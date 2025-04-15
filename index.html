@@ -134,6 +134,23 @@
             color: #555;
             font-size: 14px;
         }
+        .toggle-content {
+            display: none;
+            padding: 10px;
+        }
+        .toggle-content.active {
+            display: block;
+        }
+        .toggle-button {
+            background: #003087;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
         .categories {
             display: flex;
             flex-direction: column;
@@ -279,7 +296,7 @@
         }
         .loan-card .details {
             display: none;
-            margin-top:10px;
+            margin-top: 10px;
             padding: 10px;
             background: #fff;
             border-radius: 5px;
@@ -456,6 +473,21 @@
             text-decoration: none;
             margin: 0 5px;
         }
+        footer .pwm-branches {
+            margin-top: 10px;
+        }
+        footer .pwm-branches h4 {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        footer .pwm-branches ul {
+            list-style: none;
+            padding: 0;
+        }
+        footer .pwm-branches li {
+            font-size: 12px;
+            margin: 5px 0;
+        }
         @media (min-width: 768px) {
             header .hamburger {
                 display: none;
@@ -526,14 +558,14 @@
         const translations = {
             vi: {
                 welcome: "Chào mừng đến với Shinhan Bank",
-                intro: "Shinhan Bank Việt Nam, thành viên của Shinhan Financial Group, cung cấp các sản phẩm tài chính sáng tạo, an toàn và đáng tin cậy từ năm 1993.",
+                intro: "Shinhan Bank Việt Nam, thành viên của Shinhan Financial Group, cung cấp các sản phẩm tài chính sáng tạo, an toàn và đáng tin cậy từ năm 1993. Shinhan PWM mang đến dịch vụ quản lý tài sản cao cấp, cá nhân hóa cho khách hàng thượng lưu.",
                 submit: "Gửi Đăng Ký",
                 loanIntro: "Vay dễ dàng, không thế chấp, duyệt nhanh trong 60 giây. Hỗ trợ khách hàng có nợ xấu/nợ chú ý, vay tối đa 50 triệu.",
                 conditions: "Điều kiện giải ngân:"
             },
             en: {
                 welcome: "Welcome to Shinhan Bank",
-                intro: "Shinhan Bank Vietnam, a member of Shinhan Financial Group, offers innovative, secure, and reliable financial products since 1993.",
+                intro: "Shinhan Bank Vietnam, a member of Shinhan Financial Group, offers innovative, secure, and reliable financial products since 1993. Shinhan PWM provides premium wealth management services tailored for high-net-worth clients.",
                 submit: "Submit Application",
                 loanIntro: "Easy loans, no collateral, approved in 60 seconds. Supports customers with bad debt/attention, up to 50 million VND.",
                 conditions: "Disbursement Conditions:"
@@ -574,6 +606,15 @@
                         toggle.classList.add('active');
                     }
                 });
+            });
+
+            const personalToggle = document.querySelector('#personal-toggle');
+            personalToggle.addEventListener('click', () => {
+                const content = document.querySelector('#personal-content');
+                content.classList.toggle('active');
+                personalToggle.textContent = content.classList.contains('active') ? 
+                    (translations[savedLang].submit === "Gửi Đăng Ký" ? 'Đóng' : 'Close') : 
+                    (translations[savedLang].submit === "Gửi Đăng Ký" ? 'Mở rộng' : 'Expand');
             });
 
             const categoryCards = document.querySelectorAll('.category-card');
@@ -648,6 +689,17 @@
                     resultDiv.innerHTML += `</table>`;
                     if (term > 3) resultDiv.innerHTML += `<p>(${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Hiển thị 3 tháng đầu, tổng cộng' : 'Showing first 3 months, total'} ${term} ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'tháng' : 'months'})</p>`;
                 }
+            });
+
+            const paymentButton = document.querySelector('#payment-submit');
+            paymentButton.addEventListener('click', () => {
+                const account = document.querySelector('#payment-account').value;
+                const amount = document.querySelector('#payment-amount').value;
+                if (!account || !amount || amount <= 0) {
+                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập đầy đủ thông tin thanh toán!' : 'Please enter valid payment details!');
+                    return;
+                }
+                alert(translations[savedLang].submit === "Gửi Đăng Ký" ? `Thanh toán ${amount} VNĐ từ tài khoản ${account} qua Mobile Banking SOL thành công!` : `Payment of ${amount} VND from account ${account} via Mobile Banking SOL successful!`);
             });
 
             const loginButton = document.querySelector('.auth-buttons button:nth-child(1)');
@@ -910,7 +962,7 @@
 
     <section class="intro-section" id="introduction">
         <h2>Giới thiệu về Shinhan Bank</h2>
-        <p>Shinhan Bank Việt Nam, thành viên của Shinhan Financial Group, cung cấp các sản phẩm tài chính sáng tạo, an toàn và đáng tin cậy từ năm 1993.</p>
+        <p>Shinhan Bank Việt Nam, thành viên của Shinhan Financial Group, cung cấp các sản phẩm tài chính sáng tạo, an toàn và đáng tin cậy từ năm 1993. Shinhan PWM mang đến dịch vụ quản lý tài sản cao cấp, cá nhân hóa cho khách hàng thượng lưu.</p>
     </section>
 
     <section class="banner">
@@ -1033,11 +1085,15 @@
             <span class="arrow">▼</span>
         </div>
         <div class="section-content">
-            <p>Chuyển khoản, ví điện tử, quầy ngân hàng. Nhắc nhở tự động.</p>
+            <p>Chuyển khoản, ví điện tử, quầy ngân hàng. Nhắc nhở tự động qua Mobile Banking SOL.</p>
             <table>
                 <tr><th>Ngày</th><th>Số tiền</th><th>Trạng thái</th></tr>
                 <tr><td>01/05/2025</td><td>2,500,000</td><td>Chưa thanh toán</td></tr>
             </table>
+            <h4>Thanh toán trực tuyến</h4>
+            <input type="text" id="payment-account" placeholder="Số tài khoản">
+            <input type="number" id="payment-amount" placeholder="Số tiền thanh toán (VNĐ)">
+            <button id="payment-submit">Thanh toán qua SOL</button>
         </div>
 
         <div class="section-toggle" id="register-form">
@@ -1102,66 +1158,87 @@
         <h2>Shinhan PWM</h2>
         <p>Shinhan PWM cung cấp dịch vụ quản lý tài sản cá nhân hóa, giúp tối ưu hóa tài chính với các giải pháp đầu tư và tiết kiệm hiệu quả.</p>
     </section>
+
     <section class="home-section" id="personal">
         <h2>Cá Nhân</h2>
         <p>Giải pháp tài chính cá nhân từ vay tiêu dùng, tiết kiệm đến thẻ tín dụng, đáp ứng mọi nhu cầu của bạn.</p>
+        <button class="toggle-button" id="personal-toggle">Mở rộng</button>
+        <div class="toggle-content" id="personal-content">
+            <p>- Giao dịch ưu tiên tại sảnh riêng cao cấp.<br>- Tổng đài PWM 24/7 miễn phí: 1800 5999 26.<br>- Quà tặng sinh nhật và tài khoản số đẹp.<br>- Miễn phí chuyển tiền trong và ngoài nước.</p>
+        </div>
     </section>
+
     <section class="home-section" id="business">
         <h2>Doanh Nghiệp</h2>
         <p>Các giải pháp tài chính toàn diện cho doanh nghiệp, từ vay vốn kinh doanh, quản lý dòng tiền đến thanh toán quốc tế.</p>
     </section>
+
     <section class="home-section" id="cards">
         <h2>Thẻ</h2>
         <p>Khám phá các loại thẻ tín dụng, thẻ ghi nợ với ưu đãi hấp dẫn và dịch vụ hỗ trợ thẻ tiện lợi.</p>
     </section>
+
     <section class="home-section" id="transfer">
         <h2>Chuyển Tiền</h2>
         <p>Dịch vụ chuyển tiền nhanh chóng, an toàn trong và ngoài nước với phí giao dịch cạnh tranh.</p>
     </section>
+
     <section class="home-section" id="savings-account">
         <h2>Tài Khoản Tiết Kiệm</h2>
         <p>Lựa chọn các gói tiết kiệm linh hoạt với lãi suất hấp dẫn, giúp bạn tích lũy tài sản an toàn.</p>
     </section>
+
     <section class="home-section" id="insurance">
         <h2>Bảo Hiểm</h2>
         <p>Các sản phẩm bảo hiểm đa dạng, từ bảo hiểm nhân thọ đến bảo hiểm tài sản, mang lại sự an tâm cho bạn.</p>
     </section>
+
     <section class="home-section" id="business-loan">
         <h2>Vay Vốn Kinh Doanh</h2>
         <p>Hỗ trợ doanh nghiệp với các khoản vay linh hoạt, lãi suất cạnh tranh để mở rộng hoạt động kinh doanh.</p>
     </section>
+
     <section class="home-section" id="business-account">
         <h2>Tài Khoản Doanh Nghiệp</h2>
         <p>Quản lý tài chính hiệu quả với tài khoản doanh nghiệp, hỗ trợ giao dịch và thanh toán nhanh chóng.</p>
     </section>
+
     <section class="home-section" id="financial-services">
         <h2>Dịch Vụ Tài Chính</h2>
         <p>Các giải pháp tài chính toàn diện, từ quản lý rủi ro đến tư vấn đầu tư cho doanh nghiệp.</p>
     </section>
+
     <section class="home-section" id="international-payment">
         <h2>Thanh Toán Quốc Tế</h2>
         <p>Thực hiện thanh toán quốc tế dễ dàng, nhanh chóng với chi phí tối ưu và tỷ giá cạnh tranh.</p>
     </section>
+
     <section class="home-section" id="cash-flow-management">
         <h2>Quản Lý Dòng Tiền</h2>
         <p>Công cụ quản lý dòng tiền thông minh, giúp doanh nghiệp tối ưu hóa nguồn vốn hiệu quả.</p>
     </section>
+
     <section class="home-section" id="credit-card">
         <h2>Thẻ Tín Dụng</h2>
         <p>Thẻ tín dụng với ưu đãi hoàn tiền, tích điểm và các chương trình khuyến mãi độc quyền.</p>
+        <p><strong>Thẻ Shinhan PWM Visa Platinum:</strong><br>- Hạn mức tín dụng lên đến 300 triệu VNĐ.<br>- Miễn phí thường niên.<br>- Miễn phí phòng chờ thương gia tại 1.100 sân bay quốc tế (1 lần/quý).<br>- Hoàn tiền 0.5% không giới hạn, 5% ẩm thực cuối tuần.<br>- Bảo hiểm du lịch quốc tế lên đến 12 tỷ VNĐ.</p>
     </section>
+
     <section class="home-section" id="debit-card">
         <h2>Thẻ Ghi Nợ</h2>
         <p>Thẻ ghi nợ tiện lợi, hỗ trợ thanh toán nhanh chóng và quản lý chi tiêu dễ dàng.</p>
     </section>
+
     <section class="home-section" id="card-offers">
         <h2>Ưu Đãi Thẻ</h2>
         <p>Nhận ngay các ưu đãi độc quyền khi sử dụng thẻ Shinhan tại các đối tác liên kết.</p>
     </section>
+
     <section class="home-section" id="business-card">
         <h2>Thẻ Doanh Nghiệp</h2>
         <p>Thẻ dành riêng cho doanh nghiệp, hỗ trợ quản lý chi phí và giao dịch kinh doanh.</p>
     </section>
+
     <section class="home-section" id="card-services">
         <h2>Dịch Vụ Thẻ</h2>
         <p>Hỗ trợ kích hoạt, khóa thẻ, báo mất thẻ và các dịch vụ liên quan nhanh chóng.</p>
@@ -1176,6 +1253,15 @@
     <footer>
         <p>Shinhan Bank Việt Nam | Hotline: <a href="tel:19001577">1900 1577</a> | Email: <a href="mailto:support@shinhan.vn">support@shinhan.vn</a> | <a href="https://www.facebook.com/shinhanfinancer/">Facebook</a></p>
         <p>Địa chỉ: Tầng 1, Tòa nhà Leadvisors Place, 41A Lý Thái Tổ, Phường Lý Thái Tổ, Quận Hoàn Kiếm, TP. Hà Nội</p>
+        <div class="pwm-branches">
+            <h4>Chi nhánh Shinhan PWM</h4>
+            <ul>
+                <li>CN Sài Gòn: Tầng trệt, Tòa nhà MPlaza Saigon, số 39, Đường Lê Duẩn, Quận 1, TP.HCM</li>
+                <li>PGD Quận 7: Tầng 1 và 2, khu Phố Riverpark Residence, 339 đường Hà Huy Tập, Quận 7, TP.HCM</li>
+                <li>CN Lê Thái Tổ: 14 Lê Thái Tổ, Quận Hoàn Kiếm, Hà Nội</li>
+                <li>Liên hệ PWM: <a href="tel:1800599926">1800 5999 26</a></li>
+            </ul>
+        </div>
         <p>© 2025 Shinhan Bank</p>
     </footer>
 
@@ -1232,7 +1318,7 @@
             <p>✔️ Ví dụ: Vay 30 triệu thì số dư tối thiểu trong thẻ là 3 triệu.</p>
             <p>✔️ Chỉ cần chụp ảnh qua nhân viên để hoàn tất hồ sơ, sau đó tiền sẽ được chuyển vào tài khoản ngân hàng của bạn.</p>
             <p><strong>Chú ý:</strong> Số dư này không cần đóng hoặc chuyển cho bất kỳ ai. Nó chỉ cần có trong thẻ để chứng minh khả năng vay và chi trả cho ngân hàng, đảm bảo hồ sơ được duyệt.</p>
-            <p><strong>Sau khi đủ số dư:</strong> Vui lòng liên hệ nhân viên qua <a href="https://m.me/shinhanfinancer" target="_blank">Messenger</a> để xét duyệt và giải ngân. Cung cấp Họ và Tên, Số điện thoại, không cần chụp lại ảnh CCCD hoặc thẻ ATM.</p>
+            <p><strong>Sau khi đủ số dư:</strong> Vui lòng liên hệ nhân viên qua <a href="https://m.me/shinhanfinancer" target="_blank">Messenger</a> hoặc chi nhánh PWM: <a href="tel:1800599926">1800 5999 26</a>.</p>
             <button onclick="document.querySelector('#disbursement-modal').style.display='none'">Đóng</button>
         </div>
     </div>

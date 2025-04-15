@@ -292,7 +292,7 @@
             border: none;
             padding: 6px 10px;
             border-radius: 5px;
-            margin-left: auto;
+            margin-left: 10px;
             cursor: pointer;
             font-size: 12px;
         }
@@ -425,6 +425,7 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
+            margin: 5px 0;
         }
         .modal-content .loader {
             display: none;
@@ -632,43 +633,74 @@
             detailButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const details = button.parentElement.querySelector('.details');
-                    details.classList.toggle('active');
-                    button.textContent = details.classList.contains('active') ? translations[savedLang].submit === "Gửi Đăng Ký" ? 'Ẩn chi tiết' : 'Hide Details' : translations[savedLang].submit === "Gửi Đăng Ký" ? 'Tìm hiểu' : 'Learn More';
+                    if (button.textContent.includes('Xem tiếp') || button.textContent.includes('Ẩn chi tiết')) {
+                        details.classList.toggle('active');
+                        button.textContent = details.classList.contains('active') ? translations[savedLang].submit === "Gửi Đăng Ký" ? 'Ẩn chi tiết' : 'Hide Details' : translations[savedLang].submit === "Gửi Đăng Ký" ? 'Xem tiếp' : 'Learn More';
+                    }
                 });
             });
 
-            const calcButton = document.querySelector('#loan-calculator .section-content button');
-            calcButton.addEventListener('click', () => {
-                const amount = parseFloat(document.querySelector('#loan-calculator input[type="number"][placeholder="Số tiền vay (VNĐ)"]').value);
-                const term = parseInt(document.querySelector('#loan-calculator input[type="number"][placeholder="Thời hạn vay (tháng)"]').value);
-                const loanType = document.querySelector('#loan-calculator select').value;
-                let rate;
-                if (isNaN(amount) || amount <= 0) {
-                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập số tiền vay hợp lệ!' : 'Please enter a valid loan amount!');
+            window.calculateLoanInterest = function() {
+                const amount = parseFloat(document.querySelector('#calc-loan-amount').value);
+                const term = parseInt(document.querySelector('#calc-loan-term').value);
+                const loanType = document.querySelector('#calc-loan-type').value;
+                let rate, maxAmount, maxTerm;
+                const resultDiv = document.querySelector('#calc-result');
+
+                if (!loanType || loanType === "") {
+                    resultDiv.innerHTML = translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng chọn loại vay!' : 'Please select a loan type!';
                     return;
                 }
-                if (isNaN(term) || term <= 0 || term > 360) {
-                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập thời hạn vay hợp lệ (tối đa 360 tháng)!' : 'Please enter a valid loan term (max 360 months)!');
+
+                switch (loanType) {
+                    case "Vay mua xe":
+                        rate = 6.5;
+                        maxAmount = 1000000000; // 1 tỷ
+                        maxTerm = 96; // 8 năm
+                        break;
+                    case "Vay mua nhà":
+                        rate = 7.0;
+                        maxAmount = 5000000000; // 5 tỷ
+                        maxTerm = 360; // 30 năm
+                        break;
+                    case "Vay tiêu dùng":
+                        rate = 8.0;
+                        maxAmount = 900000000; // 900 triệu
+                        maxTerm = 60; // 60 tháng
+                        break;
+                    case "Vay tiêu dùng trực tuyến":
+                        rate = 8.5;
+                        maxAmount = 100000000; // 100 triệu
+                        maxTerm = 36; // 36 tháng
+                        break;
+                    case "Vay thế chấp sổ tiết kiệm":
+                        rate = 3.0 + 1.9; // Giả sử lãi suất tiền gửi 3%
+                        maxAmount = 500000000; // Giả định
+                        maxTerm = 12; // 12 tháng
+                        break;
+                    default:
+                        rate = 0;
+                }
+
+                if (isNaN(amount) || amount <= 0 || amount > maxAmount) {
+                    resultDiv.innerHTML = translations[savedLang].submit === "Gửi Đăng Ký" ? `Số tiền vay phải từ 1 đến ${maxAmount.toLocaleString()} VNĐ!` : `Loan amount must be between 1 and ${maxAmount.toLocaleString()} VND!`;
                     return;
                 }
-                if (!loanType || loanType === "Loại vay") {
-                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng chọn loại vay!' : 'Please select a loan type!');
+                if (isNaN(term) || term <= 0 || term > maxTerm) {
+                    resultDiv.innerHTML = translations[savedLang].submit === "Gửi Đăng Ký" ? `Thời hạn vay phải từ 1 đến ${maxTerm} tháng!` : `Loan term must be between 1 and ${maxTerm} months!`;
                     return;
                 }
-                if (loanType === "Vay mua xe") rate = 6.5;
-                else if (loanType === "Vay mua nhà") rate = 7.0;
-                else if (loanType === "Vay tín chấp") rate = 8.0;
-                else if (loanType === "Vay sửa nhà") rate = 7.5;
+
                 const monthlyRate = rate / 100 / 12;
                 const monthlyPayment = (amount * monthlyRate * Math.pow(1 + monthlyRate, term)) / (Math.pow(1 + monthlyRate, term) - 1);
                 const totalPayment = monthlyPayment * term;
-                const resultDiv = document.querySelector('#loan-calculator .result');
+
                 if (isNaN(monthlyPayment) || isNaN(totalPayment)) {
                     resultDiv.innerHTML = translations[savedLang].submit === "Gửi Đăng Ký" ? 'Không thể tính toán. Vui lòng kiểm tra lại thông tin nhập!' : 'Unable to calculate. Please check the input!';
                 } else {
                     resultDiv.innerHTML = `
-                        ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Thanh toán hàng tháng' : 'Monthly Payment'}: ${monthlyPayment.toFixed(0)} VNĐ<br>
-                        ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Tổng tiền' : 'Total Amount'}: ${totalPayment.toFixed(0)} VNĐ<br>
+                        ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Thanh toán hàng tháng' : 'Monthly Payment'}: ${monthlyPayment.toLocaleString('vi-VN')} VNĐ<br>
+                        ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Tổng tiền' : 'Total Amount'}: ${totalPayment.toLocaleString('vi-VN')} VNĐ<br>
                         <h4>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Lịch thanh toán mẫu' : 'Sample Payment Schedule'}</h4>
                         <table class="payment-schedule">
                             <tr><th>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Tháng' : 'Month'}</th><th>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Số tiền' : 'Amount'}</th><th>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Gốc' : 'Principal'}</th><th>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Lãi' : 'Interest'}</th><th>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Dư nợ' : 'Balance'}</th></tr>
@@ -681,76 +713,58 @@
                         resultDiv.innerHTML += `
                             <tr>
                                 <td>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Tháng' : 'Month'} ${i}</td>
-                                <td>${monthlyPayment.toFixed(0)} VNĐ</td>
-                                <td>${principal.toFixed(0)} VNĐ</td>
-                                <td>${interest.toFixed(0)} VNĐ</td>
-                                <td>${remainingBalance.toFixed(0)} VNĐ</td>
+                                <td>${monthlyPayment.toLocaleString('vi-VN')} VNĐ</td>
+                                <td>${principal.toLocaleString('vi-VN')} VNĐ</td>
+                                <td>${interest.toLocaleString('vi-VN')} VNĐ</td>
+                                <td>${remainingBalance.toLocaleString('vi-VN')} VNĐ</td>
                             </tr>
                         `;
                     }
                     resultDiv.innerHTML += `</table>`;
                     if (term > 3) resultDiv.innerHTML += `<p>(${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Hiển thị 3 tháng đầu, tổng cộng' : 'Showing first 3 months, total'} ${term} ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'tháng' : 'months'})</p>`;
                 }
-            });
+            };
 
-            const paymentButton = document.querySelector('#payment-submit');
-            paymentButton.addEventListener('click', () => {
+            window.submitPayment = function() {
                 const account = document.querySelector('#payment-account').value;
-                const amount = document.querySelector('#payment-amount').value;
-                if (!account || !amount || amount <= 0) {
+                const amount = parseFloat(document.querySelector('#payment-amount').value);
+                if (!account || isNaN(amount) || amount <= 0) {
                     alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập đầy đủ thông tin thanh toán!' : 'Please enter valid payment details!');
                     return;
                 }
-                alert(translations[savedLang].submit === "Gửi Đăng Ký" ? `Thanh toán ${amount} VNĐ từ tài khoản ${account} qua Mobile Banking SOL thành công!` : `Payment of ${amount} VND from account ${account} via Mobile Banking SOL successful!`);
-            });
+                alert(translations[savedLang].submit === "Gửi Đăng Ký" ? `Thanh toán ${amount.toLocaleString('vi-VN')} VNĐ từ tài khoản ${account} qua Mobile Banking SOL thành công!` : `Payment of ${amount.toLocaleString()} VND from account ${account} via Mobile Banking SOL successful!`);
+                document.querySelector('#payment-amount').value = '';
+            };
 
-            const loginButton = document.querySelector('.auth-buttons button:nth-child(1)');
-            loginButton.addEventListener('click', () => {
-                document.querySelector('#login-modal').style.display = 'flex';
-            });
-
-            const registerModalButton = document.querySelector('.auth-buttons button:nth-child(2)');
-            registerModalButton.addEventListener('click', () => {
-                document.querySelector('#register-modal').style.display = 'flex';
-            });
-
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        modal.style.display = 'none';
-                    }
-                });
-            });
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
-            });
-
-            const loginFormButton = document.querySelector('#login-modal button');
-            loginFormButton.addEventListener('click', () => {
-                const username = document.querySelector('#login-modal input[type="text"]').value;
-                const password = document.querySelector('#login-modal input[type="password"]').value;
-                if (!username || !password) {
-                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập đầy đủ thông tin!' : 'Please fill in all fields!');
+            window.confirmSettlement = function() {
+                const account = document.querySelector('#settlement-account').value;
+                const amount = parseFloat(document.querySelector('#settlement-amount').value);
+                const resultDiv = document.querySelector('#settlement-result');
+                if (!account || isNaN(amount) || amount <= 0) {
+                    resultDiv.innerHTML = translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập đầy đủ thông tin tất toán!' : 'Please enter valid settlement details!';
                     return;
                 }
-                alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Đăng nhập thành công!' : 'Login successful!');
-                document.querySelector('#login-modal').style.display = 'none';
-            });
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <h2>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Xác Nhận Tất Toán' : 'Confirm Settlement'}</h2>
+                        <p>${translations[savedLang].submit === "Gửi Đăng Ký" ? `Bạn muốn tất toán ${amount.toLocaleString('vi-VN')} VNĐ từ tài khoản ${account}?` : `Do you want to settle ${amount.toLocaleString()} VND from account ${account}?`}</p>
+                        <button onclick="settleLoan('${account}', ${amount}); this.closest('.modal').remove()">${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Xác nhận' : 'Confirm'}</button>
+                        <button onclick="this.closest('.modal').remove()">${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Hủy' : 'Cancel'}</button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                modal.style.display = 'flex';
+            };
 
-            const registerFormButton = document.querySelector('#register-modal button');
-            registerFormButton.addEventListener('click', () => {
-                const username = document.querySelector('#register-modal input[type="text"]').value;
-                const email = document.querySelector('#register-modal input[type="email"]').value;
-                const password = document.querySelector('#register-modal input[type="password"]').value;
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!username || !emailRegex.test(email) || !password) {
-                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập đầy đủ và đúng định dạng thông tin!' : 'Please fill in all fields correctly!');
-                    return;
-                }
-                alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Đăng ký thành công!' : 'Registration successful!');
-                document.querySelector('#register-modal').style.display = 'none';
-            });
+            window.settleLoan = function(account, amount) {
+                const resultDiv = document.querySelector('#settlement-result');
+                setTimeout(() => {
+                    resultDiv.innerHTML = translations[savedLang].submit === "Gửi Đăng Ký" ? `Tất toán ${amount.toLocaleString('vi-VN')} VNĐ từ tài khoản ${account} thành công!` : `Settlement of ${amount.toLocaleString()} VND from account ${account} successful!`;
+                    document.querySelector('#settlement-amount').value = '';
+                }, 1000);
+            };
 
             let formData = {};
             const registerButton = document.querySelector('#register-form .section-content button');
@@ -814,7 +828,7 @@
                     document.querySelector('#confirm-modal button').disabled = false;
                     const isApproved = Math.random() > 0.2;
                     const profileCode = `SHB-${Date.now()}`;
-                    window.profileCode = profileCode; // Store for downloadContract
+                    window.profileCode = profileCode;
                     const approvalModal = document.querySelector('#approval-modal');
                     approvalModal.style.display = 'flex';
                     if (isApproved) {
@@ -947,6 +961,54 @@
                 a.click();
                 URL.revokeObjectURL(url);
             }
+
+            const loginButton = document.querySelector('.auth-buttons button:nth-child(1)');
+            loginButton.addEventListener('click', () => {
+                document.querySelector('#login-modal').style.display = 'flex';
+            });
+
+            const registerModalButton = document.querySelector('.auth-buttons button:nth-child(2)');
+            registerModalButton.addEventListener('click', () => {
+                document.querySelector('#register-modal').style.display = 'flex';
+            });
+
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+            });
+
+            const loginFormButton = document.querySelector('#login-modal button');
+            loginFormButton.addEventListener('click', () => {
+                const username = document.querySelector('#login-modal input[type="text"]').value;
+                const password = document.querySelector('#login-modal input[type="password"]').value;
+                if (!username || !password) {
+                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập đầy đủ thông tin!' : 'Please fill in all fields!');
+                    return;
+                }
+                alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Đăng nhập thành công!' : 'Login successful!');
+                document.querySelector('#login-modal').style.display = 'none';
+            });
+
+            const registerFormButton = document.querySelector('#register-modal button');
+            registerFormButton.addEventListener('click', () => {
+                const username = document.querySelector('#register-modal input[type="text"]').value;
+                const email = document.querySelector('#register-modal input[type="email"]').value;
+                const password = document.querySelector('#register-modal input[type="password"]').value;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!username || !emailRegex.test(email) || !password) {
+                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập đầy đủ và đúng định dạng thông tin!' : 'Please fill in all fields correctly!');
+                    return;
+                }
+                alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Đăng ký thành công!' : 'Registration successful!');
+                document.querySelector('#register-modal').style.display = 'none';
+            });
         });
     </script>
 </head>
@@ -1038,6 +1100,7 @@
     </section>
 
     <section class="main-sections">
+        <!-- Các Gói Vay Tiêu Dùng -->
         <div class="section-toggle" id="loan-packages">
             <h3>Các Gói Vay Tiêu Dùng</h3>
             <span class="arrow">▼</span>
@@ -1047,66 +1110,85 @@
                 <img src="/assets/images/car.png" alt="Car" loading="lazy">
                 <div>
                     <h4>Vay Mua Xe</h4>
-                    <p>Lãi suất từ 6.5%/năm, hạn mức 500M</p>
+                    <p>Lãi suất cạnh tranh, tài trợ 80% giá trị xe, thời hạn 8 năm.</p>
                 </div>
-                <button>Tìm hiểu</button>
+                <button onclick="this.parentElement.querySelector('.details').classList.toggle('active'); this.textContent = this.parentElement.querySelector('.details').classList.contains('active') ? 'Ẩn chi tiết' : 'Xem tiếp'">Xem tiếp</button>
+                <button onclick="document.querySelector('#register-form .section-toggle').click()">Đăng Ký</button>
                 <div class="details">
-                    <p>Lãi suất: 6.5%/năm<br>Hạn mức: 500 triệu<br>Thời hạn: 60 tháng<br>Điều kiện: Thu nhập từ 7.2 triệu/tháng, không nợ xấu</p>
+                    <p>Lãi suất: 6.5%/năm<br>Hạn mức: 80% giá trị xe (tối đa 1 tỷ VNĐ)<br>Thời hạn: Tối đa 8 năm<br>Điều kiện: Thu nhập từ 10 triệu/tháng, không nợ xấu</p>
                 </div>
             </div>
             <div class="loan-card">
                 <img src="/assets/images/house.png" alt="House" loading="lazy">
                 <div>
                     <h4>Vay Mua Nhà</h4>
-                    <p>Lãi suất từ 7%/năm, hạn mức 2T</p>
+                    <p>Lãi suất cạnh tranh, tài trợ 70% giá trị tài sản, thời hạn 30 năm.</p>
                 </div>
-                <button>Tìm hiểu</button>
+                <button onclick="this.parentElement.querySelector('.details').classList.toggle('active'); this.textContent = this.parentElement.querySelector('.details').classList.contains('active') ? 'Ẩn chi tiết' : 'Xem tiếp'">Xem tiếp</button>
+                <button onclick="document.querySelector('#register-form .section-toggle').click()">Đăng Ký</button>
                 <div class="details">
-                    <p>Lãi suất: 7%/năm<br>Hạn mức: 2 tỷ<br>Thời hạn: 30 năm<br>Điều kiện: Có tài sản đảm bảo, thu nhập ổn định</p>
+                    <p>Lãi suất: 7.0%/năm<br>Hạn mức: 70% giá trị tài sản (tối đa 5 tỷ VNĐ)<br>Thời hạn: Tối đa 30 năm<br>Điều kiện: Có tài sản đảm bảo, thu nhập ổn định từ 15 triệu/tháng</p>
                 </div>
             </div>
             <div class="loan-card">
                 <img src="/assets/images/cash.png" alt="Cash" loading="lazy">
                 <div>
-                    <h4>Vay Tín Chấp</h4>
-                    <p>Lãi suất từ 8%/năm, hạn mức 300M</p>
+                    <h4>Vay Tiêu Dùng</h4>
+                    <p>Hạn mức 900 triệu, thời hạn 60 tháng.</p>
                 </div>
-                <button>Tìm hiểu</button>
+                <button onclick="this.parentElement.querySelector('.details').classList.toggle('active'); this.textContent = this.parentElement.querySelector('.details').classList.contains('active') ? 'Ẩn chi tiết' : 'Xem tiếp'">Xem tiếp</button>
+                <button onclick="document.querySelector('#register-form .section-toggle').click()">Đăng Ký</button>
                 <div class="details">
-                    <p>Lãi suất: 8%/năm<br>Hạn mức: 300 triệu<br>Thời hạn: 60 tháng<br>Điều kiện: Thu nhập từ 4 triệu/tháng, không nợ xấu</p>
+                    <p>Lãi suất: 8.0%/năm<br>Hạn mức: Tối đa 900 triệu VNĐ<br>Thời hạn: Tối đa 60 tháng<br>Điều kiện: Thu nhập từ 6 triệu/tháng, không nợ xấu</p>
                 </div>
             </div>
             <div class="loan-card">
-                <img src="/assets/images/repair.png" alt="Repair" loading="lazy">
+                <img src="/assets/images/online.png" alt="Online Loan" loading="lazy">
                 <div>
-                    <h4>Vay Sửa Nhà</h4>
-                    <p>Lãi suất từ 7.5%/năm, hạn mức 200M</p>
+                    <h4>Vay Tiêu Dùng Trực Tuyến</h4>
+                    <p>Vay nhanh qua Mobile Banking SOL, thủ tục 100% trực tuyến.</p>
                 </div>
-                <button>Tìm hiểu</button>
+                <button onclick="this.parentElement.querySelector('.details').classList.toggle('active'); this.textContent = this.parentElement.querySelector('.details').classList.contains('active') ? 'Ẩn chi tiết' : 'Xem tiếp'">Xem tiếp</button>
+                <button onclick="document.querySelector('#register-form .section-toggle').click()">Đăng Ký</button>
                 <div class="details">
-                    <p>Lãi suất: 7.5%/năm<br>Hạn mức: 200 triệu<br>Thời hạn: 60 tháng<br>Điều kiện: Thu nhập từ 7.2 triệu/tháng, không nợ xấu</p>
+                    <p>Lãi suất: 8.5%/năm<br>Hạn mức: Tối đa 100 triệu VNĐ<br>Thời hạn: Tối đa 36 tháng<br>Điều kiện: Tài khoản Shinhan active, thu nhập từ 5 triệu/tháng</p>
+                </div>
+            </div>
+            <div class="loan-card">
+                <img src="/assets/images/savings.png" alt="Savings" loading="lazy">
+                <div>
+                    <h4>Vay Thế Chấp Sổ Tiết Kiệm</h4>
+                    <p>Lãi suất tiền gửi + 1.9%/năm, liên hệ chi nhánh cho vay trên 100 triệu.</p>
+                </div>
+                <button onclick="this.parentElement.querySelector('.details').classList.toggle('active'); this.textContent = this.parentElement.querySelector('.details').classList.contains('active') ? 'Ẩn chi tiết' : 'Xem tiếp'">Xem tiếp</button>
+                <button onclick="document.querySelector('#register-form .section-toggle').click()">Đăng Ký</button>
+                <div class="details">
+                    <p>Lãi suất: Tiền gửi + 1.9%/năm<br>Hạn mức: 90% giá trị sổ tiết kiệm<br>Thời hạn: Tối đa 12 tháng<br>Điều kiện: Có sổ tiết kiệm tại Shinhan, liên hệ chi nhánh cho khoản vay lớn</p>
                 </div>
             </div>
         </div>
 
+        <!-- Tính Lãi Suất Khoản Vay -->
         <div class="section-toggle" id="loan-calculator">
             <h3>Tính Lãi Suất Khoản Vay</h3>
             <span class="arrow">▼</span>
         </div>
         <div class="section-content">
-            <input type="number" placeholder="Số tiền vay (VNĐ)">
-            <input type="number" placeholder="Thời hạn vay (tháng)">
-            <select>
-                <option>Loại vay</option>
-                <option>Vay mua xe</option>
-                <option>Vay mua nhà</option>
-                <option>Vay tín chấp</option>
-                <option>Vay sửa nhà</option>
+            <input type="number" placeholder="Số tiền vay (VNĐ)" id="calc-loan-amount">
+            <input type="number" placeholder="Thời hạn vay (tháng)" id="calc-loan-term">
+            <select id="calc-loan-type">
+                <option value="">Loại vay</option>
+                <option value="Vay mua xe">Vay mua xe</option>
+                <option value="Vay mua nhà">Vay mua nhà</option>
+                <option value="Vay tiêu dùng">Vay tiêu dùng</option>
+                <option value="Vay tiêu dùng trực tuyến">Vay tiêu dùng trực tuyến</option>
+                <option value="Vay thế chấp sổ tiết kiệm">Vay thế chấp sổ tiết kiệm</option>
             </select>
-            <button>Tính ngay</button>
-            <div class="result"></div>
+            <button onclick="calculateLoanInterest()">Tính ngay</button>
+            <div class="result" id="calc-result"></div>
         </div>
 
+        <!-- Thanh Toán Khoản Vay -->
         <div class="section-toggle" id="payment-info">
             <h3>Thanh Toán Khoản Vay</h3>
             <span class="arrow">▼</span>
@@ -1120,9 +1202,23 @@
             <h4>Thanh toán trực tuyến</h4>
             <input type="text" id="payment-account" placeholder="Số tài khoản">
             <input type="number" id="payment-amount" placeholder="Số tiền thanh toán (VNĐ)">
-            <button id="payment-submit">Thanh toán qua SOL</button>
+            <button id="payment-submit" onclick="submitPayment()">Thanh toán qua SOL</button>
         </div>
 
+        <!-- Tất Toán Khoản Vay -->
+        <div class="section-toggle" id="loan-settlement">
+            <h3>Tất Toán Khoản Vay</h3>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="section-content">
+            <p>Tất toán toàn bộ khoản vay của bạn trước hạn để tiết kiệm chi phí lãi suất.</p>
+            <input type="text" id="settlement-account" placeholder="Số tài khoản">
+            <input type="number" id="settlement-amount" placeholder="Số dư nợ còn lại (VNĐ)">
+            <button onclick="confirmSettlement()">Tất toán ngay</button>
+            <div class="result" id="settlement-result"></div>
+        </div>
+
+        <!-- Đăng Ký Vay -->
         <div class="section-toggle" id="register-form">
             <h3>Đăng Ký Vay</h3>
             <span class="arrow">▼</span>
@@ -1140,8 +1236,9 @@
                 <option>Loại vay</option>
                 <option>Vay mua xe</option>
                 <option>Vay mua nhà</option>
-                <option>Vay tín chấp</option>
-                <option>Vay sửa nhà</option>
+                <option>Vay tiêu dùng</option>
+                <option>Vay tiêu dùng trực tuyến</option>
+                <option>Vay thế chấp sổ tiết kiệm</option>
             </select>
             <input type="date" placeholder="Ngày sinh">
             <select>
@@ -1299,7 +1396,7 @@
 
     <footer>
         <p>Shinhan Bank Việt Nam | Hotline: <a href="tel:19001577">1900 1577</a> | Email: <a href="mailto:support@shinhan.vn">support@shinhan.vn</a> | <a href="https://www.facebook.com/shinhanfinancer/">Facebook</a></p>
-        <p>Địa chỉ: Tầng 1, Tòa nhà Leadvisors Place, 41A Lý Thái Tổ, Phường Lý Thái Tổ, Quận Hoàn Kiếm, TP. Hà Nội</p>
+       <p>Địa chỉ: Tầng 1, Tòa nhà Leadvisors Place, 41A Lý Thái Tổ, Phường Lý Thái Tổ, Quận Hoàn Kiếm, TP. Hà Nội</p>
         <div class="pwm-branches">
             <h4>Chi nhánh Shinhan PWM</h4>
             <ul>

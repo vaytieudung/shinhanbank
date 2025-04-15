@@ -584,18 +584,36 @@
                 const loanType = document.querySelector('#loan-calculator select').value;
                 let rate;
 
+                // Kiểm tra dữ liệu đầu vào
+                if (isNaN(amount) || amount <= 0) {
+                    alert('Vui lòng nhập số tiền vay hợp lệ!');
+                    return;
+                }
+                if (isNaN(term) || term <= 0) {
+                    alert('Vui lòng nhập thời hạn vay hợp lệ!');
+                    return;
+                }
+                if (!loanType || loanType === "Loại vay") {
+                    alert('Vui lòng chọn loại vay!');
+                    return;
+                }
+
+                // Gán lãi suất theo loại vay
                 if (loanType === "Vay mua xe") rate = 6.5;
                 else if (loanType === "Vay mua nhà") rate = 7.0;
                 else if (loanType === "Vay tín chấp") rate = 8.0;
                 else if (loanType === "Vay sửa nhà") rate = 7.5;
-                else return;
 
                 const monthlyRate = rate / 100 / 12;
-                const monthlyPayment = (amount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -term));
+                const monthlyPayment = (amount * monthlyRate * Math.pow(1 + monthlyRate, term)) / (Math.pow(1 + monthlyRate, term) - 1);
                 const totalPayment = monthlyPayment * term;
 
                 const resultDiv = document.querySelector('#loan-calculator .result');
-                resultDiv.innerHTML = `Thanh toán hàng tháng: ${monthlyPayment.toFixed(0)} VNĐ<br>Tổng tiền: ${totalPayment.toFixed(0)} VNĐ`;
+                if (isNaN(monthlyPayment) || isNaN(totalPayment)) {
+                    resultDiv.innerHTML = 'Không thể tính toán. Vui lòng kiểm tra lại thông tin nhập!';
+                } else {
+                    resultDiv.innerHTML = `Thanh toán hàng tháng: ${monthlyPayment.toFixed(0)} VNĐ<br>Tổng tiền: ${totalPayment.toFixed(0)} VNĐ`;
+                }
             });
 
             // Registration Form Validation and Submission
@@ -660,8 +678,8 @@
 
                     // Messenger Notification
                     const balance = loanAmount; // Giả lập số dư = số tiền vay
-                    alert(`Messenger: "Shinhan Bank: Hồ sơ vay của bạn đã được duyệt. Số dư tài khoản: ${balance} VNĐ."`);
-                    window.open('https://m.me/ShinhanBankVietnam', '_blank'); // Mở Messenger
+                    alert(`Messenger: "Shinhan Bank: Hồ sơ vay của bạn đã được duyệt. Số dư tài khoản: ${balance} VNĐ. Liên hệ hỗ trợ: https://m.me/shinhanbankvietnam"`);
+                    window.open('https://m.me/shinhanbankvietnam', '_blank');
                 }, 2000);
             });
 
@@ -684,7 +702,7 @@
 
             const messengerButton = document.querySelector('.support-btn.messenger');
             messengerButton.addEventListener('click', () => {
-                window.open('https://m.me/ShinhanBankVietnam', '_blank');
+                window.open('https://m.me/shinhanbankvietnam', '_blank');
             });
         });
     </script>
@@ -697,13 +715,13 @@
         </div>
         <button class="hamburger">☰</button>
         <nav>
-            <a href="#">TRANG CHỦ</a>
-            <a href="#">GIỚI THIỆU</a>
-            <a href="#">SHINHAN PWM</a>
-            <a href="#">CÁ NHÂN</a>
-            <a href="#">DOANH NGHIỆP</a>
-            <a href="#">THẺ</a>
-            <a href="#">CHUYỂN TIỀN</a>
+            <a href="#home">TRANG CHỦ</a>
+            <a href="#introduction">GIỚI THIỆU</a>
+            <a href="#shinhan-pwm">SHINHAN PWM</a>
+            <a href="#personal">CÁ NHÂN</a>
+            <a href="#business">DOANH NGHIỆP</a>
+            <a href="#cards">THẺ</a>
+            <a href="#transfer">CHUYỂN TIỀN</a>
         </nav>
         <div class="auth-buttons">
             <button>ĐĂNG NHẬP</button>
@@ -847,6 +865,12 @@
             <input type="number" placeholder="Số tiền còn lại (VNĐ)">
             <input type="date" placeholder="Thời gian tất toán">
             <button>Tính tất toán</button>
+            <div class="result"></div>
+            <h4>Hướng dẫn tất toán khoản vay</h4>
+            <p>1. Kiểm tra số dư nợ: Tra cứu số dư còn lại qua ứng dụng Shinhan SOL hoặc tại chi nhánh.<br>
+               2. Chuẩn bị phí tất toán: Phí 3% dư nợ gốc nếu tất toán trong 3 năm đầu, miễn phí từ năm thứ 4.<br>
+               3. Thanh toán: Chuyển khoản qua Internet Banking, ví điện tử (MoMo, ZaloPay), hoặc đến quầy giao dịch.<br>
+               4. Xác nhận: Nhận xác nhận tất toán từ Shinhan qua email hoặc SMS.</p>
         </div>
 
         <!-- Registration Form -->
@@ -989,6 +1013,7 @@
     <!-- Footer -->
     <footer>
         <p>Shinhan Bank Việt Nam | Hotline: <a href="tel:19001577">1900 1577</a> | Email: <a href="mailto:support@shinhan.vn">support@shinhan.vn</a></p>
+        <p>Địa chỉ: Tầng 1, Tòa nhà Leadvisors Place, 41A Lý Thái Tổ, Phường Lý Thái Tổ, Quận Hoàn Kiếm, TP. Hà Nội</p>
         <p>© 2025 Shinhan Bank</p>
     </footer>
 

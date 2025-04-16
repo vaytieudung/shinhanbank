@@ -8,12 +8,22 @@
 body {
     background: #f5f5f5;
     color: #333;
+    min-height: 100vh;
     transition: background 0.3s, color 0.3s;
 }
 
 body.dark-mode {
     background: #333;
     color: #f5f5f5;
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 header {
@@ -105,6 +115,16 @@ header .language-toggle {
     font-size: 14px;
 }
 
+header .dark-mode-toggle {
+    background: #F5C518;
+    color: #003087;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
 .banner {
     background: linear-gradient(180deg, #e6f0fa, #ffffff);
     padding: 20px 15px;
@@ -131,14 +151,19 @@ header .language-toggle {
     margin-bottom: 15px;
 }
 
-.banner button {
+.banner button, .cta-button {
     background: #003087;
     color: white;
     border: none;
-    padding: 8px 15px;
+    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
+    transition: background 0.3s;
+}
+
+.banner button:hover, .cta-button:hover {
+    background: #005670;
 }
 
 .banner img {
@@ -147,7 +172,7 @@ header .language-toggle {
     border-radius: 10px;
 }
 
-.home-section, .intro-section, .core-values, .testimonials {
+.home-section, .core-values, .testimonials, .main-sections, .contract-display {
     padding: 20px;
     background: #fff;
     margin: 10px;
@@ -155,7 +180,7 @@ header .language-toggle {
     text-align: center;
 }
 
-.home-section h2, .intro-section h2, .core-values h2, .testimonials h2 {
+.home-section h2, .core-values h2, .testimonials h2, .contract-display h2 {
     color: #003087;
     font-size: 20px;
     margin-bottom: 10px;
@@ -187,6 +212,7 @@ header .language-toggle {
     color: #003087;
     font-size: 16px;
     margin-bottom: 5px;
+    font-weight: 500;
 }
 
 .testimonials .swiper {
@@ -199,6 +225,7 @@ header .language-toggle {
     padding: 20px;
     border-radius: 10px;
     text-align: center;
+    border: 1px solid #e6f0fa;
 }
 
 .testimonial-card img {
@@ -337,12 +364,14 @@ header .language-toggle {
     display: block;
 }
 
-.section-details img {
-    width: 100%;
-    max-width: 200px;
+.section-details button {
+    background: #003087;
+    color: white;
+    border: none;
+    padding: 8px 15px;
     border-radius: 5px;
-    margin: 10px auto;
-    display: block;
+    cursor: pointer;
+    font-size: 14px;
 }
 
 .main-sections {
@@ -393,24 +422,72 @@ header .language-toggle {
     display: block;
 }
 
-.section-content input, .section-content select {
+.recent-activity {
+    color: #003087;
+    font-size: 14px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.form-header {
+    margin-bottom: 20px;
+}
+
+.form-header h4 {
+    color: #003087;
+    font-size: 18px;
+}
+
+.form-header p {
+    color: #555;
+    font-size: 14px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    color: #003087;
+    font-size: 14px;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-group input, .form-group select {
     width: 100%;
-    padding: 8px;
-    margin-bottom: 8px;
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus, .form-group select:focus {
+    border-color: #003087;
+    outline: none;
+}
+
+.form-group input:invalid:not(:placeholder-shown) {
+    border-color: #ff5555;
 }
 
 .section-content button {
     background: #003087;
     color: #F5C518;
     border: none;
-    padding: 8px;
+    padding: 10px;
     width: 100%;
     border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
+    transition: background 0.3s;
+}
+
+.section-content button:hover {
+    background: #005670;
 }
 
 .section-content .result {
@@ -489,11 +566,6 @@ header .language-toggle {
 
 .contract-display {
     display: none;
-    background: #fff;
-    padding: 20px;
-    margin: 20px auto;
-    max-width: 600px;
-    border-radius: 8px;
     text-align: left;
 }
 
@@ -504,6 +576,7 @@ header .language-toggle {
 .contract-display h3 {
     font-size: 18px;
     margin-bottom: 15px;
+    color: #003087;
 }
 
 .contract-display p {
@@ -515,6 +588,7 @@ header .language-toggle {
     width: 100%;
     max-width: 250px;
     border-radius: 8px;
+    margin-top: 10px;
 }
 
 .support-buttons {
@@ -552,6 +626,12 @@ header .language-toggle {
     justify-content: center;
     align-items: center;
     z-index: 200;
+    transition: opacity 0.3s ease;
+}
+
+.modal.active {
+    display: flex;
+    opacity: 1;
 }
 
 .modal-content {
@@ -561,6 +641,12 @@ header .language-toggle {
     width: 90%;
     max-width: 400px;
     text-align: center;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 .modal-content h2 {
@@ -582,18 +668,6 @@ header .language-toggle {
 
 .modal-content p strong {
     color: #003087;
-}
-
-.modal-content input[type="file"] {
-    margin: 8px 0;
-    width: 100%;
-}
-
-.modal-content .no-card {
-    color: #003087;
-    font-size: 12px;
-    cursor: pointer;
-    text-decoration: underline;
 }
 
 .modal-content button {
@@ -619,11 +693,8 @@ header .language-toggle {
     margin: 10px auto;
 }
 
-.modal-content .action-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
+.modal-content .loader.active {
+    display: block;
 }
 
 .modal-content .profile-code {
@@ -635,14 +706,6 @@ header .language-toggle {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-}
-
-.auth-modal input {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
 }
 
 .photo-guidance {
@@ -670,33 +733,15 @@ footer .social-links img {
     margin: 0 10px;
 }
 
-footer .pwm-branches {
-    margin-top: 10px;
-}
-
-footer .pwm-branches h4 {
-    font-size: 14px;
-    margin-bottom: 10px;
-}
-
-footer .pwm-branches ul {
-    list-style: none;
-    padding: 0;
-}
-
-footer .pwm-branches li {
-    font-size: 12px;
-    margin: 5px 0;
-}
-
-.dark-mode-toggle {
+footer button {
     background: #F5C518;
     color: #003087;
     border: none;
-    padding: 5px 10px;
+    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
+    margin: 10px 0;
 }
 
 .back-to-top {
@@ -756,33 +801,6 @@ footer .pwm-branches li {
     color: white;
 }
 
-.tooltip {
-    position: relative;
-    display: inline-block;
-}
-
-.tooltip .tooltiptext {
-    visibility: hidden;
-    width: 120px;
-    background-color: #555;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
-    position: absolute;
-    z-index: 1;
-    bottom: 125%;
-    left: 50%;
-    margin-left: -60px;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.tooltip:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
-}
-
 #loan-chart {
     margin-top: 20px;
 }
@@ -833,10 +851,6 @@ footer .pwm-branches li {
     .banner p {
         font-size: 16px;
     }
-    .banner button {
-        padding: 10px 20px;
-        font-size: 16px;
-    }
     .banner img {
         max-width: 40%;
     }
@@ -859,48 +873,4 @@ footer .pwm-branches li {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        background: #003087ee;
-    }
-    header nav a {
-        font-size: 14px;
-        padding: 12px 0;
-        text-align: center;
-    }
-    .banner {
-        flex-direction: column;
-        padding: 15px;
-    }
-    .banner h1 {
-        font-size: 22px;
-    }
-    .banner p {
-        font-size: 13px;
-    }
-    .banner button {
-        width: 100%;
-        padding: 8px;
-        font-size: 13px;
-    }
-    .banner img {
-        max-width: 250px;
-        margin: 10px auto;
-    }
-    .category-card img {
-        max-width: 150px;
-    }
-    .collapsible-section h2 {
-        font-size: 16px;
-    }
-    .section-details img {
-        max-width: 150px;
-    }
-}
-
-@media (max-width: 320px) {
-    .banner img {
-        max-width: 200px;
-    }
-    .category-card img {
-        max-width: 120px;
-    }
-}
+       

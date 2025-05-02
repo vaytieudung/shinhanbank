@@ -1,190 +1,293 @@
-
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tính Khoản Vay Shinhan Bank</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Tính khoản vay - Ngân hàng Shinhan</title>
+    <meta property="og:url" content="https://shinhan.com.vn/vi/loan_calculator.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Tính khoản vay - Shinhan Bank" />
+    <meta property="og:description" content="Công cụ tính toán khoản vay trực tuyến - Ngân hàng Shinhan" />
+    <meta property="og:image" content="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" />
+    <link rel="icon" href="https://shinhan.com.vn/public/themes/shinhan/img/favicon2023.ico">
+    <link rel="stylesheet" type="text/css" href="https://shinhan.com.vn/public/themes/shinhan/css/stylelibs.min.css?v=1" />
+    <link rel="stylesheet" type="text/css" href="https://shinhan.com.vn/public/themes/shinhan/scss/style.min.css?v=0823" />
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 20px auto;
-            background-color: #f5f8fa;
-        }
-        h2 {
-            color: #004b8d; /* Màu xanh Shinhan */
-            text-align: center;
-        }
-        #loanForm {
-            background-color: #e6f0fa; /* Nền xanh nhạt Shinhan */
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        label {
-            display: block;
-            margin: 10px 0 5px;
-            color: #004b8d;
-        }
-        input, select {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #f28c38; /* Màu cam */
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #d97a30;
-        }
-        #result {
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background-color: white;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: right;
-        }
-        th {
-            background-color: #004b8d;
-            color: white;
-        }
-        td {
-            background-color: #f9f9f9;
-        }
-        .suggestion {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #e6f0fa;
-            border-radius: 4px;
-        }
-        .suggestion h4 {
-            color: #004b8d;
-            margin-bottom: 10px;
-        }
-        .suggestion ul {
-            margin: 0;
-            padding-left: 20px;
-        }
+        /* CSS từ index (13).html liên quan đến tính khoản vay */
+        body { font-family: 'Arial', sans-serif; background-color: #f5f8fa; color: #333; line-height: 1.6; }
+        .container { max-width: 600px; margin: 0 auto; text-align: center; }
+        h1 { color: #004b8d; font-size: 2rem; margin-bottom: 20px; text-transform: uppercase; }
+        h3 { color: #004b8d; font-size: 1.4rem; margin: 15px 0 10px; text-align: left; }
+        button { padding: 12px 24px; background-color: #f28c38; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: background-color 0.3s ease, transform 0.2s ease; }
+        button:hover { background-color: #d97a30; transform: scale(1.05); }
+        #loanForm, #result { background-color: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); margin-bottom: 20px; border: 1px solid #e6f0fa; }
+        label { display: block; margin: 8px 0 5px; color: #333; font-weight: 600; font-size: 14px; position: relative; }
+        input, select { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); justify-content: center; align-items: center; z-index: 1000; }
+        .modal.active { display: flex !important; }
+        .modal-content { background-color: white; padding: 15px; border-radius: 12px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
+        .close-btn { float: right; font-size: 20px; cursor: pointer; color: #004b8d; }
+        .form-actions { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
+        .error { color: #d32f2f; font-size: 14px; text-align: left; margin-top: -10px; margin-bottom: 10px; }
+        .error-summary { color: #d32f2f; font-size: 14px; text-align: center; margin-bottom: 15px; }
+        .suggestion { margin-top: 20px; padding: 15px; background-color: #e6f0fa; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        .pagination { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
+        .pagination button { padding: 8px 12px; font-size: 14px; }
+        .loading-indicator { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.7); color: white; padding: 15px; border-radius: 8px; z-index: 2000; }
+        @media (max-width: 768px) { h3 { font-size: 1.4rem; } table { font-size: 12px; overflow-x: auto; display: block; } .modal-content { width: 95%; padding: 10px; } }
     </style>
 </head>
 <body>
-    <h2>Tính Khoản Vay Shinhan Bank</h2>
-    <form id="loanForm">
-        <label for="loanType">Loại khoản vay:</label>
-        <select id="loanType" onchange="updateInterestRate()">
-            <option value="tinchap">Vay tín chấp</option>
-            <option value="digital_tinchap">Vay tín chấp số</option>
-            <option value="thechap_nha">Vay thế chấp mua nhà</option>
-            <option value="thechap_xe">Vay thế chấp mua xe</option>
-            <option value="thechap_xe_cu">Vay thế chấp xe đã qua sử dụng</option>
-            <option value="tai_nha">Vay tái tài trợ nhà</option>
-            <option value="dam_bao">Vay đảm bảo bán lẻ (SGI)</option>
-        </select>
-
-        <label for="amount">Số tiền vay (VND):</label>
-        <input type="number" id="amount" min="1000000" required>
-
-        <label for="term">Thời hạn vay (tháng):</label>
-        <input type="number" id="term" min="12" max="240" required>
-
-        <label for="interest">Lãi suất (%/năm):</label>
-        <input type="number" id="interest" step="0.1" value="12.5" readonly>
-
-        <button type="button" onclick="calculateLoan()">Tính toán</button>
-    </form>
-
-    <div id="result"></div>
-
+    <div class="loading-indicator" id="loadingIndicator">Đang xử lý...</div>
+    <div class="modal active" id="loanCalcModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeLoanCalcModal()">&times;</span>
+            <h1>TÍNH KHOẢN VAY</h1>
+            <div class="container">
+                <form id="loanForm">
+                    <label for="loanType">Loại khoản vay <span class="tooltip">ⓘ<span class="tooltip-text">Chọn loại khoản vay phù hợp với nhu cầu của bạn.</span></span></label>
+                    <select id="loanType" onchange="updateInterestRate()">
+                        <option value="">Chọn loại khoản vay</option>
+                        <option value="tinchap">Vay tín chấp</option>
+                        <option value="digital_tinchap">Vay tín chấp số</option>
+                        <option value="thechap_nha">Vay thế chấp mua nhà</option>
+                        <option value="thechap_xe">Vay thế chấp mua xe</option>
+                        <option value="thechap_xe_cu">Vay thế chấp mua xe đã qua sử dụng</option>
+                        <option value="tai_nha">Vay tái tài trợ nhà</option>
+                        <option value="dam_bao">Vay đảm bảo bán lẻ (SGI)</option>
+                    </select>
+                    <div class="error" id="loanTypeError"></div>
+                    <label for="amount">Số tiền vay (VND)</label>
+                    <input type="text" id="amount" oninput="formatNumber(this); validateAmount(this)" placeholder="Nhập số tiền vay">
+                    <div class="error" id="amountError"></div>
+                    <label for="term">Thời hạn vay (tháng)</label>
+                    <select id="term">
+                        <option value="">Chọn thời hạn</option>
+                        <option value="12">12 tháng</option>
+                        <option value="24">24 tháng</option>
+                        <option value="36">36 tháng</option>
+                        <option value="48">48 tháng</option>
+                        <option value="60">60 tháng</option>
+                        <option value="72">72 tháng</option>
+                        <option value="84">84 tháng</option>
+                        <option value="96">96 tháng</option>
+                    </select>
+                    <div class="error" id="termError"></div>
+                    <label for="interest">Lãi suất (%/năm)</label>
+                    <input type="number" id="interest" step="0.1" readonly>
+                    <div class="error" id="interestError"></div>
+                    <div class="error-summary" id="loanCalcErrorSummary"></div>
+                    <div class="form-actions">
+                        <button type="button" onclick="calculateLoan()">Tính toán</button>
+                    </div>
+                </form>
+                <div id="result"></div>
+            </div>
+        </div>
+    </div>
     <script>
-        function updateInterestRate() {
-            const loanType = document.getElementById('loanType').value;
-            const interestInput = document.getElementById('interest');
-            if (loanType === 'tinchap') {
-                interestInput.value = 12.5; // Vay tín chấp
-            } else if (loanType === 'digital_tinchap') {
-                interestInput.value = 7.4; // Vay tín chấp số
-            } else if (loanType === 'thechap_nha') {
-                interestInput.value = 7.5; // Vay mua nhà
-            } else if (loanType === 'thechap_xe') {
-                interestInput.value = 7.8; // Vay mua xe
-            } else if (loanType === 'thechap_xe_cu') {
-                interestInput.value = 8.5; // Vay xe đã qua sử dụng
-            } else if (loanType === 'tai_nha') {
-                interestInput.value = 7.5; // Vay tái tài trợ nhà
-            } else if (loanType === 'dam_bao') {
-                interestInput.value = 7.0; // Vay đảm bảo bán lẻ
+        // Rate-limiting giả lập
+        const rateLimit = {
+            attempts: 0,
+            lastAttempt: 0,
+            check() {
+                const now = Date.now();
+                if (now - this.lastAttempt > 60000) {
+                    this.attempts = 0;
+                    this.lastAttempt = now;
+                }
+                if (this.attempts >= 5) {
+                    alert('Quá nhiều yêu cầu. Vui lòng thử lại sau 1 phút.');
+                    return false;
+                }
+                this.attempts++;
+                this.lastAttempt = now;
+                return true;
+            }
+        };
+
+        function formatNumber(input) {
+            let value = input.value.replace(/[^0-9]/g, '');
+            let numericValue = parseInt(value, 10);
+            if (!isNaN(numericValue)) {
+                input.value = numericValue.toLocaleString('vi-VN');
+            } else {
+                input.value = '';
             }
         }
 
-        function getSuggestions(amount, term) {
+        function unformatNumber(value) {
+            let numericValue = parseInt(value.replace(/[^0-9]/g, ''), 10);
+            return isNaN(numericValue) ? 0 : numericValue;
+        }
+
+        function validateAmount(input) {
+            let value = unformatNumber(input.value);
+            const loanType = document.getElementById('loanType').value;
+            const limits = {
+                tinchap: 900000000,
+                digital_tinchap: 100000000,
+                thechap_nha: 5000000000,
+                thechap_xe: 2000000000,
+                thechap_xe_cu: 2000000000,
+                tai_nha: 5000000000,
+                dam_bao: 1000000000
+            };
+            if (value < 10000000) {
+                document.getElementById(input.id + 'Error').innerText = 'Số tiền vay tối thiểu 10 triệu VND.';
+            } else if (loanType && value > limits[loanType]) {
+                document.getElementById(input.id + 'Error').innerText = `Số tiền tối đa cho ${loanType} là ${limits[loanType].toLocaleString('vi-VN')} VND.`;
+            } else {
+                document.getElementById(input.id + 'Error').innerText = '';
+            }
+        }
+
+        function updateInterestRate() {
+            const loanType = document.getElementById('loanType').value;
+            const interestInput = document.getElementById('interest');
+            const rates = {
+                tinchap: 11,
+                digital_tinchap: 7.4,
+                thechap_nha: 5.5,
+                thechap_xe: 7.8,
+                thechap_xe_cu: 8.5,
+                tai_nha: 6,
+                dam_bao: 7.0
+            };
+            if (loanType && rates[loanType]) {
+                interestInput.value = rates[loanType];
+            }
+        }
+
+        function getSuggestions(amount, term, income) {
             let suggestions = '<div class="suggestion"><h4>Đề xuất khoản vay:</h4><ul>';
-            if (amount <= 100000000 && term <= 36) {
-                suggestions += '<li><strong>Vay tín chấp số</strong>: Phù hợp với khoản vay nhỏ (tối đa 100 triệu VND). Lãi suất 7.4%/năm, phê duyệt nhanh trong 5 phút, miễn phí đăng ký.</li>';
+            if (amount <= 100000000 && term <= 36 && income >= 4000000) {
+                suggestions += '<li><strong>Vay tín chấp số</strong>: Phù hợp khoản vay nhỏ (tối đa 100 triệu). Lãi suất 7.4%/năm, phê duyệt nhanh.</li>';
             }
-            if (amount <= 900000000 && term <= 60) {
-                suggestions += '<li><strong>Vay tín chấp</strong>: Phù hợp với nhu cầu tiêu dùng cá nhân (tối đa 900 triệu VND). Lãi suất từ 12.5%/năm, không cần tài sản đảm bảo.</li>';
+            if (amount <= 900000000 && term <= 60 && income >= 6000000) {
+                suggestions += '<li><strong>Vay tín chấp</strong>: Phù hợp tiêu dùng cá nhân (tối đa 900 triệu). Lãi suất từ 11%/năm.</li>';
             }
-            if (amount > 500000000 && term > 60) {
-                suggestions += '<li><strong>Vay thế chấp mua nhà</strong>: Phù hợp với khoản vay lớn (tối đa 80% giá trị nhà). Lãi suất từ 7.5%/năm, kỳ hạn đến 20 năm. Miễn phí thẩm định cho khoản vay trên 2 tỷ VND.</li>';
-                suggestions += '<li><strong>Vay tái tài trợ nhà</strong>: Phù hợp để tái cấu trúc khoản vay nhà (lãi suất từ 7.5%/năm). Kỳ hạn đến 20 năm.</li>';
+            if (amount > 500000000 && term > 60 && income >= 15000000) {
+                suggestions += '<li><strong>Vay thế chấp mua nhà</strong>: Phù hợp khoản vay lớn (tối đa 80% giá trị nhà). Lãi suất từ 5.5%/năm.</li>';
+                suggestions += '<li><strong>Vay tái tài trợ nhà</strong>: Tái cấu trúc khoản vay nhà (lãi suất từ 6%/năm).</li>';
             }
-            if (amount <= 2000000000 && term <= 96) {
-                suggestions += '<li><strong>Vay thế chấp mua xe</strong>: Phù hợp mua xe mới (tối đa 80% giá trị xe). Lãi suất từ 7.8%/năm, kỳ hạn đến 8 năm. Giảm 0.1% cho xe hybrid/điện, 0.3% cho xe THACO AUTO.</li>';
-                suggestions += '<li><strong>Vay thế chấp xe đã qua sử dụng</strong>: Phù hợp mua xe cũ (lãi suất từ 8.5%/năm). Kỳ hạn đến 6 năm.</li>';
+            if (amount <= 2000000000 && term <= 96 && income >= 10000000) {
+                suggestions += '<li><strong>Vay thế chấp mua xe</strong>: Phù hợp mua xe mới (tối đa 80% giá trị xe). Lãi suất từ 7.8%/năm.</li>';
+                suggestions += '<li><strong>Vay thế chấp xe đã qua sử dụng</strong>: Phù hợp mua xe cũ (lãi suất từ 8.5%/năm).</li>';
             }
-            suggestions += '<li><strong>Vay đảm bảo bán lẻ (SGI)</strong>: Phù hợp với nhu cầu linh hoạt, có tài sản đảm bảo. Lãi suất từ 7.0%/năm, kỳ hạn tùy chỉnh.</li>';
+            suggestions += '<li><strong>Vay đảm bảo bán lẻ (SGI)</strong>: Linh hoạt, lãi suất từ 7.0%/năm.</li>';
             suggestions += '</ul></div>';
             return suggestions;
         }
 
         function calculateLoan() {
-            const amount = Math.round(parseFloat(document.getElementById('amount').value));
-            const term = parseInt(document.getElementById('term').value);
-            const interestRate = parseFloat(document.getElementById('interest').value) / 100 / 12;
+            if (!rateLimit.check()) return;
+            document.getElementById('loadingIndicator').style.display = 'block';
+            setTimeout(() => {
+                const loanType = document.getElementById('loanType').value;
+                const amount = unformatNumber(document.getElementById('amount').value);
+                const term = parseInt(document.getElementById('term').value);
+                const interestRate = parseFloat(document.getElementById('interest').value) / 100 / 12;
+                const income = 4000000; // Giả lập thu nhập mặc định
+                const limits = {
+                    tinchap: 900000000,
+                    digital_tinchap: 100000000,
+                    thechap_nha: 500客様
 
-            // Tính toán theo dư nợ giảm dần
-            let remainingBalance = amount;
-            let monthlyPrincipal = Math.round(amount / term);
-            let totalInterest = 0;
-            let resultText = '<h3>Kết quả tính toán:</h3>';
-            resultText += '<table><tr><th>Tháng</th><th>Gốc (VND)</th><th>Lãi (VND)</th><th>Tổng (VND)</th></tr>';
+0000000,
+                    thechap_xe: 2000000000,
+                    thechap_xe_cu: 2000000000,
+                    tai_nha: 5000000000,
+                    dam_bao: 1000000000
+                };
 
-            for (let i = 1; i <= term; i++) {
-                const interest = Math.round(remainingBalance * interestRate);
-                totalInterest += interest;
-                remainingBalance -= monthlyPrincipal;
+                let errors = {};
+                if (!loanType) errors.loanType = 'Vui lòng chọn loại khoản vay.';
+                if (isNaN(amount) || amount < 10000000) errors.amount = 'Số tiền vay tối thiểu 10 triệu VND.';
+                else if (loanType && amount > limits[loanType]) errors.amount = `Số tiền tối đa cho ${loanType} là ${limits[loanType].toLocaleString('vi-VN')} VND.`;
+                if (isNaN(term)) errors.term = 'Vui lòng chọn thời hạn vay.';
+                if (isNaN(interestRate) || interestRate <= 0) errors.interest = 'Lãi suất phải lớn hơn 0%.';
+
+                Object.keys(errors).forEach(key => document.getElementById(`${key}Error`).innerText = errors[key]);
+                if (Object.keys(errors).length > 0) {
+                    document.getElementById('loanCalcErrorSummary').innerText = 'Vui lòng kiểm tra và điền đầy đủ thông tin.';
+                    document.getElementById('loadingIndicator').style.display = 'none';
+                    return;
+                } else {
+                    document.getElementById('loanCalcErrorSummary').innerText = '';
+                }
+
+                let remainingBalance = amount;
+                let monthlyPrincipal = Math.round(amount / term);
+                let totalInterest = 0;
+                let resultText = '<h3>Kết quả tính toán:</h3>';
+                resultText += '<table id="resultTable"><tr><th>Tháng</th><th>Gốc (VND)</th><th>Lãi (VND)</th><th>Tổng (VND)</th></tr>';
+
+                const rows = [];
+                for (let i = 1; i <= term; i++) {
+                    const interest = Math.round(remainingBalance * interestRate);
+                    totalInterest += interest;
+                    remainingBalance -= monthlyPrincipal;
+                    const totalPayment = monthlyPrincipal + interest;
+                    rows.push(`<tr><td>${i}</td><td>${monthlyPrincipal.toLocaleString('vi-VN')}</td><td>${interest.toLocaleString('vi-VN')}</td><td>${totalPayment.toLocaleString('vi-VN')}</td></tr>`);
+                }
+
+                const rowsPerPage = 10;
+                const pages = Math.ceil(rows.length / rowsPerPage);
+                resultText += rows.slice(0, rowsPerPage).join('');
+                resultText += '</table>';
+                if (pages > 1) {
+                    resultText += '<div class="pagination">';
+                    for (let i = 1; i <= pages; i++) {
+                        resultText += `<button onclick="showPage(${i}, ${rowsPerPage})">${i}</button>`;
+                    }
+                    resultText += '</div>';
+                }
+                resultText += `<p><strong>Số tiền vay:</strong> ${amount.toLocaleString('vi-VN')} VND</p>`;
+                resultText += `<p><strong>Tổng lãi phải trả:</strong> ${totalInterest.toLocaleString('vi-VN')} VND</p>`;
+                resultText += `<p><strong>Tổng gốc + lãi:</strong> ${(amount + totalInterest).toLocaleString('vi-VN')} VND</p>`;
+                resultText += getSuggestions(amount, term, income);
+                document.getElementById('result').innerHTML = resultText;
+                document.getElementById('loadingIndicator').style.display = 'none';
+            }, 500);
+        }
+
+        function showPage(page, rowsPerPage) {
+            const rows = [];
+            for (let i = 1; i <= parseInt(document.getElementById('term').value); i++) {
+                const monthlyPrincipal = Math.round(unformatNumber(document.getElementById('amount').value) / parseInt(document.getElementById('term').value));
+                const interest = Math.round((unformatNumber(document.getElementById('amount').value) - monthlyPrincipal * (i - 1)) * (parseFloat(document.getElementById('interest').value) / 100 / 12));
                 const totalPayment = monthlyPrincipal + interest;
-                resultText += `<tr><td>${i}</td><td>${monthlyPrincipal.toLocaleString('vi-VN')}</td><td>${interest.toLocaleString('vi-VN')}</td><td>${totalPayment.toLocaleString('vi-VN')}</td></tr>`;
+                rows.push(`<tr><td>${i}</td><td>${monthlyPrincipal.toLocaleString('vi-VN')}</td><td>${interest.toLocaleString('vi-VN')}</td><td>${totalPayment.toLocaleString('vi-VN')}</td></tr>`);
             }
+            const start = (page - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            document.getElementById('resultTable').innerHTML = '<tr><th>Tháng</th><th>Gốc (VND)</th><th>Lãi (VND)</th><th>Tổng (VND)</th></tr>' + rows.slice(start, end).join('');
+        }
 
-            resultText += '</table>';
-            resultText += `<p><strong>Số tiền vay:</strong> ${amount.toLocaleString('vi-VN')} VND</p>`;
-            resultText += `<p><strong>Tổng lãi phải trả:</strong> ${totalInterest.toLocaleString('vi-VN')} VND</p>`;
-            resultText += `<p><strong>Tổng gốc + lãi:</strong> ${(amount + totalInterest).toLocaleString('vi-VN')} VND</p>`;
-            resultText += getSuggestions(amount, term); // Thêm đề xuất
-            document.getElementById('result').innerHTML = resultText;
+        function openLoanCalcModal() {
+            document.getElementById('loanCalcModal').style.display = 'flex';
+            document.getElementById('loanCalcModal').classList.add('active');
+        }
+
+        function closeLoanCalcModal() {
+            document.getElementById('loanCalcModal').style.display = 'none';
+            document.getElementById('loanCalcModal').classList.remove('active');
+            document.getElementById('loanForm').reset();
+            document.getElementById('result').innerHTML = '';
+            clearErrors();
+        }
+
+        function clearErrors() {
+            const errorIds = ['loanTypeError', 'amountError', 'termError', 'interestError'];
+            errorIds.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.innerText = '';
+            });
+            document.getElementById('loanCalcErrorSummary').innerText = '';
         }
     </script>
 </body>

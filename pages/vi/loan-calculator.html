@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tính Khoản Vay Shinhan Bank</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #f5f8fa;
+        }
+        h2 {
+            color: #004b8d; /* Màu xanh Shinhan */
+            text-align: center;
+        }
+        #loanForm {
+            background-color: #e6f0fa; /* Nền xanh nhạt Shinhan */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #004b8d;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #f28c38; /* Màu cam */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #d97a30;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: right;
+        }
+        th {
+            background-color: #004b8d;
+            color: white;
+        }
+        td {
+            background-color: #f9f9f9;
+        }
+        .suggestion {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e6f0fa;
+            border-radius: 4px;
+        }
+        .suggestion h4 {
+            color: #004b8d;
+            margin-bottom: 10px;
+        }
+        .suggestion ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Tính Khoản Vay Shinhan Bank</h2>
+    <form id="loanForm">
+        <label for="loanType">Loại khoản vay:</label>
+        <select id="loanType" onchange="updateInterestRate()">
+            <option value="tinchap">Vay tín chấp</option>
+            <option value="digital_tinchap">Vay tín chấp số</option>
+            <option value="thechap_nha">Vay thế chấp mua nhà</option>
+            <option value="thechap_xe">Vay thế chấp mua xe</option>
+            <option value="thechap_xe_cu">Vay thế chấp xe đã qua sử dụng</option>
+            <option value="tai_nha">Vay tái tài trợ nhà</option>
+            <option value="dam_bao">Vay đảm bảo bán lẻ (SGI)</option>
+        </select>
+
+        <label for="amount">Số tiền vay (VND):</label>
+        <input type="number" id="amount" min="1000000" required>
+
+        <label for="term">Thời hạn vay (tháng):</label>
+        <input type="number" id="term" min="12" max="240" required>
+
+        <label for="interest">Lãi suất (%/năm):</label>
+        <input type="number" id="interest" step="0.1" value="12.5" readonly>
+
+        <button type="button" onclick="calculateLoan()">Tính toán</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        function updateInterestRate() {
+            const loanType = document.getElementById('loanType').value;
+            const interestInput = document.getElementById('interest');
+            if (loanType === 'tinchap') {
+                interestInput.value = 12.5; // Vay tín chấp
+            } else if (loanType === 'digital_tinchap') {
+                interestInput.value = 7.4; // Vay tín chấp số
+            } else if (loanType === 'thechap_nha') {
+                interestInput.value = 7.5; // Vay mua nhà
+            } else if (loanType === 'thechap_xe') {
+                interestInput.value = 7.8; // Vay mua xe
+            } else if (loanType === 'thechap_xe_cu') {
+                interestInput.value = 8.5; // Vay xe đã qua sử dụng
+            } else if (loanType === 'tai_nha') {
+                interestInput.value = 7.5; // Vay tái tài trợ nhà
+            } else if (loanType === 'dam_bao') {
+                interestInput.value = 7.0; // Vay đảm bảo bán lẻ
+            }
+        }
+
+        function getSuggestions(amount, term) {
+            let suggestions = '<div class="suggestion"><h4>Đề xuất khoản vay:</h4><ul>';
+            if (amount <= 100000000 && term <= 36) {
+                suggestions += '<li><strong>Vay tín chấp số</strong>: Phù hợp với khoản vay nhỏ (tối đa 100 triệu VND). Lãi suất 7.4%/năm, phê duyệt nhanh trong 5 phút, miễn phí đăng ký.</li>';
+            }
+            if (amount <= 900000000 && term <= 60) {
+                suggestions += '<li><strong>Vay tín chấp</strong>: Phù hợp với nhu cầu tiêu dùng cá nhân (tối đa 900 triệu VND). Lãi suất từ 12.5%/năm, không cần tài sản đảm bảo.</li>';
+            }
+            if (amount > 500000000 && term > 60) {
+                suggestions += '<li><strong>Vay thế chấp mua nhà</strong>: Phù hợp với khoản vay lớn (tối đa 80% giá trị nhà). Lãi suất từ 7.5%/năm, kỳ hạn đến 20 năm. Miễn phí thẩm định cho khoản vay trên 2 tỷ VND.</li>';
+                suggestions += '<li><strong>Vay tái tài trợ nhà</strong>: Phù hợp để tái cấu trúc khoản vay nhà (lãi suất từ 7.5%/năm). Kỳ hạn đến 20 năm.</li>';
+            }
+            if (amount <= 2000000000 && term <= 96) {
+                suggestions += '<li><strong>Vay thế chấp mua xe</strong>: Phù hợp mua xe mới (tối đa 80% giá trị xe). Lãi suất từ 7.8%/năm, kỳ hạn đến 8 năm. Giảm 0.1% cho xe hybrid/điện, 0.3% cho xe THACO AUTO.</li>';
+                suggestions += '<li><strong>Vay thế chấp xe đã qua sử dụng</strong>: Phù hợp mua xe cũ (lãi suất từ 8.5%/năm). Kỳ hạn đến 6 năm.</li>';
+            }
+            suggestions += '<li><strong>Vay đảm bảo bán lẻ (SGI)</strong>: Phù hợp với nhu cầu linh hoạt, có tài sản đảm bảo. Lãi suất từ 7.0%/năm, kỳ hạn tùy chỉnh.</li>';
+            suggestions += '</ul></div>';
+            return suggestions;
+        }
+
+        function calculateLoan() {
+            const amount = Math.round(parseFloat(document.getElementById('amount').value));
+            const term = parseInt(document.getElementById('term').value);
+            const interestRate = parseFloat(document.getElementById('interest').value) / 100 / 12;
+
+            // Tính toán theo dư nợ giảm dần
+            let remainingBalance = amount;
+            let monthlyPrincipal = Math.round(amount / term);
+            let totalInterest = 0;
+            let resultText = '<h3>Kết quả tính toán:</h3>';
+            resultText += '<table><tr><th>Tháng</th><th>Gốc (VND)</th><th>Lãi (VND)</th><th>Tổng (VND)</th></tr>';
+
+            for (let i = 1; i <= term; i++) {
+                const interest = Math.round(remainingBalance * interestRate);
+                totalInterest += interest;
+                remainingBalance -= monthlyPrincipal;
+                const totalPayment = monthlyPrincipal + interest;
+                resultText += `<tr><td>${i}</td><td>${monthlyPrincipal.toLocaleString('vi-VN')}</td><td>${interest.toLocaleString('vi-VN')}</td><td>${totalPayment.toLocaleString('vi-VN')}</td></tr>`;
+            }
+
+            resultText += '</table>';
+            resultText += `<p><strong>Số tiền vay:</strong> ${amount.toLocaleString('vi-VN')} VND</p>`;
+            resultText += `<p><strong>Tổng lãi phải trả:</strong> ${totalInterest.toLocaleString('vi-VN')} VND</p>`;
+            resultText += `<p><strong>Tổng gốc + lãi:</strong> ${(amount + totalInterest).toLocaleString('vi-VN')} VND</p>`;
+            resultText += getSuggestions(amount, term); // Thêm đề xuất
+            document.getElementById('result').innerHTML = resultText;
+        }
+    </script>
+</body>
+</html>

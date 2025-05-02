@@ -1,0 +1,99 @@
+
+<!-- register-modal.html -->
+<div class="modal" id="registerModal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeRegisterModal()">×</span>
+        <h3>Đăng Ký Vay</h3>
+        <form id="registerForm">
+            <label for="branch">Chi nhánh:</label>
+            <select id="branch" required>
+                <option value="">Chọn chi nhánh</option>
+                <option value="HCM">TP. Hồ Chí Minh</option>
+                <option value="HN">Hà Nội</option>
+                <option value="DN">Đà Nẵng</option>
+            </select>
+            <span class="error" id="branchError"></span>
+            <label for="fullName">Họ và Tên:</label>
+            <input type="text" id="fullName" name="fullName" required>
+            <span class="error" id="fullNameError"></span>
+            <label>Giới tính:</label>
+            <div class="radio-group">
+                <label><input type="radio" name="gender" value="male"> Nam</label>
+                <label><input type="radio" name="gender" value="female"> Nữ</label>
+            </div>
+            <span class="error" id="genderError"></span>
+            <label for="birthDate">Ngày Sinh:</label>
+            <input type="date" id="birthDate" name="birthDate" required>
+            <span class="error" id="birthDateError"></span>
+            <label for="idNumber">Số CMND/CCCD:</label>
+            <input type="text" id="idNumber" name="idNumber" required>
+            <span class="error" id="idNumberError"></span>
+            <label for="phone">Số Điện Thoại:</label>
+            <input type="tel" id="phone" name="phone" required>
+            <span class="error" id="phoneError"></span>
+            <label for="hometown">Quê Quán:</label>
+            <input type="text" id="hometown" name="hometown" required>
+            <span class="error" id="hometownError"></span>
+            <label for="residence">Nơi Thường Trú:</label>
+            <input type="text" id="residence" name="residence" required>
+            <span class="error" id="residenceError"></span>
+            <label for="income">Thu Nhập Hàng Tháng (VND):</label>
+            <input type="number" id="income" name="income" required>
+            <span class="error" id="incomeError"></span>
+            <label for="job">Công Việc Hiện Tại:</label>
+            <input type="text" id="job" name="job" required>
+            <span class="error" id="jobError"></span>
+            <label for="relativePhone">Số Điện Thoại Người Thân:</label>
+            <input type="tel" id="relativePhone" name="relativePhone" required>
+            <span class="error" id="relativePhoneError"></span>
+            <label for="relativeName">Tên Người Thân:</label>
+            <input type="text" id="relativeName" name="relativeName" required>
+            <span class="error" id="relativeNameError"></span>
+            <label>Hình Thức Vay:</label>
+            <div class="radio-group">
+                <label><input type="radio" name="loanForm" value="online">Trực tuyến</label>
+                <label><input type="radio" name="loanForm" value="branch">Tại chi nhánh</label>
+            </div>
+            <span class="error" id="loanFormError"></span>
+            <label>Đối Tượng Khách Hàng:</label>
+            <div class="radio-group">
+                <label><input type="radio" name="customerType" value="new">Khách hàng mới</label>
+                <label><input type="radio" name="customerType" value="existing">Khách hàng hiện tại</label>
+            </div>
+            <span class="error" id="customerTypeError"></span>
+            <label for="registerLoanType">Loại Khoản Vay:</label>
+            <select id="registerLoanType" required>
+                <option value="">Chọn loại khoản vay</option>
+                <option value="tinchap">Vay tín chấp</option>
+                <option value="digital_tinchap">Vay tín chấp số</option>
+                <option value="thechap_nha">Vay thế chấp mua nhà</option>
+                <option value="thechap_xe">Vay thế chấp mua xe</option>
+                <option value="thechap_xe_cu">Vay thế chấp xe đã qua sử dụng</option>
+                <option value="tai_nha">Vay tái tài trợ nhà</option>
+                <option value="dam_bao">Vay đảm bảo bán lẻ (SGI)</option>
+            </select>
+            <span class="error" id="registerLoanTypeError"></span>
+            <label for="registerAmount">Số Tiền Vay (VND):</label>
+            <input type="text" id="registerAmount" name="registerAmount" oninput="formatNumber(this); validateAmount(this)" required>
+            <span class="error" id="registerAmountError"></span>
+            <label for="registerTerm">Thời Hạn Vay (Tháng):</label>
+            <select id="registerTerm" required>
+                <option value="">Chọn thời hạn</option>
+                <option value="12">12 tháng</option>
+                <option value="24">24 tháng</option>
+                <option value="36">36 tháng</option>
+                <option value="48">48 tháng</option>
+                <option value="60">60 tháng</option>
+                <option value="72">72 tháng</option>
+                <option value="84">84 tháng</option>
+                <option value="96">96 tháng</option>
+            </select>
+            <span class="error" id="registerTermError"></span>
+            <span class="error-summary" id="registerErrorSummary"></span>
+            <div class="form-actions">
+                <button type="button" onclick="saveDraft()">Lưu Bản Nháp</button>
+                <button type="button" onclick="nextToVerify()">Tiếp Theo</button>
+            </div>
+        </form>
+    </div>
+</div>

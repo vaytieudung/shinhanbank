@@ -169,31 +169,6 @@
             max-width: 300px;
         }
 
-        .initial-button {
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 500;
-            border: none;
-            background: linear-gradient(135deg, #F37021, #d94f00);
-            color: #fff;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-        }
-
-        .initial-button:hover {
-            background: #004080;
-            transform: scale(1.05);
-        }
-
-        .spinner {
-            margin-left: 8px;
-            display: none;
-        }
-
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -294,11 +269,6 @@
                 min-width: 50px;
                 border-radius: 8px;
             }
-
-            .initial-button {
-                font-size: 14px;
-                padding: 10px 20px;
-            }
         }
     </style>
 </head>
@@ -310,12 +280,6 @@
 
     <!-- Toast Notification -->
     <div class="toast" id="toast"></div>
-
-    <!-- Giao diện ban đầu -->
-    <a href="#" id="showFormButton" class="initial-button animate__animated animate__pulse animate__infinite" data-toggle="modal" data-target="#registerForm" aria-label="Mở biểu mẫu đăng ký vay tín chấp" title="Mở biểu mẫu để đăng ký vay tín chấp nhanh chóng" role="button" tabindex="0">
-        <span class="button-text">Đăng ký vay ngay</span>
-        <span class="spinner"><i class="fas fa-spinner fa-spin"></i></span>
-    </a>
 
     <!-- Register Modal -->
     <div id="registerForm" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="registerFormTitle" aria-hidden="true">
@@ -426,6 +390,7 @@
                                 <img id="signaturePreview" style="display: none;" alt="Chữ ký" />
                                 <button id="clearSignature" onclick="clearSignature()" style="display: none;" class="vib-v2-btn-dk02">Xóa chữ ký</button>
                             </div>
+                            <button onclick="downloadContract()" class="vib-v2-btn-dk02" style="margin-top: 16px;">Tải hợp đồng</button>
                             <div class="step-buttons">
                                 <button type="button" class="btn-step prev" onclick="prevStep(3)">Quay lại</button>
                                 <button type="button" class="btn-step next" onclick="nextStep(5)" id="contractNext" disabled>Tiếp theo</button>

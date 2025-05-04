@@ -11,12 +11,9 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous">
-    <!-- Tooltipster -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/4.2.8/css/tooltipster.bundle.min.css" integrity="sha512-2aS3jM0J7W2V7eM48Q2q2Z7H3Y+2u7nD8fQZwTKv3uOa7e3bY+0g3eT8Z/NN7Vv2q2XjH7oJ+1q2j9Z5b5f5f6g==" crossorigin="anonymous">
     <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" integrity="sha512-c42qTSw/wPZ3/5LBzD+Bw5f7bSF2oxou6wEb+I/lqeaKV5FDIfMvvRp772y4jcJLKuGUOpbJMdg/BTl50fJYAw==" crossorigin="anonymous">
     <style>
-        /* Form Styles from 111.txt */
         body {
             background: linear-gradient(135deg, #005BAC 0%, #004080 100%);
             color: #fff;
@@ -41,7 +38,6 @@
             color: #333;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             border: none;
-            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
         }
 
         .modal-body {
@@ -60,7 +56,6 @@
             font-size: 14px;
             border: 1px solid #e0e0e0;
             border-radius: 12px;
-            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
         .vib-v2-input01 input:focus, .vib-v2-input01 select:focus {
@@ -83,44 +78,6 @@
             display: none;
         }
 
-        .help-text {
-            font-size: 12px;
-            color: #005BAC;
-            margin-top: 4px;
-            display: none;
-        }
-
-        .photo-card {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-            background: #f9f9f9;
-            padding: 10px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .photo-preview {
-            max-width: 100px;
-            border-radius: 12px;
-            border: 1px solid #e0e0e0;
-        }
-
-        .delete-photo {
-            background: #e63946;
-            color: #fff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .delete-photo:hover {
-            background: #d00000;
-        }
-
         .step-buttons {
             display: flex;
             justify-content: center;
@@ -137,7 +94,6 @@
             font-weight: 500;
             border: none;
             cursor: pointer;
-            transition: transform 0.2s, background 0.3s, box-shadow 0.3s;
         }
 
         .btn-step.prev {
@@ -148,42 +104,19 @@
         .btn-step.next, .vib-v2-btn-dk02 {
             background: linear-gradient(135deg, #F37021, #d94f00);
             color: #fff;
-            box-shadow: 0 4px 8px rgba(243, 112, 33, 0.3);
         }
 
-        .btn-step:disabled {
+        .btn-step:disabled, .vib-v2-btn-dk02:disabled {
             background: #ccc;
             cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        .btn-step:hover:not(:disabled), .vib-v2-btn-dk02:hover {
-            background: #004080;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 64, 128, 0.3);
-        }
-
-        .btn-step:active, .vib-v2-btn-dk02:active {
-            animation: pulse 0.2s;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(0.95); }
-            100% { transform: scale(1); }
         }
 
         .step {
             display: none;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
         }
 
         .step.active {
             display: block;
-            opacity: 1;
-            transform: translateY(0);
         }
 
         .progress-bar {
@@ -193,22 +126,7 @@
             margin-bottom: 16px;
             overflow-x: auto;
             padding-bottom: 8px;
-            scrollbar-width: thin;
-            scrollbar-color: #005BAC #e0e0e0;
             position: relative;
-        }
-
-        .progress-bar::-webkit-scrollbar {
-            height: 6px;
-        }
-
-        .progress-bar::-webkit-scrollbar-track {
-            background: #e0e0e0;
-        }
-
-        .progress-bar::-webkit-scrollbar-thumb {
-            background: #005BAC;
-            border-radius: 6px;
         }
 
         .progress-step {
@@ -219,7 +137,6 @@
             border-radius: 12px;
             font-size: 12px;
             color: #333;
-            transition: background 0.3s, color 0.3s;
             min-width: 80px;
         }
 
@@ -235,50 +152,6 @@
             font-size: 14px;
             color: #005BAC;
             font-weight: bold;
-        }
-
-        .face-scan-container {
-            text-align: center;
-            background: #f9f9f9;
-            padding: 16px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .face-scan-circle {
-            border: 3px dashed #005BAC;
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
-            margin: 10px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            color: #666;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .face-scan-guide {
-            font-size: 14px;
-            color: #005BAC;
-            margin: 10px 0;
-        }
-
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #005BAC;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 16px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
 
         .toast {
@@ -305,7 +178,6 @@
             background: linear-gradient(135deg, #F37021, #d94f00);
             color: #fff;
             cursor: pointer;
-            transition: transform 0.2s, background 0.3s, box-shadow 0.3s;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -315,16 +187,6 @@
         .initial-button:hover {
             background: #004080;
             transform: scale(1.05);
-            box-shadow: 0 8px 16px rgba(0, 64, 128, 0.4);
-        }
-
-        .initial-button:focus {
-            outline: 3px solid #005BAC;
-            outline-offset: 2px;
-        }
-
-        .initial-button:active {
-            animation: pulse 0.2s;
         }
 
         .spinner {
@@ -345,7 +207,6 @@
             z-index: 2000;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
         }
 
         .loading-overlay.active {
@@ -379,70 +240,9 @@
             border-radius: 8px;
         }
 
-        .loan-chart-container {
-            margin: 16px 0;
-            padding: 16px;
-            background: #f4f4f4;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        .tooltipster-sidetip .tooltipster-box {
-            background: #005BAC;
-            color: #fff;
-            border-radius: 8px;
-        }
-
-        .tooltipster-sidetip .tooltipster-arrow-border {
-            border-top-color: #005BAC;
-        }
-
-        .help-button {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: #005BAC;
-            color: #fff;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .help-button:hover, .help-button:focus {
-            transform: scale(1.1);
-            outline: none;
-        }
-
-        .form-instructions {
-            background: #e9f7ff;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 12px;
-        }
-
-        .timeout-warning {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #ffcc00;
-            color: #333;
-            padding: 12px 24px;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            display: none;
-            z-index: 1000;
-            font-size: 14px;
-            max-width: 400px;
-            text-align: center;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         @media (max-width: 767px) {
@@ -472,7 +272,7 @@
                 margin-bottom: 4px;
             }
 
-            .error-message, .help-text {
+            .error-message {
                 font-size: 10px;
                 margin-top: 4px;
             }
@@ -488,29 +288,6 @@
                 border-radius: 8px;
             }
 
-            .photo-preview {
-                max-width: 60px;
-            }
-
-            .photo-card {
-                padding: 8px;
-                gap: 8px;
-            }
-
-            .face-scan-circle {
-                width: 80px;
-                height: 80px;
-            }
-
-            .face-scan-guide {
-                font-size: 12px;
-            }
-
-            .progress-bar {
-                gap: 4px;
-                padding-bottom: 4px;
-            }
-
             .progress-step {
                 font-size: 10px;
                 padding: 4px;
@@ -522,60 +299,6 @@
                 font-size: 14px;
                 padding: 10px 20px;
             }
-
-            .photo-guide img {
-                max-width: 100px;
-            }
-
-            .loan-chart-container {
-                padding: 8px;
-            }
-
-            #signatureCanvas {
-                width: 150px;
-                height: 80px;
-            }
-
-            #signaturePreview {
-                max-width: 150px;
-            }
-
-            .help-button {
-                width: 40px;
-                height: 40px;
-            }
-
-            .timeout-warning {
-                max-width: 90%;
-            }
-        }
-
-        @media (orientation: landscape) and (max-width: 1024px) {
-            .modal-dialog {
-                max-width: 80vw;
-            }
-
-            .modal-content {
-                padding: 12px;
-            }
-
-            .modal-body {
-                padding: 12px;
-            }
-
-            .face-scan-circle {
-                width: 100px;
-                height: 100px;
-            }
-
-            .photo-preview {
-                max-width: 60px;
-            }
-
-            .progress-bar {
-                flex-direction: row;
-                gap: 6px;
-            }
         }
     </style>
 </head>
@@ -585,20 +308,13 @@
         <div class="loading-spinner" aria-label="Đang tải"></div>
     </div>
 
-    <!-- Timeout Warning -->
-    <div class="timeout-warning" id="timeoutWarning" role="alert" aria-live="assertive">
-        Phiên làm việc sẽ hết hạn sau <span id="timeoutSeconds">60</span> giây. <button onclick="extendSession()" class="vib-v2-btn-dk02" style="margin-left: 10px;">Gia hạn</button>
-    </div>
-
-    <!-- Help Button -->
-    <div class="help-button" title="Hỗ trợ trực tuyến" onclick="openSupportChat()" role="button" aria-label="Mở hỗ trợ trực tuyến" tabindex="0">
-        <i class="fas fa-question-circle"></i>
-    </div>
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
 
     <!-- Giao diện ban đầu -->
-    <a href="#" id="showFormButton" class="initial-button tooltip animate__animated animate__pulse animate__infinite" data-toggle="modal" data-target="#registerForm" aria-label="Mở biểu mẫu đăng ký vay tín chấp" title="Mở biểu mẫu để đăng ký vay tín chấp nhanh chóng" role="button" tabindex="0">
+    <a href="#" id="showFormButton" class="initial-button animate__animated animate__pulse animate__infinite" data-toggle="modal" data-target="#registerForm" aria-label="Mở biểu mẫu đăng ký vay tín chấp" title="Mở biểu mẫu để đăng ký vay tín chấp nhanh chóng" role="button" tabindex="0">
         <span class="button-text">Đăng ký vay ngay</span>
-        <span class="spinner" style="display: none;"><i class="fas fa-spinner fa-spin"></i></span>
+        <span class="spinner"><i class="fas fa-spinner fa-spin"></i></span>
     </a>
 
     <!-- Register Modal -->
@@ -608,312 +324,118 @@
                 <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
                     <h5 class="modal-title" id="registerFormTitle" style="font-size: 18px; color: #005BAC;">Đăng ký vay tín chấp</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
-                        <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
                         <div class="progress-step active" data-step="1">Thông tin cá nhân</div>
                         <div class="progress-step" data-step="2">Chứng minh</div>
-                        <div class="progress-step" data-step="3">Chụp CCCD/ATM</div>
-                        <div class="progress-step" data-step="4">Xác minh khuôn mặt</div>
-                        <div class="progress-step" data-step="5">Thông tin vay</div>
+                        <div class="progress-step" data-step="3">Thông tin vay</div>
+                        <div class="progress-step" data-step="4">Hợp đồng</div>
+                        <div class="progress-step" data-step="5">Giải ngân</div>
                         <span class="progress-percentage" id="progressPercentage">20%</span>
                     </div>
-                    <form id="contact-form" enctype="multipart/form-data">
-                        <input type="hidden" name="_csrf" value="GENERATED_CSRF_TOKEN">
-                        <!-- Step 1 -->
+                    <form id="contact-form">
+                        <!-- Step 1: Personal Information -->
                         <div class="step active" id="step-1">
-                            <div class="form-instructions">
-                                <strong>Hướng dẫn:</strong> Vui lòng điền đầy đủ thông tin cá nhân chính xác để tiếp tục.
-                            </div>
                             <div class="vib-v2-input01">
                                 <label class="ph_input" for="fullName">Họ và tên (*)</label>
-                                <input type="text" id="fullName" name="fullName" required class="field_input tooltip" title="Họ tên từ 2-50 ký tự, không chứa số hoặc ký tự đặc biệt" aria-describedby="fullNameError" />
+                                <input type="text" id="fullName" name="fullName" required aria-describedby="fullNameError" />
                                 <div id="fullNameError" class="error-message"></div>
-                                <div id="fullNameHelp" class="help-text">Ví dụ: Nguyễn Văn An</div>
                             </div>
                             <div class="vib-v2-input01">
                                 <label class="ph_input" for="phone">Số điện thoại (*)</label>
-                                <input type="tel" id="phone" name="phone" required class="field_input tooltip" pattern="^(03|05|07|08|09|01[2|6|8|9])[0-9]{8}$" title="Số điện thoại 10 số, bắt đầu bằng 03, 05, 07, 08, 09, hoặc 01" aria-describedby="phoneError" />
+                                <input type="tel" id="phone" name="phone" required pattern="^(03|05|07|08|09|01[2|6|8|9])[0-9]{8}$" aria-describedby="phoneError" />
                                 <div id="phoneError" class="error-message"></div>
-                                <div id="phoneHelp" class="help-text">Ví dụ: 0901234567</div>
-                            </div>
-                            <div class="vib-v2-input01" id="otpContainer" style="display: none;">
-                                <label class="ph_input" for="otp">Mã OTP (*)</label>
-                                <input type="text" id="otp" name="otp" class="field_input tooltip" title="Nhập mã OTP 6 số được gửi đến điện thoại" aria-describedby="otpError" />
-                                <button type="button" class="btn btn-primary mt-2" onclick="sendOTP()">Gửi OTP</button>
-                                <div id="otpError" class="error-message"></div>
-                                <div id="otpHelp" class="help-text">Kiểm tra tin nhắn SMS để lấy mã OTP</div>
                             </div>
                             <div class="vib-v2-input01">
                                 <label class="ph_input" for="email">Email (*)</label>
-                                <input type="email" id="email" name="email" required class="field_input tooltip" title="Nhập email hợp lệ (VD: example@domain.com)" aria-describedby="emailError" />
+                                <input type="email" id="email" name="email" required aria-describedby="emailError" />
                                 <div id="emailError" class="error-message"></div>
-                                <div id="emailHelp" class="help-text">Ví dụ: example@gmail.com</div>
                             </div>
                             <div class="step-buttons">
                                 <button type="button" class="btn-step next" onclick="nextStep(2)">Tiếp theo</button>
                             </div>
                         </div>
-                        <!-- Step 2 -->
+                        <!-- Step 2: ID Details -->
                         <div class="step" id="step-2">
-                            <div class="form-instructions">
-                                <strong>Hướng dẫn:</strong> Cung cấp thông tin giấy tờ tùy thân chính xác để xác minh danh tính.
-                            </div>
                             <div class="vib-v2-input01">
                                 <label class="ph_input" for="idNumber">Số CCCD/CMND (*)</label>
-                                <input type="text" id="idNumber" name="idNumber" required class="field_input tooltip" pattern="^\d{9}$|^\d{12}$" title="CMND/CCCD phải là 9 hoặc 12 số" aria-describedby="idNumberError" />
+                                <input type="text" id="idNumber" name="idNumber" required pattern="^\d{9}$|^\d{12}$" aria-describedby="idNumberError" />
                                 <div id="idNumberError" class="error-message"></div>
-                                <div id="idNumberHelp" class="help-text">Ví dụ: 123456789 hoặc 123456789012</div>
                             </div>
                             <div class="vib-v2-input01">
                                 <label class="ph_input" for="idIssueDate">Ngày cấp (*)</label>
-                                <input type="date" id="idIssueDate" name="idIssueDate" required class="field_input tooltip" title="Chọn ngày cấp, không được trong tương lai" max="2025-05-03" aria-describedby="idIssueDateError" />
+                                <input type="date" id="idIssueDate" name="idIssueDate" required max="2025-05-03" aria-describedby="idIssueDateError" />
                                 <div id="idIssueDateError" class="error-message"></div>
-                                <div id="idIssueDateHelp" class="help-text">Chọn ngày cấp từ lịch</div>
                             </div>
                             <div class="vib-v2-input01">
                                 <label class="ph_input" for="idIssuePlace">Nơi cấp (*)</label>
-                                <input type="text" id="idIssuePlace" name="idIssuePlace" required class="field_input tooltip" title="Nhập nơi cấp (VD: Hà Nội)" aria-describedby="idIssuePlaceError" />
+                                <input type="text" id="idIssuePlace" name="idIssuePlace" required aria-describedby="idIssuePlaceError" />
                                 <div id="idIssuePlaceError" class="error-message"></div>
-                                <div id="idIssuePlaceHelp" class="help-text">Ví dụ: Cục Cảnh sát DKQL dân cư</div>
                             </div>
                             <div class="step-buttons">
                                 <button type="button" class="btn-step prev" onclick="prevStep(1)">Quay lại</button>
                                 <button type="button" class="btn-step next" onclick="nextStep(3)">Tiếp theo</button>
                             </div>
                         </div>
-                        <!-- Step 3 -->
+                        <!-- Step 3: Loan Details -->
                         <div class="step" id="step-3">
-                            <div class="form-instructions">
-                                <strong>Hướng dẫn:</strong> Tải lên ảnh CCCD/CMND và thẻ ATM rõ nét, không mất góc. Đảm bảo ảnh có kích thước dưới 5MB.
-                            </div>
                             <div class="vib-v2-input01">
-                                <label class="ph_input" for="idPhotoFront">Ảnh CCCD/CMND (Mặt trước) (*)</label>
-                                <input type="file" id="idPhotoFront" name="idPhotoFront" accept="image/jpeg,image/png" required class="field_input tooltip" title="Chụp rõ số CCCD, không mất góc hoặc mờ" onchange="previewImage(this, 'idPhotoFrontPreview', 'idPhotoFrontUploaded')" aria-describedby="idPhotoFrontError" />
-                                <div class="photo-card">
-                                    <img id="idPhotoFrontPreview" class="photo-preview" style="display: none;" alt="Ảnh mặt trước CCCD/CMND" />
-                                    <button class="delete-photo" onclick="deletePhoto('idPhotoFront')" style="display: none;">Xóa</button>
-                                </div>
-                                <div id="idPhotoFrontUploaded" class="photo-uploaded" style="display: none;"><i class="fas fa-check"></i> Đã tải lên</div>
-                                <div id="idPhotoFrontError" class="error-message"></div>
-                                <div id="idPhotoFrontHelp" class="help-text">Đảm bảo ảnh rõ nét, không che khuất thông tin</div>
-                            </div>
-                            <div class="vib-v2-input01">
-                                <label class="ph_input" for="idPhotoBack">Ảnh CCCD/CMND (Mặt sau) (*)</label>
-                                <input type="file" id="idPhotoBack" name="idPhotoBack" accept="image/jpeg,image/png" required class="field_input tooltip" title="Chụp rõ mặt sau, không mất góc hoặc mờ" onchange="previewImage(this, 'idPhotoBackPreview', 'idPhotoBackUploaded')" aria-describedby="idPhotoBackError" />
-                                <div class="photo-card">
-                                    <img id="idPhotoBackPreview" class="photo-preview" style="display: none;" alt="Ảnh mặt sau CCCD/CMND" />
-                                    <button class="delete-photo" onclick="deletePhoto('idPhotoBack')" style="display: none;">Xóa</button>
-                                </div>
-                                <div id="idPhotoBackUploaded" class="photo-uploaded" style="display: none;"><i class="fas fa-check"></i> Đã tải lên</div>
-                                <div id="idPhotoBackError" class="error-message"></div>
-                                <div id="idPhotoBackHelp" class="help-text">Đảm bảo ảnh rõ nét, không che khuất thông tin</div>
-                            </div>
-                            <div class="vib-v2-input01">
-                                <label class="ph_input" for="atmPhotoFront">Ảnh thẻ ATM (Mặt trước) (*)</label>
-                                <input type="file" id="atmPhotoFront" name="atmPhotoFront" accept="image/jpeg,image/png" required class="field_input tooltip" title="Chụp rõ số thẻ, tên, logo ngân hàng" onchange="previewImage(this, 'atmPhotoFrontPreview', 'atmPhotoFrontUploaded')" aria-describedby="atmPhotoFrontError" />
-                                <div class="photo-card">
-                                    <img id="atmPhotoFrontPreview" class="photo-preview" style="display: none;" alt="Ảnh mặt trước thẻ ATM" />
-                                    <button class="delete-photo" onclick="deletePhoto('atmPhotoFront')" style="display: none;">Xóa</button>
-                                </div>
-                                <div id="atmPhotoFrontUploaded" class="photo-uploaded" style="display: none;"><i class="fas fa-check"></i> Đã tải lên</div>
-                                <div id="atmPhotoFrontError" class="error-message"></div>
-                                <div id="atmPhotoFrontHelp" class="help-text">Ảnh chụp màn hình ứng dụng ngân hàng cũng được chấp nhận</div>
-                            </div>
-                            <div class="vib-v2-input01">
-                                <label class="ph_input" for="atmPhotoBack">Ảnh thẻ ATM (Mặt sau, nếu chụp vật lý)</label>
-                                <input type="file" id="atmPhotoBack" name="atmPhotoBack" accept="image/jpeg,image/png" class="field_input tooltip" title="Chụp rõ mã CVV, dải từ (nếu thẻ vật lý)" onchange="previewImage(this, 'atmPhotoBackPreview', 'atmPhotoBackUploaded')" aria-describedby="atmPhotoBackError" />
-                                <div class="photo-card">
-                                    <img id="atmPhotoBackPreview" class="photo-preview" style="display: none;" alt="Ảnh mặt sau thẻ ATM" />
-                                    <button class="delete-photo" onclick="deletePhoto('atmPhotoBack')" style="display: none;">Xóa</button>
-                                </div>
-                                <div id="atmPhotoBackUploaded" class="photo-uploaded" style="display: none;"><i class="fas fa-check"></i> Đã tải lên</div>
-                                <div id="atmPhotoBackError" class="error-message"></div>
-                                <div id="atmPhotoBackHelp" class="help-text">Không cần nếu là ảnh chụp màn hình ứng dụng</div>
-                            </div>
-                            <div class="photo-guide" style="text-align: center; margin-top: 12px; background: #f9f9f9; padding: 12px; border-radius: 12px;">
-                                <p style="font-size: 14px;">CCCD/CMND: Chụp rõ số, không mất góc/mờ. ATM: Chụp rõ số thẻ, tên, logo (mặt trước); mã CVV, dải từ (mặt sau nếu vật lý). Ảnh chụp màn hình app chỉ cần mặt trước.</p>
-                                <img src="https://via.placeholder.com/150?text=Mau+CCCD.webp" alt="Mẫu CCCD" style="max-width: 150px; margin: 8px;" loading="lazy" />
-                                <img src="https://via.placeholder.com/150?text=Mau+ATM+Mat+Truoc.webp" alt="Mẫu ATM mặt trước" style="max-width: 150px; margin: 8px;" loading="lazy" />
-                                <img src="https://via.placeholder.com/150?text=Mau+ATM+Mat+Sau.webp" alt="Mẫu ATM mặt sau" style="max-width: 150px; margin: 8px;" loading="lazy" />
-                                <a href="#" class="vib-v2-btn-dk02" style="display: inline-block; margin: 8px;">Xem video hướng dẫn</a>
-                                <button onclick="openCamera()" class="vib-v2-btn-dk02">Chụp ảnh</button>
-                                <a href="https://m.me/ShinhanBankVietnam" target="_blank" class="vib-v2-btn-dk02" style="display: inline-block; margin: 8px;">Liên hệ hỗ trợ</a>
-                            </div>
-                            <div class="step-buttons">
-                                <button type="button" class="btn-step prev" onclick="prevStep(2)">Quay lại</button>
-                                <button type="button" class="btn-step next" onclick="nextStep(4)">Tiếp theo</button>
-                            </div>
-                        </div>
-                        <!-- Step 4 -->
-                        <div class="step" id="step-4">
-                            <div class="form-instructions">
-                                <strong>Hướng dẫn:</strong> Đưa khuôn mặt vào khung tròn, làm theo hướng dẫn để xác minh danh tính (eKYC). Đảm bảo ánh sáng tốt, không đeo kính/mũ.
-                            </div>
-                            <div class="face-scan-container">
-                                <video id="faceVideo" autoplay style="border-radius: 12px; max-width: 100%;" aria-label="Video xác minh khuôn mặt"></video>
-                                <div class="face-scan-circle">Đưa khuôn mặt vào khung</div>
-                                <p class="face-scan-guide" id="faceScanGuide">Vui lòng nhìn thẳng vào camera.</p>
-                                <button onclick="verifyFace()" class="vib-v2-btn-dk02">Bắt đầu quét</button>
-                                <button onclick="retryFaceScan()" class="vib-v2-btn-dk02" id="retryFaceScan" style="display: none;">Thử lại</button>
-                                <div id="faceScanError" class="error-message"></div>
-                                <div id="faceScanHelp" class="help-text">Đảm bảo khuôn mặt nằm trong khung và ánh sáng đủ sáng</div>
-                            </div>
-                            <div class="step-buttons">
-                                <button type="button" class="btn-step prev" onclick="prevStep(3)">Quay lại</button>
-                                <button type="button" class="btn-step next" id="faceScanNext" disabled onclick="nextStep(5)">Tiếp theo</button>
-                            </div>
-                        </div>
-                        <!-- Step 5 -->
-                        <div class="step" id="step-5">
-                            <div class="form-instructions">
-                                <strong>Hướng dẫn:</strong> Cung cấp thông tin khoản vay và tài khoản ngân hàng để hoàn tất hồ sơ.
-                            </div>
-                            <div class="vib-v2-input01">
-                                <label class="ph_input" for="loanAmountInput">Số tiền vay (VNĐ) (*)</label>
-                                <input type="text" id="loanAmountInput" name="loanAmount" required class="field_input tooltip" title="Số tiền vay từ 10 triệu đến 900 triệu" oninput="formatCurrency(this)" aria-describedby="loanAmountError" />
+                                <label class="ph_input" for="loanAmount">Số tiền vay (VNĐ) (*)</label>
+                                <input type="text" id="loanAmount" name="loanAmount" required oninput="formatCurrency(this)" aria-describedby="loanAmountError" />
                                 <div id="loanAmountError" class="error-message"></div>
-                                <div id="loanAmountHelp" class="help-text">Nhập số tiền mong muốn, ví dụ: 50,000,000</div>
-                            </div>
-                            <div class="vib-v2-input01" id="assetValueContainer" style="display: none;">
-                                <label class="ph_input" for="assetValue">Giá trị tài sản (VNĐ) (*)</label>
-                                <input type="text" id="assetValue" name="assetValue" class="field_input tooltip" title="Nhập giá trị tài sản (VD: giá xe, nhà)" oninput="formatCurrency(this)" aria-describedby="assetValueError" />
-                                <div id="assetValueError" class="error-message"></div>
-                                <div id="assetValueHelp" class="help-text">Ví dụ: 500,000,000 cho giá trị ngôi nhà</div>
                             </div>
                             <div class="vib-v2-input01">
-                                <label class="ph_input" for="loanTermSelect">Thời hạn vay (tháng) (*)</label>
-                                <select id="loanTermSelect" name="loanTerm" required class="field_input tooltip" title="Chọn thời hạn vay từ 12 đến 300 tháng" aria-describedby="loanTermError">
+                                <label class="ph_input" for="loanTerm">Thời hạn vay (tháng) (*)</label>
+                                <select id="loanTerm" name="loanTerm" required aria-describedby="loanTermError">
                                     <option value="">Chọn thời hạn</option>
                                     <option value="12">12 tháng</option>
                                     <option value="24">24 tháng</option>
                                     <option value="36">36 tháng</option>
                                     <option value="48">48 tháng</option>
                                     <option value="60">60 tháng</option>
-                                    <option value="72">72 tháng</option>
-                                    <option value="84">84 tháng</option>
-                                    <option value="96">96 tháng</option>
-                                    <option value="108">108 tháng</option>
-                                    <option value="120">120 tháng</option>
-                                    <option value="180">180 tháng</option>
-                                    <option value="240">240 tháng</option>
-                                    <option value="300">300 tháng</option>
                                 </select>
                                 <div id="loanTermError" class="error-message"></div>
-                                <div id="loanTermHelp" class="help-text">Chọn thời gian trả góp phù hợp</div>
                             </div>
                             <div class="vib-v2-input01">
-                                <label class="ph_input" for="loanTypeSelect">Loại vay (*)</label>
-                                <select id="loanTypeSelect" name="loanType" required class="field_input tooltip" title="Chọn loại vay phù hợp với nhu cầu" aria-describedby="loanTypeError">
-                                    <option value="">Chọn loại vay</option>
-                                    <option value="Vay tiêu dùng">Vay tiêu dùng</option>
-                                    <option value="Vay mua nhà">Vay mua nhà</option>
-                                    <option value="Vay mua xe">Vay mua xe</option>
-                                    <option value="Vay tiêu dùng số">Vay tiêu dùng số</option>
-                                </select>
-                                <div id="loanTypeError" class="error-message"></div>
-                                <div id="loanTypeHelp" class="help-text">Chọn mục đích sử dụng khoản vay</div>
-                            </div>
-                            <div class="vib-v2-input01">
-                                <label class="ph_input" for="loanPurpose">Mục đích vay</label>
-                                <input type="text" id="loanPurpose" name="loanPurpose" class="field_input tooltip" title="Mô tả mục đích sử dụng khoản vay (tùy chọn)" aria-describedby="loanPurposeError" />
-                                <div id="loanPurposeError" class="error-message"></div>
-                                <div id="loanPurposeHelp" class="help-text">Ví dụ: Mua xe ô tô, sửa nhà</div>
-                            </div>
-                            <div class="vib-v2-input01">
-                                <label class="ph_input" for="relativePhone">Số điện thoại người thân hoặc bạn bè (*)</label>
-                                <input type="tel" id="relativePhone" name="relativePhone" required class="field_input tooltip" pattern="^(03|05|07|08|09|01[2|6|8|9])[0-9]{8}$" title="Số điện thoại 10 số, bắt đầu bằng 03, 05, 07, 08, 09, hoặc 01" aria-describedby="relativePhoneError" />
-                                <div id="relativePhoneError" class="error-message"></div>
-                                <div id="relativePhoneHelp" class="help-text">Ví dụ: 0912345678</div>
-                            </div>
-                            <div class="vib-v2-input01">
-                                <label class="ph_input" for="accountNumberInput">Số tài khoản (*)</label>
-                                <input type="text" id="accountNumberInput" name="accountNumber" required class="field_input tooltip" pattern="^[0-9]{9,15}$" title="Số tài khoản từ 9-15 số" aria-describedby="accountNumberError" />
+                                <label class="ph_input" for="accountNumber">Số tài khoản (*)</label>
+                                <input type="text" id="accountNumber" name="accountNumber" required pattern="^[0-9]{9,15}$" aria-describedby="accountNumberError" />
                                 <div id="accountNumberError" class="error-message"></div>
-                                <div id="accountNumberHelp" class="help-text">Ví dụ: 123456789012</div>
                             </div>
-                            <div class="vib-v2-input01">
-                                <label class="ph_input" for="bank">Ngân hàng (*)</label>
-                                <select id="bank" name="bank" required class="field_input tooltip" title="Chọn ngân hàng của tài khoản" aria-describedby="bankError">
-                                    <option value="">Chọn ngân hàng</option>
-                                    <option value="Agribank">Ngân hàng Nông nghiệp và Phát triển Nông thôn (Agribank)</option>
-                                    <option value="Vietcombank">Ngân hàng Ngoại thương Việt Nam (Vietcombank)</option>
-                                    <option value="VietinBank">Ngân hàng Công Thương Việt Nam (VietinBank)</option>
-                                    <option value="BIDV">Ngân hàng Đầu tư và Phát triển Việt Nam (BIDV)</option>
-                                    <option value="Techcombank">Ngân hàng Kỹ Thương Việt Nam (Techcombank)</option>
-                                    <option value="MBBank">Ngân hàng Quân đội (MBBank)</option>
-                                    <option value="VPBank">Ngân hàng Việt Nam Thịnh Vượng (VPBank)</option>
-                                    <option value="Sacombank">Ngân hàng Sài Gòn Thương Tín (Sacombank)</option>
-                                    <option value="ACB">Ngân hàng Á Châu (ACB)</option>
-                                    <option value="TPBank">Ngân hàng Tiên Phong (TPBank)</option>
-                                    <option value="Shinhan">Ngân hàng Shinhan Việt Nam</option>
-                                    <option value="HSBC">Ngân hàng HSBC Việt Nam</option>
-                                    <option value="StandardChartered">Ngân hàng Standard Chartered Việt Nam</option>
-                                    <option value="SCB">Ngân hàng Sài Gòn (SCB)</option>
-                                    <option value="HDBank">Ngân hàng Phát triển TP.HCM (HDBank)</option>
-                                    <option value="DongABank">Ngân hàng Đông Á (DongABank)</option>
-                                    <option value="Eximbank">Ngân hàng Xuất Nhập khẩu Việt Nam (Eximbank)</option>
-                                    <option value="LienVietPostBank">Ngân hàng Bưu điện Liên Việt (LienVietPostBank)</option>
-                                    <option value="SeABank">Ngân hàng Đông Nam Á (SeABank)</option>
-                                    <option value="NamABank">Ngân hàng Nam Á (NamABank)</option>
-                                    <option value="OCB">Ngân hàng Phương Đông (OCB)</option>
-                                    <option value="VIB">Ngân hàng Quốc tế (VIB)</option>
-                                    <option value="MSB">Ngân hàng Hàng Hải (MSB)</option>
-                                    <option value="PVcomBank">Ngân hàng Đại chúng (PVcomBank)</option>
-                                    <option value="SHB">Ngân hàng Sài Gòn - Hà Nội (SHB)</option>
-                                    <option value="ANZ">Ngân hàng ANZ Việt Nam</option>
-                                    <option value="Citibank">Ngân hàng Citibank Việt Nam</option>
-                                    <option value="UOB">Ngân hàng United Overseas Bank (UOB)</option>
-                                    <option value="WooriBank">Ngân hàng Woori Việt Nam</option>
-                                    <option value="PublicBank">Ngân hàng Public Bank Việt Nam</option>
-                                    <option value="KienLongBank">Ngân hàng Kiên Long (KienLongBank)</option>
-                                    <option value="SaigonBank">Ngân hàng Sài Gòn Công Thương (SaigonBank)</option>
-                                    <option value="BacABank">Ngân hàng Bắc Á (BacABank)</option>
-                                    <option value="BaoVietBank">Ngân hàng Bảo Việt (BaoVietBank)</option>
-                                    <option value="GPBank">Ngân hàng Dầu khí Toàn cầu (GPBank)</option>
-                                    <option value="OceanBank">Ngân hàng Đại Dương (OceanBank)</option>
-                                    <option value="VRB">Ngân hàng Việt Nga (VRB)</option>
-                                </select>
-                                <div id="bankError" class="error-message"></div>
-                                <div id="bankHelp" class="help-text">Chọn ngân hàng liên kết với tài khoản</div>
+                            <div class="step-buttons">
+                                <button type="button" class="btn-step prev" onclick="prevStep(2)">Quay lại</button>
+                                <button type="button" class="btn-step next" onclick="nextStep(4)">Tiếp theo</button>
                             </div>
-                            <div class="vib-v2-input01">
-                                <label class="ph_input" for="accountHolder">Tên chủ tài khoản (*)</label>
-                                <input type="text" id="accountHolder" name="accountHolder" required class="field_input tooltip" title="Tên chủ tài khoản phải khớp với họ tên" aria-describedby="accountHolderError" />
-                                <div id="accountHolderError" class="error-message"></div>
-                                <div id="accountHolderHelp" class="help-text">Phải trùng với họ tên đã nhập</div>
+                        </div>
+                        <!-- Step 4: Contract Review -->
+                        <div class="step" id="step-4">
+                            <h6>Số hợp đồng: <span id="contractId"></span></h6>
+                            <p>Ngày hợp đồng: <span id="contractDate"></span></p>
+                            <p>Họ và tên: <span id="contractFullName"></span></p>
+                            <p>Số CCCD/CMND: <span id="contractIdNumber"></span></p>
+                            <p>Số điện thoại: <span id="contractPhone"></span></p>
+                            <p>Email: <span id="contractEmail"></span></p>
+                            <p>Số tài khoản: <span id="contractAccountNumber"></span></p>
+                            <p>Số tiền vay: <span id="contractLoanAmount"></span></p>
+                            <p>Thời hạn vay: <span id="contractLoanTerm"></span> tháng</p>
+                            <div class="signature-section" style="margin-top: 16px;">
+                                <button id="startSigning" onclick="startSigning()" class="vib-v2-btn-dk02">Bắt đầu ký</button>
+                                <canvas id="signatureCanvas" width="300" height="150" style="display: none;"></canvas>
+                                <img id="signaturePreview" style="display: none;" alt="Chữ ký" />
+                                <button id="clearSignature" onclick="clearSignature()" style="display: none;" class="vib-v2-btn-dk02">Xóa chữ ký</button>
                             </div>
-                            <div class="vib-v2-input01">
-                                <label class="ph_input" for="monthlyIncome">Thu nhập hàng tháng (VNĐ)</label>
-                                <input type="text" id="monthlyIncome" name="monthlyIncome" class="field_input tooltip" title="Thu nhập từ 4 triệu trở lên (tùy chọn)" oninput="formatCurrency(this)" aria-describedby="monthlyIncomeError" />
-                                <div id="monthlyIncomeError" class="error-message"></div>
-                                <div id="monthlyIncomeHelp" class="help-text">Ví dụ: 10,000,000</div>
+                            <div class="step-buttons">
+                                <button type="button" class="btn-step prev" onclick="prevStep(3)">Quay lại</button>
+                                <button type="button" class="btn-step next" onclick="nextStep(5)" id="contractNext" disabled>Tiếp theo</button>
                             </div>
-                            <div class="vib-v2-input01">
-                                <label class="ph_input" for="branchName">Chi nhánh quản lý (*)</label>
-                                <select id="branchName" name="branchName" required class="field_input tooltip" title="Chọn chi nhánh quản lý hồ sơ" aria-describedby="branchNameError">
-                                    <option value="">Chọn chi nhánh</option>
-                                    <option value="Chi nhánh Hà Nội">Chi nhánh Hà Nội</option>
-                                    <option value="Chi nhánh TP.HCM">Chi nhánh TP.HCM</option>
-                                </select>
-                                <div id="branchNameError" class="error-message"></div>
-                                <div id="branchNameHelp" class="help-text">Chọn chi nhánh gần nhất</div>
-                            </div>
-                            <div class="loan-chart-container">
-                                <input type="text" id="loanAmountChart" placeholder="Số tiền vay" style="margin-bottom: 8px; border-radius: 12px;" oninput="formatCurrency(this)" aria-label="Số tiền vay để tính toán" />
-                                <select id="loanTermChart" style="margin-bottom: 8px; border-radius: 12px;" aria-label="Thời hạn vay để tính toán">
-                                    <option value="12">12 tháng</option>
-                                    <option value="24">24 tháng</option>
-                                    <option value="36">36 tháng</option>
-                                    <option value="48">48 tháng</option>
-                                    <option value="60">60 tháng</option>
-                                </select>
-                                <p>Lãi suất: <span id="interestRate">14%</span></p>
-                                <p>Trả hàng tháng: <span id="monthlyPayment"></span></p>
-                                <canvas id="loanChart" height="100" aria-label="Biểu đồ kế hoạch trả nợ"></canvas>
-                            </div>
+                        </div>
+                        <!-- Step 5: Disbursement Conditions -->
+                        <div class="step" id="step-5">
+                            <p>Số dư tối thiểu yêu cầu: <span id="disbursementMinimumBalance"></span></p>
+                            <p>Vui lòng chụp ảnh số dư tài khoản và gửi qua Messenger để hoàn tất giải ngân.</p>
+                            <button onclick="openCameraForBalance()" class="vib-v2-btn-dk02">Chụp ảnh số dư</button>
                             <div class="step-buttons">
                                 <button type="button" class="btn-step prev" onclick="prevStep(4)">Quay lại</button>
                                 <button type="button" class="btn-step next" onclick="submitForm()">Hoàn tất</button>
@@ -932,55 +454,13 @@
                 <div class="modal-header" style="border-bottom: none;">
                     <h5 class="modal-title" id="successModalTitle" style="font-size: 18px; color: #005BAC;">Chúc mừng!</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
-                        <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body" style="text-align: center;">
                     <div class="success-check animate__animated animate__bounceIn" style="font-size: 40px; color: #28a745;">✔</div>
                     <p style="font-size: 14px;">Đã duyệt khoản vay <span id="successLoanAmount"></span>.</p>
-                    <p style="font-size: 14px;">Vui lòng ký hợp đồng và cung cấp ảnh số dư tài khoản để giải ngân.</p>
-                    <button type="button" class="vib-v2-btn-dk02" onclick="$('#successModal').modal('hide'); $('#contractModal').modal('show');">Xem hồ sơ</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Contract Modal -->
-    <div class="modal fade" id="contractModal" tabindex="-1" role="dialog" aria-labelledby="contractModalTitle" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content animate__animated animate__fadeIn">
-                <div class="modal-header" style="border-bottom: none;">
-                    <h5 class="modal-title" id="contractModalTitle" style="font-size: 18px; color: #005BAC;">Hợp đồng vay</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div id="contract-vay">
-                        <h6>Số hợp đồng: <span id="contractId"></span></h6>
-                        <p>Ngày hợp đồng: <span id="contractDate"></span></p>
-                        <p>Họ và tên: <span id="contractFullName"></span></p>
-                        <p>Số CCCD/CMND: <span id="contractIdNumber"></span></p>
-                        <p>Ngày cấp: <span id="contractIdIssueDate"></span></p>
-                        <p>Nơi cấp: <span id="contractIdIssuePlace"></span></p>
-                        <p>Số điện thoại: <span id="contractPhone"></span></p>
-                        <p>Số điện thoại người thân: <span id="contractRelativePhone"></span></p>
-                        <p>Email: <span id="contractEmail"></span></p>
-                        <p>Số tài khoản: <span id="contractAccountNumber"></span></p>
-                        <p>Ngân hàng: <span id="contractBank"></span></p>
-                        <p>Số tiền vay: <span id="contractLoanAmount"></span></p>
-                        <p>Thời hạn vay: <span id="contractLoanTerm"></span> tháng</p>
-                        <p>Trả hàng tháng: <span id="contractMonthlyPayment"></span></p>
-                        <p>Ký bởi: <span id="contractFullName2"></span></p>
-                        <canvas id="contractQrCode" style="margin-top: 10px;"></canvas>
-                    </div>
-                    <div class="signature-section" style="margin-top: 16px;">
-                        <button id="startSigning" onclick="startSigning()" class="vib-v2-btn-dk02">Bắt đầu ký</button>
-                        <canvas id="signatureCanvas" width="300" height="150" style="display: none;"></canvas>
-                        <img id="signaturePreview" style="display: none;" alt="Chữ ký" />
-                        <button id="clearSignature" onclick="clearSignature()" style="display: none;" class="vib-v2-btn-dk02">Xóa chữ ký</button>
-                    </div>
-                    <button onclick="downloadContract()" class="vib-v2-btn-dk02" style="margin-top: 16px;">Tải hợp đồng</button>
+                    <p style="font-size: 14px;">Hồ sơ của bạn đã được gửi để xét duyệt cuối cùng.</p>
                 </div>
             </div>
         </div>
@@ -990,76 +470,32 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/4.2.8/js/tooltipster.bundle.min.js" integrity="sha512-5t30rt+eE3W2V6gq56Y8v3i3sXbDa3EFH2J1+dtO7YJsp5p2zDHuM1J6RBnKCT4vke+xAH0BghP4p8zTuyqV0JA==" crossorigin="anonymous"></script>
-    <!-- Chart.js for Loan Chart -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
-    <!-- Optional: Include for OCR (commented out; enable if needed) -->
-    <!-- <script src="https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js"></script> -->
-    <!-- Optional: Include for Face Verification (commented out; enable if needed) -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script> -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection"></script> -->
-    <!-- Optional: Include for PDF Generation and QR Code (commented out; enable if needed) -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script> -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-        // Form Logic
-        let formData = {};
-        let currentStep = 1;
-        let loanChart = null;
-        let signatureData = null;
-
         $(document).ready(function() {
-            $('.tooltip').tooltipster();
-            $('#registerForm').modal('show'); // Auto-open modal on page load
-            resetSessionTimeout();
+            $('#registerForm').modal('show');
         });
 
-        function resetSessionTimeout() {
-            clearTimeout(window.sessionTimeout);
-            clearTimeout(window.timeoutWarning);
-            window.sessionTimeout = setTimeout(() => {
-                $('#registerForm').modal('hide');
-                showToast("Phiên làm việc đã hết hạn.", "error");
-            }, 30 * 60 * 1000); // 30 minutes
-            window.timeoutWarning = setTimeout(() => {
-                $('#timeoutWarning').show();
-                let secondsLeft = 60;
-                $('#timeoutSeconds').text(secondsLeft);
-                const countdown = setInterval(() => {
-                    secondsLeft--;
-                    $('#timeoutSeconds').text(secondsLeft);
-                    if (secondsLeft <= 0) clearInterval(countdown);
-                }, 1000);
-            }, (30 * 60 - 60) * 1000); // 1 minute before timeout
-        }
+        let formData = {};
+        let currentStep = 1;
+        let signatureData = null;
 
-        function extendSession() {
-            resetSessionTimeout();
-            $('#timeoutWarning').hide();
-            showToast("Phiên làm việc đã được gia hạn.", "success");
+        function showToast(message, type = "error") {
+            const toast = $("#toast");
+            toast.text(message).css("background", type === "success" ? "#28a745" : "#e63946").fadeIn(300);
+            setTimeout(() => toast.fadeOut(300), 3000);
         }
 
         function formatCurrency(input) {
-            try {
-                let value = input.value.replace(/\D/g, '');
-                if (value) {
-                    value = parseInt(value).toLocaleString('vi-VN') + ' VND';
-                    input.value = value;
-                }
-            } catch (error) {
-                console.error(error);
-                showToast("Lỗi định dạng số tiền.", "error");
+            let value = input.value.replace(/\D/g, '');
+            if (value) {
+                input.value = parseInt(value).toLocaleString('vi-VN') + ' VND';
             }
         }
 
         function parseCurrency(value) {
-            try {
-                return parseInt(value.replace(/\D/g, '')) || 0;
-            } catch (error) {
-                console.error(error);
-                showToast("Lỗi phân tích số tiền.", "error");
-                return 0;
-            }
+            return parseInt(value.replace(/\D/g, '')) || 0;
         }
 
         function updateProgressBar(step) {
@@ -1069,46 +505,9 @@
             $(`.progress-step[data-step="${step}"]`).addClass('active');
         }
 
-        function showToast(message, type = "error") {
-            const toast = $("#toast");
-            toast.text(message).css("background", type === "success" ? "#28a745" : "#e63946").fadeIn(300);
-            setTimeout(() => toast.fadeOut(300), 3000);
-        }
-
-        window.previewImage = async function(input, previewId, uploadedId) {
-            const file = input.files[0];
-            if (file) {
-                if (file.size > 5 * 1000000) {
-                    showToast("Ảnh không được vượt quá 5MB!", "error");
-                    input.value = "";
-                    return;
-                }
-                formData[input.name] = file;
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.getElementById(previewId);
-                    img.src = e.target.result;
-                    img.style.display = 'block';
-                    document.getElementById(uploadedId).style.display = 'block';
-                    $(`button[onclick="deletePhoto('${input.name}')"]`).show();
-                };
-                reader.readAsDataURL(file);
-                resetSessionTimeout();
-            }
-        };
-
-        window.deletePhoto = function(inputName) {
-            formData[inputName] = null;
-            $(`#${inputName}Preview`).hide();
-            $(`#${inputName}Uploaded`).hide();
-            $(`input[name="${inputName}"]`).val("");
-            $(`button[onclick="deletePhoto('${inputName}')"]`).hide();
-            resetSessionTimeout();
-        };
-
-        window.nextStep = async function(step) {
-            const currentStep = $(`#step-${step-1}`);
-            const inputs = currentStep.find('input[required], select[required]');
+        window.nextStep = function(step) {
+            const currentStepEl = $(`#step-${step-1}`);
+            const inputs = currentStepEl.find('input[required], select[required]');
             let isValid = true;
 
             inputs.each(function() {
@@ -1116,82 +515,168 @@
                 formData[input.attr('name')] = input.val();
                 if (!input.val()) {
                     isValid = false;
-                    showToast("Vui lòng điền đầy đủ thông tin.", "error");
+                    $(`#${input.attr('id')}Error`).text("Vui lòng điền trường này").show();
                 } else if (input.attr('pattern') && !new RegExp(input.attr('pattern')).test(input.val())) {
                     isValid = false;
-                    showToast(input.attr('title') || "Dữ liệu không hợp lệ.", "error");
+                    $(`#${input.attr('id')}Error`).text("Dữ liệu không hợp lệ").show();
+                } else {
+                    $(`#${input.attr('id')}Error`).hide();
                 }
             });
 
+            if (step === 5 && !signatureData) {
+                isValid = false;
+                showToast("Vui lòng ký hợp đồng trước khi tiếp tục.", "error");
+            }
+
             if (isValid) {
                 updateProgressBar(step);
-                $('.step').removeClass('active').css({ opacity: 0, transform: 'translateY(20px)' });
-                $(`#step-${step}`).addClass('active').css({ opacity: 1, transform: 'translateY(0)' });
+                $('.step').removeClass('active');
+                $(`#step-${step}`).addClass('active');
                 currentStep = step;
-                resetSessionTimeout();
+                if (step === 4) {
+                    updateContractDetails();
+                }
+            } else {
+                showToast("Vui lòng kiểm tra lại thông tin.", "error");
             }
         };
 
         window.prevStep = function(step) {
             updateProgressBar(step);
-            $('.step').removeClass('active').css({ opacity: 0, transform: 'translateY(20px)' });
-            $(`#step-${step}`).addClass('active').css({ opacity: 1, transform: 'translateY(0)' });
+            $('.step').removeClass('active');
+            $(`#step-${step}`).addClass('active');
             currentStep = step;
-            resetSessionTimeout();
         };
 
-        window.submitForm = async function() {
-            // TODO: Implement real server submission API
+        window.submitForm = function() {
             console.log("Form submitted:", formData);
             $('#registerForm').modal('hide');
             $('#successModal').modal('show');
-            resetSessionTimeout();
+            $('#successLoanAmount').text(parseCurrency(formData.loanAmount).toLocaleString('vi-VN') + ' VND');
         };
 
-        window.verifyFace = async function() {
-            // TODO: Implement real face verification API
-            console.log("Face verification initiated");
-            $('#faceScanGuide').text("Xác minh thành công!");
-            showToast("Xác minh khuôn mặt thành công!", "success");
-            $('#faceScanNext').prop('disabled', false);
-            $('#retryFaceScan').hide();
-            resetSessionTimeout();
-        };
-
-        window.retryFaceScan = function() {
-            $('#retryFaceScan').hide();
-            $('#faceScanGuide').text("Vui lòng nhìn thẳng vào camera.");
-            verifyFace();
-            resetSessionTimeout();
-        };
-
-        window.openCamera = function() {
-            // TODO: Implement camera access
-            console.log("Camera opened");
-            resetSessionTimeout();
-        };
-
-        window.openSupportChat = function() {
-            window.open('https://m.me/ShinhanBankVietnam', '_blank');
-            resetSessionTimeout();
-        };
+        function updateContractDetails() {
+            const contractId = Math.floor(100000 + Math.random() * 900000);
+            const today = new Date().toLocaleDateString('vi-VN');
+            $('#contractId').text(contractId);
+            $('#contractDate').text(today);
+            $('#contractFullName').text(formData.fullName || '');
+            $('#contractIdNumber').text(formData.idNumber || '');
+            $('#contractPhone').text(formData.phone || '');
+            $('#contractEmail').text(formData.email || '');
+            $('#contractAccountNumber').text(formData.accountNumber || '');
+            $('#contractLoanAmount').text(parseCurrency(formData.loanAmount).toLocaleString('vi-VN') + ' VND');
+            $('#contractLoanTerm').text(formData.loanTerm || '');
+            $('#disbursementMinimumBalance').text((parseCurrency(formData.loanAmount) * 0.1).toLocaleString('vi-VN') + ' VND');
+            new QRCode(document.getElementById('contractQrCode'), {
+                text: `https://your-server.com/track-loan/SHB-2025-${contractId}`,
+                width: 100,
+                height: 100
+            });
+        }
 
         window.startSigning = function() {
-            // TODO: Implement signature canvas
-            console.log("Signature started");
-            resetSessionTimeout();
+            const canvas = document.getElementById('signatureCanvas');
+            const ctx = canvas.getContext('2d');
+            let isDrawing = false;
+
+            canvas.style.display = 'block';
+            $('#startSigning').hide();
+
+            canvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                ctx.beginPath();
+                ctx.moveTo(e.offsetX, e.offsetY);
+            });
+
+            canvas.addEventListener('mousemove', (e) => {
+                if (isDrawing) {
+                    ctx.lineTo(e.offsetX, e.offsetY);
+                    ctx.strokeStyle = '#000';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+            });
+
+            canvas.addEventListener('mouseup', () => {
+                isDrawing = false;
+                signatureData = canvas.toDataURL('image/png');
+                $('#signaturePreview').attr('src', signatureData).show();
+                $('#clearSignature').show();
+                $('#contractNext').prop('disabled', false);
+            });
+
+            canvas.addEventListener('touchstart', (e) => {
+                isDrawing = true;
+                const touch = e.touches[0];
+                const rect = canvas.getBoundingClientRect();
+                ctx.beginPath();
+                ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+                e.preventDefault();
+            });
+
+            canvas.addEventListener('touchmove', (e) => {
+                if (isDrawing) {
+                    const touch = e.touches[0];
+                    const rect = canvas.getBoundingClientRect();
+                    ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+                    ctx.strokeStyle = '#000';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+                e.preventDefault();
+            });
+
+            canvas.addEventListener('touchend', () => {
+                isDrawing = false;
+                signatureData = canvas.toDataURL('image/png');
+                $('#signaturePreview').attr('src', signatureData).show();
+                $('#clearSignature').show();
+                $('#contractNext').prop('disabled', false);
+            });
         };
 
         window.clearSignature = function() {
-            // TODO: Implement signature clear
-            console.log("Signature cleared");
-            resetSessionTimeout();
+            const canvas = document.getElementById('signatureCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            signatureData = null;
+            $('#signaturePreview').hide();
+            $('#clearSignature').hide();
+            $('#signatureCanvas').hide();
+            $('#startSigning').show();
+            $('#contractNext').prop('disabled', true);
         };
 
         window.downloadContract = function() {
-            // TODO: Implement contract download
-            console.log("Contract downloaded");
-            resetSessionTimeout();
+            if (!signatureData) {
+                showToast("Vui lòng ký hợp đồng trước khi tải.", "error");
+                return;
+            }
+            const element = document.getElementById('contract-vay');
+            const signatureImg = document.createElement('img');
+            signatureImg.src = signatureData;
+            signatureImg.style.maxWidth = '200px';
+            signatureImg.style.marginTop = '8px';
+            document.getElementById('contractFullName2').appendChild(signatureImg);
+            html2pdf().from(element).set({
+                filename: `HopDongVay_${formData.fullName}_${new Date().toLocaleDateString("vi-VN")}.pdf`,
+                margin: 10,
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            }).save().then(() => {
+                showToast("Hợp đồng đã được tải.", "success");
+                signatureImg.remove();
+            }).catch(() => {
+                showToast("Lỗi tải hợp đồng.", "error");
+            });
+        };
+
+        window.openCameraForBalance = function() {
+            showToast("Chụp ảnh số dư và gửi qua Messenger.", "success");
+            setTimeout(() => {
+                window.open('https://m.me/ShinhanBankVietnam', '_blank');
+            }, 2000);
         };
     </script>
 </body>

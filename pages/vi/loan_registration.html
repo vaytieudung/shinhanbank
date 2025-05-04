@@ -41,7 +41,7 @@
         .modal-content {
             border-radius: 16px;
             padding: 16px;
-            background: #f8f9fa;
+            background: #F8F9FA;
             color: #333;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
             border: none;
@@ -56,12 +56,16 @@
             align-items: center;
             border-bottom: none;
             padding-bottom: 0;
+            background: #005BAC;
+            color: #fff;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            padding: 20px;
         }
 
         .modal-title {
             font-size: 28px;
             font-weight: 700;
-            color: #005BAC;
             text-align: center;
             width: 100%;
             margin-top: 10px;
@@ -74,23 +78,25 @@
 
         /* Modal body */
         .modal-body {
-            padding: 16px;
+            padding: 20px;
             display: grid;
-            gap: 16px;
+            gap: 20px;
         }
 
         /* Input field styling */
         .vib-v2-input01 {
             position: relative;
+            margin-bottom: 15px;
         }
 
         .vib-v2-input01 input, .vib-v2-input01 select {
             width: 100%;
             padding: 12px;
             font-size: 14px;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #E0E0E0;
             border-radius: 12px;
             transition: border-color 0.3s, box-shadow 0.3s;
+            background: #fff;
         }
 
         .vib-v2-input01 input:focus, .vib-v2-input01 select:focus {
@@ -101,7 +107,7 @@
 
         .vib-v2-input01 .ph_input {
             font-size: 14px;
-            color: #666;
+            color: #333;
             margin-bottom: 8px;
             display: block;
             font-weight: 500;
@@ -121,7 +127,7 @@
             align-items: center;
             gap: 10px;
             margin-top: 10px;
-            background: #f9f9f9;
+            background: #F8F9FA;
             padding: 10px;
             border-radius: 12px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -130,7 +136,7 @@
         .photo-preview {
             max-width: 100px;
             border-radius: 12px;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #E0E0E0;
         }
 
         .delete-photo {
@@ -152,7 +158,7 @@
             display: flex;
             justify-content: center;
             gap: 16px;
-            margin-top: 16px;
+            margin-top: 20px;
             flex-wrap: wrap;
         }
 
@@ -165,11 +171,11 @@
             font-weight: 500;
             border: none;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: background 0.3s, transform 0.2s;
         }
 
         .btn-step.prev {
-            background: #e0e0e0;
+            background: #E0E0E0;
             color: #333;
         }
 
@@ -184,16 +190,22 @@
         }
 
         .btn-step:hover:not(:disabled), .vib-v2-btn-dk02:hover:not(:disabled) {
+            transform: scale(1.05);
             opacity: 0.9;
         }
 
         /* Step content */
         .step {
             display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateY(20px);
         }
 
         .step.active {
             display: block;
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Progress bar */
@@ -201,28 +213,29 @@
             display: flex;
             flex-direction: row;
             gap: 8px;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             overflow-x: auto;
             padding-bottom: 8px;
             position: relative;
+            background: #E0E0E0;
+            border-radius: 12px;
         }
 
         .progress-step {
             flex: 1;
             text-align: center;
-            padding: 8px;
-            background: #f4f4f4;
+            padding: 10px;
+            background: #F8F9FA;
             border-radius: 12px;
             font-size: 12px;
             color: #333;
             min-width: 80px;
-            visibility: hidden; /* Hide step titles */
+            transition: background 0.3s;
         }
 
         .progress-step.active {
             background: #005BAC;
             color: #fff;
-            visibility: hidden;
         }
 
         .progress-percentage {
@@ -288,9 +301,9 @@
 
         /* Signature canvas */
         #signatureCanvas {
-            background: #f9f9f9;
+            background: #F8F9FA;
             cursor: crosshair;
-            border: 1px solid #ccc;
+            border: 1px solid #E0E0E0;
             border-radius: 8px;
             width: 100%;
             max-width: 300px;
@@ -302,16 +315,18 @@
 
         #signaturePreview {
             max-width: 200px;
-            border: 1px solid #ccc;
+            border: 1px solid #E0E0E0;
             border-radius: 8px;
         }
 
         /* Contract and disbursement previews */
         .contract-preview, .disbursement-preview {
             max-width: 100%;
-            margin: 16px 0;
-            border: 1px solid #e0e0e0;
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #E0E0E0;
             border-radius: 8px;
+            background: #fff;
         }
 
         /* Tooltips */
@@ -319,6 +334,26 @@
             margin-left: 5px;
             color: #005BAC;
             cursor: pointer;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background: #005BAC;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
         }
 
         /* Hidden fields */
@@ -352,8 +387,8 @@
             }
 
             .modal-body {
-                padding: 8px;
-                gap: 8px;
+                padding: 10px;
+                gap: 10px;
             }
 
             .vib-v2-input01 input, .vib-v2-input01 select {
@@ -386,10 +421,9 @@
 
             .progress-step {
                 font-size: 10px;
-                padding: 4px;
+                padding: 6px;
                 min-width: 50px;
                 border-radius: 8px;
-                visibility: hidden;
             }
 
             .photo-preview {
@@ -398,6 +432,7 @@
 
             .contract-preview, .disbursement-preview {
                 max-width: 100%;
+                padding: 10px;
             }
 
             .modal-title {
@@ -408,17 +443,8 @@
                 max-width: 80px;
             }
 
-            .modal-dialog {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100%;
-            }
-
-            .modal-content {
-                width: 100%;
-                max-width: 100%;
-                margin: 0;
+            .modal-header {
+                padding: 15px;
             }
         }
     </style>
@@ -445,8 +471,81 @@
         <div class="modal-dialog">
             <div class="modal-content animate__animated animate__fadeIn">
                 <div class="modal-header">
-                    <img src="/shinhanbank/public/images/logo.png" class="logo" alt="Shinhan Bank Logo" loading="lazy" onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABxwAAAoACAYAAACLUle5AAAABHNCSVQICAgIfAhkiAAAIABJREFUeJzs3VmMZed57vf/mvdcu8YeqkdOTZoURVESJZmyLNo+1nGOdRLkxEFwjFwEGQADuc6tc5fc+C5AgOAYRoIcwJZkeNDxANkWSQ0USbFJimSTYpNsstnVQ1V1TXtc85eLXd/irhbVXawm1RLy/MBiNXfvvYZvDQTWs9/3c8qyNIiIiIiIiIiIiIiIiIHIB7pzdARERERERERERERERERH51KXAUERERERERERERERERkQNT4CgiIiIiIiIiIiIiIiIiB6bAUUREREREREREREREREQOTIGjiIiIiIiIiIiIiIiIiByYAkcREREREREREREREREROTAFjiIiIiIiIiIiIiIiIiJyYAocRUREREREREREREREROTAFDiKiIiIiIiIiIiIiIiIyIEpcBQRERERERERERERERGRA1PgKCIiIiIiIiIiIiIiIiIHpsBRRERERERERERERERERA5MgaOIiIiIiIiIiIiIiIiIHJgCRxERERERERERERERERE5MAWOIiIiIiIiIiIiIiIiInJgChxFRERERERERERERERE5MAUOIqIiIiIiIiIiIiIiIjIgSlwFBEREREREREREREREZEDU+AoIiIiIiIiIiIiIiIiIgemwFFEREREREREREREREREDkyBo4iIiIiIiIiIiIiIiIgcmAJHERERERERERERERERETkwBY4iIiIiIiIiIiIiIiIicmAKHEVERERERERERERERETkwBQ4ioiIiIiIiIiIiIiIiMiBKXAUERERERERERERERERkQNT4CgiIiIiIiIiIiIiIiIiB6bAUUREREREREREREREREQOTIGjiIiIiIiIiIiIiIiIiByYAkcREREREREREREREREROTAFjiIiIiIiIiIiIiIiIiJyYAocRUREREREREREREREROTAFDiKiIiIiIiIiIiIiIiIyIEpcBQRERERERERERERERGRA1PgKCIiIiIiIiIiIiIiIiIHpsBRRERERERERERERERERA5MgaOIiIiIiIiIiIiIiIiIHJgCRxERERERERERERERERE5MAWOIiIiIiIiIiIiIiIiInJgChxFRERERERERERERERE5MAUOIqIiIiIiIiIiIiIiIjIgSlwFBEREREREREREREREZEDU+AoIiIiIiIiIiIiIiIiIgemwFFEREREREREREREREREDkyBo4iIiIiIiIiIiIiIiIgcmAJHERERERERERERERERETkwBY4iIiIiIiIiIiIiIiIicmAKHEVERERERERERERERETkwBQ4ioiIiIiIiIiIiIiIiMiBKXAUERERERERERERERERkQNT4CgiIiIiIiIiIiIiIiIiB6bAUUREREREREREREREREQOTIGjiIiIiIiIiIiIiIiIiByYAkcREREREREREREREREROTAFjiIiIiIiIiIiIiIiIiJyYAocRUREREREREREREREROTAFDiKiIiIiIiIiIiIiIiIyIEpcBQRERERERERERERERGRA1PgKCIiIiIiIiIiIiIiIiIHpsBRRERERERERERERERERA5MgaOIiIiIiIiIiIiIiIiIHJgCRxERERERERERERERERE5MP9Ob4CAccAxB/s9+Rc4GBxKMCVggHLvShwX4zgYXEpcDA4OBt/kQMEH2bNTbRPG/eDPFfdnl129/nN2blfpgGtu+I2hpMTF3V3qB+93zfT2GxxTglPiGHb3cbI/ys1FRERERERERERERETuHAWOd5hxJvGde6DfDrv/4OJMwkYzhiyBIoYyhyACxwXXI8cndUIyAnJcvCJn1k/AySbvcVwwHqYsSbKCvDDUmy1KHIwxuz8OxhSTPztQliW5KTGlg+u6+H6I7/k4uyFgmhd4nofrQmGgSCefq4WTYDEjx1Di4GKmT0czCVX93SzRAVynxCUDp2B3FHBMbTd0FBERERERERERERERkTtBgeMdNF05WB70t5mEj5hi92dSBYhjwIXR9Wu4UYOg3cav1TFEGHxSA7kpKFwPr8zI82KyTM/F9eq4nkuAy/qgh+N4OI6D4zi4jtn9s8HBUA/rhEBOTpqmZFlCUWT4vo/nBtQDr9pH3wETORQFlLmZbKc3qcg0u3tlmLzfFm9OYkX7yvRo5UxO3+kySBEREREREREREREREflFc8qyVGJzh9jA8cMalO57GUWBi8FjN8ArMzD57o+BKARchuOYnVFGajy8Rotmo4XHJMZzmMR2OZAYyHLISzDGMFObbOR0w1XDpLLRo+D6tcs06iGdTofIi3B335PmKXka0260Jp8wu592ysmf05Qkz/AaDUqHSdBoXDBBNSauAdfdjRodcCkmFY5MtYE1tb2VkSIiIiIiIiIiIiIiIvILpcDxDrrdwNGlpEgTfMBx3d2qRgeMocRQGof+cIAXRYRRk0lECCkwGI3ppwWbvQSv3qTZqFFvgsduHsikBWqWgONMagk9Jr99d7Ia3xi6gQMUjOIRaTyCsqBdr9OuN/AoMXlOkaeQ5/iuA743SS+LAvIC6k0KZ7edqvHA+IBTFS66U0mngwEnx8G2VAVDsPsZERERERERERERERERuRMUON5Btxs4euQ4yQgw4PngepSuT45HjksOrG5s4foenh8SBB5+GExCQyah4iYQ258URjGMYxink0rHlUsrhL5LI/Tp1ELajYBWPaQeBdQ8g5cP6DbqzNR8PCZZoiGnTGLIU7rNOpQZJolxinQSinq7dZVuMPlxgskWGWf396ROsuSDwLFqP+sYjFNWo+YYFzSHo4iIiIiIiIiIiIiIyB2jwPEO+lgCx3Q06Tnq+Rg3ICEkAxImjUc9Js1HcyDNIEtj8jSmyGMSE/D3z5zj2k7KxZWrXLx8jWsbWwzijAIXXB/P8/Bdl8CFyIPIN0SeS+iC7+QszTS5++QyD3/qQe6/5zSH5mdpBBA6EJmctu8ziUCzSbvXZARFDp4HYTipTnRsO9Xd31X4CFWPVmfyknGgrKZzNJO/1hksIiIiIiIiIiIiIiJyxyhwvIM+lsCxGE96njoeuRMR45EAYyADLq8mtDoR3foku7t6bZ2Xz/6Ys88/w/l3LjJymwwyj0FSMM4diqCB35ylNjNHWJ+hN4oxxmDygrJIIc8oiwRTTOaKbNUiyiLFZDGR57K8NMdjjzzME1/+Io/eNcPGZsJ8K2IunFRVFtmYMk0IfZ8wCiZtVWE3cHR2f++2VYU9gSO7YWPpfDB2ntlttSoiIiIiIiIiIiIiIiJ3hALHO+hjCRzJd5cQkhAQAyMmLVJTJiHfu1fHvPj8c5z98Q+5+NY5hr1tArcgDEMcv07p1SGok/lNRk7EIPfZKXzGhU/hhuD64Pq4noPvTn4CB3AdRnFKFEXUAxeTJ+SjAV6Z0qn5dOsB/9N/++85dXieu4/VmHEn80IWCdQCaHkQFAWeySdzNhr3gx87QN7uzjqAOwkbi93Q0UWBo4iIiIiIiIiIiIiIyJ2mwPEO2k/gOBwOaTVbAMRJTJZl1Ot1fM8nycb4DqRFTopL6UUUvs+4hM0B9IYxf/Xtv+X1N17j8sX3CD1DO3JJxj3SeEjNLfHymFazQ2wiNhMo24eoL57geuxy8fIm4cIyhV+jKEpqrQ4Lc122tzcZbG1S784TuyEmKSCJgRw8l1bkUvccQpOy9v4FHrz7FE88/gV+80uf4cxRCICdGIZrA+7quCw1I0xRMtzp0QgiovZkf/vXNmgvzH9Q3TgVOBbupJVq5ChwFBERERERERERERERuZMUON5B+wkcsyzD8yZlfmVZ4nkerjOpAMzKkp3xmFazSQxcu94DP6J0XH7w7PP8zbe/TZKlrK+vMuxtEYUui7MzLC3OcnhpkaWZOnNByeL8LF5rngEN8toCSTTP22tDXnn3Ci++cQETNBiOErzAp9NuMuj1SOMRs0tH2YjdSRKYp4ABF1ynxM1S3CLm+OIcG9dWiPvbHDu8xBNf/hJf/crnePAYtIAghnaZ02n4eAbyuODq+yvMtJp0lhYmJZE4VYVj7kDmfjB2oQOe0SksIiIiIiIiIiIiIiJyp/h3egPk5sIgJEkTsiwjiqIqbMyLnMzxCZpN3t5KCYKAhYUOZ1+7wH/4D/8X5157hcXFec6/+VMOHVrk/ruOsrS0wOHDh1haWqLdbOKbmI6T0p1pU4YdTBEyJKBf5KRZTJFnOBSYYkyRDChGGWnZxAx7MB6RRQ615iIpIU7oE7gOgeviFDmFk1NmLoNxTNhoYYzh/avr/MXf/gOvvfkOv/mbv8njDx/mswuQ5T4bMczUIKx5tOdmcUrDB4WLpprSEcfBZRI8Oh8yXiIiIiIiIiIiIiIiIvKLpQrHO2g/FY4ODmmWkiTJJHB0XeI4xnEcnEaTcxuGxXmH7Rj+6i/+hu999x/IRjt4xZidzescXprjvvvu4e6776YzP8tMd45GZ5b+cMzatSvUXChx2BhlXNmK2Ux9hm6LjVHO6vaIjf4QjMtwZ5N66HDXsSX8PGFr7TIZAcOgS2x8jDF4jkvo+biOocwLyjxle2uDo4cOMzfbZTQYsnb1GqYoOXb8KGdOHOF/+e//HctdCAzE/ZKO7zDfdHAMbF1ZY3ZxfjJCDuC65I5L4ULuODhAiCocRURERERERERERERE7iQFjnfQfgPHvMgpyxLXdSmKgjzPCcOQxA84X8Cz5/o8+fd/w0+efRJ3vMGJhSbzNQNpn3/7n32NZrNO4br04wy/3qYxM08vLri0tsW5964xzBzW+zHrOwmDwqcMmhReRJrn1KOA0Mlx4h53HZ7hq597iMWmx7V3z7O6scH5K5v0E0Mcx+R5OQlCsS1gDZ4f0uv1GA7H1Go15uYWaLfb5FlJOhpy310n+fq//h1++4t3UQfGfWh5htloUslIkVEFjg7krjuZw9GZFOdOAsdP7BCJiIiIiIiIiIiIiIjILail6i+50XhErVbD93zyIsf3faIwIs1Srg8Nb6w6/O//x59y5dmn+fTn7udIfZa3XniSxvFZ/uf/7r8hT4a4ZkBWuDQ8lyQfc+XqChevXuf86ogfvNNjFMyRuxGlW8N4dTAe5EAJJs4Ig4w6CYdqBQ8daXD/sS7b3QEbawFfuneBXpzR2xkwjBOyvMQYh8K4FCVkxmGnV2NrZ0CaFTjOmGI0Jh+OGY1inj27xurGJtfWfpv/4muf53AbisRhZ5gw246gLJm0VLWhowHHYbKB4OoUFhERERERERERERERuaOU1vySy/O8mrcxSRJqtRoAFy9e5B9ffJv/7W9fIlw4wfEv/gYXLrxMjy2eePyLfPmhExSjLeLtNYJaQLO7SKczy5V+zsX33uXln77HT3sB8cIXSBrH8GoNavUGjhtQFBlukRCVY/qX38ahxEkHjNcH9C+1oX6Eo+42h+cLap1Z4qRgOG6S5gVF6ZIblzSHtHDY6o+ot2ZxgwYbmz3OX3iXi+9fpp8nzDQarBYtXn3nXTY2vkE86vNffe23ODkLmICdXp+ZZsikwnFSB1rljRgmCWQJk1pIERERERERERERERERuQMUON5hBc5uS1WDC7v/ZZusuri+RwGkBrbSknrkQQnPX1jnz//x+2wMA5r1Hu72Gibd4b5TM3zl0fu4byli88o7nDy6wDiHxK+xlTq8tTrg5YvbXBwEJK1lkuYh8FoUuWE8GEMxgCwGtyT2S8L5BZxaTrwx5sp4nbcur3K4YTjdhNmmw/bG+5TGEOLRcGr4YQNDQOIWJHnBvfctszMeMxhu05qFU5+/h+zTd7OztcPq0PCNZ14jPNwhHgz5h7//W5Ltdf7gP/89zhzp4AYtCnImI8AHVY67IzX5rbBRRERERERERERERETkTvL++I//+H+90xvx/1el4zAsDamzO5kjBR4lDhmYnIKCrDSUfkjiQM+PeO1qxt8+e54//+6LPPf6RUyrw0zdge13Od2K+Xe/fi/3L0C5cZG5VsAozXE6i1zL26w6S/zpP5xlpVxkPTiCc+gB4syHIoe0h5duE+U9Qi/GCaEIXFhYYGecM/fAw6xs9Rj2x3zps4/RcXxMnmO6PjRCAq+NRws/q+NnEb4JCV0P18lwnZTAGxM4Q8J0SLOMWQp8jsy0ePjBu4jclK3VS1y/fo3+cERmoLNwmNmZOoN4zDge0ajXwHG4trpKVGvhuXX6gxGNMMS56SjfPsdxqh+Asix/5vWyLCmKgqIoMOaDSSWzLMN1XVzXxRhDmqaTqtXd1+xnx+MxRVHg+z6O42CMIUkSgiAgyzKMMXieV73fGIPr3jpste9zHIcsy4jjGGNMtZ6dnR1qtVr193meEwQBjuNU67f7mOc5eZ7vGYfp5U+PSZ7njEYjoiiqXjPGkOc5aZriOE61P7f6yfOcJEk+9DP7Ycfbjt3Ozg7GGMIwrPZzOBxSliWe51WfybIM37/5dzLsMpMkIU1TyrL8SNt347gVRcHW1hZ5nlfHxZ43QLV9duxvtY7pbRmPx2RZRhAEFEXBzs4OwJ5jXJblnnP2VoqiwHGcanzjOGY0Gv3Mcn/eD0CapmRZVi3HGFNdQ/sdww+7RouiwPM8jDHVNWRNn7MfdfnGGMqyrObVvR3Tx91ef3meV2PwcS3fnudpmlbn9Hg8JgzD6piXZVndFwAGgwFhGN7W+uM4rq4juy/b29vkeU4URdW5Nn0NAdV1fitZllX3XPsZex+2y+n3+1V3ALtMe27ceGztZ+09Po7jajn2c9Pr2s/+22tp+pyx6xuNRtV96Mb76ccx/iIiIiIiIiIiIr9IqnC8gwxgnA/+TFXdWGIoMY5PFNXZKiF1YezBK5eu880nn+f1d9aITtxHMtrBzYe0o4LTc02OdT3azpi0HBAYcN2AxPjkQYf3rifseHNsmRmK1hLjLATXB5PgklIzMREpGI/YcUg9n8LxoNXlcuZQNpfoJetcuLLDiSNNXC+ldHNKJ8dxDT4OIT5u6VJSkDuGy1cuQ63Aq3n4vo9X8yhjh3ycMSpGuK0ux44d44HEMHjtLc69f5XtJ58h8Rv81pce5bMn5jGpyyhJCD2YaXdwywKfkkYYfOLHaDAY/MxDac/zqgfz00FJEEy2xz5YLsuSKIr2BBT2wbUxhqIoyPPJXJT2gbwNkVzXpV6vV++1YQB8EGLaZd3McDicjPtu8BKG4Z5t6Ha71XttmGIfsud5ztbWFp7nVQ/B7XKsoij2hHk2kHRdl0ajUb1mtz8MwyrksJ+9GcdxCIKgGls7bsC+9t8GCHmeVyFBs9mslgcQRRFBEFTbYkPD/YQKNsCxx8ru13SwcCt2n+z7O53Onu1zXbdqpWxD2/3uf5qmuK67Z5ts4NztdveEe9PbPh6PAWg0Grdcx3QAb8dyet9uxn5m+v02cPM875b7+POCSXsO2qDaXl/2fNzPsj9subA3rLT7flB2P33f/9Bw+1bjdyv9fp9Go1Fd29PBnw2z7PVtrxU7TtPH5aB836/GPAgCjDG0Wq1qG4IgqM47e5xsOJ6mKTMzMzdd/nQAbK+L6X0C6HQ6P/M5u69BEFT3J7t+u51FUdBoNCiKgjRNq3uzDW+NMbccI9/3yfO8+qLH9P0zz3OazWb13vF4XI2P4zi0Wq39DbKIiIiIiIiIiMgvCQWOd5Cz20YVSnxKXBwMBoxDiUthHOLSgAfDHF766Sb//OTTnHvpVXAbdI4eZTvZgnTIXLvOvSdnWJrr4OWbeKbAc118z2dcGLxaxLsX36IoIS0L2u0O/a0BNH0wttrOB1OC52EcD1wXygLqNbLtLdpRgBnnXHj7Hf7V8iM0aiEZGQ4pAS6e4+A7BtcNKDA4XsnhpUXyyJBHHmnhMo5dMny8oEnhNxn5LUzLxc8OUa4FrF9/m/UrI6KXLzAqPB74979FLWww7ifgZTSbDco0Zdxbp9WZw5hPdg7Hdrt907+frgiybKhjgzH79zcGWDYAunEZ01Vydnk2CLJByq0q7ywb+t0YUNoH7jZ0KMuSIAjwfZ8sywBoNptV8GQDGrtv0/s5/WMrgGq1Gp7nVVV/08EWUAWbtwq0RqMRtVqtCg9sRZPv+/uq8AOqUMGGg9Phna2+mq5gsvu7H6PRiHq9XgUP09uz3wq66X2zoaw1HA6rsbTvseHt9LH4eYIgqI6BrTadrkq0YY19zYa79rX9bPv0uW6rufI8Zzgc3vL4pmm6Z39t+LPfsNa+Z/pcmL52+v0+9Xp9T8g+/fNR3LiO6d8HZa+XGysz8zynKIpbBm63Mv0FA3v8renwywbsdt3TX1K4HdNfFLCVxva16XDTbp+9FvZzbt+4fLuc6XNnPB5XXwaw67T7ar+4YUPL6RD6xuvEVmWHYbjniwn73T57XUzfV+w22FDyxopWu10iIiIiIiIiIiK/KhQ43mG+UwBmKnyE0nHJDeSlRz9O8Zs+71zq8Zd//Z948pmXodWluXiMURxT98FL+8zO+Bw7NEsz9CjHI1wMgefiO25VWbe2fp3S8aAoqdWb9Fc3oNME4+KYYBIuOiG4Lq7n43oeZVkQRAHZ+g7tto9Pwcb6KkEQ0QgiUtfgkOO7Oa43eVBtcHAxlC4EgUfqlKxvDjl/aY13Lu0wikPmZk/SPHIX8ewcb2/0+elKzJWyi7/8EB4OF7ZKtn74Co/82gN89eEjLLVncZMdoMR1S8pkCLRwCKdG7uPX7/cBqofFNhycrpSCvcGHDQengz77IHm6msb+3fRDZRs42GDNVsDYz9uH0nYZt2LXPb2t0xU7nucxHA5xXbeqrLEVPo7jVIGRbUFo2y/C5GG6fWg+XamVZRlJklQP522gZNuU2uXsx3SIaYMzu979BI5pmtJoNPaEKbYSajQaVW0/7euu6+4J5pIkuenybXhp3/dR2qnaz9mgxVbM2uNk2+zac8aOcxRF+w6cp8NuGyQOBgNgEijbitTpwMsGL/sJnOxxd12XOI6r88Qu61bsuW7DX6Dav/0Enh/2numWlfV6fc/5Z6t8bQvPj6OK73ZMB/7T2zdd3Xw7pvfP3pOmj/V0EBhFEZ7n7WknfLuBqg2U7XKmr//xeFy1951u4WvPqWazecv9n17+dHhq7xeDwaAKOcfjMWVZ0mg0qkA1SZKqgnj6Hm4DXxsGTo/hRw1F7b13Oky09/F+v19Vfdv7r12PrQoVERERERERERH5VaHA8Q5yKQkoYLe6ESatVXMcChxSfFrNiNdXY/7xyR/wwxd+gklLZo4fJWh32V6/zLxbEpVj5uptZmoB+biPl4yoBw6eM1Xt43oY19sN59xJBaPjgesADm7pghsAHmXg4fgBrutTOgaPjMzk1DyPVhTQ8CNqYUToBzhm8iDVLRxc3+CWJcbJKXEoHIfSdwn9kNLJWd2OefH8ZVbWc2YWC7qbddaDHpd6MWvbKVCD9iFyDOu9ddY31vjTb/09h2f/a+ZOtmlEDSABDPVgt/rS+WQrQBqNRhVsTVen2JDKPjyfbsM5XbFlH6pbtr2erbSz87bZqrVarVZVJaVpuqfqZrqKx4aG09U7H6Ysy2p+Qvug3T5ItwHUjeHVdAAXhiGj0YiiKKpwzYZK02GrnXMQJkFkHMdVgGKXb+eltG039/Mw3baDnG7Basd3PB5X67zZ/k8vy4YHjuNUYw0fzCNoA0i7/OmWhx/Gvnc0GlUBgQ1sb6ze+zBpmlahUBiGVdAxXW1oj5kddzueaZrecgxtS+DpCkwbJNkgxgYhRVEQx3EV6k4HRTfb/nq9Xt1nyrKsApT9sOfvaDQijmNqtVq1f/b8uxn7Xhue2X20223324bH9vjaoP2jBI4/r73q7RgOh3uWtd+5AffLXsc3Vk3b+5RtXzrd7tm2op2+5g8qjuPqGNpzzYZtzWazunfYcUySpJq78FbV5TA5b+w5Pb0Pdl/n5uaq1+x7pqtTbZX1jWHjdCVmGIZV8JgkCXEc37QN7rSdnZ1qXy17TTabzQ+tYLVfsvg4zwMREREREREREZFfBAWOd5BDib8bODq7IaPBoTQuufFJHQ8X+JcfPs/f/fP3yJ2I7skjDNOcbHWTehTgjmPqbsF8q0YncshHPYI8o9GqkRcFxjO7oVjOkaVDnN/ehCAgS8ZQC8FzcA24vodjDKUDeC54k9CrcB2K8ZBGMyQoU+aadR44cXwSMjDCo45xDAQhhRNgnABTOJSTGSrBnQQ7SwtNTp4yHN9w2Si3uD4uWbuyxvvjnKIxh9eYp/DrUPiQxODWYfYIP3jhHE89/DKn57/M8ZaPWya4OPi1GvwCnsfah9V5nrOzs0McxwwGA7a3t+n3+1W1oX3YXa/XabfbdDod6vV6FerZB+q1Wq2q0IMP2jRO/7brvTFMtHMrTocyt6qwsS04pwM+W70EVHMt2gf902FgkiSkaVoFn/bzNsCwbEhm2RAzCAI2Nzer/ZgO0uznbtW6dDgcVnO+RVG0Z737qYBrNptVO0Qb3tn9CcOwCrnCMPyZStM0Tfc1j5oNQm2FmA1Rsiy7ZWDWbrd/ZvuSJKkCjX6/T7vdtfM8arXaz4z7fkJbG3ZMb5M9/jdWVMEHIdp+lp9lWXV8bdWY/Uwcx7cM9Gz4ZIP96QBnP+M3vZzptpT2J03TqnrtdtuoWtNztO53+34e26Zzer/tlwSSJGF2dva2lm+D2BsD/un9CoKgqi6FD6p16/X6bVdYdjod0jSt1mOrraeD/WlRFFUB6H5Mz8dq12OvWVspae9P9ly01bSu69LpdKpzI8uyahw+LGi1VYr2Wonj+Jb3h5mZmWq7rBvPqelqSvvfH1dLWxERERERERERkV8kBY53mEsJ2HkIHUo8CscjwSMBfvTyRb7//CusrPXoHL2Lemee7WvbkIxw63WKeECzVnJotkmr7lGOYmqhT6tRY3V7hGl08AOPssg4dfIYz7yzQc33Gfe3cRsRrpODazC4lMbHcXyM51KgeLDmAAAgAElEQVR4PrgOoeeQDnZYnq0T7Oww167z+U9/mnrUoIx7ZH6X3K1hnBDH88BzcEoHU2ZAycb6KmY4ZuRGdGsN7rv7LmJ3i5+u9Liys0UrrONGJV7dY+R6DMflZO7IeouW6zHYavOdp5/hcMPhv/zq51hqhDhFRhSGkwpN88mmjhcuXGBtbY2LFy+yurpKv99nPB4zGAyI43jPfHA2PKjX61XY+Ou//utVe8DFxUWWlpb2zGs3HQKsrq6ysrLCzs4OQRDQarWI47gKTuI4pt1uc/LkSY4cObKv7bcP9m0wsr6+zptvvsloNKLT6VSB0Wg0Ymdnh0OHDvHpT3+6amtpKzin50pbWVlhdXW1qpIbjUZVFY99ED8/P8+pU6eqqiJgz0P/4XDIxYsX2djYuOn2DwYDPvWpT3Hs2DGCIKiqLW0AdytxHPPaa69x7do1ZmZmaDabDAYDjDF0Oh36/T4PPPAAS0tLRFFUVfjBJPx47rnnbrr8jY0Njhw5wunTp+l2uwA/U9l5M3me8/rrr3P16tUqpO73+5RlSafT4fr16zz00EMsLy9X+28Dif2EjXaM8jzntddeY21tjXa7Ta1Wqyr8hsMheZ7T7XY5fvw4i4uL1byhtzJ9Xkwf39XVVd54441bBsqzs7OcPn2aZrNZhcPWfqoHX3755ara14br9rM2UDp16hSdTocoivYEa/sZvxvbfdrXkiQhz3N+/OMf33IZN3P69OkqpI2iqAof7XjcbuBk28dOb//Kygrr6+tVhaytErSVyWmacvz4cc6cOXNb67bOnz/PysoKrVarOu+MMXS73eoLHK1Wi/vuu4+5uTm63e6eNqY3Y4/h5uYm58+fp9/v02q18H2f4XBIs9lkY2ODdrvNpz71KTqdzp5Ka8/z6PV6vPvuu1y/fr1qWWyXa8cEYGlpiZMnT1YVvNPVqT9PlmW89957XL9+vbqnjkYjjDE0m82qnfXs7CxHjx6l1WopaBQRERERERERkV9ZChzvIMcYcD4IHJ3dmsccl8yZNA/9f7/5bd5b3STszJIaj2wUQ60GgUuWDcnTmKjp0u00aUU1StehFgVEob9bxZgTuA5OlnN06RABOQ23YGe8Rbt9hMTJJ1WNrk9pfIzrYzwf43rglvhuQZL0mG8cJd8c0w473HP6ONFoSEzI2J0n83NyL6AswXgObpnjFRmeiVlYPj6Zzy+HRrvDwpE2x4+nHH1njfOX1lhZW2Mrucr2cIfcnyGozVMEEWWeMxqNOHL8OC+99iNOzdb5yucfYa7VIjMZrhvg74a0n6Qf/ehHXL16lYsXL7K1tVXNaxhFEfV6vXo4bFt+GmMYjUaMRiMA/uqv/oqiKGi329x///187nOf46677sL3/aplZxiGjMdj3n77bZ566inefPNNfN9nfn6+qsazczoeO3aMz3/+81W7wP3O8VUUBcPhkFdffZV/+Zd/4dKlS0RRRFEUzM3NkSQJvV6PX/u1X6Pb7XLfffdV861Nz+V25coVzp49y6uvvlrNBWiDpjAM6fV6pGnKmTNneOyxx/jKV74CUAU9NoS7fv06586d4/vf//5Nt9s+/F9cXCQIgiqQsu1hb/Vg/r333uPJJ5/kpZdeYnZ2lrm5uapStdPpMDs7SxiGLC4uVvM2ZllGFEU0m03+/M///KbL7/V6fPGLX2R2drYKHG2V3Y1Vkx/m8uXLfP/73+fs2bN0u1263S6bm5uMx2M6nU7V2nRxcbGqzizLklarVbVuvRlbOXX58mWefvppXn/9ddrtNr7vs76+TrfbZXt7G2MMDzzwAE888QRzc3NVJdqtKvhsdaNtoWvbwp4/f56nnnqKzc3Nm37+s5/9LGEYct9991XbawPV/bQ7/fa3v121ukzTtAqqbKXpb/zGbzA3N1eNpW2JOR0q3Wr8PqzC0c5T+s1vfvOWy7gZe//wPI+ZmRlOnDjBmTNnuPfee5mbm7utZVv2HDHGcOnSJX784x/z6quvsrm5WX1Zol6v4/s+vV4P3/f5whe+QLfbZWlp6bbWvbm5ybPPPstzzz1Hs9mk3W6zublZXX95ntPr9Th8+DC/+7u/y+OPP06tVsN13T2V2D9PnucMh0PeeOMNfvCDH7CyslIFicPhkE6nw8bGBidPnqzOA1udapd94cIFnnrqKS5cuFDd340xjMfj6gsAURTxyCOP0Gg0WF5eBvZXYf3SSy/x7LPPcu7cOXzfp9PpVOe4nb9ycXGRRx55hEOHDlXtYW2gfafnGBUREREREREREfkobm8CKvlYxOMhvUGPAp/3Vld5f30LF/jmf/oxr759iV5c4ja6ZHgM42w3n3QxeUGj0aAsc7ozkyBlNBrheR5Xrlzh0KFDFFlKM/I5cWQRkj6fuuckM1HBrF9QDjfJx32iKKDRbmGCiMwN8Got3GAyv2CRjLnn5DKbly+w0PT53d98nLrnMx6OwGvRM112guMMW6fIDz3AazuG0fxJ3hoUePPLbMY5xkArcJkxMfXxdRbdPl95YIn/4d8+xv/4rx/mD790it+5r0Nx6UXa6TXKKz8lLEaEHly9fJnHv/o7PPXsWf7P//vPGQKDssbVnZxB6VM4N6+gupXhcFi1wOz1etXcX88++yx/8id/whtvvMHVq1cBmJ+fZ3FxkUajgeu61Zx1NmCyrVKn2+6Nx2NarRZFUfDqq6/yT//0T1UVi60gtHOWnTp1iocffpgkSVhaWiJN0yossO0019fXq5BwP+0cbfDlOE71sL3X61WVlrbK0XGcKgw4fvw48EH1kK1yHA6HLC8v81u/9VscOXJkz7yWRVGwublJo9EgCAIuXry4Z36yIAio1+vkeU6aphw6dIivf/3rHD16lKtXr1Kv16uKJ1uVaedb+4//8T9WVYO2ChD4mVaFH2ZhYYHr168zMzNDq9Vie3u7GvuyLNnY2KjmICzLkiiK9jzk/4M/+AM6nU4VNtuWuLayc2ZmhnPnznHy5MlqHOx5sJ+2kEtLS7z33nvMzs6SJEkVNLTbbbIsYzQaUa/XCcMQ13Xpdrs0m809lXo3E0URKysrnDx5sjrvtra2aDQa1X4HQcDp06d55513ePHFF3/u3J43Mz13XhAEHD58mHvvvXdPKGznJrXzlgZBwNNPP02v16Pf71ftd33fZ2tr65bVkTBpSdvr9apKMRv623B2c3OTY8eOAR+05/0o8yTacZ+uZA7DkG63y6FDh3j88cdZW1sjyzIajQaDwYDxeFyFmnafbRWjDXLTNKUoiiqgHQwGXLt2jeeff56/+Iu/4M/+7M/41re+xeXLl6t70traGuvr6/T7/aoqcT/sFwPs+fv1r3+d69evV62Z4zhmPB5jjCGOY1ZWVlhZWaHf71fbate1s7NT3S/2E7jNzc3xhS98gWPHjrG9vU2SJHS7XaIoIkkShsMh8/Pz9Pt9XnjhBa5duwbsv12w7/uEYcjx48e5dOlStV3j8RjP80iSBMdxWF1d5fDhw9V53el0qmUcO3aMRx55hDzPWV1d3XOfiuN4z/jbsNFWIMdxXFXWTof/WZYxGAz467/+a65cuVJVXdoKZRtobm9vc//99/OVr3yluv/ZeV1vd/5MERERERERERGRXzQFjr8EgiAgarYpcPFqLWYWZ3l/CM//5A0SNyJ1I3InmIRrxgVKMCU4JaUDheMTZwWl6+P4EaXr4XoBmIJ2q8G4v0Pa3+BQp849hzrMeRlhvEGj6OOVMcl4QG/QJ05SMieEsIET1HAdn3oY4JcpnQCW59osNJv4TNoM+lGLsHOMJFpitWjxN8++wTeeeZX/57vP8/Rbl3nuwlWKWpfCCSnTDD8d0jEjFv0+s+U6rdFFHprNeGTJ8LnliK/+2hHaxTaBm+IVY5J4QLPT5eLKVRrdJd6+tMaP31gjanj0ioBxCbfbeK7ZbFZVba1WC2MMr7zyCmfPnuX69etcunSpCiJtVZQNp/I8rx5M25DBLvPw4cOcPHmS2dlZms0mjuNUD5jtHH3tdrtqd2grnA4fPky328VxnH0Fap+0PM+rB+5Wu93m8OHDt1V9Y5dnxwio2mLaANcGBocOHeKb3/xmVbU0PffcJ+3w4cPMzs5W80dOV9H9ItZ/u7Isq4LfEydOkCQJMzMzbG9v75k7dDAY4Hke29vbrKysVKH5rdhzPgzDKqgEWF5e5jOf+UwVzMMHlXbT51O32+W5555jZWWFubk5iqKo2mL+KvjUpz7F4cOHq4o8G7iWZUm/35/Mg1sUjEYjhsNhVXFqA29bCV2v12k0GjiOQ6/X4+LFi7z++uv83d/9HS+88AIbGxtVxaFtC7rftqM2uLVzToZhSKPRqEJrG9LZSuVWq8VgMODcuXPVZ0ejEVmW0e12cV2XJEn2HUjPz89z7NgxGo0GcRxXIaAdBxvIbmxscP78edI03XfL0o9Dq9Xi2LFj1T0tSZLqWN6KDaBtkG/D2dXVVb71rW/R6/WqayyO46pFtud5pGnK9772NR588MHqSxS2ohk+mEtTRERERERERETkV4UCxzvKIU8z8CIcp8a1Xp+o3cYD/ul7P+FHL79O5kZkTkTheJRVB1wD5DimJDcBGSHbo5TCDfFqLQrHxwsm7TJbtZB0uE3a3+RI2+PBU4vcPR/SpU8926YRFjjk5GUJnocT1SiDiNL1Ma5Ds+bjpGPmGgFnji9zaK6NZ0p816VWb4PXIHcjsqjO989d5Om3rvI3Z8/z/Mo2T/10hb7XJqZGWRi8NKFdjlhwR8yaDVrj9zke9rm7lfPQkQa//dn78MYbdIKSCIPJchrtDpfXt6jPzHP+4lW+8/QzJIAJA+JiUux5W0dgN2yxbQ2vXbvGD3/4Q86dO1e1PO10OjSbTcqyZDAYMBwOq0oZ2wbTzhGX5zlbW1u8//77nD9/ntFoRJIk1YNpW21ogxljTBVctVotTpw4wcLCAsaYfVexfZJsIDI9B1y9XufUqVP7qrC8kZ330f4+c+YMc3NzlGVJHMdV1ZQNpew4P/nkk6ytrdFsNhmPxwC3bCf6cVheXmZhYYFarYYxpgpFgX1V4N1pw+GQdrsNwNGjR6t2rDs7O9X2+75fzRu6vr7Oq6++CuxvfKdDcRsQw6Tl7ZkzZ6pqQlsdCOwJIFutVtVyEmA8HjMej38lwlyA+++/n4WFhSqMtvMvBkGwZ65NO9a24th+cWH63mBDR9v69fr16zzzzDP84Ac/4I033thzP7DVv7di72swCbDs/LEzMzPVfKW2ZXKWZYRhSKfTYTgccvbsWfr9fjWPob0X+L5Pv9/f9xgdOnSI06dPV3PF2lapdm5ZOyfr9vY2L774IpcuXQL4hdz/jDHUajVOnDjB8vIytVqtusb3c33bL13YczYIAgaDAWfPnuXpp5+u2kzb+SRrtRqDwQDHcbj33nv5nd/5He655x6Anwn49xP4i4iIiIiIiIiI/DLRHI53kHHAOD5pYXB9j6R0abmwVsI/f/9ZNocZ9SiicHwM/u50hbsPIQ24lBTGZ2wi1nbGnJ7t0Km1yMshzVptEt7kKaHjYZyEOjEnZuo8fGqerLfOmxvbpM4MRRQQ+C3yoE3mNUlKF1OUeK5P5EHR7zM7F3HPsSPMthqYnR6OcfD9kDLJIAzotGHoBPhLy+zkGRtBi3PrPS72S047NTpBC7fMMVkPzyQ0KPDdmGx7iFNGdOoz3H3
-                           <input type="text" id="idNumber" name="idNumber" required pattern="\d{9,12}" title="Số CCCD/CMND phải có 9-12 số" data-lang-key="idNumber">
+                    <img src="/shinhanbank/public/images/logo.png" class="logo" alt="Shinhan Bank Logo" loading="lazy" onerror="this.src='data:image/png;base64,iVBORw0KGgo...[base64 from fromdangky111.txt]'">
+                    <h5 class="modal-title" id="registerFormTitle" data-lang-key="registerFormTitle">Đăng ký vay tiêu dùng</h5>
+                </div>
+                <div class="modal-body">
+                    <!-- Step 1: Personal Information -->
+                    <div id="step-1" class="step active">
+                        <div class="progress-bar">
+                            <div class="progress-step active" data-step="1">Thông tin cá nhân</div>
+                            <div class="progress-step" data-step="2">Thông tin CCCD</div>
+                            <div class="progress-step" data-step="3">Thông tin khoản vay</div>
+                            <div class="progress-step" data-step="4">Thông tin ngân hàng</div>
+                            <div class="progress-step" data-step="5">Tài liệu eKYC</div>
+                            <div class="progress-step" data-step="6">Xác nhận</div>
+                            <span class="progress-percentage" id="progressPercentage">16.67%</span>
+                        </div>
+                        <p class="step-instruction" data-lang-key="step1Instruction">Vui lòng điền thông tin cá nhân chính xác để tiếp tục.</p>
+                        <div class="vib-v2-input01">
+                            <label class="ph_input" for="fullName" data-lang-key="fullName">Họ và tên</label>
+                            <div class="tooltip">
+                                <input type="text" id="fullName" name="fullName" required pattern="[A-Za-zÀ-ỹ\s]+" title="Vui lòng nhập họ tên hợp lệ (chỉ chứa chữ cái và dấu cách)" data-lang-key="fullName">
+                                <span class="tooltip-icon fas fa-info-circle"></span>
+                                <span class="tooltip-text">Nhập họ tên đầy đủ, không chứa số hoặc ký tự đặc biệt.</span>
+                            </div>
+                            <div class="error-message" id="fullNameError"></div>
+                        </div>
+                        <div class="vib-v2-input01">
+                            <label class="ph_input" for="phone" data-lang-key="phone">Số điện thoại</label>
+                            <div class="tooltip">
+                                <input type="tel" id="phone" name="phone" required pattern="0[0-9]{9}" title="Số điện thoại phải bắt đầu bằng 0 và có 10 số" data-lang-key="phone">
+                                <span class="tooltip-icon fas fa-info-circle"></span>
+                                <span class="tooltip-text">Số điện thoại phải có 10 số, bắt đầu bằng 0 (VD: 0901234567).</span>
+                            </div>
+                            <div class="error-message" id="phoneError"></div>
+                        </div>
+                        <div class="vib-v2-input01">
+                            <label class="ph_input" for="relativePhone" data-lang-key="relativePhone">Số điện thoại người thân</label>
+                            <div class="tooltip">
+                                <input type="tel" id="relativePhone" name="relativePhone" required pattern="0[0-9]{9}" title="Số điện thoại phải bắt đầu bằng 0 và có 10 số" data-lang-key="relativePhone">
+                                <span class="tooltip-icon fas fa-info-circle"></span>
+                                <span class="tooltip-text">Số điện thoại của người thân để liên hệ trong trường hợp cần thiết.</span>
+                            </div>
+                            <div class="error-message" id="relativePhoneError"></div>
+                        </div>
+                        <div class="vib-v2-input01">
+                            <label class="ph_input" for="email" data-lang-key="email">Email</label>
+                            <div class="tooltip">
+                                <input type="email" id="email" name="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Vui lòng nhập email hợp lệ" data-lang-key="email">
+                                <span class="tooltip-icon fas fa-info-circle"></span>
+                                <span class="tooltip-text">Email sẽ được sử dụng để gửi hợp đồng và thông báo.</span>
+                            </div>
+                            <div class="error-message" id="emailError"></div>
+                        </div>
+                        <div class="step-buttons">
+                            <button class="btn-step next" onclick="nextStep(2)" data-lang-key="next">Tiếp tục</button>
+                        </div>
+                    </div>
+                    <!-- Step 2: ID Information -->
+                    <div id="step-2" class="step">
+                        <div class="progress-bar">
+                            <div class="progress-step" data-step="1">Thông tin cá nhân</div>
+                            <div class="progress-step active" data-step="2">Thông tin CCCD</div>
+                            <div class="progress-step" data-step="3">Thông tin khoản vay</div>
+                            <div class="progress-step" data-step="4">Thông tin ngân hàng</div>
+                            <div class="progress-step" data-step="5">Tài liệu eKYC</div>
+                            <div class="progress-step" data-step="6">Xác nhận</div>
+                            <span class="progress-percentage" id="progressPercentage">33.33%</span>
+                        </div>
+                        <p class="step-instruction" data-lang-key="step2Instruction">Vui lòng cung cấp thông tin CCCD/CMND chính xác.</p>
+                        <div class="vib-v2-input01">
+                            <label class="ph_input" for="idNumber" data-lang-key="idNumber">Số CCCD/CMND</label>
+                            <div class="tooltip">
+                                <input type="text" id="idNumber" name="idNumber" required pattern="\d{9,12}" title="Số CCCD/CMND phải có 9-12 số" data-lang-key="idNumber">
+                                <span class="tooltip-icon fas fa-info-circle"></span>
+                                <span class="tooltip-text">Nhập số CCCD/CMND, chỉ chứa số, 9-12 ký tự.</span>
+                            </div>
                             <div class="error-message" id="idNumberError"></div>
                         </div>
                         <div class="vib-v2-input01">
@@ -456,7 +555,11 @@
                         </div>
                         <div class="vib-v2-input01">
                             <label class="ph_input" for="idIssuePlace" data-lang-key="idIssuePlace">Nơi cấp</label>
-                            <input type="text" id="idIssuePlace" name="idIssuePlace" required pattern="[A-Za-zÀ-ỹ\s]+" title="Vui lòng nhập nơi cấp hợp lệ" data-lang-key="idIssuePlaceError">
+                            <div class="tooltip">
+                                <input type="text" id="idIssuePlace" name="idIssuePlace" required pattern="[A-Za-zÀ-ỹ\s]+" title="Vui lòng nhập nơi cấp hợp lệ" data-lang-key="idIssuePlace">
+                                <span class="tooltip-icon fas fa-info-circle"></span>
+                                <span class="tooltip-text">Nhập nơi cấp CCCD/CMND (VD: Cục Cảnh sát ĐKQL Cư trú).</span>
+                            </div>
                             <div class="error-message" id="idIssuePlaceError"></div>
                         </div>
                         <div class="step-buttons">
@@ -467,17 +570,22 @@
                     <!-- Step 3: Loan Information -->
                     <div id="step-3" class="step">
                         <div class="progress-bar">
-                            <div class="progress-step" data-step="1"></div>
-                            <div class="progress-step" data-step="2"></div>
-                            <div class="progress-step active" data-step="3"></div>
-                            <div class="progress-step" data-step="4"></div>
-                            <div class="progress-step" data-step="5"></div>
-                            <div class="progress-step" data-step="6"></div>
+                            <div class="progress-step" data-step="1">Thông tin cá nhân</div>
+                            <div class="progress-step" data-step="2">Thông tin CCCD</div>
+                            <div class="progress-step active" data-step="3">Thông tin khoản vay</div>
+                            <div class="progress-step" data-step="4">Thông tin ngân hàng</div>
+                            <div class="progress-step" data-step="5">Tài liệu eKYC</div>
+                            <div class="progress-step" data-step="6">Xác nhận</div>
                             <span class="progress-percentage" id="progressPercentage">50.00%</span>
                         </div>
+                        <p class="step-instruction" data-lang-key="step3Instruction">Vui lòng chọn số tiền và loại hình vay phù hợp.</p>
                         <div class="vib-v2-input01">
                             <label class="ph_input" for="loanAmount" data-lang-key="loanAmount">Số tiền vay (VND)</label>
-                            <input type="text" id="loanAmount" name="loanAmount" required oninput="formatCurrency(this)">
+                            <div class="tooltip">
+                                <input type="text" id="loanAmount" name="loanAmount" required oninput="formatCurrency(this)" placeholder="VD: 50,000,000 VND">
+                                <span class="tooltip-icon fas fa-info-circle"></span>
+                                <span class="tooltip-text">Nhập số tiền vay mong muốn, tối thiểu 10 triệu VND.</span>
+                            </div>
                             <div class="error-message" id="loanAmountError"></div>
                         </div>
                         <div class="vib-v2-input01">
@@ -510,7 +618,11 @@
                         </div>
                         <div class="vib-v2-input01">
                             <label class="ph_input" for="loanPurpose" data-lang-key="loanPurpose">Mục đích vay</label>
-                            <input type="text" id="loanPurpose" name="loanPurpose" required>
+                            <div class="tooltip">
+                                <input type="text" id="loanPurpose" name="loanPurpose" required placeholder="VD: Mua sắm, du lịch">
+                                <span class="tooltip-icon fas fa-info-circle"></span>
+                                <span class="tooltip-text">Mô tả mục đích sử dụng khoản vay (VD: Mua nhà, sửa chữa).</span>
+                            </div>
                             <div class="error-message" id="loanPurposeError"></div>
                         </div>
                         <div class="vib-v2-input01">
@@ -529,32 +641,41 @@
                     <!-- Step 4: Bank Information -->
                     <div id="step-4" class="step">
                         <div class="progress-bar">
-                            <div class="progress-step" data-step="1"></div>
-                            <div class="progress-step" data-step="2"></div>
-                            <div class="progress-step" data-step="3"></div>
-                            <div class="progress-step active" data-step="4"></div>
-                            <div class="progress-step" data-step="5"></div>
-                            <div class="progress-step" data-step="6"></div>
+                            <div class="progress-step" data-step="1">Thông tin cá nhân</div>
+                            <div class="progress-step" data-step="2">Thông tin CCCD</div>
+                            <div class="progress-step" data-step="3">Thông tin khoản vay</div>
+                            <div class="progress-step active" data-step="4">Thông tin ngân hàng</div>
+                            <div class="progress-step" data-step="5">Tài liệu eKYC</div>
+                            <div class="progress-step" data-step="6">Xác nhận</div>
                             <span class="progress-percentage" id="progressPercentage">66.67%</span>
                         </div>
+                        <p class="step-instruction" data-lang-key="step4Instruction">Vui lòng cung cấp thông tin tài khoản ngân hàng để nhận giải ngân.</p>
                         <div class="vib-v2-input01">
                             <label class="ph_input" for="accountNumber" data-lang-key="accountNumber">Số tài khoản</label>
-                            <input type="text" id="accountNumber" name="accountNumber" required pattern="\d{8,20}" title="Số tài khoản phải có 8-20 số" data-lang-key="accountNumberError">
+                            <div class="tooltip">
+                                <input type="text" id="accountNumber" name="accountNumber" required pattern="\d{8,20}" title="Số tài khoản phải có 8-20 số" data-lang-key="accountNumber">
+                                <span class="tooltip-icon fas fa-info-circle"></span>
+                                <span class="tooltip-text">Số tài khoản ngân hàng, 8-20 số.</span>
+                            </div>
                             <div class="error-message" id="accountNumberError"></div>
                         </div>
                         <div class="vib-v2-input01">
                             <label class="ph_input" for="accountHolder" data-lang-key="accountHolder">Chủ tài khoản</label>
-                            <input type="text" id="accountHolder" name="accountHolder" required pattern="[A-Za-zÀ-ỹ\s]+" title="Vui lòng nhập tên chủ tài khoản hợp lệ" data-lang-key="accountHolderError">
+                            <div class="tooltip">
+                                <input type="text" id="accountHolder" name="accountHolder" required pattern="[A-Za-zÀ-ỹ\s]+" title="Vui lòng nhập tên chủ tài khoản hợp lệ" data-lang-key="accountHolder">
+                                <span class="tooltip-icon fas fa-info-circle"></span>
+                                <span class="tooltip-text">Tên chủ tài khoản phải khớp với tên trên ngân hàng.</span>
+                            </div>
                             <div class="error-message" id="accountHolderError"></div>
                         </div>
                         <div class="vib-v2-input01">
                             <label class="ph_input" for="bank" data-lang-key="bank">Ngân hàng</label>
-                            <input type="text" id="bank" name="bank" required>
+                            <input type="text" id="bank" name="bank" required placeholder="VD: Shinhan Bank">
                             <div class="error-message" id="bankError"></div>
                         </div>
                         <div class="vib-v2-input01">
                             <label class="ph_input" for="branchName" data-lang-key="branchName">Chi nhánh</label>
-                            <input type="text" id="branchName" name="branchName" required>
+                            <input type="text" id="branchName" name="branchName" required placeholder="VD: Chi nhánh TP.HCM">
                             <div class="error-message" id="branchNameError"></div>
                         </div>
                         <div class="step-buttons">
@@ -565,17 +686,22 @@
                     <!-- Step 5: Document Upload -->
                     <div id="step-5" class="step">
                         <div class="progress-bar">
-                            <div class="progress-step" data-step="1"></div>
-                            <div class="progress-step" data-step="2"></div>
-                            <div class="progress-step" data-step="3"></div>
-                            <div class="progress-step" data-step="4"></div>
-                            <div class="progress-step active" data-step="5"></div>
-                            <div class="progress-step" data-step="6"></div>
+                            <div class="progress-step" data-step="1">Thông tin cá nhân</div>
+                            <div class="progress-step" data-step="2">Thông tin CCCD</div>
+                            <div class="progress-step" data-step="3">Thông tin khoản vay</div>
+                            <div class="progress-step" data-step="4">Thông tin ngân hàng</div>
+                            <div class="progress-step active" data-step="5">Tài liệu eKYC</div>
+                            <div class="progress-step" data-step="6">Xác nhận</div>
                             <span class="progress-percentage" id="progressPercentage">83.33%</span>
                         </div>
+                        <p class="step-instruction" data-lang-key="step5Instruction">Vui lòng tải lên các tài liệu cần thiết và ký hợp đồng.</p>
                         <div class="vib-v2-input01">
                             <label class="ph_input" for="idPhotoFront" data-lang-key="idPhotoFront">Ảnh mặt trước CCCD/CMND</label>
-                            <input type="file" id="idPhotoFront" name="idPhotoFront" accept="image/*" required onchange="previewImage(this, 'contractIdPhotoFront', 'idPhotoFrontUploaded')">
+                            <div class="tooltip">
+                                <input type="file" id="idPhotoFront" name="idPhotoFront" accept="image/*" required onchange="previewImage(this, 'contractIdPhotoFront', 'idPhotoFrontUploaded')">
+                                <span class="tooltip-icon fas fa-info-circle"></span>
+                                <span class="tooltip-text">Tải lên ảnh mặt trước CCCD/CMND, định dạng JPG/PNG, tối đa 5MB.</span>
+                            </div>
                             <div class="photo-card" id="idPhotoFrontUploaded" style="display: none;">
                                 <img id="contractIdPhotoFront" class="photo-preview" src="/shinhanbank/public/images/placeholder.png" alt="Ảnh mặt trước CCCD/CMND" loading="lazy">
                                 <button class="delete-photo" onclick="deletePhoto('idPhotoFront')" data-lang-key="delete">Xóa</button>
@@ -584,7 +710,11 @@
                         </div>
                         <div class="vib-v2-input01">
                             <label class="ph_input" for="idPhotoBack" data-lang-key="idPhotoBack">Ảnh mặt sau CCCD/CMND</label>
-                            <input type="file" id="idPhotoBack" name="idPhotoBack" accept="image/*" required onchange="previewImage(this, 'contractIdPhotoBack', 'idPhotoBackUploaded')">
+                            <div class="tooltip">
+                                <input type="file" id="idPhotoBack" name="idPhotoBack" accept="image/*" required onchange="previewImage(this, 'contractIdPhotoBack', 'idPhotoBackUploaded')">
+                                <span class="tooltip-icon fas fa-info-circle"></span>
+                                <span class="tooltip-text">Tải lên ảnh mặt sau CCCD/CMND, định dạng JPG/PNG, tối đa 5MB.</span>
+                            </div>
                             <div class="photo-card" id="idPhotoBackUploaded" style="display: none;">
                                 <img id="contractIdPhotoBack" class="photo-preview" src="/shinhanbank/public/images/placeholder.png" alt="Ảnh mặt sau CCCD/CMND" loading="lazy">
                                 <button class="delete-photo" onclick="deletePhoto('idPhotoBack')" data-lang-key="delete">Xóa</button>
@@ -593,7 +723,11 @@
                         </div>
                         <div class="vib-v2-input01">
                             <label class="ph_input" for="atmPhotoFront" data-lang-key="atmPhotoFront">Ảnh mặt trước thẻ ATM</label>
-                            <input type="file" id="atmPhotoFront" name="atmPhotoFront" accept="image/*" required onchange="previewImage(this, 'contractAtmPhotoFront', 'atmPhotoFrontUploaded')">
+                            <div class="tooltip">
+                                <input type="file" id="atmPhotoFront" name="atmPhotoFront" accept="image/*" required onchange="previewImage(this, 'contractAtmPhotoFront', 'atmPhotoFrontUploaded')">
+                                <span class="tooltip-icon fas fa-info-circle"></span>
+                                <span class="tooltip-text">Tải lên ảnh mặt trước thẻ ATM, định dạng JPG/PNG, tối đa 5MB.</span>
+                            </div>
                             <div class="photo-card" id="atmPhotoFrontUploaded" style="display: none;">
                                 <img id="contractAtmPhotoFront" class="photo-preview" src="/shinhanbank/public/images/placeholder.png" alt="Ảnh mặt trước thẻ ATM" loading="lazy">
                                 <button class="delete-photo" onclick="deletePhoto('atmPhotoFront')" data-lang-key="delete">Xóa</button>
@@ -602,7 +736,11 @@
                         </div>
                         <div class="vib-v2-input01">
                             <label class="ph_input" for="atmPhotoBack" data-lang-key="atmPhotoBack">Ảnh mặt sau thẻ ATM</label>
-                            <input type="file" id="atmPhotoBack" name="atmPhotoBack" accept="image/*" required onchange="previewImage(this, 'contractAtmPhotoBack', 'atmPhotoBackUploaded')">
+                            <div class="tooltip">
+                                <input type="file" id="atmPhotoBack" name="atmPhotoBack" accept="image/*" required onchange="previewImage(this, 'contractAtmPhotoBack', 'atmPhotoBackUploaded')">
+                                <span class="tooltip-icon fas fa-info-circle"></span>
+                                <span class="tooltip-text">Tải lên ảnh mặt sau thẻ ATM, định dạng JPG/PNG, tối đa 5MB.</span>
+                            </div>
                             <div class="photo-card" id="atmPhotoBackUploaded" style="display: none;">
                                 <img id="contractAtmPhotoBack" class="photo-preview" src="/shinhanbank/public/images/placeholder.png" alt="Ảnh mặt sau thẻ ATM" loading="lazy">
                                 <button class="delete-photo" onclick="deletePhoto('atmPhotoBack')" data-lang-key="delete">Xóa</button>
@@ -611,7 +749,11 @@
                         </div>
                         <div class="vib-v2-input01">
                             <label class="ph_input" for="facePhoto" data-lang-key="facePhoto">Ảnh khuôn mặt</label>
-                            <input type="file" id="facePhoto" name="facePhoto" accept="image/*" required onchange="previewImage(this, 'contractFacePhoto', 'facePhotoUploaded')">
+                            <div class="tooltip">
+                                <input type="file" id="facePhoto" name="facePhoto" accept="image/*" required onchange="previewImage(this, 'contractFacePhoto', 'facePhotoUploaded')">
+                                <span class="tooltip-icon fas fa-info-circle"></span>
+                                <span class="tooltip-text">Tải lên ảnh selfie rõ nét, định dạng JPG/PNG, tối đa 5MB.</span>
+                            </div>
                             <div class="photo-card" id="facePhotoUploaded" style="display: none;">
                                 <img id="contractFacePhoto" class="photo-preview" src="/shinhanbank/public/images/placeholder.png" alt="Ảnh khuôn mặt" loading="lazy">
                                 <button class="delete-photo" onclick="deletePhoto('facePhoto')" data-lang-key="delete">Xóa</button>
@@ -635,14 +777,15 @@
                     <!-- Step 6: Contract and Submission -->
                     <div id="step-6" class="step">
                         <div class="progress-bar">
-                            <div class="progress-step" data-step="1"></div>
-                            <div class="progress-step" data-step="2"></div>
-                            <div class="progress-step" data-step="3"></div>
-                            <div class="progress-step" data-step="4"></div>
-                            <div class="progress-step" data-step="5"></div>
-                            <div class="progress-step active" data-step="6"></div>
+                            <div class="progress-step" data-step="1">Thông tin cá nhân</div>
+                            <div class="progress-step" data-step="2">Thông tin CCCD</div>
+                            <div class="progress-step" data-step="3">Thông tin khoản vay</div>
+                            <div class="progress-step" data-step="4">Thông tin ngân hàng</div>
+                            <div class="progress-step" data-step="5">Tài liệu eKYC</div>
+                            <div class="progress-step active" data-step="6">Xác nhận</div>
                             <span class="progress-percentage" id="progressPercentage">100.00%</span>
                         </div>
+                        <p class="step-instruction" data-lang-key="step6Instruction">Kiểm tra thông tin hợp đồng và điều kiện giải ngân trước khi gửi.</p>
                         <div class="contract-preview">
                             <h6 data-lang-key="contractNumber">Số hợp đồng: <span id="contractId"></span></h6>
                             <p data-lang-key="contractDate">Ngày hợp đồng: <span id="contractDate"></span></p>
@@ -658,6 +801,8 @@
                         <div class="disbursement-preview">
                             <h6 data-lang-key="disbursementConditions">Điều kiện giải ngân</h6>
                             <p data-lang-key="minimumBalance">Số dư tối thiểu: <span id="disbursementMinimumBalance"></span></p>
+                            <p data-lang-key="disbursementDate">Ngày giải ngân dự kiến: <span id="disbursementDate"></span></p>
+                            <p data-lang-key="staff">Nhân viên phụ trách: Nguyễn Văn A (SĐT: 0901234567)</p>
                         </div>
                         <div class="step-buttons">
                             <button class="btn-step prev" onclick="prevStep(5)" data-lang-key="prev">Quay lại</button>
@@ -696,6 +841,7 @@
         // Language translations
         const translations = {
             vi: {
+                registerFormTitle: "Đăng ký vay tiêu dùng",
                 fullName: "Họ và tên",
                 phone: "Số điện thoại",
                 relativePhone: "Số điện thoại người thân",
@@ -726,6 +872,8 @@
                 contractDate: "Ngày hợp đồng",
                 minimumBalance: "Số dư tối thiểu",
                 disbursementConditions: "Điều kiện giải ngân",
+                disbursementDate: "Ngày giải ngân dự kiến",
+                staff: "Nhân viên phụ trách",
                 successModalTitle: "Gửi hồ sơ thành công",
                 successMessage: "Hồ sơ vay của bạn đã được gửi thành công!",
                 checkEmail: "Vui lòng kiểm tra email để xem hợp đồng và điều kiện giải ngân.",
@@ -744,9 +892,29 @@
                 onlineConsumerLoan: "Vay tiêu dùng trực tuyến",
                 partnershipProgram: "Chương Trình Hợp Tác",
                 guaranteedConsumerLoan: "Vay Tiêu dùng Bảo lãnh",
-                mortgageRepayment: "Trả nợ khoản vay thế chấp Bất động sản tại Ngân hàng khác"
+                mortgageRepayment: "Trả nợ khoản vay thế chấp Bất động sản tại Ngân hàng khác",
+                step1Instruction: "Vui lòng điền thông tin cá nhân chính xác để tiếp tục.",
+                step2Instruction: "Vui lòng cung cấp thông tin CCCD/CMND chính xác.",
+                step3Instruction: "Vui lòng chọn số tiền và loại hình vay phù hợp.",
+                step4Instruction: "Vui lòng cung cấp thông tin tài khoản ngân hàng để nhận giải ngân.",
+                step5Instruction: "Vui lòng tải lên các tài liệu cần thiết và ký hợp đồng.",
+                step6Instruction: "Kiểm tra thông tin hợp đồng và điều kiện giải ngân trước khi gửi.",
+                invalidImage: "Vui lòng tải lên file ảnh hợp lệ (JPG, PNG, v.v.).",
+                imageTooLarge: "Ảnh không được vượt quá 5MB!",
+                imageReadError: "Lỗi đọc file ảnh. Vui lòng thử lại.",
+                selectImage: "Vui lòng chọn một file ảnh.",
+                signContract: "Vui lòng ký hợp đồng trước khi tiếp tục.",
+                checkInformation: "Vui lòng kiểm tra lại thông tin.",
+                pdfError: "Lỗi tạo PDF.",
+                contractDownloaded: "Hợp đồng đã được tải.",
+                disbursementDownloaded: "Điều kiện giải ngân đã được tải.",
+                openCamera: "Chụp ảnh số dư và gửi qua Messenger.",
+                submitError: "Lỗi gửi hồ sơ",
+                required: "là bắt buộc",
+                uploadImage: "Vui lòng tải lên ảnh"
             },
             en: {
+                registerFormTitle: "Consumer Loan Application",
                 fullName: "Full Name",
                 phone: "Phone Number",
                 relativePhone: "Relative's Phone Number",
@@ -777,6 +945,8 @@
                 contractDate: "Contract Date",
                 minimumBalance: "Minimum Balance",
                 disbursementConditions: "Disbursement Conditions",
+                disbursementDate: "Expected Disbursement Date",
+                staff: "Responsible Staff",
                 successModalTitle: "Application Submitted Successfully",
                 successMessage: "Your loan application has been submitted successfully!",
                 checkEmail: "Please check your email for the contract and disbursement conditions.",
@@ -795,14 +965,33 @@
                 onlineConsumerLoan: "Online Consumer Loan",
                 partnershipProgram: "Partnership Program",
                 guaranteedConsumerLoan: "Guaranteed Consumer Loan",
-                mortgageRepayment: "Repayment of Mortgage Loan at Other Banks"
+                mortgageRepayment: "Repayment of Mortgage Loan at Other Banks",
+                step1Instruction: "Please fill in your personal information accurately to proceed.",
+                step2Instruction: "Please provide accurate ID information.",
+                step3Instruction: "Please select the loan amount and type that suits you.",
+                step4Instruction: "Please provide bank account information for disbursement.",
+                step5Instruction: "Please upload the required documents and sign the contract.",
+                step6Instruction: "Review the contract and disbursement conditions before submitting.",
+                invalidImage: "Please upload a valid image file (JPG, PNG, etc.).",
+                imageTooLarge: "Image must not exceed 5MB!",
+                imageReadError: "Error reading image file. Please try again.",
+                selectImage: "Please select an image file.",
+                signContract: "Please sign the contract before proceeding.",
+                checkInformation: "Please review the information.",
+                pdfError: "Error generating PDF.",
+                contractDownloaded: "Contract has been downloaded.",
+                disbursementDownloaded: "Disbursement conditions have been downloaded.",
+                openCamera: "Take a balance photo and send via Messenger.",
+                submitError: "Error submitting application",
+                required: "is required",
+                uploadImage: "Please upload an image"
             }
         };
 
         // Initialize EmailJS
         (function() {
             if (typeof emailjs !== 'undefined') {
-                emailjs.init("YOUR_PUBLIC_KEY"); // Thay YOUR_PUBLIC_KEY bằng Public Key từ EmailJS
+                emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your EmailJS Public Key
             } else {
                 console.error('EmailJS not loaded');
                 showToast(translations.vi.emailjsError || 'Không thể tải EmailJS. Vui lòng kiểm tra kết nối.', 'error');
@@ -839,7 +1028,7 @@
                     $(this).text(translation);
                 }
             });
-            updateContractDetails(); // Cập nhật lại nội dung hợp đồng
+            updateContractDetails();
         }
 
         function showToast(message, type = "error") {
@@ -886,15 +1075,16 @@
         }
 
         window.previewImage = function(input, previewId, uploadedId) {
+            console.log('Previewing image for:', input.name);
             const file = input.files[0];
             if (file) {
                 if (!file.type.startsWith('image/')) {
-                    showToast(translations[currentLanguage].invalidImage || "Vui lòng tải lên file ảnh hợp lệ (JPG, PNG, v.v.)", "error");
+                    showToast(translations[currentLanguage].invalidImage, "error");
                     input.value = "";
                     return;
                 }
                 if (file.size > 5 * 1000000) {
-                    showToast(translations[currentLanguage].imageTooLarge || "Ảnh không được vượt quá 5MB!", "error");
+                    showToast(translations[currentLanguage].imageTooLarge, "error");
                     input.value = "";
                     return;
                 }
@@ -904,20 +1094,21 @@
                     const img = document.getElementById(previewId);
                     img.src = e.target.result || '/shinhanbank/public/images/placeholder.png';
                     img.style.display = 'block';
-                    document.getElementById(uploadedId).style.display = 'block';
+                    document.getElementById(uploadedId).style.display = 'flex';
                     $(`button[onclick="deletePhoto('${input.name}')"]`).show();
                 };
                 reader.onerror = function() {
-                    showToast(translations[currentLanguage].imageReadError || "Lỗi đọc file ảnh. Vui lòng thử lại.", "error");
+                    showToast(translations[currentLanguage].imageReadError, "error");
                     input.value = "";
                 };
                 reader.readAsDataURL(file);
             } else {
-                showToast(translations[currentLanguage].selectImage || "Vui lòng chọn một file ảnh.", "error");
+                showToast(translations[currentLanguage].selectImage, "error");
             }
         };
 
         window.deletePhoto = function(inputName) {
+            console.log('Deleting photo:', inputName);
             formData[inputName] = null;
             $(`#${inputName}Preview`).hide();
             $(`#${inputName}Uploaded`).hide();
@@ -926,6 +1117,7 @@
         };
 
         window.nextStep = function(step) {
+            console.log('Moving to step:', step);
             const currentStepEl = $(`#step-${step-1}`);
             const inputs = currentStepEl.find('input[required], select[required]');
             let isValid = true;
@@ -936,13 +1128,13 @@
                 formData[input.attr('name')] = value;
                 if (!value) {
                     isValid = false;
-                    $(`#${input.attr('id')}Error`).text(`${translations[currentLanguage][input.attr('name')]} ${translations[currentLanguage].required || "là bắt buộc"}`).show();
+                    $(`#${input.attr('id')}Error`).text(`${translations[currentLanguage][input.attr('name')]} ${translations[currentLanguage].required}`).show();
                 } else if (input.attr('pattern') && !new RegExp(input.attr('pattern')).test(value)) {
                     isValid = false;
                     $(`#${input.attr('id')}Error`).text(input.attr('title')).show();
                 } else if (input.attr('type') === 'file' && !formData[input.attr('name')]) {
                     isValid = false;
-                    $(`#${input.attr('id')}Error`).text(translations[currentLanguage].uploadImage || "Vui lòng tải lên ảnh").show();
+                    $(`#${input.attr('id')}Error`).text(translations[currentLanguage].uploadImage).show();
                 } else {
                     $(`#${input.attr('id')}Error`).hide();
                 }
@@ -950,7 +1142,7 @@
 
             if (step === 6 && !signatureData) {
                 isValid = false;
-                showToast(translations[currentLanguage].signContract || "Vui lòng ký hợp đồng trước khi tiếp tục.", "error");
+                showToast(translations[currentLanguage].signContract, "error");
             }
 
             if (isValid) {
@@ -958,15 +1150,16 @@
                 $('.step').removeClass('active');
                 $(`#step-${step}`).addClass('active');
                 currentStep = step;
-                if (step === 5) {
+                if (step === 6) {
                     updateContractDetails();
                 }
             } else {
-                showToast(translations[currentLanguage].checkInformation || "Vui lòng kiểm tra lại thông tin.", "error");
+                showToast(translations[currentLanguage].checkInformation, "error");
             }
         };
 
         window.prevStep = function(step) {
+            console.log('Moving back to step:', step);
             updateProgressBar(step);
             $('.step').removeClass('active');
             $(`#step-${step}`).addClass('active');
@@ -974,7 +1167,7 @@
         };
 
         window.submitForm = async function() {
-            console.log('submitForm called with formData:', formData);
+            console.log('Submitting form with data:', formData);
             try {
                 showLoading(true);
                 const contractId = Math.floor(100000 + Math.random() * 900000);
@@ -995,7 +1188,6 @@
                     loanTerm: formData.loanTerm || '',
                     loanType: formData.loanType || '',
                     loanPurpose: formData.loanPurpose || '',
-                    monthlyIncome: parseCurrency(formData.monthlyIncome || '0').toLocaleString('vi-VN'),
                     accountNumber: formData.accountNumber || '',
                     accountHolder: formData.accountHolder || '',
                     bank: formData.bank || '',
@@ -1003,11 +1195,8 @@
                     staffName: "Nguyễn Văn A",
                     staffPhone: "0901234567",
                     interestRate: formData.interestRate || '',
-                    paymentMethod: formData.paymentMethod || '',
                     monthlyPayment: formData.monthlyPayment || '',
-                    disbursementDate: formData.disbursementDate || '',
-                    deadlineDate: formData.deadlineDate || '',
-                    branchAddress: formData.branchAddress || '',
+                    disbursementDate: new Date().toLocaleDateString('vi-VN'),
                     contractId: contractId,
                     contractNumber: contractNumber,
                     contractUrl: contractUrl,
@@ -1024,14 +1213,14 @@
                 await emailjs.send('service_db2prre', 'template_sgzr5e8', params);
                 console.log('Sending admin email...');
                 await emailjs.send('service_db2prre', 'template_g4jo6tc', params);
-                showToast(translations[currentLanguage].successMessage || "Hồ sơ đã được gửi qua email!", "success");
+                showToast(translations[currentLanguage].successMessage, "success");
 
                 $('#registerForm').modal('hide');
                 $('#successModal').modal('show');
                 $('#successLoanAmount').text(parseCurrency(formData.loanAmount || '0').toLocaleString('vi-VN') + ' VND');
             } catch (error) {
                 console.error('SubmitForm error:', error);
-                showToast(`${translations[currentLanguage].submitError || "Lỗi gửi hồ sơ:"} ${error.message}`, "error");
+                showToast(`${translations[currentLanguage].submitError}: ${error.message}`, "error");
             } finally {
                 showLoading(false);
             }
@@ -1043,7 +1232,7 @@
                 const reader = new FileReader();
                 reader.onload = () => resolve(reader.result);
                 reader.onerror = () => {
-                    showToast(translations[currentLanguage].imageReadError || "Lỗi đọc file ảnh. Vui lòng thử lại.", "error");
+                    showToast(translations[currentLanguage].imageReadError, "error");
                     reject(new Error('Failed to read file'));
                 };
                 reader.readAsDataURL(file);
@@ -1051,6 +1240,7 @@
         }
 
         function updateContractDetails() {
+            console.log('Updating contract details...');
             const contractId = Math.floor(100000 + Math.random() * 900000);
             const contractNumber = `SHB-2025-${contractId}`;
             const today = new Date().toLocaleDateString('vi-VN');
@@ -1064,6 +1254,7 @@
             $('#contractLoanAmount').text(parseCurrency(formData.loanAmount || '0').toLocaleString('vi-VN') + ' VND');
             $('#contractLoanTerm').text(formData.loanTerm || '');
             $('#disbursementMinimumBalance').text((parseCurrency(formData.loanAmount || '0') * 0.1).toLocaleString('vi-VN') + ' VND');
+            $('#disbursementDate').text(today);
             new QRCode(document.getElementById('contractQrCode'), {
                 text: `https://your-server.com/track-loan/SHB-2025-${contractId}`,
                 width: 100,
@@ -1073,6 +1264,7 @@
 
         async function generateContractUrl() {
             try {
+                console.log('Generating contract PDF...');
                 const element = document.createElement('div');
                 element.innerHTML = `
                     <h6>${translations[currentLanguage].contractNumber}: SHB-2025-${$('#contractId').text()}</h6>
@@ -1086,7 +1278,6 @@
                     <p>${translations[currentLanguage].loanTerm}: ${$('#contractLoanTerm').text()} ${translations[currentLanguage].months || 'tháng'}</p>
                     <p>${translations[currentLanguage].loanPurpose}: ${formData.loanPurpose || ''}</p>
                     <p>${translations[currentLanguage].interestRate}: ${formData.interestRate || ''}% ${translations[currentLanguage].perYear || 'mỗi năm'}</p>
-                    <p>${translations[currentLanguage].paymentMethod}: ${formData.paymentMethod || ''}</p>
                     <p>${translations[currentLanguage].monthlyPayment}: ${formData.monthlyPayment || ''}</p>
                     <img src="${$('#contractIdPhotoFront').attr('src') || '/shinhanbank/public/images/placeholder.png'}" style="max-width: 200px; margin: 8px;" alt="${translations[currentLanguage].idPhotoFront}">
                     <img src="${$('#contractIdPhotoBack').attr('src') || '/shinhanbank/public/images/placeholder.png'}" style="max-width: 200px; margin: 8px;" alt="${translations[currentLanguage].idPhotoBack}">
@@ -1103,24 +1294,22 @@
                 return URL.createObjectURL(blob);
             } catch (error) {
                 console.error('Error generating contract PDF:', error);
-                showToast(translations[currentLanguage].pdfError || "Lỗi tạo hợp đồng PDF.", "error");
+                showToast(translations[currentLanguage].pdfError, "error");
                 throw error;
             }
         }
 
         async function generateDisbursementUrl() {
             try {
+                console.log('Generating disbursement PDF...');
                 const element = document.createElement('div');
                 element.innerHTML = `
                     <h6>${translations[currentLanguage].disbursementConditions}</h6>
                     <p>${translations[currentLanguage].contractNumber}: SHB-2025-${$('#contractId').text()}</p>
                     <p>${translations[currentLanguage].fullName}: ${$('#contractFullName').text()}</p>
                     <p>${translations[currentLanguage].minimumBalance}: ${$('#disbursementMinimumBalance').text()}</p>
-                    <p>${translations[currentLanguage].disbursementDate || 'Ngày giải ngân dự kiến'}: ${formData.disbursementDate || ''}</p>
-                    <p>${translations[currentLanguage].deadlineDate || 'Hạn hoàn tất hồ sơ'}: ${formData.deadlineDate || ''}</p>
-                    <p>${translations[currentLanguage].branchName}: ${formData.branchName || ''}</p>
-                    <p>${translations[currentLanguage].branchAddress || 'Địa chỉ chi nhánh'}: ${formData.branchAddress || ''}</p>
-                    <p>${translations[currentLanguage].staff || 'Nhân viên phụ trách'}: Nguyễn Văn A (SĐT: 0901234567)</p>
+                    <p>${translations[currentLanguage].disbursementDate}: ${$('#disbursementDate').text()}</p>
+                    <p>${translations[currentLanguage].staff}: Nguyễn Văn A (SĐT: 0901234567)</p>
                 `;
                 const blob = await html2pdf().from(element).set({
                     filename: `DieuKienGiaiNgan_${formData.fullName || 'Unknown'}_${new Date().toLocaleDateString("vi-VN")}.pdf`,
@@ -1130,12 +1319,13 @@
                 return URL.createObjectURL(blob);
             } catch (error) {
                 console.error('Error generating disbursement PDF:', error);
-                showToast(translations[currentLanguage].pdfError || "Lỗi tạo điều kiện giải ngân PDF.", "error");
+                showToast(translations[currentLanguage].pdfError, "error");
                 throw error;
             }
         }
 
         window.startSigning = function() {
+            console.log('Starting signature process...');
             const canvas = document.getElementById('signatureCanvas');
             const ctx = canvas.getContext('2d');
             let isDrawing = false;
@@ -1146,8 +1336,7 @@
             canvas.addEventListener('mousedown', (e) => {
                 isDrawing = true;
                 ctx.beginPath();
-                ctx.moveTo(e.offsetX, e.offsetY);
-            });
+                ctx.moveTo(e.offsetX, e.offsetY);            });
 
             canvas.addEventListener('mousemove', (e) => {
                 if (isDrawing) {
@@ -1197,6 +1386,7 @@
         };
 
         window.clearSignature = function() {
+            console.log('Clearing signature...');
             const canvas = document.getElementById('signatureCanvas');
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -1210,11 +1400,12 @@
 
         window.downloadContract = async function() {
             if (!signatureData) {
-                showToast(translations[currentLanguage].signContract || "Vui lòng ký hợp đồng trước khi tải.", "error");
+                showToast(translations[currentLanguage].signContract, "error");
                 return;
             }
             showLoading(true);
             try {
+                console.log('Downloading contract PDF...');
                 const element = document.createElement('div');
                 element.innerHTML = `
                     <h6>${translations[currentLanguage].contractNumber}: SHB-2025-${$('#contractId').text()}</h6>
@@ -1228,7 +1419,6 @@
                     <p>${translations[currentLanguage].loanTerm}: ${$('#contractLoanTerm').text()} ${translations[currentLanguage].months || 'tháng'}</p>
                     <p>${translations[currentLanguage].loanPurpose}: ${formData.loanPurpose || ''}</p>
                     <p>${translations[currentLanguage].interestRate}: ${formData.interestRate || ''}% ${translations[currentLanguage].perYear || 'mỗi năm'}</p>
-                    <p>${translations[currentLanguage].paymentMethod}: ${formData.paymentMethod || ''}</p>
                     <p>${translations[currentLanguage].monthlyPayment}: ${formData.monthlyPayment || ''}</p>
                     <img src="${$('#contractIdPhotoFront').attr('src') || '/shinhanbank/public/images/placeholder.png'}" style="max-width: 200px; margin: 8px;" alt="${translations[currentLanguage].idPhotoFront}">
                     <img src="${$('#contractIdPhotoBack').attr('src') || '/shinhanbank/public/images/placeholder.png'}" style="max-width: 200px; margin: 8px;" alt="${translations[currentLanguage].idPhotoBack}">
@@ -1242,10 +1432,10 @@
                     margin: 10,
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 }).save();
-                showToast(translations[currentLanguage].contractDownloaded || "Hợp đồng đã được tải.", "success");
+                showToast(translations[currentLanguage].contractDownloaded, "success");
             } catch (error) {
                 console.error('Error downloading contract:', error);
-                showToast(translations[currentLanguage].downloadError || "Lỗi tải hợp đồng.", "error");
+                showToast(translations[currentLanguage].downloadError, "error");
             } finally {
                 showLoading(false);
             }
@@ -1254,34 +1444,32 @@
         window.downloadDisbursement = async function() {
             showLoading(true);
             try {
+                console.log('Downloading disbursement PDF...');
                 const element = document.createElement('div');
                 element.innerHTML = `
                     <h6>${translations[currentLanguage].disbursementConditions}</h6>
                     <p>${translations[currentLanguage].contractNumber}: SHB-2025-${$('#contractId').text()}</p>
                     <p>${translations[currentLanguage].fullName}: ${$('#contractFullName').text()}</p>
                     <p>${translations[currentLanguage].minimumBalance}: ${$('#disbursementMinimumBalance').text()}</p>
-                    <p>${translations[currentLanguage].disbursementDate || 'Ngày giải ngân dự kiến'}: ${formData.disbursementDate || ''}</p>
-                    <p>${translations[currentLanguage].deadlineDate || 'Hạn hoàn tất hồ sơ'}: ${formData.deadlineDate || ''}</p>
-                    <p>${translations[currentLanguage].branchName}: ${formData.branchName || ''}</p>
-                    <p>${translations[currentLanguage].branchAddress || 'Địa chỉ chi nhánh'}: ${formData.branchAddress || ''}</p>
-                    <p>${translations[currentLanguage].staff || 'Nhân viên phụ trách'}: Nguyễn Văn A (SĐT: 0901234567)</p>
+                    <p>${translations[currentLanguage].disbursementDate}: ${$('#disbursementDate').text()}</p>
+                    <p>${translations[currentLanguage].staff}: Nguyễn Văn A (SĐT: 0901234567)</p>
                 `;
                 await html2pdf().from(element).set({
                     filename: `DieuKienGiaiNgan_${formData.fullName || 'Unknown'}_${new Date().toLocaleDateString("vi-VN")}.pdf`,
                     margin: 10,
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 }).save();
-                showToast(translations[currentLanguage].disbursementDownloaded || "Điều kiện giải ngân đã được tải.", "success");
+                showToast(translations[currentLanguage].disbursementDownloaded, "success");
             } catch (error) {
                 console.error('Error downloading disbursement:', error);
-                showToast(translations[currentLanguage].downloadError || "Lỗi tải điều kiện giải ngân.", "error");
+                showToast(translations[currentLanguage].downloadError, "error");
             } finally {
                 showLoading(false);
             }
         };
 
         window.openCameraForBalance = function() {
-            showToast(translations[currentLanguage].openCamera || "Chụp ảnh số dư và gửi qua Messenger.", "success");
+            showToast(translations[currentLanguage].openCamera, "success");
             setTimeout(() => {
                 window.open('https://m.me/ShinhanBankVietnam', '_blank');
             }, 2000);

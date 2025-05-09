@@ -6,6 +6,7 @@
     <title>Chụp CMND/CCCD - Shinhan Bank</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -81,6 +82,11 @@
             font-size: 14px;
             color: #666;
         }
+        .file-preview {
+            max-width: 100%;
+            margin-top: 10px;
+            display: none;
+        }
         .btn-primary {
             font-size: 16px;
             font-weight: 700;
@@ -96,18 +102,40 @@
             background-color: #cccccc;
             cursor: not-allowed;
         }
-        .btn-secondary {
+        .btn-danger {
             font-size: 16px;
             font-weight: 700;
             padding: 10px 20px;
-            background-color: #6c757d;
-            border: none;
-            position: absolute;
-            top: 20px;
-            left: 20px;
+            margin: 5px;
         }
-        .btn-secondary:hover {
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 8px 16px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            text-decoration: none;
+        }
+        .back-btn:hover {
             background-color: #5a6268;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .back-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.3);
+        }
+        .back-btn .bi {
+            margin-right: 8px;
         }
         .footer {
             text-align: center;
@@ -129,6 +157,19 @@
             text-align: center;
             margin-top: 20px;
         }
+        .spinner-border {
+            width: 1.5rem;
+            height: 1.5rem;
+            vertical-align: middle;
+            margin-left: 10px;
+            display: none;
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -138,7 +179,9 @@
     </div>
 
     <div class="container">
-        <button type="button" class="btn btn-secondary" onclick="window.location.href='step1.html'">Quay Lại</button>
+        <button type="button" class="back-btn" onclick="window.location.href='step1.html'" aria-label="Quay lại bước đăng ký thông tin cá nhân">
+            <i class="bi bi-arrow-left"></i> Quay Lại
+        </button>
         <div class="progress-bar-container">
             <div class="progress-bar">
                 <div class="progress-bar-fill" id="progressBar" style="width: 20%"></div>
@@ -147,23 +190,29 @@
 
         <div id="step2" class="step-transition">
             <h5 class="step-title">Chụp hoặc Quét CMND/CCCD/Hộ Chiếu</h5>
-            <p class="step-description">Vui lòng chụp ảnh hoặc tải lên ít nhất một ảnh (mặt trước hoặc mặt sau) của CMND/CCCD/Hộ chiếu.</p>
+            <p class="step-description">Vui lòng chụp ảnh hoặc tải lên ít nhất một ảnh (mặt trước hoặc mặt sau) của CMND/CCCD/Hộ chiếu. Đảm bảo ảnh rõ nét, không mờ.</p>
             <div class="mb-3">
                 <label for="idFrontImage" class="form-label">Hình Ảnh Mặt Trước</label>
                 <div class="file-upload-box">
-                    <label for="idFrontImage">Chụp ảnh hoặc tải lên</label>
+                    <label for="idFrontImage" aria-label="Tải lên hình ảnh mặt trước CMND/CCCD">Chụp ảnh hoặc tải lên</label>
                     <input type="file" id="idFrontImage" accept="image/jpeg,image/png" capture="environment">
-                    <button type="button" class="btn btn-primary mt-2" onclick="scanQR('idFrontImage')">Quét Mã QR</button>
-                    <div class="file-info" id="idFrontInfo"></div>
+                    <button type="button" class="btn btn-primary mt-2" onclick="scanQR('idFrontImage')" tabindex="0" aria-label="Quét mã QR cho hình ảnh mặt trước">Quét Mã QR<span class="spinner-border" id="idFrontSpinner"></span></button>
+                    <button type="button" class="btn btn-danger mt-2" onclick="clearImage('idFrontImage')" tabindex="0" aria-label="Xóa hình ảnh mặt trước">Xóa Ảnh</button>
+                    <div class="file-info" id="idFrontInfo" aria-live="polite"></div>
+                    <img class="file-preview" id="idFrontPreview">
+                    <div class="error-message" id="idFrontError"></div>
                 </div>
             </div>
             <div class="mb-3">
                 <label for="idBackImage" class="form-label">Hình Ảnh Mặt Sau</label>
                 <div class="file-upload-box">
-                    <label for="idBackImage">Chụp ảnh hoặc tải lên</label>
+                    <label for="idBackImage" aria-label="Tải lên hình ảnh mặt sau CMND/CCCD">Chụp ảnh hoặc tải lên</label>
                     <input type="file" id="idBackImage" accept="image/jpeg,image/png" capture="environment">
-                    <button type="button" class="btn btn-primary mt-2" onclick="scanQR('idBackImage')">Quét Mã QR</button>
-                    <div class="file-info" id="idBackInfo"></div>
+                    <button type="button" class="btn btn-primary mt-2" onclick="scanQR('idBackImage')" tabindex="0" aria-label="Quét mã QR cho hình ảnh mặt sau">Quét Mã QR<span class="spinner-border" id="idBackSpinner"></span></button>
+                    <button type="button" class="btn btn-danger mt-2" onclick="clearImage('idBackImage')" tabindex="0" aria-label="Xóa hình ảnh mặt sau">Xóa Ảnh</button>
+                    <div class="file-info" id="idBackInfo" aria-live="polite"></div>
+                    <img class="file-preview" id="idBackPreview">
+                    <div class="error-message" id="idBackError"></div>
                 </div>
             </div>
             <div class="continue-btn-container">
@@ -173,14 +222,17 @@
 
         <div class="footer">
             <img src="https://shinhan.com.vn/public/themes/shinhan/img/i_lock.png" alt="Lock Icon" class="lock-icon" onerror="this.src='https://via.placeholder.com/24x24?text=Lock';">
-            <p>© 2025 Shinhan Bank - Hotline: 1900 1234 - Email: <a href="mailto:support@shinhan.com.vn">support@shinhan.com.vn</a></p>
+            <p>© 2025 Shinhan Bank - Hotline: 1900 1234 - Email: <a href="/cdn-cgi/l/email-protection#9be8eeebebf4e9efdbe8f3f2f5f3faf5b5f8f4f6b5edf5"><span class="__cf_email__" data-cfemail="2e5d5b5e5e415c5a6e5d464740464f40004d4143005840">[email protected]</span></a></p>
             <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo" class="footer-logo" onerror="this.src='https://via.placeholder.com/100x40?text=Logo+Shinhan';">
         </div>
     </div>
 
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
     <script>
         // Load user data
         let userData = {
@@ -205,14 +257,25 @@
         };
 
         function loadUserData() {
-            const storedData = localStorage.getItem('userData');
-            if (storedData) {
-                userData = JSON.parse(storedData);
+            try {
+                const storedData = localStorage.getItem('userData');
+                if (storedData) {
+                    userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
+                    console.log('Loaded userData:', userData);
+                }
+            } catch (error) {
+                console.error('Error parsing userData:', error);
             }
         }
 
         function saveToLocalStorage() {
-            localStorage.setItem('userData', JSON.stringify(userData));
+            try {
+                const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(userData), 'shinhan-secret-key').toString();
+                localStorage.setItem('userData', encryptedData);
+                console.log('Saved userData:', userData);
+            } catch (error) {
+                console.error('Error saving userData:', error);
+            }
         }
 
         // Check if at least one image is uploaded
@@ -227,22 +290,73 @@
             $('#proceedToStep3Btn').prop('disabled', !checkImageInput('idFrontImage', 'idBackImage'));
         }
 
+        // Validate file
+        function validateFile(file, inputId) {
+            if (!file) return false;
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            const validTypes = ['image/jpeg', 'image/png'];
+            if (!validTypes.includes(file.type)) {
+                $(`#${inputId}Error`).text('Vui lòng chọn file JPEG hoặc PNG.').show();
+                return false;
+            }
+            if (file.size > maxSize) {
+                $(`#${inputId}Error`).text('File quá lớn. Vui lòng chọn file dưới 5MB.').show();
+                return false;
+            }
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+            return new Promise((resolve) => {
+                img.onload = () => {
+                    if (img.width < 300 || img.height < 200) {
+                        $(`#${inputId}Error`).text('Ảnh quá nhỏ. Độ phân giải tối thiểu 300x200.').show();
+                        resolve(false);
+                    } else {
+                        resolve(true);
+                    }
+                };
+                img.onerror = () => {
+                    $(`#${inputId}Error`).text('Không thể tải ảnh. Vui lòng thử lại.').show();
+                    resolve(false);
+                };
+            });
+        }
+
+        // Clear image
+        function clearImage(inputId) {
+            $(`#${inputId}`).val('');
+            $(`#${inputId}Info`).text('');
+            $(`#${inputId}Preview`).hide();
+            $(`#${inputId}Error`).hide();
+            updateImageButtonState();
+        }
+
         // Handle image uploads
-        $('#idFrontImage, #idBackImage').on('change', function(e) {
+        $('#idFrontImage, #idBackImage').on('change', async function(e) {
             const file = e.target.files[0];
+            const inputId = e.target.id;
+            $(`#${inputId}Error`).hide();
+            $(`#${inputId}Info`).text('');
+            $(`#${inputId}Preview`).hide();
             if (file) {
-                $(`#${e.target.id}Info`).text(`${file.name} (${Math.round(file.size / 1024)} KB)`);
-            } else {
-                $(`#${e.target.id}Info`).text('');
+                const isValid = await validateFile(file, inputId);
+                if (isValid) {
+                    $(`#${inputId}Info`).text(DOMPurify.sanitize(`${file.name} (${Math.round(file.size / 1024)} KB)`));
+                    $(`#${inputId}Preview`).attr('src', URL.createObjectURL(file)).show();
+                } else {
+                    $(this).val('');
+                }
             }
             updateImageButtonState();
         });
 
         // QR scanning
-        function scanQR(inputId) {
+        async function scanQR(inputId) {
             const input = document.getElementById(inputId);
             const file = input.files[0];
+            $(`#${inputId}Error`).hide();
             if (file) {
+                $(`#${inputId}Spinner`).show();
+                $(`#${inputId}Info`).text('Đang xử lý QR...');
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const img = new Image();
@@ -255,29 +369,62 @@
                         ctx.drawImage(img, 0, 0, img.width, img.height);
                         const imageData = ctx.getImageData(0, 0, img.width, img.height);
                         const code = jsQR(imageData.data, imageData.width, imageData.height);
+                        $(`#${inputId}Spinner`).hide();
                         if (code) {
-                            const qrData = JSON.parse(code.data);
-                            userData.qrData[inputId] = {
-                                fullName: qrData.fullName || '',
-                                idNumber: qrData.idNumber || '',
-                                idIssueDate: qrData.idIssueDate || '',
-                                idIssuePlace: qrData.idIssuePlace || ''
-                            };
-                            saveToLocalStorage();
+                            try {
+                                const qrData = JSON.parse(code.data);
+                                const idNumberRegex = /^\d{9,12}$/;
+                                if (!qrData.idNumber || !idNumberRegex.test(qrData.idNumber)) {
+                                    throw new Error('Số CMND/CCCD không hợp lệ');
+                                }
+                                if (!qrData.fullName || !qrData.idIssueDate || !qrData.idIssuePlace) {
+                                    throw new Error('Dữ liệu QR thiếu thông tin bắt buộc');
+                                }
+                                userData.qrData[inputId] = {
+                                    fullName: qrData.fullName || '',
+                                    idNumber: qrData.idNumber || '',
+                                    idIssueDate: qrData.idIssueDate || '',
+                                    idIssuePlace: qrData.idIssuePlace || ''
+                                };
+                                saveToLocalStorage();
+                                $(`#${inputId}Info`).text('QR xử lý thành công.');
+                            } catch (error) {
+                                $(`#${inputId}Error`).text('QR không hợp lệ hoặc dữ liệu không đúng định dạng: ' + error.message).show();
+                                console.error('Invalid QR data:', error);
+                            }
+                        } else {
+                            $(`#${inputId}Error`).text('Không tìm thấy mã QR trong ảnh.').show();
                         }
+                    };
+                    img.onerror = () => {
+                        $(`#${inputId}Spinner`).hide();
+                        $(`#${inputId}Error`).text('Không thể tải ảnh QR.').show();
                     };
                 };
                 reader.readAsDataURL(file);
+                reader.onerror = () => {
+                    $(`#${inputId}Spinner`).hide();
+                    $(`#${inputId}Error`).text('Lỗi đọc file. Vui lòng thử lại.').show();
+                };
+            } else {
+                $(`#${inputId}Error`).text('Vui lòng chọn ảnh trước khi quét QR.').show();
             }
         }
+
+        // Handle keyboard access for buttons
+        $('.btn-primary, .btn-danger, .back-btn').on('keypress', function(e) {
+            if (e.which === 13) {
+                $(this).click();
+            }
+        });
 
         // Proceed to next step
         $('#proceedToStep3Btn').on('click', function(e) {
             e.preventDefault();
             $('#idFrontImage').val('');
             $('#idBackImage').val('');
-            $('#idFrontInfo').text('');
-            $('#idBackInfo').text('');
+            $('#idFrontInfo, #idBackInfo').text('');
+            $('#idFrontPreview, #idBackPreview').hide();
             userData.currentStep = 3;
             saveToLocalStorage();
             window.location.href = 'step3.html';
@@ -289,5 +436,6 @@
             updateImageButtonState();
         };
     </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93cf2a50dda7bcf6',t:'MTc0Njc3MjQwNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

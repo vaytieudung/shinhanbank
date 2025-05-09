@@ -227,7 +227,7 @@
 
         <div id="step1" class="step-transition">
             <h5 class="step-title">Đăng Ký Hồ Sơ Vay Tín Chấp</h5>
-            <p class="step-description">Vui lòng cung cấp thông tin cá nhân để chúng tôi tiến hành xét duyệt. Thông tin của bạn sẽ được gửi qua email để xử lý hồ sơ.</p>
+            <p class="step-description">Vui lòng cung cấp thông tin cá nhân để chúng tôi tiến hành xét duyệt. Thông tin của bạn sẽ được gửi để thẩm định và xử lý hồ sơ.</p>
             <form id="registerForm" novalidate>
                 <div class="mb-3">
                     <label for="fullName" class="form-label">Họ và Tên <span class="tooltip-icon" data-bs-toggle="tooltip" title="Họ tên đầy đủ theo CMND/CCCD" id="fullNameTooltip">ⓘ</span></label>
@@ -235,17 +235,17 @@
                     <div class="invalid-feedback">Vui lòng nhập họ và tên.</div>
                 </div>
                 <div class="mb-3">
-                    <label for="idNumber" class="form-label">Số CMND/CCCD/Hộ chiếu <span class="tooltip-icon" data-bs-toggle="tooltip" title="Số định danh trên giấy tờ tùy thân (9 hoặc 12 số)" id="idNumberTooltip">ⓘ</span></label>
+                    <label for="idNumber" class="form-label">Số CMND/CCCD <span class="tooltip-icon" data-bs-toggle="tooltip" title="Số định danh trên giấy tờ tùy thân (9 hoặc 12 số)" id="idNumberTooltip">ⓘ</span></label>
                     <input type="text" class="form-control" id="idNumber" required placeholder="Nhập 9 hoặc 12 số" aria-describedby="idNumberTooltip">
                     <div class="invalid-feedback">Vui lòng nhập số CMND/CCCD/Hộ chiếu (9 hoặc 12 số).</div>
                 </div>
                 <div class="mb-3">
-                    <label for="idIssueDate" class="form-label">Ngày Cấp CMND/CCCD/Hộ chiếu</label>
+                    <label for="idIssueDate" class="form-label">Ngày Cấp CMND/CCCD</label>
                     <input type="text" class="form-control" id="idIssueDate" required placeholder="DD/MM/YYYY">
                     <div class="invalid-feedback">Vui lòng nhập ngày cấp (DD/MM/YYYY).</div>
                 </div>
                 <div class="mb-3">
-                    <label for="idIssuePlace" class="form-label">Nơi Cấp CMND/CCCD/Hộ chiếu</label>
+                    <label for="idIssuePlace" class="form-label">Nơi Cấp CMND/CCCD</label>
                     <input type="text" class="form-control" id="idIssuePlace" required>
                     <div class="invalid-feedback">Vui lòng nhập nơi cấp.</div>
                 </div>
@@ -349,7 +349,7 @@
                 <div class="mb-3">
                     <div class="terms-box">
                         <img src="https://shinhan.com.vn/public/themes/shinhan/img/i_lock.png" alt="Lock Icon" onerror="this.src='https://via.placeholder.com/28x28?text=Lock';">
-                        <p>Thông tin của bạn sẽ được bảo mật tuyệt đối theo chính sách bảo mật của Shinhan Bank. Dữ liệu sẽ được gửi qua email để xử lý hồ sơ. Vui lòng đọc kỹ <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Điều khoản và Điều kiện</a> trước khi tiếp tục.</p>
+                        <p>Thông tin của bạn sẽ được bảo mật tuyệt đối theo chính sách bảo mật của Shinhan Bank. Dữ liệu sẽ được gửi để thẩm định và xử lý hồ sơ. Vui lòng đọc kỹ <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Điều khoản và Điều kiện</a> trước khi tiếp tục.</p>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="termsAgree" aria-label="Đồng ý với điều khoản và điều kiện">
@@ -359,12 +359,12 @@
                         <div id="termsFeedback" class="invalid-feedback" style="display: none;">Vui lòng đồng ý với các điều khoản và điều kiện.</div>
                     </div>
                 </div>
-                <div class="spam-error" id="spamError">Bạn đã vượt quá số lần đăng ký trong 24 giờ. Vui lòng thử lại sau.</div>
-                <div class="error-message" id="storageError">Lỗi lưu trữ dữ liệu. Vui lòng thử lại.</div>
-                <div class="error-message" id="emailError">Lỗi gửi email. Vui lòng thử lại.</div>
+                <div class="spam-error" id="spamError">Bạn đã có hồ sơ tại Shinhanbank. Vui lòng thử lại sau.</div>
+                <div class="error-message" id="storageError">Lỗi thông tin không trùng khớp. Vui lòng thử lại.</div>
+                <div class="error-message" id="emailError">Lỗi gửi thông tin không trùng khớp trên hệ thống. Vui lòng thử lại.</div>
                 <div class="continue-btn-container">
                     <button type="submit" class="btn btn-primary" id="proceedToStep2Btn" disabled>Tiếp Tục</button>
-                    <button type="button" class="btn btn-primary" id="retryEmailBtn" style="display: none;">Thử Lại Gửi Email</button>
+                    <button type="button" class="btn btn-primary" id="retryEmailBtn" style="display: none;">Thử Lại</button>
                 </div>
             </form>
         </div>

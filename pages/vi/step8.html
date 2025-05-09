@@ -65,7 +65,8 @@
         }
         #contractCanvas {
             width: 100%;
-            max-width: 360px;
+            max-width: 600px;
+            min-height: 850px;
             margin: 20px auto;
             display: block;
             border: 2px solid #e9ecef;
@@ -116,22 +117,6 @@
         .btn-secondary:hover {
             background-color: #5a6268;
             transform: translateY(-2px);
-        }
-        .footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #003087;
-            color: white;
-            margin-top: 20px;
-            font-size: 16px;
-        }
-        .footer img.lock-icon {
-            vertical-align: middle;
-            margin-right: 10px;
-        }
-        .footer-logo {
-            height: 40px;
-            margin-top: 10px;
         }
         .modal-content {
             border: none;
@@ -255,59 +240,58 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
-        // Placeholder user data (for fallback if localStorage is empty)
+        // Placeholder user data (aligned with Step1)
         let userData = {
-            registrationDate: "",
             fullName: "",
             idNumber: "",
+            idIssueDate: "",
+            idIssuePlace: "",
+            address: "",
+            occupation: "",
+            income: "",
             phoneNumber: "",
             email: "",
             loanAmount: "",
-            loanPurpose: "",
-            customLoanPurpose: "",
             loanTerm: "",
-            interestRate: 0,
-            bankAccount: "",
+            loanPurpose: "",
+            accountNumber: "",
+            bankName: "",
+            termsAgree: false,
             loanCode: "",
+            registrationDate: "",
+            monthlyPayment: 0,
+            interestRate: 0,
             sellerCode: "",
             storeCode: "",
-            employeeName: "",
-            branch: "",
-            employeeCode: "",
-            approvedAmount: "",
-            idIssueDate: "",
-            idIssuePlace: "",
+            staffCode: "",
+            staffName: "",
+            branchName: "",
+            isRegistered: false,
+            qrData: {},
             atmCard: {
                 cardNumber: "",
                 cardHolderName: "",
                 issueDate: "",
                 expiryDate: "",
-                cvv: ""
+                cvv: "",
+                frontImage: "",
+                backImage: ""
             },
+            approvedAmount: "",
             currentStep: 8
         };
 
-        // Generate random code (for fallback)
-        function generateRandomCode(length) {
-            const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            let result = "";
-            for (let i = 0; i < length; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
-        }
-
         // Format number to VND
         function formatNumber(number) {
-            if (!number) return "";
+            if (!number) return "Không có";
             return Number(number).toLocaleString('vi-VN');
         }
 
         // Split date into day, month, year
         function splitDate(dateStr) {
-            if (!dateStr) return { day: "", month: "", year: "" };
+            if (!dateStr) return { day: "Không có", month: "Không có", year: "Không có" };
             const [day, month, year] = dateStr.split("/");
-            return { day: day || "", month: month || "", year: year || "" };
+            return { day: day || "Không có", month: month || "Không có", year: year || "Không có" };
         }
 
         // Save to localStorage
@@ -326,7 +310,7 @@
                 const storedData = localStorage.getItem('userData');
                 if (storedData) {
                     userData = JSON.parse(storedData);
-                    console.log('Loaded userData from localStorage:', userData);
+                    console.log('Loaded userData from localStorage for Step8:', userData);
                 } else {
                     console.warn('No userData found in localStorage, using default.');
                 }
@@ -335,68 +319,27 @@
             }
         }
 
-        // Define text fields for canvas (adjusted coordinates for better alignment)
-        const canvasFields = [
-            { label: "", value: userData.registrationDate ? splitDate(userData.registrationDate).day : "", x: 539, y: 443, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.registrationDate ? splitDate(userData.registrationDate).month : "", x: 710, y: 443, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.registrationDate ? splitDate(userData.registrationDate).year : "", x: 902, y: 443, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.fullName || "", x: 685, y: 517, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.idNumber || "", x: 683, y: 585, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.phoneNumber || "", x: 683, y: 725, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.email || "", x: 683, y: 795, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : "", x: 683, y: 961, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.loanPurpose === "Khác" ? userData.customLoanPurpose || "" : userData.loanPurpose || "", x: 673, y: 1233, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.interestRate ? `${userData.interestRate}%` : "", x: 817, y: 1557, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.bankAccount || "", x: 591, y: 2063, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.loanCode || "", x: 1629, y: 573, font: "40px Arial bold", color: "#FF0000" },
-            { label: "", value: userData.registrationDate || "", x: 2005, y: 571, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.sellerCode || "", x: 2071, y: 621, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.storeCode || "", x: 2071, y: 671, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.employeeName || "", x: 1547, y: 2211, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.branch || "", x: 1473, y: 2281, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.employeeCode || "", x: 1575, y: 2377, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: "Đã xét duyệt", x: 1697, y: 2789, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.approvedAmount ? `${formatNumber(userData.approvedAmount)} VND` : "", x: 1819, y: 2909, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.registrationDate ? splitDate(userData.registrationDate).day : "", x: 1645, y: 2977, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.registrationDate ? splitDate(userData.registrationDate).month : "", x: 1825, y: 2977, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.registrationDate ? splitDate(userData.registrationDate).year : "", x: 2025, y: 2977, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.atmCard?.cardNumber || "", x: 683, y: 1020, font: "40px Arial bold", color: "#000000" },
-            { label: "", value: userData.atmCard?.cardHolderName || "", x: 683, y: 1080, font: "40px Arial bold", color: "#000000" }
-        ];
-
-        // Define tick fields for canvas
-        const tickFields = [
-            { condition: userData.loanPurpose === "Sửa chữa nhà", x: 183, y: 1157, symbol: "✓", font: "40px Arial bold", color: "#FF0000" },
-            { condition: userData.loanPurpose === "Mua xe", x: 511, y: 1161, symbol: "✓", font: "40px Arial bold", color: "#FF0000" },
-            { condition: userData.loanPurpose === "Học tập", x: 767, y: 1159, symbol: "✓", font: "40px Arial bold", color: "#FF0000" },
-            { condition: userData.loanPurpose === "Chi tiêu cá nhân", x: 183, y: 1123, symbol: "✓", font: "40px Arial bold", color: "#FF0000" },
-            { condition: userData.loanTerm === "12", x: 575, y: 1479, symbol: "✓", font: "40px Arial bold", color: "#FF0000" },
-            { condition: userData.loanTerm === "24", x: 719, y: 1483, symbol: "✓", font: "40px Arial bold", color: "#FF0000" },
-            { condition: userData.loanTerm === "36", x: 865, y: 1483, symbol: "✓", font: "40px Arial bold", color: "#FF0000" },
-            { condition: true, x: 2119, y: 2495, symbol: "✓", font: "40px Arial bold", color: "#FF0000" },
-            { condition: true, x: 2119, y: 2587, symbol: "✓", font: "40px Arial bold", color: "#FF0000" },
-            { condition: true, x: 2119, y: 2641, symbol: "✓", font: "40px Arial bold", color: "#FF0000" },
-            { condition: true, x: 2119, y: 2697, symbol: "✓", font: "40px Arial bold", color: "#FF0000" }
-        ];
-
         // Render image and text/ticks on canvas
-        function renderCanvas(canvasId, imageUrl) {
+        function renderCanvas(canvasId, imageUrl, fallbackUrl) {
             const canvas = document.getElementById(canvasId);
             const ctx = canvas.getContext('2d');
             const img = new Image();
             img.crossOrigin = "Anonymous";
             img.src = imageUrl;
 
+            canvas.classList.add('loading');
+
             img.onload = function() {
+                canvas.classList.remove('loading');
                 canvas.width = 2480;
                 canvas.height = 3508;
                 ctx.drawImage(img, 0, 0, 2480, 3508);
                 canvasFields.forEach(field => {
-                    const value = field.value || "";
+                    const value = field.value || "Không có";
                     if (field.x >= 0 && field.y >= 0 && field.x < canvas.width && field.y < canvas.height) {
                         ctx.font = field.font;
                         ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
-                        const rectHeight = field.font.includes("32px") ? 30 : 34;
+                        const rectHeight = field.font.includes("36px") ? 32 : 34;
                         ctx.fillRect(field.x - 2, field.y - (rectHeight - 6), ctx.measureText(value).width + 4, rectHeight);
                         ctx.fillStyle = field.color;
                         ctx.fillText(value, field.x, field.y);
@@ -413,15 +356,70 @@
                         console.warn(`Invalid coordinates for tick at (${tick.x}, ${tick.y})`);
                     }
                 });
+                console.log('Rendered canvas with fields:', canvasFields.map(f => ({ value: f.value, x: f.x, y: f.y })));
             };
 
             img.onerror = function() {
                 console.error('Failed to load image:', imageUrl);
-                ctx.fillStyle = '#000000';
-                ctx.font = '40px Arial';
-                ctx.fillText('Không thể tải hình ảnh hợp đồng.', 20, 50);
+                img.src = fallbackUrl;
+                img.onload = function() {
+                    canvas.classList.remove('loading');
+                    canvas.width = 2480;
+                    canvas.height = 3508;
+                    ctx.drawImage(img, 0, 0, 2480, 3508);
+                    ctx.fillStyle = '#000000';
+                    ctx.font = '36px Arial';
+                    ctx.fillText('Hình ảnh hợp đồng mặc định.', 20, 50);
+                };
+                img.onerror = function() {
+                    canvas.classList.remove('loading');
+                    ctx.fillStyle = '#000000';
+                    ctx.font = '36px Arial';
+                    ctx.fillText('Không thể tải hình ảnh hợp đồng.', 20, 50);
+                };
             };
         }
+
+        // Define text fields for canvas (removed storeCode at x:2071, y:671)
+        const canvasFields = [
+            { label: "", value: userData.registrationDate ? splitDate(userData.registrationDate).day : "Không có", x: 539, y: 443, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.registrationDate ? splitDate(userData.registrationDate).month : "Không có", x: 710, y: 443, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.registrationDate ? splitDate(userData.registrationDate).year : "Không có", x: 902, y: 443, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.fullName || "Không có", x: 685, y: 517, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.idNumber || "Không có", x: 683, y: 585, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.phoneNumber || "Không có", x: 683, y: 725, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.email || "Không có", x: 683, y: 795, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : "Không có", x: 683, y: 961, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.loanPurpose || "Không có", x: 673, y: 1233, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.interestRate ? `${userData.interestRate}%` : "Không có", x: 817, y: 1557, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.accountNumber || "Không có", x: 591, y: 2063, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.loanCode || "Không có", x: 1629, y: 573, font: "36px Arial bold", color: "#FF0000" },
+            { label: "", value: userData.registrationDate || "Không có", x: 2005, y: 571, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.sellerCode || "Không có", x: 2071, y: 621, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.staffName || "Không có", x: 1547, y: 2211, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.branchName || "Không có", x: 1473, y: 2281, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: "Đã xét duyệt", x: 1697, y: 2789, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.approvedAmount ? `${formatNumber(userData.approvedAmount)} VND` : "Không có", x: 1819, y: 2909, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.registrationDate ? splitDate(userData.registrationDate).day : "Không có", x: 1645, y: 2977, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.registrationDate ? splitDate(userData.registrationDate).month : "Không có", x: 1825, y: 2977, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.atmCard?.cardNumber || "Không có", x: 683, y: 1020, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.atmCard?.cardHolderName || "Không có", x: 683, y: 1080, font: "36px Arial bold", color: "#000000" }
+        ];
+
+        // Define tick fields for canvas
+        const tickFields = [
+            { condition: userData.loanPurpose === "Sửa chữa nhà", x: 183, y: 1157, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
+            { condition: userData.loanPurpose === "Mua xe", x: 511, y: 1161, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
+            { condition: userData.loanPurpose === "Học tập", x: 767, y: 1159, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
+            { condition: userData.loanPurpose === "Chi tiêu cá nhân", x: 183, y: 1123, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
+            { condition: userData.loanTerm === "12", x: 575, y: 1479, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
+            { condition: userData.loanTerm === "24", x: 719, y: 1483, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
+            { condition: userData.loanTerm === "36", x: 865, y: 1483, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
+            { condition: true, x: 2119, y: 2495, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
+            { condition: true, x: 2119, y: 2587, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
+            { condition: true, x: 2119, y: 2641, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
+            { condition: true, x: 2119, y: 2697, symbol: "✓", font: "36px Arial bold", color: "#FF0000" }
+        ];
 
         // Download canvas as PDF
         function downloadAsPDF(canvas, filename) {
@@ -438,38 +436,37 @@
         // Load user data and populate fields
         window.onload = function() {
             loadUserData();
-            console.log('Rendering canvas with userData:', userData);
-            $('#confirmRegistrationDate').text(userData.registrationDate || '');
-            $('#confirmFullName').text(userData.fullName || '');
-            $('#confirmIdNumber').text(userData.idNumber || '');
-            $('#confirmPhoneNumber').text(userData.phoneNumber || '');
-            $('#confirmEmail').text(userData.email || '');
-            $('#confirmLoanAmount').text(userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : '');
-            $('#confirmLoanPurpose').text(userData.loanPurpose || '');
-            $('#confirmLoanTerm').text(userData.loanTerm ? `${userData.loanTerm} tháng` : '');
-            $('#confirmInterestRate').text(userData.interestRate ? `${userData.interestRate}%` : '');
-            $('#confirmLoanCode').text(userData.loanCode || '');
-            $('#confirmApprovedAmount').text(userData.approvedAmount ? `${formatNumber(userData.approvedAmount)} VND` : '');
-            $('#confirmCardNumber').text(userData.atmCard?.cardNumber || '');
-            $('#confirmCardHolderName').text(userData.atmCard?.cardHolderName || '');
-            renderCanvas('contractCanvas', 'https://raw.githubusercontent.com/vaytieudung/shinhanbank/main/assets/img/anhhopdongvay.png');
+            $('#confirmRegistrationDate').text(userData.registrationDate || 'Không có');
+            $('#confirmFullName').text(userData.fullName || 'Không có');
+            $('#confirmIdNumber').text(userData.idNumber || 'Không có');
+            $('#confirmPhoneNumber').text(userData.phoneNumber || 'Không có');
+            $('#confirmEmail').text(userData.email || 'Không có');
+            $('#confirmLoanAmount').text(userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : 'Không có');
+            $('#confirmLoanPurpose').text(userData.loanPurpose || 'Không có');
+            $('#confirmLoanTerm').text(userData.loanTerm ? `${userData.loanTerm} tháng` : 'Không có');
+            $('#confirmInterestRate').text(userData.interestRate ? `${userData.interestRate}%` : 'Không có');
+            $('#confirmLoanCode').text(userData.loanCode || 'Không có');
+            $('#confirmApprovedAmount').text(userData.approvedAmount ? `${formatNumber(userData.approvedAmount)} VND` : 'Không có');
+            $('#confirmCardNumber').text(userData.atmCard?.cardNumber || 'Không có');
+            $('#confirmCardHolderName').text(userData.atmCard?.cardHolderName || 'Không có');
+            renderCanvas('contractCanvas', 'https://raw.githubusercontent.com/vaytieudung/shinhanbank/main/assets/img/anhhopdongvay.png', 'https://via.placeholder.com/2480x3508?text=Hinh+Hop+Dong');
         };
 
         // Populate confirmation modal
         $('#proceedToStep9Btn').on('click', function() {
-            $('#confirmRegistrationDate').text(userData.registrationDate || '');
-            $('#confirmFullName').text(userData.fullName || '');
-            $('#confirmIdNumber').text(userData.idNumber || '');
-            $('#confirmPhoneNumber').text(userData.phoneNumber || '');
-            $('#confirmEmail').text(userData.email || '');
-            $('#confirmLoanAmount').text(userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : '');
-            $('#confirmLoanPurpose').text(userData.loanPurpose || '');
-            $('#confirmLoanTerm').text(userData.loanTerm ? `${userData.loanTerm} tháng` : '');
-            $('#confirmInterestRate').text(userData.interestRate ? `${userData.interestRate}%` : '');
-            $('#confirmLoanCode').text(userData.loanCode || '');
-            $('#confirmApprovedAmount').text(userData.approvedAmount ? `${formatNumber(userData.approvedAmount)} VND` : '');
-            $('#confirmCardNumber').text(userData.atmCard?.cardNumber || '');
-            $('#confirmCardHolderName').text(userData.atmCard?.cardHolderName || '');
+            $('#confirmRegistrationDate').text(userData.registrationDate || 'Không có');
+            $('#confirmFullName').text(userData.fullName || 'Không có');
+            $('#confirmIdNumber').text(userData.idNumber || 'Không có');
+            $('#confirmPhoneNumber').text(userData.phoneNumber || 'Không có');
+            $('#confirmEmail').text(userData.email || 'Không có');
+            $('#confirmLoanAmount').text(userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : 'Không có');
+            $('#confirmLoanPurpose').text(userData.loanPurpose || 'Không có');
+            $('#confirmLoanTerm').text(userData.loanTerm ? `${userData.loanTerm} tháng` : 'Không có');
+            $('#confirmInterestRate').text(userData.interestRate ? `${userData.interestRate}%` : 'Không có');
+            $('#confirmLoanCode').text(userData.loanCode || 'Không có');
+            $('#confirmApprovedAmount').text(userData.approvedAmount ? `${formatNumber(userData.approvedAmount)} VND` : 'Không có');
+            $('#confirmCardNumber').text(userData.atmCard?.cardNumber || 'Không có');
+            $('#confirmCardHolderName').text(userData.atmCard?.cardHolderName || 'Không có');
         });
 
         // Zoom contract

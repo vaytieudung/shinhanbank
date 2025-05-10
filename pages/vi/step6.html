@@ -6,65 +6,97 @@
     <title>Xét Duyệt Hồ Sơ - Shinhan Bank</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
             font-size: 16px;
-            background-color: #f8f9fa;
             margin: 0;
         }
         .header {
-            text-align: center;
-            padding: 20px;
-            background-color: #003087;
-            color: white;
+            padding: 15px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #b3cde0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .header img {
-            height: 50px;
+            height: 35px;
         }
-        .header h1 {
-            font-size: 26px;
-            font-weight: 700;
-            margin: 10px 0 0 0;
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .header-icons i {
+            font-size: 24px;
+            cursor: pointer;
+            color: #0052cc;
         }
         .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            position: relative;
-        }
-        .progress-bar-container {
-            margin-bottom: 20px;
-        }
-        .progress-bar {
-            height: 20px;
-            background-color: #e9ecef;
+            max-width: 90%;
+            width: 100%;
+            margin: 15px 5%;
+            padding: 15px;
+            background: #ffffff;
             border-radius: 10px;
-            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 82, 204, 0.1);
         }
-        .progress-bar-fill {
-            height: 100%;
-            background-color: #28a745;
-            transition: width 0.3s ease-in-out;
+        @media (min-width: 768px) {
+            .container {
+                max-width: 700px;
+                margin: 15px 5%;
+            }
         }
-        .step-title {
-            color: #003087;
-            font-size: 22px;
-            font-weight: 700;
+        .nav-tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+            margin-top: 10px;
+            flex-wrap: nowrap;
+        }
+        .nav-tabs .nav-item {
+            flex: 1;
             text-align: center;
+        }
+        .nav-tabs .nav-link {
+            background-color: #d3d3d3;
+            color: #ffffff;
+            border-radius: 20px;
+            padding: 8px 10px;
+            font-weight: 500;
+            font-size: 12px;
+            width: 100%;
+            margin: 0 2px;
+            white-space: nowrap;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #0033a0;
+            color: #ffffff;
+        }
+        @media (max-width: 767px) {
+            .nav-tabs .nav-link {
+                font-size: 10px;
+                padding: 6px 8px;
+            }
+        }
+        .section-title {
+            color: #0033a0;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
         }
         .review-container {
             text-align: center;
             padding: 20px;
-            border: 1px solid #dee2e6;
+            border: 1px solid #b3cde0;
             border-radius: 8px;
             background-color: #f9f9f9;
         }
         .review-message {
-            font-size: 16px;
+            font-size: 14px;
             line-height: 1.6;
             color: #333;
             margin-bottom: 20px;
@@ -73,16 +105,19 @@
             width: 3rem;
             height: 3rem;
             border-width: 0.4em;
+            color: #0033a0;
         }
         .progress-bar-review {
             height: 10px;
             background-color: #e9ecef;
             border-radius: 5px;
             overflow: hidden;
+            margin-top: 20px;
         }
         .progress-bar-review-fill {
             height: 100%;
-            background-color: #003087;
+            background-color: #0033a0;
+            transition: width 0.3s ease-in-out;
         }
         .checkmark {
             width: 80px;
@@ -113,79 +148,121 @@
             font-weight: 700;
         }
         .modal-body p {
-            font-size: 16px;
+            font-size: 14px;
             margin: 5px 0;
         }
         .modal-body p strong {
-            color: #003087;
+            color: #0033a0;
         }
         .btn-primary {
-            font-size: 16px;
-            font-weight: 700;
-            padding: 10px 20px;
-            background-color: #003087;
+            background-color: #0033a0;
             border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-weight: 700;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
         }
         .btn-primary:hover {
-            background-color: #00205b;
+            background-color: #0052cc;
         }
         .btn-secondary {
-            font-size: 16px;
-            font-weight: 700;
-            padding: 10px 20px;
-            background-color: #6c757d;
+            background-color: #0033a0;
             border: none;
-            position: absolute;
-            top: 20px;
-            left: 20px;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-weight: 700;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
         }
         .btn-secondary:hover {
-            background-color: #5a6268;
+            background-color: #0052cc;
         }
         .footer {
+            background-color: #0033a0;
+            color: #ffffff;
             text-align: center;
-            padding: 20px;
-            background-color: #003087;
-            color: white;
-            margin-top: 20px;
-            font-size: 16px;
+            padding: 15px;
+            font-size: 12px;
         }
-        .footer img.lock-icon {
-            vertical-align: middle;
-            margin-right: 10px;
+        .footer-links a {
+            color: #b3cde0;
+            margin: 0 8px;
+            text-decoration: none;
         }
-        .footer-logo {
-            height: 40px;
-            margin-top: 10px;
+        .footer-links a:hover {
+            color: #ffffff;
         }
-        .continue-btn-container {
-            text-align: center;
-            margin-top: 20px;
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        @media (max-width: 767px) {
+            .button-group {
+                flex-direction: row;
+                justify-content: center;
+            }
+            .button-group a, .button-group button {
+                flex: 1;
+                text-align: center;
+            }
+        }
+        .dropdown-menu {
+            min-width: 200px;
+        }
+        .dropdown-menu a {
+            color: #0033a0;
+            text-transform: uppercase;
+            font-size: 14px;
+            padding: 8px 12px;
+        }
+        .dropdown-menu a:hover {
+            background-color: #e6f0fa;
+            color: #0052cc;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+Shinhan';">
-        <h1>Đăng Ký Vay Tín Chấp</h1>
+        <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo">
+        <div class="header-icons">
+            <i class="bi bi-search"></i>
+            <div class="dropdown">
+                <i class="bi bi-list" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#">GIỚI THIỆU</a></li>
+                    <li><a class="dropdown-item" href="#">LỢI ÍCH</a></li>
+                    <li><a class="dropdown-item" href="#">GIẤY TỜ CẦN THIẾT</a></li>
+                    <li><a class="dropdown-item" href="#">ĐĂNG KÝ TRỰC TUYẾN</a></li>
+                    <li><a class="dropdown-item" href="#">XEM KẾT QUẢ</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
 
     <div class="container">
-        <button type="button" class="btn btn-secondary" onclick="window.location.href='step4.html'">Quay Lại</button>
-        <div class="progress-bar-container">
-            <div class="progress-bar">
-                <div class="progress-bar-fill" id="progressBar" style="width: 50%"></div>
-            </div>
-        </div>
+        <ul class="nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="#">1. Nhập thông tin</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">2. Xác thực và xử lý</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="#">3. Hoàn thành</a>
+            </li>
+        </ul>
 
-        <div id="step6" class="step-transition">
-            <h5 class="step-title">Đang Xét Duyệt Hồ Sơ</h5>
+        <div id="step5">
+            <h5 class="section-title">ĐANG XÉT DUYỆT HỒ SƠ</h5>
             <div class="review-container">
                 <p class="review-message">Hồ sơ đang được xét duyệt. Quý khách vui lòng chờ. Ngân hàng Shinhanbank đang thẩm định và xét duyệt. Quá trình này sẽ mất vài giây.</p>
-                <div class="spinner-border text-primary" role="status">
+                <div class="spinner-border" role="status">
                     <span class="visually-hidden">Đang tải...</span>
                 </div>
-                <div class="progress-bar-review mt-3">
+                <div class="progress-bar-review">
                     <div class="progress-bar-review-fill" id="reviewProgressFill" style="width: 0%"></div>
                 </div>
             </div>
@@ -196,8 +273,8 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo" onerror="this.src='https://via.placeholder.com/30x30?text=Logo+Shinhan';">
-                        <h5 class="modal-title" id="celebrationModalLabel">Chúc Mừng!</h5>
+                        <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo">
+                        <h5 class="modal-title" id="celebrationModalLabel">CHÚC MỪNG!</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -209,38 +286,46 @@
                         <p id="approvalMessage"></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="proceedToStep7()">Tiếp Tục</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="proceedToStep7()">TIẾP TỤC</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="footer">
-            <img src="https://shinhan.com.vn/public/themes/shinhan/img/i_lock.png" alt="Lock Icon" class="lock-icon" onerror="this.src='https://via.placeholder.com/24x24?text=Lock';">
-            <p>© 2025 Shinhan Bank - Hotline: 1900 1234 - Email: <a href="mailto:support@shinhan.com.vn">support@shinhan.com.vn</a></p>
-            <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo" class="footer-logo" onerror="this.src='https://via.placeholder.com/100x40?text=Logo+Shinhan';">
+        <div class="button-group">
+            <a href="step4.html" class="btn btn-secondary">QUAY LẠI</a>
         </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-links">
+            <a href="#">Chính sách bảo mật</a> |
+            <a href="#">Điều khoản sử dụng</a> |
+            <a href="#">Chính sách Cookies</a> |
+            <a href="#">Miễn khoản từ chối liên kết bên ngoài</a> |
+            <a href="#">Hướng dẫn truy cập web</a> |
+            <a href="#">Sitemap</a>
+        </div>
+        <p class="mt-2">Trung tâm bảo mật | Demo Ngân hàng trực tuyến | Liên hệ | Trang Global Portal | Giới Thiệu</p>
+        <p>© 2015 SHINHAN BANK VIETNAM ALL RIGHTS RESERVED.</p>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Placeholder user data (for fallback if localStorage is empty)
-        const userData = {
+        let userData = {
             fullName: "Nguyễn Văn A",
             loanAmount: 100000000,
             loanCode: "SHB123456",
             registrationDate: "08/05/2025",
             email: "nguyenvana@example.com",
-            currentStep: 6
+            currentStep: 5
         };
 
-        // Format number to VND
         function formatNumber(number) {
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
-        // Load user data from localStorage
         function loadUserData() {
             const storedData = localStorage.getItem('userData');
             if (storedData) {
@@ -248,32 +333,27 @@
             }
         }
 
-        // Save user data to localStorage
         function saveToLocalStorage() {
             localStorage.setItem('userData', JSON.stringify(userData));
         }
 
-        // Start profile review
         function startProfileReview() {
             const progressFill = document.getElementById('reviewProgressFill');
-            progressFill.style.transition = 'width 10s linear'; // Reduced to 10 seconds for better UX
+            progressFill.style.transition = 'width 10s linear';
             progressFill.style.width = '100%';
             setTimeout(() => {
-                // Simulate review completion
                 $('#approvalMessage').text(`Đã đủ điều kiện xét duyệt thành công với số tiền ${formatNumber(userData.loanAmount) || ''} VND`);
                 const modal = new bootstrap.Modal(document.getElementById('celebrationModal'));
                 modal.show();
-            }, 10000); // Match the reduced duration
+            }, 10000);
         }
 
-        // Proceed to Step 7
         function proceedToStep7() {
             userData.currentStep = 7;
             saveToLocalStorage();
             window.location.href = 'step7.html';
         }
 
-        // Load user data and start review
         window.onload = function() {
             loadUserData();
             startProfileReview();

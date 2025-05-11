@@ -208,7 +208,7 @@
         .file-preview {
             max-width: 100%;
             margin-top: 5px;
-            display: none;
+            display: block; /* Đảm bảo ảnh hiển thị khi có src */
         }
         .capture-btn {
             background-color: #0033a0;
@@ -417,50 +417,27 @@
             const { frontFile, backFile } = checkImageInput();
             const hasImages = frontFile && backFile;
             const imagesValid = frontImageValid && backImageValid;
+            console.log('Button state:', { hasImages, imagesValid, frontImageValid, backImageValid });
             $('#proceedToStep3Btn').prop('disabled', !(hasImages && imagesValid));
         }
 
         function validateFile(file, inputId) {
+            console.log('Validating file:', file);
             if (!file) return false;
             const maxSize = 5 * 1024 * 1024;
             const validTypes = ['image/jpeg', 'image/png'];
             if (!validTypes.includes(file.type)) {
-                $(`#${inputId}Error`).text('Vui lòng chọn file JPEG hoặc PNG.').show();
+                $(`#${inputId}Error`).text('Chọn file JPEG/PNG.').show();
                 return false;
             }
             if (file.size > maxSize) {
-                $(`#${inputId}Error`).text('File quá lớn. Vui lòng chọn file dưới 5MB.').show();
+                $(`#${inputId}Error`).text('File dưới 5MB.').show();
                 return false;
             }
-            const img = new Image();
-            img.src = URL.createObjectURL(file);
-            return new Promise((resolve) => {
-                img.onload = () => {
-                    if (img.width < 300 || img.height < 200) {
-                        $(`#${inputId}Error`).text('Ảnh quá nhỏ. Độ phân giải tối thiểu 300x200.').show();
-                        resolve(false);
-                    } else {
-                        validateImageQuality(img, inputId).then(isValid => {
-                            if (isValid) {
-                                if (inputId === 'idFrontImage') frontImageValid = true;
-                                else if (inputId === 'idBackImage') backImageValid = true;
-                            } else {
-                                if (inputId === 'idFrontImage') frontImageValid = false;
-                                else if (inputId === 'idBackImage') backImageValid = false;
-                            }
-                            updateButtonState();
-                            resolve(isValid);
-                        });
-                    }
-                };
-                img.onerror = () => {
-                    $(`#${inputId}Error`).text('Không thể tải ảnh. Vui lòng thử lại.').show();
-                    if (inputId === 'idFrontImage') frontImageValid = false;
-                    else if (inputId === 'idBackImage') backImageValid = false;
-                    updateButtonState();
-                    resolve(false);
-                };
-            });
+            if (inputId === 'idFrontImage') frontImageValid = true;
+            else if (inputId === 'idBackImage') backImageValid = true;
+            updateButtonState();
+            return true;
         }
 
         function validateImageQuality(img, inputId) {
@@ -502,6 +479,7 @@
         }
 
         function captureImage(inputId) {
+            console.log('Capturing image for:', inputId);
             const input = document.getElementById(inputId);
             input.setAttribute('capture', 'environment');
             input.click();
@@ -520,17 +498,21 @@
 
         $('#idFrontImage, #idBackImage').on('change', async function(e) {
             const file = e.target.files[0];
+            console.log('File selected:', file);
             const inputId = e.target.id;
             $(`#${inputId}Error`).hide();
             $(`#${inputId}Info`).text('');
             $(`#${inputId}Preview`).hide();
             if (file) {
                 const isValid = await validateFile(file, inputId);
+                console.log('Validation result:', isValid);
                 if (isValid) {
                     $(`#${inputId}Info`).text(DOMPurify.sanitize(`${file.name} (${Math.round(file.size / 1024)} KB)`));
                     $(`#${inputId}Preview`).attr('src', URL.createObjectURL(file)).show();
+                    console.log('Preview set for:', inputId);
                 } else {
                     $(this).val('');
+                    console.log('Invalid file, cleared input');
                 }
             }
             updateButtonState();

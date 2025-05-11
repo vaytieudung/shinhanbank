@@ -224,7 +224,7 @@
             <div class="dropdown">
                 <i class="bi bi-list" data-bs-toggle="dropdown" aria-expanded="false"></i>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">GIỚI THIỆ\&U</a></li>
+                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">GIỚI THIỆU</a></li>
                     <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/tham-chieu.html">LỢI ÍCH</a></li>
                     <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-vay.html">GIẤY TỜ CẦN THIẾT</a></li>
                     <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html">ĐĂNG KÝ TRỰC TUYẾN</a></li>
@@ -247,7 +247,10 @@
                 <a class="nav-link" href="#">2. Xác thực và xử lý</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="#">3. Hoàn thành</a>
+                <a class="nav-link" href="#">3. Hoàn thành</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="#">4. Xét duyệt</a>
             </li>
         </ul>
 
@@ -319,12 +322,6 @@
 
         function startProfileReview() {
             const progressFill = document.getElementById('reviewProgressFill');
-            if (!progressFill) {
-                console.error('Progress bar not found');
-                $('.review-message').text('Lỗi hệ thống, vui lòng thử lại.');
-                return;
-            }
-
             let width = 0;
             const duration = 10000; // 10 seconds
             const startTime = performance.now();
@@ -337,10 +334,14 @@
                 if (elapsed < duration) {
                     requestAnimationFrame(updateProgress);
                 } else {
-                    // Save data and redirect to step6
-                    userData.currentStep = 6;
-                    saveToLocalStorage();
-                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step6.html';
+                    $('.review-message').text('Xét duyệt hồ sơ thành công!');
+                    $('.spinner-border').hide();
+                    setTimeout(() => {
+                        userData.currentStep = 6;
+                        userData.reviewStatus = 'success';
+                        saveToLocalStorage();
+                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step6.html';
+                    }, 1000); // Delay 1s to show success message
                 }
             }
 

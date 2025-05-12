@@ -114,9 +114,6 @@
         .form-control.ultra-short {
             width: 120px;
         }
-        .form-control.extra-short {
-            width: 120px;
-        }
         .form-control.short {
             width: 250px;
         }
@@ -128,9 +125,6 @@
         }
         @media (max-width: 767px) {
             .form-control.ultra-short {
-                width: 40vw;
-            }
-            .form-control.extra-short {
                 width: 40vw;
             }
             .form-control.short {
@@ -154,9 +148,6 @@
         .form-select.ultra-short {
             width: 120px;
         }
-        .form-select.extra-short {
-            width: 120px;
-        }
         .form-select.short {
             width: 250px;
         }
@@ -168,9 +159,6 @@
         }
         @media (max-width: 767px) {
             .form-select.ultra-short {
-                width: 40vw;
-            }
-            .form-select.extra-short {
                 width: 40vw;
             }
             .form-select.short {
@@ -333,6 +321,14 @@
             background-color: #e6f0fa;
             color: #0033a0;
             font-weight: 700;
+        }
+        .loan-summary {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #0033a0;
+        }
+        .loan-summary p {
+            margin: 5px 0;
         }
     </style>
 </head>
@@ -597,6 +593,12 @@
             <div class="mb-2">
                 <label class="section-title">KẾT QUẢ TÍNH TOÁN</label>
                 <div id="loanResult">
+                    <div class="loan-summary">
+                        <p><strong>Số tiền vay:</strong> <span id="summaryAmount">0 VND</span></p>
+                        <p><strong>Thanh toán hàng tháng:</strong> <span id="summaryMonthly">0 VND</span></p>
+                        <p><strong>Tổng lãi phải trả:</strong> <span id="summaryInterest">0 VND</span></p>
+                        <p><strong>Tổng gốc + lãi:</strong> <span id="summaryTotal">0 VND</span></p>
+                    </div>
                     <table id="resultTable">
                         <tr><th>Tháng</th><th>Gốc (VND)</th><th>Lãi (VND)</th><th>Tổng (VND)</th><th>Dư nợ (VND)</th></tr>
                     </table>
@@ -700,12 +702,18 @@
 
         function calculateLoan() {
             const loanType = document.getElementById('loanType').value;
-            const amount = parseInt(document.getElementById('loanAmountInput').value);
+            const amountInput = document.getElementById('loanAmountInput').value;
             const term = parseInt(document.getElementById('loanTerm').value);
             const interestRate = parseFloat(document.getElementById('interest').value) / 100 / 12;
 
-            if (!loanType || isNaN(amount) || isNaN(term) || isNaN(interestRate)) {
-                $('#formError').text('Vui lòng điền đầy đủ thông tin khoản vay.').show();
+            if (!loanType || !amountInput || amountInput === 'khac' || isNaN(term) || isNaN(interestRate)) {
+                $('#formError').text('Vui lòng chọn loại khoản vay, số tiền hợp lệ và thời hạn vay.').show();
+                return;
+            }
+
+            const amount = parseInt(amountInput);
+            if (amount < 10000000) {
+                $('#formError').text('Số tiền vay tối thiểu là 10,000,000 VND.').show();
                 return;
             }
 
@@ -732,6 +740,13 @@
                 });
             }
 
+            userData.loanAmount = amount;
+            userData.loanTerm = term;
+            userData.interestRate = parseFloat(document.getElementById('interest').value);
+            userData.monthlyPayment = monthlyPayment;
+            userData.totalInterest = totalInterest;
+            userData.totalRepayment = amount + totalInterest;
+
             let resultText = '<table id="resultTable">';
             resultText += '<tr><th>Tháng</th><th>Gốc (VND)</th><th>Lãi (VND)</th><th>Tổng (VND)</th><th>Dư nợ (VND)</th></tr>';
             resultText += rows.map(row => `
@@ -744,7 +759,17 @@
                 </tr>
             `).join('');
             resultText += '</table>';
-            document.getElementById('loanResult').innerHTML = resultText;
+
+            document.getElementById('loanResult').innerHTML = `
+                <div class="loan-summary">
+                    <p><strong>Số tiền vay:</strong> <span id="summaryAmount">${amount.toLocaleString('vi-VN')} VND</span></p>
+                    <p><strong>Thanh toán hàng tháng:</strong> <span id="summaryMonthly">${monthlyPayment.toLocaleString('vi-VN')} VND</span></p>
+                    <p><strong>Tổng lãi phải trả:</strong> <span id="summaryInterest">${totalInterest.toLocaleString('vi-VN')} VND</span></p>
+                    <p><strong>Tổng gốc + lãi:</strong> <span id="summaryTotal">${(amount + totalInterest).toLocaleString('vi-VN')} VND</span></p>
+                </div>
+                ${resultText}
+            `;
+            $('#formError').hide();
         }
 
         function validateForm() {
@@ -773,8 +798,8 @@
 
             for (const field of requiredFields) {
                 const value = $(field.selector).val();
-                if (!value || value.trim() === "") {
-                    $('#formError').text(`Vui lòng điền ${field.label}`).show();
+                if (!value || value.trim() === "" || value === 'khac') {
+                    $('#formError').text(`Vui lòng điền ${field.label} hợp lệ`).show();
                     $('html, body').animate({
                         scrollTop: $(field.selector).offset().top - 50
                     }, 500);
@@ -807,6 +832,7 @@
             $('#accountHolderName').val(userData.accountHolderName || '');
             $('#accountNumber').val(userData.accountNumber || '');
             $('#bankName').val(userData.bankName || '');
+            if (userData.loanType) updateInterestRate();
         };
 
         $('#registerForm').on('submit', function(e) {
@@ -826,6 +852,7 @@
                     loanType: $('#loanType').val(),
                     loanTerm: $('#loanTerm').val(),
                     loanAmount: $('#loanAmountInput').val(),
+                    interestRate: parseFloat($('#interest').val()),
                     disbursementDate: $('#disbursementDate').val().trim(),
                     income: $('#income').val().trim(),
                     occupation: $('#occupation').val(),
@@ -836,7 +863,10 @@
                     accountNumber: $('#accountNumber').val().trim(),
                     bankName: $('#bankName').val(),
                     loanCode: "SHB" + Math.floor(100000 + Math.random() * 900000),
-                    currentStep: 2
+                    currentStep: 2,
+                    monthlyPayment: userData.monthlyPayment || 0,
+                    totalInterest: userData.totalInterest || 0,
+                    totalRepayment: userData.totalRepayment || 0
                 };
                 console.log('Submitting userData:', userData);
 
@@ -853,6 +883,7 @@
                         loan_type: userData.loanType,
                         loan_term: userData.loanTerm,
                         loan_amount: userData.loanAmount,
+                        interest_rate: userData.interestRate,
                         disbursement_date: userData.disbursementDate,
                         income: userData.income,
                         occupation: userData.occupation,
@@ -861,7 +892,8 @@
                         company_address: userData.companyAddress,
                         account_holder_name: userData.accountHolderName,
                         account_number: userData.accountNumber,
-                        bank_name: userData.bankName
+                        bank_name: userData.bankName,
+                        loan_code: userData.loanCode
                     })
                     .then(function(response) {
                         console.log('Email sent successfully:', response);

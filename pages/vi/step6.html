@@ -86,7 +86,7 @@
             color: #003087;
             font-size: 18px;
             font-weight: 700;
-            margin-bottom: 20 renseignements personnels
+            margin-bottom: 20px;
             text-transform: uppercase;
             text-align: center;
         }
@@ -312,24 +312,7 @@
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
-        let userData = {
-            fullName: "",
-            idNumber: "",
-            phoneNumber: "",
-            email: "",
-            loanAmount: "",
-            loanTerm: "",
-            loanPurpose: "",
-            accountNumber: "",
-            bankName: "",
-            loanCode: "",
-            disbursementDate: "",
-            staffName: "",
-            staffCode: "",
-            branchName: "",
-            branchCode: "",
-            currentStep: 7
-        };
+        let userData = {};
 
         function formatNumber(number) {
             if (!number) return "Không có";
@@ -358,9 +341,19 @@
                 if (storedData) {
                     userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
                     console.log('Loaded userData:', userData);
+                    if (!userData.isRegistered) {
+                        alert('Bạn đã có hồ sơ tại Ngân hàng Shinhan Bank. Vui lòng quay lại bước đăng ký.');
+                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
+                    }
+                } else {
+                    console.error('No userData found in localStorage');
+                    alert('Không tìm thấy dữ liệu hồ sơ, vui lòng thử lại.');
+                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
                 }
             } catch (error) {
                 console.error('Error parsing userData:', error);
+                alert('Lỗi tải dữ liệu, vui lòng thử lại.');
+                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
             }
         }
 
@@ -476,7 +469,26 @@
 
         window.onload = function() {
             loadUserData();
+            // Cập nhật canvasFields với dữ liệu từ userData
+            canvasFields[0].value = userData.disbursementDate ? splitDate(userData.disbursementDate).day : "Không có";
+            canvasFields[1].value = userData.disbursementDate ? splitDate(userData.disbursementDate).month : "Không có";
+            canvasFields[2].value = userData.disbursementDate ? splitDate(userData.disbursementDate).year : "Không có";
+            canvasFields[3].value = userData.fullName || "Không có";
+            canvasFields[4].value = userData.idNumber || "Không có";
+            canvasFields[5].value = userData.phoneNumber || "Không có";
+            canvasFields[6].value = userData.email || "Không có";
+            canvasFields[7].value = userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : "Không có";
+            canvasFields[8].value = userData.loanPurpose || "Không có";
+            canvasFields[9].value = userData.accountNumber || "Không có";
+            canvasFields[10].value = userData.loanCode || "Không có";
+            canvasFields[11].value = userData.disbursementDate || "Không có";
+            canvasFields[17].value = userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : "Không có";
+            canvasFields[18].value = userData.disbursementDate ? splitDate(userData.disbursementDate).day : "Không có";
+            canvasFields[19].value = userData.disbursementDate ? splitDate(userData.disbursementDate).month : "Không có";
+
             renderCanvas('contractCanvas', 'https://raw.githubusercontent.com/vaytieudung/shinhanbank/main/assets/img/anhhopdongvay.png', 'https://via.placeholder.com/2480x3508?text=Hinh+Hop+Dong');
+            userData.currentStep = 7;
+            saveToLocalStorage();
         };
 
         $('#downloadContractBtn').on('click', function() {

@@ -91,7 +91,7 @@
             text-align: center;
         }
         .approval-container {
-            text-align: center;
+            text-align: left;
             padding: 20px;
             border: 1px solid #dee2e6;
             border-radius: 8px;
@@ -127,12 +127,23 @@
             font-weight: 500;
             color: #28a745;
             margin: 20px 0;
+            text-align: center;
         }
         .approval-details {
             font-size: 14px;
             line-height: 1.6;
             color: #1a3c87;
             margin-bottom: 20px;
+        }
+        .approval-details ul {
+            list-style: none;
+            padding: 0;
+        }
+        .approval-details ul li {
+            margin: 5px 0;
+        }
+        .approval-details ul li strong {
+            color: #0033a0;
         }
         .btn-primary {
             background-color: #0033a0;
@@ -204,7 +215,7 @@
         }
         .modal-body {
             padding: 20px;
-            text-align: center;
+            text-align: left;
         }
         .modal-body p {
             font-size: 14px;
@@ -270,7 +281,6 @@
             background-color: #e6f0fa;
             color: #0052cc;
         }
-        /* Fireworks effect */
         .fireworks-canvas {
             position: absolute;
             top: 0;
@@ -325,7 +335,7 @@
                     <path fill="none" stroke="#28a745" stroke-width="4" d="M14 27l8 8 16-16"/>
                 </svg>
                 <p class="approval-message">Hồ sơ đã được xét duyệt thành công!</p>
-                <p class="approval-details" id="approvalDetails"></p>
+                <div class="approval-details" id="approvalDetails"></div>
                 <div class="action-buttons">
                     <button id="proceedToContractBtn" class="btn btn-primary">Xem Hợp Đồng</button>
                 </div>
@@ -339,9 +349,8 @@
             </div>
         </div>
 
-        <!-- Modal: Success Notification -->
         <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <canvas class="fireworks-canvas"></canvas>
                     <div class="modal-header">
@@ -354,12 +363,8 @@
                             <circle cx="26" cy="26" r="25" fill="none" stroke="#28a745" stroke-width="4"/>
                             <path fill="none" stroke="#28a745" stroke-width="4" d="M14 27l8 8 16-16"/>
                         </svg>
-                        <p>Hồ sơ vay tín chấp của bạn đã được duyệt thành công!</p>
-                        <ul>
-                            <li><strong>Họ và tên:</strong> <span id="modalFullName"></span></li>
-                            <li><strong>Số tiền vay:</strong> <span id="modalLoanAmount"></span></li>
-                            <li><strong>Mã hồ sơ:</strong> <span id="modalLoanCode"></span></li>
-                        </ul>
+                        <p>Hồ sơ vay của bạn đã được duyệt thành công! Dưới đây là chi tiết hồ sơ:</p>
+                        <ul id="modalDetails"></ul>
                     </div>
                 </div>
             </div>
@@ -387,15 +392,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
     <script>
-        let userData = {
-            fullName: "",
-            loanAmount: "",
-            loanTerm: "",
-            interestRate: 7.5,
-            loanCode: "",
-            approvedAmount: "",
-            currentStep: 6
-        };
+        let userData = {};
 
         function formatNumber(number) {
             return number ? Number(number).toLocaleString('vi-VN') : "Không có";
@@ -407,6 +404,9 @@
                 if (storedData) {
                     userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
                     console.log('Loaded userData:', userData);
+                } else {
+                    console.error('No userData found in localStorage');
+                    $('.approval-message').text('Không tìm thấy dữ liệu hồ sơ, vui lòng thử lại.');
                 }
             } catch (error) {
                 console.error('Error parsing userData:', error);
@@ -431,12 +431,40 @@
         }
 
         function showDetails() {
-            $('#approvalDetails').text(
-                `Khoản vay ${formatNumber(userData.approvedAmount) || ''} VNĐ trong ${userData.loanTerm || ''} tháng với mức lãi suất ${userData.interestRate || ''}% của Quý khách đã được Ngân hàng Shinhan phê duyệt thành công. Vui lòng xem hồ sơ vay vốn và điều kiện giải ngân để tiếp tục.`
-            );
+            const details = `
+                <ul>
+                    <li><strong>Họ và tên:</strong> ${userData.fullName || 'Không có'}</li>
+                    <li><strong>Ngày sinh:</strong> ${userData.dob || 'Không có'}</li>
+                    <li><strong>Giới tính:</strong> ${userData.gender || 'Không có'}</li>
+                    <li><strong>Địa chỉ thường trú:</strong> ${userData.contactAddress || 'Không có'}</li>
+                    <li><strong>Số định danh cá nhân (CCCD/CMND):</strong> ${userData.idNumber || 'Không có'}</li>
+                    <li><strong>Nơi cấp:</strong> ${userData.idIssuePlace || 'Không có'}</li>
+                    <li><strong>Số điện thoại:</strong> ${userData.phoneNumber || 'Không có'}</li>
+                    <li><strong>E-mail:</strong> ${userData.email || 'Không có'}</li>
+                    <li><strong>Hình thức vay:</strong> ${userData.loanType || 'Không có'}</li>
+                    <li><strong>Thời hạn vay:</strong> ${userData.loanTerm ? userData.loanTerm + ' tháng' : 'Không có'}</li>
+                    <li><strong>Số tiền vay:</strong> ${formatNumber(userData.loanAmount)} VND</li>
+                    <li><strong>Lãi suất:</strong> ${userData.interestRate ? userData.interestRate + '%/năm' : 'Không có'}</li>
+                    <li><strong>Dự kiến giải ngân ngày:</strong> ${userData.disbursementDate || 'Không có'}</li>
+                    <li><strong>Thu nhập hàng tháng:</strong> ${formatNumber(userData.income)} VND</li>
+                    <li><strong>Nghề nghiệp:</strong> ${userData.occupation || 'Không có'}</li>
+                    <li><strong>Mục đích vay:</strong> ${userData.loanPurpose || 'Không có'}</li>
+                    <li><strong>Số điện thoại người thân:</strong> ${userData.companyPhone || 'Không có'}</li>
+                    <li><strong>Quan hệ:</strong> ${userData.companyAddress || 'Không có'}</li>
+                    <li><strong>Tên chủ tài khoản:</strong> ${userData.accountHolderName || 'Không có'}</li>
+                    <li><strong>Số tài khoản:</strong> ${userData.accountNumber || 'Không có'}</li>
+                    <li><strong>Tên ngân hàng:</strong> ${userData.bankName || 'Không có'}</li>
+                    <li><strong>Thanh toán hàng tháng:</strong> ${formatNumber(userData.monthlyPayment)} VND</li>
+                    <li><strong>Tổng lãi phải trả:</strong> ${formatNumber(userData.totalInterest)} VND</li>
+                    <li><strong>Tổng gốc + lãi:</strong> ${formatNumber(userData.totalRepayment)} VND</li>
+                    <li><strong>Mã hồ sơ:</strong> ${userData.loanCode || 'Không có'}</li>
+                </ul>
+                <p>Khoản vay của Quý khách đã được Ngân hàng Shinhan phê duyệt thành công. Vui lòng xem hồ sơ vay vốn và điều kiện giải ngân để tiếp tục.</p>
+            `;
+            $('#approvalDetails').html(details);
+            $('#modalDetails').html(details);
         }
 
-        // Fireworks effect
         function createFireworks(canvas) {
             const ctx = canvas.getContext('2d');
             let particles = [];
@@ -496,14 +524,10 @@
 
         window.onload = function() {
             loadUserData();
-            $('#modalFullName').text(userData.fullName || 'Không có');
-            $('#modalLoanAmount').text(`${formatNumber(userData.loanAmount) || 'Không có'} VND`);
-            $('#modalLoanCode').text(userData.loanCode || 'Không có');
             showDetails();
             const modal = new bootstrap.Modal(document.getElementById('successModal'), { backdrop: 'static' });
             modal.show();
 
-            // Initialize fireworks
             const canvas = document.querySelector('.fireworks-canvas');
             if (canvas) createFireworks(canvas);
         };

@@ -86,7 +86,7 @@
             color: #003087;
             font-size: 18px;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 20 renseignements personnels
             text-transform: uppercase;
             text-align: center;
         }
@@ -312,10 +312,28 @@
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
-        let userData = {};
+        let userData = {
+            fullName: "",
+            idNumber: "",
+            phoneNumber: "",
+            email: "",
+            loanAmount: "",
+            loanTerm: "",
+            loanPurpose: "",
+            accountNumber: "",
+            bankName: "",
+            loanCode: "",
+            disbursementDate: "",
+            staffName: "",
+            staffCode: "",
+            branchName: "",
+            branchCode: "",
+            currentStep: 7
+        };
 
         function formatNumber(number) {
-            return number ? Number(number).toLocaleString('vi-VN') : "Không có";
+            if (!number) return "Không có";
+            return Number(number).toLocaleString('vi-VN');
         }
 
         function splitDate(dateStr) {
@@ -340,8 +358,6 @@
                 if (storedData) {
                     userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
                     console.log('Loaded userData:', userData);
-                } else {
-                    console.error('No userData found in localStorage');
                 }
             } catch (error) {
                 console.error('Error parsing userData:', error);
@@ -368,12 +384,9 @@
                         ctx.font = field.font;
                         ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
                         const rectHeight = field.font.includes("36px") ? 32 : 34;
-                        const textWidth = ctx.measureText(value).width;
-                        ctx.fillRect(field.x - 2, field.y - (rectHeight - 6), textWidth + 4, rectHeight);
+                        ctx.fillRect(field.x - 2, field.y - (rectHeight - 6), ctx.measureText(value).width + 4, rectHeight);
                         ctx.fillStyle = field.color;
                         ctx.fillText(value, field.x, field.y);
-                    } else {
-                        console.warn(`Invalid coordinates for field: ${value} at (${field.x}, ${field.y})`);
                     }
                 });
                 tickFields.forEach(tick => {
@@ -407,33 +420,26 @@
         }
 
         const canvasFields = [
-            { value: userData.disbursementDate ? splitDate(userData.disbursementDate).day : "Không có", x: 539, y: 443, font: "36px Arial bold", color: "#000000" },
-            { value: userData.disbursementDate ? splitDate(userData.disbursementDate).month : "Không có", x: 710, y: 443, font: "36px Arial bold", color: "#000000" },
-            { value: userData.disbursementDate ? splitDate(userData.disbursementDate).year : "Không có", x: 902, y: 443, font: "36px Arial bold", color: "#000000" },
-            { value: userData.fullName || "Không có", x: 685, y: 517, font: "36px Arial bold", color: "#000000" },
-            { value: userData.idNumber || "Không có", x: 683, y: 585, font: "36px Arial bold", color: "#000000" },
-            { value: userData.phoneNumber || "Không có", x: 683, y: 725, font: "36px Arial bold", color: "#000000" },
-            { value: userData.email || "Không có", x: 683, y: 795, font: "36px Arial bold", color: "#000000" },
-            { value: userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : "Không có", x: 683, y: 961, font: "36px Arial bold", color: "#000000" },
-            { value: userData.loanTerm ? `${userData.loanTerm} tháng` : "Không có", x: 683, y: 1030, font: "36px Arial bold", color: "#000000" },
-            { value: userData.interestRate ? `${userData.interestRate}%/năm` : "Không có", x: 683, y: 1100, font: "36px Arial bold", color: "#000000" },
-            { value: userData.loanPurpose || "Không có", x: 673, y: 1233, font: "36px Arial bold", color: "#000000" },
-            { value: userData.income ? `${formatNumber(userData.income)} VND` : "Không có", x: 683, y: 1300, font: "36px Arial bold", color: "#000000" },
-            { value: userData.occupation || "Không có", x: 683, y: 1370, font: "36px Arial bold", color: "#000000" },
-            { value: userData.companyPhone || "Không có", x: 683, y: 1440, font: "36px Arial bold", color: "#000000" },
-            { value: userData.companyAddress || "Không có", x: 683, y: 1510, font: "36px Arial bold", color: "#000000" },
-            { value: userData.accountHolderName || "Không có", x: 591, y: 1990, font: "36px Arial bold", color: "#000000" },
-            { value: userData.accountNumber || "Không có", x: 591, y: 2063, font: "36px Arial bold", color: "#000000" },
-            { value: userData.bankName || "Không có", x: 591, y: 2130, font: "36px Arial bold", color: "#000000" },
-            { value: userData.monthlyPayment ? `${formatNumber(userData.monthlyPayment)} VND` : "Không có", x: 591, y: 2200, font: "36px Arial bold", color: "#000000" },
-            { value: userData.totalInterest ? `${formatNumber(userData.totalInterest)} VND` : "Không có", x: 591, y: 2270, font: "36px Arial bold", color: "#000000" },
-            { value: userData.totalRepayment ? `${formatNumber(userData.totalRepayment)} VND` : "Không có", x: 591, y: 2340, font: "36px Arial bold", color: "#000000" },
-            { value: userData.loanCode || "Không có", x: 1629, y: 573, font: "36px Arial bold", color: "#FF0000" },
-            { value: userData.disbursementDate || "Không có", x: 2005, y: 571, font: "36px Arial bold", color: "#000000" },
-            { value: "Đã xét duyệt", x: 1697, y: 2789, font: "36px Arial bold", color: "#000000" },
-            { value: userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : "Không có", x: 1699, y: 2903, font: "36px Arial bold", color: "#000000" },
-            { value: userData.disbursementDate ? splitDate(userData.disbursementDate).day : "Không có", x: 1645, y: 2977, font: "36px Arial bold", color: "#000000" },
-            { value: userData.disbursementDate ? splitDate(userData.disbursementDate).month : "Không có", x: 1825, y: 2977, font: "36px Arial bold", color: "#000000" }
+            { label: "", value: userData.disbursementDate ? splitDate(userData.disbursementDate).day : "Không có", x: 539, y: 443, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.disbursementDate ? splitDate(userData.disbursementDate).month : "Không có", x: 710, y: 443, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.disbursementDate ? splitDate(userData.disbursementDate).year : "Không có", x: 902, y: 443, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.fullName || "Không có", x: 685, y: 517, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.idNumber || "Không có", x: 683, y: 585, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.phoneNumber || "Không có", x: 683, y: 725, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.email || "Không có", x: 683, y: 795, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : "Không có", x: 683, y: 961, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.loanPurpose || "Không có", x: 673, y: 1233, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.accountNumber || "Không có", x: 591, y: 2063, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.loanCode || "Không có", x: 1629, y: 573, font: "36px Arial bold", color: "#FF0000" },
+            { label: "", value: userData.disbursementDate || "Không có", x: 2005, y: 571, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.staffName || "Không có", x: 1325, y: 2204, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.branchName || "Không có", x: 1326, y: 2277, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.branchCode || "Không có", x: 1550, y: 2369, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.staffCode || "Không có", x: 1995, y: 2369, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: "Đã xét duyệt", x: 1697, y: 2789, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : "Không có", x: 1699, y: 2903, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.disbursementDate ? splitDate(userData.disbursementDate).day : "Không có", x: 1645, y: 2977, font: "36px Arial bold", color: "#000000" },
+            { label: "", value: userData.disbursementDate ? splitDate(userData.disbursementDate).month : "Không có", x: 1825, y: 2977, font: "36px Arial bold", color: "#000000" }
         ];
 
         const tickFields = [
@@ -484,6 +490,5 @@
             window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step7.html';
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93e886ae4a71bfff',t:'MTc0NzAzODMzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

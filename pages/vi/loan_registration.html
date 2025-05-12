@@ -682,6 +682,11 @@
                 if (storedData) {
                     userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
                     console.log('Loaded userData from localStorage:', userData);
+                    // Kiểm tra trạng thái đăng ký
+                    if (userData.isRegistered) {
+                        $('#formError').text('Bạn đã đăng ký thành công. Vui lòng kiểm tra email hoặc liên hệ hỗ trợ để tiếp tục.').show();
+                        $('#registerForm').find('input, select, button[type="submit"]').prop('disabled', true);
+                    }
                 }
             } catch (error) {
                 console.error('Error loading userData from localStorage:', error);
@@ -810,6 +815,37 @@
             return true;
         }
 
+        // Lưu dữ liệu tạm thời khi nhập
+        function saveFormDataRealTime() {
+            userData = {
+                fullName: $('#fullName').val().trim(),
+                dob: $('#dob').val().trim(),
+                gender: $('#gender').val(),
+                contactAddress: $('#contactAddress').val().trim(),
+                idNumber: $('#idNumber').val().trim(),
+                idIssuePlace: $('#idIssuePlace').val(),
+                phoneNumber: $('#phoneNumber').val().trim(),
+                email: $('#email').val().trim(),
+                loanType: $('#loanType').val(),
+                loanTerm: $('#loanTerm').val(),
+                loanAmount: $('#loanAmountInput').val(),
+                interestRate: parseFloat($('#interest').val()),
+                disbursementDate: $('#disbursementDate').val().trim(),
+                income: $('#income').val().trim(),
+                occupation: $('#occupation').val(),
+                loanPurpose: $('#loanPurpose').val(),
+                companyPhone: $('#companyPhone').val().trim(),
+                companyAddress: $('#companyAddress').val(),
+                accountHolderName: $('#accountHolderName').val().trim(),
+                accountNumber: $('#accountNumber').val().trim(),
+                bankName: $('#bankName').val(),
+                monthlyPayment: userData.monthlyPayment || 0,
+                totalInterest: userData.totalInterest || 0,
+                totalRepayment: userData.totalRepayment || 0
+            };
+            saveToLocalStorage();
+        }
+
         window.onload = function() {
             loadUserData();
             $('#disbursementDate').val(getCurrentDate());
@@ -833,11 +869,19 @@
             $('#accountNumber').val(userData.accountNumber || '');
             $('#bankName').val(userData.bankName || '');
             if (userData.loanType) updateInterestRate();
+
+            // Gắn sự kiện input để lưu dữ liệu real-time
+            $('#registerForm input, #registerForm select').on('input change', saveFormDataRealTime);
         };
 
         $('#registerForm').on('submit', function(e) {
             e.preventDefault();
             $('#formError').hide();
+
+            if (userData.isRegistered) {
+                $('#formError').text('Bạn đã đăng ký thành công. Vui lòng kiểm tra email hoặc liên hệ hỗ trợ để tiếp tục.').show();
+                return;
+            }
 
             if (validateForm()) {
                 userData = {
@@ -866,7 +910,8 @@
                     currentStep: 2,
                     monthlyPayment: userData.monthlyPayment || 0,
                     totalInterest: userData.totalInterest || 0,
-                    totalRepayment: userData.totalRepayment || 0
+                    totalRepayment: userData.totalRepayment || 0,
+                    isRegistered: true // Đánh dấu đã đăng ký
                 };
                 console.log('Submitting userData:', userData);
 
@@ -910,5 +955,6 @@
         });
     </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93e83c68aaf4bf9a',t:'MTc0NzAzNTI5MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93e9c41bcbd244ea',t:'MTc0NzA1MTMzNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

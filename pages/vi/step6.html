@@ -333,8 +333,20 @@
 
         function splitDate(dateStr) {
             if (!dateStr) return { day: "Không có", month: "Không có", year: "Không có" };
-            const [day, month, year] = dateStr.split("/");
+            const [year, month, day] = dateStr.split("-");
             return { day: day || "Không có", month: month || "Không có", year: year || "Không có" };
+        }
+
+        function calculateDueDate(disbursementDate, loanTerm) {
+            if (!disbursementDate || !loanTerm) return "Không có";
+            const date = new Date(disbursementDate);
+            date.setMonth(date.getMonth() + parseInt(loanTerm));
+            return date.toISOString().split('T')[0];
+        }
+
+        function generateRandomCode(prefix) {
+            const randomNum = Math.floor(100000 + Math.random() * 900000);
+            return `${prefix}${randomNum}`;
         }
 
         function saveToLocalStorage() {
@@ -394,8 +406,8 @@
                 canvas.height = 3508;
                 ctx.drawImage(img, 0, 0, 2480, 3508);
                 canvasFields.forEach(field => {
-                    const value = field.value || "Không có";
-                    if (field.x >= 0 && field.y >= 0 && field.x < canvas.width && field.y < canvas.height) {
+                    const value = field.value || "";
+                    if (value && field.x >= 0 && field.y >= 0 && field.x < canvas.width && field.y < canvas.height) {
                         ctx.font = field.font;
                         ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
                         const rectHeight = field.font.includes("36px") ? 32 : 34;
@@ -445,16 +457,26 @@
             { label: "", value: "", x: 683, y: 961, font: "36px Arial bold", color: "#000000" }, // loanAmount
             { label: "", value: "", x: 673, y: 1233, font: "36px Arial bold", color: "#000000" }, // loanPurpose
             { label: "", value: "", x: 591, y: 2063, font: "36px Arial bold", color: "#000000" }, // accountNumber
-            { label: "", value: "", x: 1629, y: 573, font: "36px Arial bold", color: "#FF0000" }, // loanCode
+            { label: "", value: generateRandomCode("SHBVN"), x: 1629, y: 573, font: "36px Arial bold", color: "#FF0000" }, // loanCode
             { label: "", value: "", x: 2005, y: 571, font: "36px Arial bold", color: "#000000" }, // disbursementDate
-            { label: "", value: "Không có", x: 1325, y: 2204, font: "36px Arial bold", color: "#000000" }, // staffName
-            { label: "", value: "Không có", x: 1326, y: 2277, font: "36px Arial bold", color: "#000000" }, // branchName
-            { label: "", value: "Không có", x: 1550, y: 2369, font: "36px Arial bold", color: "#000000" }, // branchCode
-            { label: "", value: "Không có", x: 1995, y: 2369, font: "36px Arial bold", color: "#000000" }, // staffCode
+            { label: "", value: "NGUYỄN THỊ MỸ DUYÊN", x: 1325, y: 2204, font: "36px Arial bold", color: "#000000" }, // staffName
+            { label: "", value: "CHI NHÁNH HỒ CHÍ MINH", x: 1326, y: 2277, font: "36px Arial bold", color: "#000000" }, // branchName
+            { label: "", value: generateRandomCode("SHBVN"), x: 1550, y: 2369, font: "36px Arial bold", color: "#000000" }, // branchCode
+            { label: "", value: generateRandomCode("SHBVN"), x: 1995, y: 2369, font: "36px Arial bold", color: "#000000" }, // staffCode
             { label: "", value: "Đã xét duyệt", x: 1697, y: 2789, font: "36px Arial bold", color: "#000000" },
             { label: "", value: "", x: 1699, y: 2903, font: "36px Arial bold", color: "#000000" }, // loanAmount
             { label: "", value: "", x: 1645, y: 2977, font: "36px Arial bold", color: "#000000" }, // disbursementDate.day
-            { label: "", value: "", x: 1825, y: 2977, font: "36px Arial bold", color: "#000000" }  // disbursementDate.month
+            { label: "", value: "", x: 1825, y: 2977, font: "36px Arial bold", color: "#000000" }, // disbursementDate.month
+            { label: "", value: "", x: 683, y: 1031, font: "36px Arial bold", color: "#000000" }, // loanTerm
+            { label: "", value: "", x: 801, y: 1555, font: "36px Arial bold", color: "#000000" }, // interestRate
+            { label: "", value: "", x: 683, y: 1171, font: "36px Arial bold", color: "#000000" }, // dueDate
+            { label: "", value: "", x: 689, y: 1241, font: "36px Arial bold", color: "#000000" }, // monthlyPayment
+            { label: "", value: "", x: 685, y: 1307, font: "36px Arial bold", color: "#000000" }, // totalInterest
+            { label: "", value: "", x: 681, y: 1381, font: "36px Arial bold", color: "#000000" }, // totalRepayment
+            { label: "", value: generateRandomCode("SHBVN"), x: 1631, y: 571, font: "36px Arial bold", color: "#FF0000" }, // contractNumber
+            { label: "", value: generateRandomCode("SHBVN"), x: 1729, y: 615, font: "36px Arial bold", color: "#000000" }, // sellerCode
+            { label: "", value: generateRandomCode("SHBVN"), x: 2075, y: 617, font: "36px Arial bold", color: "#000000" }, // storeCode
+            { label: "", value: "", x: 2031, y: 2973, font: "36px Arial bold", color: "#000000" } // disbursementDate.year
         ];
 
         const tickFields = [
@@ -492,24 +514,29 @@
         window.onload = function() {
             loadUserData();
 
-            // Cập nhật canvasFields với dữ liệu từ userData
-            canvasFields[0].value = userData.disbursementDate ? splitDate(userData.disbursementDate).day : "Không có";
-            canvasFields[1].value = userData.disbursementDate ? splitDate(userData.disbursementDate).month : "Không có";
-            canvasFields[2].value = userData.disbursementDate ? splitDate(userData.disbursementDate).year : "Không có";
-            canvasFields[3].value = userData.fullName || "Không có";
-            canvasFields[4].value = userData.idNumber || "Không có";
-            canvasFields[5].value = userData.phoneNumber || "Không có";
-            canvasFields[6].value = userData.email || "Không có";
-            canvasFields[7].value = userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : "Không có";
-            canvasFields[8].value = userData.loanPurpose || "Không có";
-            canvasFields[9].value = userData.accountNumber || "Không có";
-            canvasFields[10].value = userData.loanCode || "Không có";
-            canvasFields[11].value = userData.disbursementDate || "Không có";
-            canvasFields[17].value = userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : "Không có";
-            canvasFields[18].value = userData.disbursementDate ? splitDate(userData.disbursementDate).day : "Không có";
-            canvasFields[19].value = userData.disbursementDate ? splitDate(userData.disbursementDate).month : "Không có";
+            // Calculate due date
+            const dueDate = calculateDueDate(userData.disbursementDate, userData.loanTerm);
 
-            // Cập nhật tickFields dựa trên loanPurpose và loanTerm
+            // Update canvasFields with user data
+            canvasFields[0].value = userData.disbursementDate ? splitDate(userData.disbursementDate).day : "";
+            canvasFields[1].value = userData.disbursementDate ? splitDate(userData.disbursementDate).month : "";
+            canvasFields[2].value = userData.disbursementDate ? splitDate(userData.disbursementDate).year : "";
+            canvasFields[3].value = userData.fullName || "";
+            canvasFields[4].value = userData.cccd || "";
+            canvasFields[5].value = userData.phone || "";
+            canvasFields[6].value = userData.email || "";
+            canvasFields[7].value = userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : "";
+            canvasFields[8].value = userData.loanPurpose || "";
+            canvasFields[9].value = userData.accountNumber || "";
+            canvasFields[10].value = userData.loanCode || "";
+            canvasFields[11].value = userData.disbursementDate || "";
+            canvasFields[17].value = userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : "";
+            canvasFields[18].value = userData.disbursementDate ? splitDate(userData.disbursementDate).day : "";
+            canvasFields[19].value = userData.disbursementDate ? splitDate(userData.disbursementDate).month : "";
+            canvasFields[21].value = userData.interestRate ? `${userData.interestRate}%/năm` : "";
+            canvasFields[29].value = userData.disbursementDate ? splitDate(userData.disbursementDate).year : "";
+
+            // Update tickFields based on loanPurpose and loanTerm
             tickFields[0].condition = userData.loanPurpose === "Mua nhà";
             tickFields[1].condition = userData.loanPurpose === "Mua xe";
             tickFields[2].condition = userData.loanPurpose === "Kinh doanh";

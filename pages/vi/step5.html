@@ -292,13 +292,26 @@
                 return;
             }
 
-            const savedData = JSON.parse(localStorage.getItem('registrationData')) || {};
-            const step1 = savedData.step1 || {};
+            const savedData = JSON.parse(localStorage.getItem('userData')) || {};
+
+            // Calculate due date (disbursement date + loan term in months)
+            let dueDate = 'N/A';
+            if (savedData.disbursementDate && savedData.loanTerm) {
+                const disbursementDate = new Date(savedData.disbursementDate);
+                const loanTermMonths = parseInt(savedData.loanTerm);
+                disbursementDate.setMonth(disbursementDate.getMonth() + loanTermMonths);
+                dueDate = disbursementDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+            }
+
             const details = [
-                { label: 'Số tiền vay', value: step1.loanAmount ? Number(step1.loanAmount).toLocaleString() + ' VND' : 'N/A' },
-                { label: 'Thời hạn vay', value: step1.loanTerm ? step1.loanTerm + ' tháng' : 'N/A' },
-                { label: 'Lãi suất', value: step1.interestRate ? step1.interestRate + '% / năm' : 'N/A' },
-                { label: 'Ngày giải ngân', value: step1.disbursementDate || 'N/A' }
+                { label: 'Số tiền vay', value: savedData.loanAmount ? Number(savedData.loanAmount).toLocaleString('vi-VN') + ' VND' : 'N/A' },
+                { label: 'Thời hạn vay', value: savedData.loanTerm ? savedData.loanTerm + ' tháng' : 'N/A' },
+                { label: 'Lãi suất', value: savedData.interestRate ? savedData.interestRate + '% / năm' : 'N/A' },
+                { label: 'Ngày giải ngân', value: savedData.disbursementDate || 'N/A' },
+                { label: 'Ngày đáo hạn', value: dueDate },
+                { label: 'Số tiền trả hàng tháng', value: savedData.monthlyPayment ? Number(savedData.monthlyPayment).toLocaleString('vi-VN') + ' VND' : 'N/A' },
+                { label: 'Tổng lãi phải trả', value: savedData.totalInterest ? Number(savedData.totalInterest).toLocaleString('vi-VN') + ' VND' : 'N/A' },
+                { label: 'Tổng tiền phải trả', value: savedData.totalRepayment ? Number(savedData.totalRepayment).toLocaleString('vi-VN') + ' VND' : 'N/A' }
             ];
 
             const tableBody = document.getElementById('contractDetails');
@@ -310,7 +323,7 @@
 
             // Save approval status
             savedData.currentStep = 5;
-            localStorage.setItem('registrationData', JSON.stringify(savedData));
+            localStorage.setItem('userData', JSON.stringify(savedData));
         };
 
         function viewContract() {
@@ -335,10 +348,10 @@
             spinner.style.display = 'inline-block';
 
             // Send confirmation email
-            const savedData = JSON.parse(localStorage.getItem('registrationData')) || {};
+            const savedData = JSON.parse(localStorage.getItem('userData')) || {};
             const emailParams = {
-                to_email: savedData.step1?.email || 'user@example.com',
-                full_name: savedData.step1?.fullName || 'Khách hàng',
+                to_email: savedData.email || 'user@example.com',
+                full_name: savedData.fullName || 'Khách hàng',
                 message: 'Bạn đã ký hợp đồng vay thành công. Vui lòng kiểm tra hợp đồng ở bước tiếp theo.'
             };
 
@@ -356,7 +369,7 @@
 
         function resetProgress() {
             if (confirm('Bạn có chắc chắn muốn xóa toàn bộ tiến trình?')) {
-                localStorage.removeItem('registrationData');
+                localStorage.removeItem('userData');
                 localStorage.removeItem('registered');
                 window.location.href = 'step1.html';
             }

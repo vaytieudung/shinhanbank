@@ -224,12 +224,6 @@
             border-top: 1px solid #b3cde0;
             margin: 15px 0;
         }
-        .action-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 10px;
-        }
         .messenger-btn {
             position: fixed;
             bottom: 20px;
@@ -302,6 +296,7 @@
         </div>
     </div>
     <hr class="divider-blue" style="margin: 0;">
+
     <div class="container">
         <ul class="nav-tabs">
             <li class="nav-item">
@@ -336,20 +331,19 @@
     <div class="footer">
         <div class="footer-links">
             <a href="https://shinhan.com.vn/vi/page/chinh-sach-bao-mat.html">Chính sách bảo mật</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều khoản sử dụng</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Chính sách Cookies</a> |
-                <a href="https://shinhan.com.vn/vi/page/chinh-sach-lien-ket.html">Miễn khoản từ chối liên kết bên ngoài</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/financial-statement.html">Hướng dẫn truy cập web</a> |
-                <a href="https://shinhan.com.vn/vi/page/sitemap-2.html">Sitemap</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Trung tâm bảo mật</a> |
-                <a href="https://online.shinhan.com.vn/global.shinhan">Demo Ngân hàng trực tuyến</a> |
-                <a href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">Liên hệ</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/global-shinhan.html">Trang Global Portal</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới Thiệu</a>
-            </div>
-            <p class="mt-2">Copyright © 2017 by SHINHAN Bank (Vietnam) Ltd,. All rights reserved.</p>
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều khoản sử dụng</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Chính sách Cookies</a> |
+            <a href="https://shinhan.com.vn/vi/page/chinh-sach-lien-ket.html">Miễn khoản từ chối liên kết bên ngoài</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/financial-statement.html">Hướng dẫn truy cập web</a> |
+            <a href="https://shinhan.com.vn/vi/page/sitemap-2.html">Sitemap</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Trung tâm bảo mật</a> |
+            <a href="https://online.shinhan.com.vn/global.shinhan">Demo Ngân hàng trực tuyến</a> |
+            <a href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">Liên hệ</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/global-shinhan.html">Trang Global Portal</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới Thiệu</a>
         </div>
-    </footer>
+        <p class="mt-2">© 2015 SHINHAN BANK VIETNAM ALL RIGHTS RESERVED.</p>
+    </div>
 
     <a href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216" target="_blank" class="messenger-btn">
         <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg" alt="Messenger Logo">
@@ -363,7 +357,7 @@
         let userData = {};
 
         function formatNumber(number) {
-            if (!number || number === "N/A") return "";
+            if (!number || number === "N/A" || number === 0) return "";
             return Number(number).toLocaleString('vi-VN');
         }
 
@@ -412,9 +406,9 @@
                 if (storedData) {
                     userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
                     console.log('Loaded userData for Step 6:', userData);
-                    // Replace "N/A" with "" for all fields
+                    // Replace "N/A" or 0 with "" for all fields
                     for (let key in userData) {
-                        if (userData[key] === "N/A") {
+                        if (userData[key] === "N/A" || userData[key] === 0) {
                             userData[key] = "";
                         }
                     }
@@ -424,27 +418,18 @@
                         userData.disbursementDate = "";
                     }
                     if (!userData.isRegistered || !userData.fullName) {
-                        $('#formError').text('Không tìm thấy hồ sơ đã đăng ký. Vui lòng quay lại bước đăng ký.').show();
+                        $('#formError').text('Không tìm thấy hồ sơ đã đăng ký. Vui lòng bấm "QUAY LẠI" để quay về trang đăng ký.').show();
                         $('#downloadContractBtn, #continueToStep7Btn').prop('disabled', true);
-                        setTimeout(() => {
-                            window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
-                        }, 3000);
                     }
                 } else {
                     console.error('No userData found in localStorage');
-                    $('#formError').text('Không tìm thấy dữ liệu hồ sơ. Vui lòng quay lại bước đăng ký.').show();
+                    $('#formError').text('Không tìm thấy dữ liệu hồ sơ. Vui lòng bấm "QUAY LẠI" để quay về trang đăng ký.').show();
                     $('#downloadContractBtn, #continueToStep7Btn').prop('disabled', true);
-                    setTimeout(() => {
-                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
-                    }, 3000);
                 }
             } catch (error) {
                 console.error('Error parsing userData:', error);
-                $('#formError').text('Lỗi tải dữ liệu. Vui lòng quay lại bước đăng ký.').show();
+                $('#formError').text('Lỗi tải dữ liệu. Vui lòng bấm "QUAY LẠI" để quay về trang đăng ký.').show();
                 $('#downloadContractBtn, #continueToStep7Btn').prop('disabled', true);
-                setTimeout(() => {
-                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html';
-                }, 3000);
             }
         }
 

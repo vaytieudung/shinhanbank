@@ -8,8 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js" async></script>
-    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js" async></script>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
     <style>
         :root {
             --primary-color: #003087;
@@ -19,6 +18,20 @@
         body {
             font-family: 'Roboto', sans-serif;
             background-color: var(--secondary-color);
+            transition: background-color 0.3s ease;
+        }
+        body.scanning {
+            background-color: #000000;
+        }
+        body.scanning .navbar,
+        body.scanning .step-indicator,
+        body.scanning .progress-percentage,
+        body.scanning .instructions,
+        body.scanning .accordion-item .accordion-header,
+        body.scanning .text-center.mt-2,
+        body.scanning .upload-input,
+        body.scanning .d-flex.justify-content-between {
+            display: none !important;
         }
         .navbar {
             background-color: var(--primary-color);
@@ -111,18 +124,59 @@
             position: relative;
             width: 100%;
             max-width: 320px;
-            aspect-ratio: 4 / 3;
+            aspect-ratio: 1 / 1;
             margin: 0 auto;
             display: grid;
             place-items: center;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+        body.scanning .webcam-container {
+            max-width: 280px;
+        }
+        #webcamVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .overlay-mask {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 8;
+            display: none;
+        }
+        body.scanning .overlay-mask {
+            display: block;
+        }
+        .overlay-mask::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            background: transparent;
+            border-radius: 50%;
+            box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.8);
+        }
+        body.scanning .overlay-mask::before {
+            top: 5%;
+            left: 5%;
+            width: 90%;
+            height: 90%;
         }
         .face-overlay {
             position: absolute;
-            top: 15%;
-            left: 15%;
-            width: 70%;
-            height: 70%;
-            border: 2px dashed #ffffff;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            border: 2px solid #ffffff;
             border-radius: 50%;
             pointer-events: none;
             z-index: 10;
@@ -144,16 +198,56 @@
         }
         .face-overlay::before {
             top: 50%;
-            left: -20px;
+            left: -25px;
             transform: translateY(-50%) rotate(180deg);
         }
         .face-overlay::after {
             top: 50%;
-            right: -20px;
+            right: -25px;
             transform: translateY(-50%);
         }
         .face-overlay.show-arrows::before, .face-overlay.show-arrows::after {
             opacity: 1;
+        }
+        .progress-circle {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            z-index: 9;
+        }
+        body.scanning .face-overlay,
+        body.scanning .progress-circle {
+            top: 5%;
+            left: 5%;
+            width: 90%;
+            height: 90%;
+        }
+        #webcamStatus {
+            font-size: 1rem;
+            color: #333;
+            z-index: 11;
+            position: relative;
+        }
+        body.scanning #webcamStatus {
+            font-size: 1.2rem;
+            color: #ffffff;
+            text-align: center;
+            margin-top: 20px;
+        }
+        #webcamSuccess {
+            z-index: 11;
+            position: relative;
+        }
+        body.scanning #webcamSuccess {
+            font-size: 1.2rem;
+            color: #28a745;
+            text-align: center;
+            margin-top: 20px;
+        }
+        #retryButton {
+            display: none; /* Ẩn nút Thử Lại mặc định */
         }
         .btn-primary {
             background-color: var(--primary-color);
@@ -203,7 +297,7 @@
             max-width: 100%;
         }
         .partner-logos {
-            display: none; /* Ẩn toàn bộ khối logo */
+            display: none;
         }
         .instructions {
             display: flex;
@@ -222,6 +316,23 @@
         .instruction-item i {
             color: var(--accent-color);
             font-size: 1rem;
+        }
+        .upload-input {
+            margin-top: 10px;
+            font-size: 0.85rem;
+        }
+        .upload-input input {
+            width: 100%;
+            padding: 5px;
+            font-size: 0.85rem;
+        }
+        #faceImagePreview {
+            margin-top: 10px;
+            max-height: 150px;
+            overflow: hidden;
+        }
+        #faceImagePreview img {
+            max-height: 150px;
         }
         @media (max-width: 768px) {
             .navbar-brand img {
@@ -254,17 +365,31 @@
                 margin-bottom: 10px;
             }
             .webcam-container {
-                max-width: 100%;
+                max-width: 280px;
             }
-            .face-overlay {
-                top: 10%;
-                left: 10%;
-                width: 80%;
-                height: 80%;
+            .face-overlay, .progress-circle {
+                top: 5%;
+                left: 5%;
+                width: 90%;
+                height: 90%;
             }
             .instructions {
                 flex-direction: column;
                 gap: 8px;
+            }
+            .upload-input {
+                font-size: 0.8rem;
+            }
+            #faceImagePreview {
+                max-height: 120px;
+            }
+            #faceImagePreview img {
+                max-height: 120px;
+            }
+            body.scanning #webcamStatus,
+            body.scanning #webcamSuccess {
+                font-size: 1rem;
+                margin-top: 15px;
             }
         }
     </style>
@@ -324,7 +449,7 @@
                 <div class="accordion-item">
                     <h2 class="accordion-header">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#webcamSection" aria-expanded="true" aria-controls="webcamSection">
-                            Quét Khuôn Mặt
+                            Xác Minh Khuôn Mặt
                         </button>
                     </h2>
                     <div id="webcamSection" class="accordion-collapse collapse show" data-bs-parent="#faceAccordion">
@@ -332,32 +457,34 @@
                             <div class="webcam-container">
                                 <video id="webcamVideo" autoplay playsinline muted></video>
                                 <canvas id="webcamCanvas" style="display: none;"></canvas>
+                                <div class="overlay-mask"></div>
+                                <svg class="progress-circle" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#808080" stroke-width="4" stroke-dasharray="35.34" stroke-dashoffset="0" transform="rotate(0 50 50)"/>
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#808080" stroke-width="4" stroke-dasharray="35.34" stroke-dashoffset="0" transform="rotate(45 50 50)"/>
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#808080" stroke-width="4" stroke-dasharray="35.34" stroke-dashoffset="0" transform="rotate(90 50 50)"/>
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#808080" stroke-width="4" stroke-dasharray="35.34" stroke-dashoffset="0" transform="rotate(135 50 50)"/>
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#808080" stroke-width="4" stroke-dasharray="35.34" stroke-dashoffset="0" transform="rotate(180 50 50)"/>
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#808080" stroke-width="4" stroke-dasharray="35.34" stroke-dashoffset="0" transform="rotate(225 50 50)"/>
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#808080" stroke-width="4" stroke-dasharray="35.34" stroke-dashoffset="0" transform="rotate(270 50 50)"/>
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#808080" stroke-width="4" stroke-dasharray="35.34" stroke-dashoffset="0" transform="rotate(315 50 50)"/>
+                                </svg>
                                 <div class="face-overlay" id="faceOverlay"></div>
                             </div>
                             <p id="webcamStatus" class="text-center mt-2">Đang chờ khuôn mặt...</p>
                             <p id="webcamError" class="error text-center"></p>
-                            <p id="webcamSuccess" class="success-message text-center">Ảnh khuôn mặt đã được chụp!</p>
+                            <p id="webcamSuccess" class="success-message text-center">Quét hoàn tất!</p>
                             <div class="text-center mt-2">
-                                <button class="btn btn-primary" onclick="takeSnapshot()">Quét Khuôn Mặt</button>
-                                <button class="btn btn-secondary" onclick="resetWebcam()">Thử Lại</button>
-                                <button class="btn btn-outline-secondary" onclick="takeSnapshot(true)">Quét Đơn Giản</button>
+                                <button class="btn btn-primary" onclick="startFaceScan()">Quét Khuôn Mặt</button>
+                                <button class="btn btn-primary" onclick="takeSnapshot(true)">Chụp Ảnh</button>
+                                <button id="retryButton" class="btn btn-secondary" onclick="resetWebcam()">Thử Lại</button>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#uploadSection" aria-expanded="false" aria-controls="uploadSection">
-                            Chọn Ảnh Khuôn Mặt
-                        </button>
-                    </h2>
-                    <div id="uploadSection" class="accordion-collapse collapse" data-bs-parent="#faceAccordion">
-                        <div class="accordion-body">
-                            <p>Ảnh cần rõ nét, hiển thị toàn bộ khuôn mặt, không chỉnh sửa.</p>
-                            <input type="file" id="faceImage" accept="image/jpeg,image/png" aria-label="Tải ảnh khuôn mặt">
-                            <div id="faceImagePreview" class="mt-2"></div>
-                            <p id="faceImageError" class="error"></p>
-                            <p id="faceImageSuccess" class="success-message">Ảnh khuôn mặt đã được tải lên!</p>
+                            <div class="upload-input text-center">
+                                <p>Tải ảnh khuôn mặt (JPG/PNG, < 5MB)</p>
+                                <input type="file" id="faceImage" accept="image/jpeg,image/png" aria-label="Tải ảnh khuôn mặt">
+                                <div id="faceImagePreview"></div>
+                                <p id="faceImageError" class="error"></p>
+                                <p id="faceImageSuccess" class="success-message">Ảnh khuôn mặt đã được tải lên!</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -406,7 +533,6 @@
                 <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới Thiệu</a>
             </div>
             <div class="partner-logos">
-                <!-- Ẩn bằng CSS, giữ HTML để dễ khôi phục nếu cần -->
                 <a href="https://shinhan.com.vn" target="_blank"><img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo"></a>
                 <img src="https://pay.vnpay.vn/images/img/logos/pcidss.svg" alt="PCI DSS Certification">
             </div>
@@ -414,44 +540,58 @@
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
     <script>
         // Global variables
         let videoElement, canvasElement, stream, tempFaceImage = null, modelsLoaded = false;
+        let headPoseStatus = Array(8).fill(false);
+        let isScanning = false;
+        let detectionInterval = null;
+        let imageSource = null; // 'scan', 'upload', hoặc 'capture'
 
-        async function init() {
-            const modelLoadPromise = Promise.all([
-                faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights'),
-                faceapi.nets.faceLandmark68Net.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights')
-            ]);
-            const timeoutPromise = new Promise((_, reject) => {
-                setTimeout(() => reject(new Error('Tải mô hình quá lâu. Vui lòng kiểm tra mạng hoặc dùng Quét Đơn Giản.')), 10000);
-            });
+        async function loadModels(attempt = 1, maxRetries = 3) {
+            const primaryUri = 'https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights';
+            const fallbackUri = 'https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights';
+            const uri = attempt === maxRetries ? fallbackUri : primaryUri;
 
             try {
-                await Promise.race([modelLoadPromise, timeoutPromise]);
-                modelsLoaded = true;
+                await Promise.all([
+                    faceapi.nets.tinyFaceDetector.loadFromUri(uri),
+                    faceapi.nets.faceLandmark68Net.loadFromUri(uri)
+                ]);
+                return true;
             } catch (error) {
-                showErrorModal('Không thể tải mô hình nhận diện khuôn mặt: ' + error.message);
-                console.error('Model loading failed:', error);
-            }
-
-            setupWebcam();
-            setupFileInput();
-
-            document.getElementById('webcamSection').addEventListener('hidden.bs.collapse', () => {
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                    stream = null;
-                    document.getElementById('webcamStatus').textContent = 'Webcam đã tắt.';
+                if (attempt < maxRetries) {
+                    console.warn(`Model loading failed on attempt ${attempt}. Retrying...`);
+                    return loadModels(attempt + 1, maxRetries);
                 }
+                throw error;
+            }
+        }
+
+        function init() {
+            document.addEventListener('DOMContentLoaded', async () => {
+                const timeoutPromise = new Promise((_, reject) => {
+                    setTimeout(() => reject(new Error('Tải mô hình quá lâu. Vui lòng kiểm tra mạng hoặc dùng Chụp Ảnh.')), 30000);
+                });
+
+                try {
+                    await Promise.race([loadModels(), timeoutPromise]);
+                    modelsLoaded = true;
+                } catch (error) {
+                    showErrorModal('Không thể tải mô hình nhận diện khuôn mặt: ' + error.message + '. Vui lòng thử lại hoặc dùng Chụp Ảnh.');
+                    console.error('Model loading failed:', error);
+                }
+
+                setupWebcam();
+                setupFileInput();
             });
-            document.getElementById('webcamSection').addEventListener('shown.bs.collapse', setupWebcam);
         }
 
         function setupFileInput() {
             const input = document.getElementById('faceImage');
-            input.addEventListener('change', handleFileUpload);
+            if (input) {
+                input.addEventListener('change', handleFileUpload);
+            }
         }
 
         async function setupWebcam() {
@@ -459,6 +599,11 @@
             canvasElement = document.getElementById('webcamCanvas');
             const webcamStatus = document.getElementById('webcamStatus');
             const faceOverlay = document.getElementById('faceOverlay');
+
+            if (!videoElement || !canvasElement || !webcamStatus || !faceOverlay) {
+                console.error('Required DOM elements are missing.');
+                return;
+            }
 
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                 showErrorModal('Trình duyệt của bạn không hỗ trợ webcam. Vui lòng sử dụng trình duyệt hiện đại như Chrome, Firefox hoặc Safari.');
@@ -469,23 +614,25 @@
                 stream = await navigator.mediaDevices.getUserMedia({
                     video: {
                         width: { ideal: 320 },
-                        height: { ideal: 240 },
+                        height: { ideal: 320 },
                         facingMode: 'user'
                     },
                     audio: false
                 });
                 videoElement.srcObject = stream;
                 webcamStatus.textContent = 'Webcam đã sẵn sàng. Vui lòng đưa khuôn mặt gần khung.';
+                faceOverlay.style.display = 'block';
                 if (modelsLoaded) detectFaces();
             } catch (error) {
                 if (error.name === 'OverconstrainedError') {
                     try {
                         stream = await navigator.mediaDevices.getUserMedia({
-                            video: { width: { ideal: 160 }, height: { ideal: 120 }, facingMode: 'user' },
+                            video: { width: { ideal: 160 }, height: { ideal: 160 }, facingMode: 'user' },
                             audio: false
                         });
                         videoElement.srcObject = stream;
                         webcamStatus.textContent = 'Webcam đã sẵn sàng (độ phân giải thấp).';
+                        faceOverlay.style.display = 'block';
                         if (modelsLoaded) detectFaces();
                     } catch (fallbackError) {
                         showErrorModal(`Không thể khởi động webcam: ${getWebcamErrorMessage(fallbackError)}`);
@@ -496,24 +643,103 @@
             }
         }
 
-        async function detectFaces() {
+        function startFaceScan() {
+            if (!modelsLoaded) {
+                showErrorModal('Mô hình nhận diện khuôn mặt chưa tải. Vui lòng thử lại hoặc tải ảnh lên.');
+                return;
+            }
+            isScanning = true;
+            headPoseStatus = Array(8).fill(false);
+            document.body.classList.add('scanning');
+            const circles = document.querySelectorAll('.progress-circle circle');
+            circles.forEach(circle => circle.setAttribute('stroke', '#808080'));
+            const webcamStatus = document.getElementById('webcamStatus');
+            if (webcamStatus) {
+                webcamStatus.textContent = 'Xoay đầu sang phải.';
+            }
+        }
+
+        function detectFaces() {
             if (!modelsLoaded) return;
             const faceOverlay = document.getElementById('faceOverlay');
             const webcamStatus = document.getElementById('webcamStatus');
+            const webcamError = document.getElementById('webcamError');
+            const retryButton = document.getElementById('retryButton');
+            const circles = document.querySelectorAll('.progress-circle circle');
 
-            setInterval(async () => {
-                if (!videoElement || videoElement.paused || videoElement.ended) return;
-                const detections = await faceapi.detectAllFaces(videoElement, new faceapi.TinyFaceDetectorOptions())
-                    .withFaceLandmarks();
+            if (!faceOverlay || !webcamStatus || !webcamError || !retryButton) {
+                console.error('DOM elements for face detection are missing.');
+                return;
+            }
 
-                if (detections.length > 0) {
-                    faceOverlay.classList.add('face-detected');
-                    faceOverlay.classList.remove('show-arrows');
-                    webcamStatus.textContent = 'Khuôn mặt đã sẵn sàng để chụp!';
-                } else {
-                    faceOverlay.classList.remove('face-detected');
-                    faceOverlay.classList.add('show-arrows');
-                    webcamStatus.textContent = 'Không phát hiện khuôn mặt. Vui lòng đưa khuôn mặt gần khung.';
+            detectionInterval = setInterval(async () => {
+                if (!videoElement || videoElement.paused || videoElement.ended || !isScanning) return;
+                try {
+                    const detections = await faceapi.detectAllFaces(videoElement, new faceapi.TinyFaceDetectorOptions())
+                        .withFaceLandmarks();
+
+                    if (detections.length > 0) {
+                        faceOverlay.classList.add('face-detected');
+                        faceOverlay.classList.remove('show-arrows');
+                        const landmarks = detections[0].landmarks;
+                        const nose = landmarks.getNose()[0];
+                        const leftEye = landmarks.getLeftEye()[0];
+                        const rightEye = landmarks.getRightEye()[0];
+                        const mouth = landmarks.getMouth()[0];
+
+                        const yaw = (leftEye.x - rightEye.x) / (leftEye.x - nose.x + 0.01);
+                        const pitch = (nose.y - (leftEye.y + rightEye.y) / 2) / (nose.y - mouth.y + 0.01);
+
+                        const angle = Math.atan2(pitch, yaw) * 180 / Math.PI;
+                        let normalizedAngle = ((angle + 360) % 360);
+                        const segment = Math.round(normalizedAngle / 45) % 8;
+                        if (!headPoseStatus[segment] && (Math.abs(yaw) > 0.5 || Math.abs(pitch) > 0.5)) {
+                            headPoseStatus[segment] = true;
+                            circles[segment].setAttribute('stroke', '#28a745');
+                        }
+
+                        if (headPoseStatus.every(status => status)) {
+                            isScanning = false;
+                            clearInterval(detectionInterval);
+                            document.body.classList.remove('scanning');
+                            canvasElement.width = videoElement.videoWidth;
+                            canvasElement.height = videoElement.videoHeight;
+                            canvasElement.getContext('2d').drawImage(videoElement, 0, 0);
+                            const dataUri = canvasElement.toDataURL('image/jpeg', 0.8);
+                            if (!checkImageBrightness(dataUri)) {
+                                webcamError.textContent = 'Ảnh quá tối. Vui lòng di chuyển đến nơi sáng hơn.';
+                                retryButton.style.display = 'inline-block';
+                                resetWebcam();
+                                return;
+                            }
+                            const previewElement = document.getElementById('faceImagePreview');
+                            if (previewElement) {
+                                previewElement.innerHTML = `<img src="${dataUri}" alt="Ảnh khuôn mặt" style="max-width: 300px;">`;
+                            }
+                            webcamStatus.textContent = 'Quét hoàn tất!';
+                            const webcamSuccess = document.getElementById('webcamSuccess');
+                            if (webcamSuccess) {
+                                webcamSuccess.textContent = 'Quét hoàn tất!';
+                                webcamSuccess.style.display = 'block';
+                            }
+                            retryButton.style.display = 'inline-block';
+                            tempFaceImage = dataUri;
+                            imageSource = 'scan';
+                        } else {
+                            const nextDirection = headPoseStatus.findIndex(status => !status);
+                            const directions = ['phải', 'phải trên', 'lên', 'trái trên', 'trái', 'trái dưới', 'xuống', 'phải dưới'];
+                            webcamStatus.textContent = `Xoay đầu sang ${directions[nextDirection]}.`;
+                        }
+                    } else {
+                        faceOverlay.classList.remove('face-detected');
+                        faceOverlay.classList.add('show-arrows');
+                        webcamStatus.textContent = 'Không phát hiện khuôn mặt. Vui lòng đưa khuôn mặt gần khung.';
+                        retryButton.style.display = 'inline-block';
+                    }
+                } catch (error) {
+                    console.error('Error in detectFaces:', error);
+                    clearInterval(detectionInterval);
+                    retryButton.style.display = 'inline-block';
                 }
             }, 200);
         }
@@ -522,9 +748,15 @@
             const errorElement = document.getElementById('webcamError');
             const successElement = document.getElementById('webcamSuccess');
             const previewElement = document.getElementById('faceImagePreview');
-            const faceOverlay = document.getElementById('faceOverlay');
+            const webcamStatus = document.getElementById('webcamStatus');
+            const retryButton = document.getElementById('retryButton');
 
             clearMessages();
+
+            if (!canvasElement || !videoElement) {
+                console.error('Canvas or video element missing.');
+                return;
+            }
 
             canvasElement.width = videoElement.videoWidth;
             canvasElement.height = videoElement.videoHeight;
@@ -534,29 +766,57 @@
             if (!simpleMode && modelsLoaded) {
                 faceapi.detectAllFaces(canvasElement, new faceapi.TinyFaceDetectorOptions()).then(detections => {
                     if (detections.length === 0) {
-                        errorElement.textContent = 'Không phát hiện khuôn mặt. Vui lòng thử lại hoặc dùng Quét Đơn Giản.';
+                        if (errorElement) {
+                            errorElement.textContent = 'Không phát hiện khuôn mặt. Vui lòng thử lại hoặc dùng Chụp Ảnh.';
+                        }
+                        if (retryButton) retryButton.style.display = 'inline-block';
                         return;
                     }
                     if (!checkImageBrightness(dataUri)) {
-                        errorElement.textContent = 'Ảnh quá tối. Vui lòng di chuyển đến nơi sáng hơn hoặc bật đèn.';
+                        if (errorElement) {
+                            errorElement.textContent = 'Ảnh quá tối. Vui lòng di chuyển đến nơi sáng hơn hoặc bật đèn.';
+                        }
+                        if (retryButton) retryButton.style.display = 'inline-block';
                         return;
                     }
-                    previewElement.innerHTML = `<img src="${dataUri}" alt="Ảnh khuôn mặt" style="max-width: 300px;">`;
-                    document.getElementById('webcamStatus').textContent = 'Đã chụp ảnh khuôn mặt.';
-                    successElement.style.display = 'block';
-                    faceOverlay.style.display = 'none';
+                    if (previewElement) {
+                        previewElement.innerHTML = `<img src="${dataUri}" alt="Ảnh khuôn mặt" style="max-width: 300px;">`;
+                    }
+                    if (webcamStatus) {
+                        webcamStatus.textContent = 'Đã chụp ảnh khuôn mặt.';
+                    }
+                    if (successElement) {
+                        successElement.textContent = 'Ảnh khuôn mặt đã được chụp!';
+                        successElement.style.display = 'block';
+                    }
+                    if (retryButton) retryButton.style.display = 'inline-block';
                     tempFaceImage = dataUri;
+                    imageSource = 'capture';
+                }).catch(error => {
+                    console.error('Error in face detection:', error);
+                    if (retryButton) retryButton.style.display = 'inline-block';
                 });
             } else {
                 if (!checkImageBrightness(dataUri)) {
-                    errorElement.textContent = 'Ảnh quá tối. Vui lòng di chuyển đến nơi sáng hơn hoặc bật đèn.';
+                    if (errorElement) {
+                        errorElement.textContent = 'Ảnh quá tối. Vui lòng di chuyển đến nơi sáng hơn hoặc bật đèn.';
+                    }
+                    if (retryButton) retryButton.style.display = 'inline-block';
                     return;
                 }
-                previewElement.innerHTML = `<img src="${dataUri}" alt="Ảnh khuôn mặt" style="max-width: 300px;">`;
-                document.getElementById('webcamStatus').textContent = 'Đã chụp ảnh khuôn mặt.';
-                successElement.style.display = 'block';
-                faceOverlay.style.display = 'none';
+                if (previewElement) {
+                    previewElement.innerHTML = `<img src="${dataUri}" alt="Ảnh khuôn mặt" style="max-width: 300px;">`;
+                }
+                if (webcamStatus) {
+                    webcamStatus.textContent = 'Đã chụp ảnh khuôn mặt.';
+                }
+                if (successElement) {
+                    successElement.textContent = 'Ảnh khuôn mặt đã được chụp!';
+                    successElement.style.display = 'block';
+                }
+                if (retryButton) retryButton.style.display = 'inline-block';
                 tempFaceImage = dataUri;
+                imageSource = 'capture';
             }
         }
 
@@ -578,17 +838,35 @@
         }
 
         function resetWebcam() {
+            const webcamStatus = document.getElementById('webcamStatus');
+            const webcamError = document.getElementById('webcamError');
+            const webcamSuccess = document.getElementById('webcamSuccess');
+            const faceImage = document.getElementById('faceImage');
+            const faceImagePreview = document.getElementById('faceImagePreview');
+            const retryButton = document.getElementById('retryButton');
+
             clearMessages();
+            if (detectionInterval) {
+                clearInterval(detectionInterval);
+                detectionInterval = null;
+            }
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
                 stream = null;
             }
+            isScanning = false;
+            headPoseStatus = Array(8).fill(false);
+            document.body.classList.remove('scanning');
+            const circles = document.querySelectorAll('.progress-circle circle');
+            circles.forEach(circle => circle.setAttribute('stroke', '#808080'));
             setupWebcam();
-            document.getElementById('faceImagePreview').innerHTML = '';
-            document.getElementById('webcamStatus').textContent = 'Đang chờ khuôn mặt...';
-            document.getElementById('faceImage').value = '';
-            document.getElementById('faceOverlay').style.display = 'block';
+            if (faceImagePreview) faceImagePreview.innerHTML = '';
+            if (webcamStatus) webcamStatus.textContent = 'Đang chờ khuôn mặt...';
+            if (faceImage) faceImage.value = '';
+            if (document.getElementById('faceOverlay')) document.getElementById('faceOverlay').style.display = 'block';
+            if (retryButton) retryButton.style.display = 'none';
             tempFaceImage = null;
+            imageSource = null;
         }
 
         function handleFileUpload(event) {
@@ -596,21 +874,25 @@
             const errorElement = document.getElementById('faceImageError');
             const successElement = document.getElementById('faceImageSuccess');
             const previewElement = document.getElementById('faceImagePreview');
+            const retryButton = document.getElementById('retryButton');
 
             clearMessages();
 
             if (!file) {
-                errorElement.textContent = 'Vui lòng chọn một file hình ảnh.';
+                if (errorElement) errorElement.textContent = 'Vui lòng chọn một file hình ảnh.';
+                if (retryButton) retryButton.style.display = 'inline-block';
                 return;
             }
 
             if (!['image/jpeg', 'image/png'].includes(file.type)) {
-                errorElement.textContent = 'Chỉ chấp nhận file JPG hoặc PNG.';
+                if (errorElement) errorElement.textContent = 'Chỉ chấp nhận file JPG hoặc PNG.';
+                if (retryButton) retryButton.style.display = 'inline-block';
                 return;
             }
 
             if (file.size > 5 * 1024 * 1024) {
-                errorElement.textContent = 'File phải nhỏ hơn 5MB.';
+                if (errorElement) errorElement.textContent = 'File phải nhỏ hơn 5MB.';
+                if (retryButton) retryButton.style.display = 'inline-block';
                 return;
             }
 
@@ -618,12 +900,20 @@
             reader.onload = e => {
                 const dataUri = e.target.result;
                 if (!checkImageBrightness(dataUri)) {
-                    errorElement.textContent = 'Ảnh quá tối. Vui lòng chọn ảnh có ánh sáng tốt hơn.';
+                    if (errorElement) errorElement.textContent = 'Ảnh quá tối. Vui lòng chọn ảnh có ánh sáng tốt hơn.';
+                    if (retryButton) retryButton.style.display = 'inline-block';
                     return;
                 }
-                previewElement.innerHTML = `<img src="${dataUri}" alt="Ảnh khuôn mặt" style="max-width: 300px;">`;
-                successElement.style.display = 'block';
+                if (previewElement) {
+                    previewElement.innerHTML = `<img src="${dataUri}" alt="Ảnh khuôn mặt" style="max-width: 300px;">`;
+                }
+                if (successElement) {
+                    successElement.textContent = 'Ảnh khuôn mặt đã được tải lên!';
+                    successElement.style.display = 'block';
+                }
+                if (retryButton) retryButton.style.display = 'inline-block';
                 tempFaceImage = dataUri;
+                imageSource = 'upload';
             };
             reader.readAsDataURL(file);
         }
@@ -631,36 +921,46 @@
         async function nextStep() {
             const errorElement = document.getElementById('faceImageError');
             const spinner = document.querySelector('.spinner');
+            const faceOverlay = document.getElementById('faceOverlay');
 
             clearMessages();
 
-            if (!tempFaceImage) {
-                errorElement.textContent = 'Vui lòng quét khuôn mặt hoặc tải lên ảnh khuôn mặt.';
+            if (!tempFaceImage || (imageSource !== 'scan' && imageSource !== 'upload')) {
+                if (errorElement) errorElement.textContent = 'Vui lòng quét khuôn mặt hoặc tải lên ảnh khuôn mặt.';
                 return;
             }
 
-            spinner.style.display = 'inline-block';
+            if (spinner) spinner.style.display = 'inline-block';
+            if (faceOverlay) faceOverlay.style.display = 'none';
+            document.body.classList.remove('scanning');
 
             try {
                 const response = await fetch('https://vaytieudung.github.io/shinhanbank/pages/vi/step4.html', { method: 'HEAD' });
                 if (response.ok) {
-                    spinner.style.display = 'none';
+                    if (spinner) spinner.style.display = 'none';
                     tempFaceImage = null;
+                    imageSource = null;
                     window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step4.html';
                 } else {
                     throw new Error('Trang tiếp theo không tồn tại');
                 }
             } catch (error) {
-                spinner.style.display = 'none';
-                errorElement.textContent = 'Lỗi chuyển hướng: ' + error.message;
+                if (spinner) spinner.style.display = 'none';
+                if (faceOverlay) faceOverlay.style.display = 'block';
+                if (errorElement) errorElement.textContent = 'Lỗi chuyển hướng: ' + error.message;
             }
         }
 
         function clearMessages() {
-            document.getElementById('webcamError').textContent = '';
-            document.getElementById('webcamSuccess').style.display = 'none';
-            document.getElementById('faceImageError').textContent = '';
-            document.getElementById('faceImageSuccess').style.display = 'none';
+            const webcamError = document.getElementById('webcamError');
+            const webcamSuccess = document.getElementById('webcamSuccess');
+            const faceImageError = document.getElementById('faceImageError');
+            const faceImageSuccess = document.getElementById('faceImageSuccess');
+
+            if (webcamError) webcamError.textContent = '';
+            if (webcamSuccess) webcamSuccess.style.display = 'none';
+            if (faceImageError) faceImageError.textContent = '';
+            if (faceImageSuccess) faceImageSuccess.style.display = 'none';
         }
 
         function getWebcamErrorMessage(error) {
@@ -681,8 +981,16 @@
         }
 
         function showErrorModal(message) {
-            document.getElementById('errorModalBody').textContent = message;
-            new bootstrap.Modal(document.getElementById('errorModal')).show();
+            document.body.classList.remove('scanning');
+            const errorModalBody = document.getElementById('errorModalBody');
+            const retryButton = document.getElementById('retryButton');
+            if (errorModalBody) {
+                errorModalBody.textContent = message;
+                new bootstrap.Modal(document.getElementById('errorModal')).show();
+            } else {
+                console.error('Error modal body not found.');
+            }
+            if (retryButton) retryButton.style.display = 'inline-block';
         }
 
         window.onload = init;

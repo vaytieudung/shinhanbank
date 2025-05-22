@@ -7,150 +7,241 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
         :root {
             --primary-color: #003087;
             --secondary-color: #f5f5f5;
             --accent-color: #ff6200;
             --spinner-color: #3498db;
             --checkmark-color: #2ecc71;
-            --processing-color: #f1c40f;
         }
+
         body {
-            font-family: 'Roboto', sans-serif;
             background-color: var(--secondary-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
-        .navbar {
+
+        /* Top Banner */
+        .top-banner {
             background-color: var(--primary-color);
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
         }
-        .navbar-brand img {
-            height: 50px;
+
+        .top-banner img {
+            height: 35px;
         }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            position: absolute;
+            top: 12px;
+            right: 10px;
+            z-index: 1000;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: #fff;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger[aria-expanded="true"] span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger[aria-expanded="true"] span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger[aria-expanded="true"] span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 10px 0;
+        }
+
         .navbar-nav {
             display: flex;
             flex-wrap: nowrap;
             overflow-x: auto;
             white-space: nowrap;
             -webkit-overflow-scrolling: touch;
+            justify-content: center;
         }
+
         .navbar-nav .nav-link {
-            color: white !important;
-            transition: color 0.3s;
+            color: var(--primary-color) !important;
+            transition: background 0.3s;
             padding: 8px 10px;
             font-size: 0.9rem;
             margin: 0 5px;
+            text-transform: uppercase;
         }
-        .navbar-nav .nav-link:hover {
-            color: var(--accent-color) !important;
+
+        .navbar-nav .nav-link:hover, .navbar-nav .nav-link:focus {
+            background: #e6f0ff;
+            border-radius: 5px;
         }
-        .step-indicator {
-            display: flex;
-            justify-content: center;
-            margin: 30px 0;
+
+        /* Banner Carousel */
+        .banner-carousel {
             position: relative;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
+            overflow: hidden;
+            margin: 10px 0;
+            min-height: 180px;
+            aspect-ratio: 16 / 9;
+            max-height: 280px;
         }
-        .step {
-            padding: 12px 25px;
-            margin: 0 15px;
-            border-radius: 25px;
-            background-color: #d3d3d3;
-            color: #333;
-            font-weight: bold;
-            position: relative;
-            z-index: 1;
-            transition: all 0.3s;
-            font-size: 0.95rem;
+
+        .banner-slide {
+            display: none;
+            width: 100%;
+            height: 100%;
         }
-        .step.active {
-            background-color: var(--accent-color);
-            color: white;
+
+        .banner-slide.active {
+            display: block;
         }
-        .step::before {
-            content: '\f058';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            margin-right: 8px;
+
+        .banner-slide img {
+            width: 100%;
+            max-height: 280px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
         }
-        .step-indicator::before {
-            content: '';
+
+        .banner-text {
             position: absolute;
             top: 50%;
-            left: 15%;
-            right: 15%;
-            height: 4px;
-            background-color: #d3d3d3;
-            z-index: 0;
+            left: 5%;
+            transform: translateY(-50%);
+            color: #fff;
+            text-align: left;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 12px;
+            border-radius: 5px;
+            max-width: 80%;
         }
-        .status-section {
-            background: white;
-            padding: 20px;
+
+        .banner-text h1 {
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .banner-text p {
+            font-size: 12px;
+            margin: 5px 0 0;
+        }
+
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            border: none;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .prev:hover, .next:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .prev:focus, .next:focus {
+            outline: 2px solid #fff;
+            outline-offset: 2px;
+        }
+
+        .prev { left: 15px; }
+        .next { right: 15px; }
+
+        .dots {
+            text-align: center;
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            margin: 0 6px;
+            background: #ccc;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .dot:hover, .dot:focus {
+            background: #666;
+        }
+
+        .dot.active {
+            background: var(--primary-color);
+        }
+
+        /* Main Content */
+        .container-main {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin: 20px 0;
             text-align: center;
         }
-        .status-section h3 {
+
+        .header {
+            font-size: 20px;
+            font-weight: 400;
+            margin-bottom: 10px;
             color: var(--primary-color);
             border-bottom: 2px solid var(--accent-color);
             padding-bottom: 10px;
-            margin-bottom: 20px;
         }
-        .profile-details {
-            text-align: left;
-            margin-bottom: 20px;
-        }
-        .profile-details p {
-            margin: 5px 0;
-            font-size: 0.95rem;
-        }
-        .profile-details strong {
-            color: var(--primary-color);
-        }
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            transition: background-color 0.3s;
-        }
-        .btn-primary:hover {
-            background-color: var(--accent-color);
-            border-color: var(--accent-color);
-        }
-        .btn-outline-secondary {
-            padding: 8px 15px;
-            font-size: 0.9rem;
-        }
-        .footer-links a {
-            margin: 0 10px;
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-        .footer-links a:hover {
-            color: var(--accent-color);
-        }
-        /* Modal Styles */
-        .modal-content {
-            background-color: var(--secondary-color);
-            border-radius: 10px;
-        }
-        .modal-body {
-            text-align: center;
-            padding: 20px;
-        }
-        .main-status {
-            font-size: 20px;
-            color: #333;
-            font-weight: 500;
-            margin-bottom: 10px;
-        }
-        .sub-status {
+
+        .sub-header {
             font-size: 14px;
+            font-weight: 300;
+            margin-bottom: 20px;
             color: #666;
-            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        .spinner {
+
+        .sub-header-icon .spinner {
             display: inline-block;
             width: 18px;
             height: 18px;
@@ -158,324 +249,576 @@
             border-top-color: transparent;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-left: 8px;
             vertical-align: middle;
-            opacity: 0;
-            animation: spin 1s linear infinite, fadeIn 0.2s ease-in forwards;
         }
-        .checkmark {
-            display: none;
+
+        .sub-header-icon .checkmark {
+            display: inline-block;
             font-size: 18px;
             color: var(--checkmark-color);
-            margin-left: 8px;
             vertical-align: middle;
-            animation: zoomIn 0.3s ease-in-out;
         }
-        .progress-container {
+
+        .timer {
+            font-size: 14px;
+            font-weight: 300;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        .review-status {
+            font-size: 24px;
+            font-weight: 500;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: var(--primary-color);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--spinner-color);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Progress Steps */
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+            gap: 10px;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .step.active {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .step::before {
+            content: '\f058';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 8px;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
             margin: 20px 0;
+            overflow: hidden;
             position: relative;
         }
-        .progress-bar {
+
+        .progress {
+            height: 100%;
             background-color: var(--spinner-color);
-            transition: width 0.3s ease;
+            width: 0;
+            transition: width 1s ease-in-out;
         }
+
+        .progress-text {
+            font-size: 14px;
+            color: #333;
+            margin-top: 10px;
+        }
+
         .progress-milestone {
             position: absolute;
             top: -20px;
             font-size: 12px;
             color: #333;
         }
-        .countdown {
-            font-size: 14px;
-            color: #333;
-            margin-top: 10px;
-            text-align: right;
+
+        /* Footer */
+        .footer {
+            background-color: var(--primary-color);
+            color: #fff;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 15px;
         }
-        .status-table {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
+
+        .footer-links {
+            margin-bottom: 10px;
         }
-        .status-table td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-            font-size: 16px;
+
+        .footer-links a {
+            color: #fff;
+            margin: 0 8px;
+            font-size: 12px;
+            text-decoration: none;
         }
-        .status-processing {
-            color: var(--processing-color);
+
+        .footer-links a:hover {
+            text-decoration: underline;
         }
-        .status-completed {
-            color: var(--checkmark-color);
+
+        .footer img {
+            height: 28px;
+            margin: 8px;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+
+        .footer p {
+            font-size: 12px;
+            margin: 5px 0;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes zoomIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .navbar-brand img {
-                height: 40px;
+            .top-banner {
+                padding: 10px;
             }
+
+            .top-banner img {
+                height: 28px;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
             .navbar-nav {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                padding-bottom: 10px;
-            }
-            .navbar-nav .nav-link {
-                font-size: 0.8rem;
-                padding: 6px 8px;
-                margin: 0 3px;
-            }
-            .step-indicator {
-                flex-direction: row;
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                padding-bottom: 10px;
-            }
-            .step {
-                padding: 8px 15px;
-                margin: 0 8px;
-                font-size: 0.85rem;
-            }
-            .step-indicator::before {
-                left: 10%;
-                right: 10%;
-            }
-            .btn-primary, .btn-outline-secondary {
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                background: #fff;
+                position: absolute;
+                top: 50px;
+                left: 0;
                 width: 100%;
-                margin-bottom: 10px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                z-index: 999;
             }
-            .main-status {
-                font-size: 18px;
+
+            .navbar-nav.show {
+                display: flex;
             }
-            .sub-status {
+
+            .navbar-nav .nav-link {
+                padding: 12px;
+                font-size: 0.8rem;
+                margin: 0;
+            }
+
+            .banner-carousel {
+                min-height: 160px;
+                margin: 5px 0;
+            }
+
+            .banner-text h1 {
+                font-size: 14px;
+            }
+
+            .banner-text p {
+                font-size: 10px;
+            }
+
+            .banner-slide img {
+                max-height: 180px;
+            }
+
+            .prev, .next {
+                padding: 8px;
                 font-size: 12px;
             }
-            .countdown {
-                text-align: center;
+
+            .dot {
+                width: 8px;
+                height: 8px;
+                margin: 0 4px;
+            }
+
+            .progress-steps {
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .step {
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            .container-main {
+                padding: 12px;
+                margin: 10px;
+            }
+
+            .header {
+                font-size: 18px;
+                margin-bottom: 8px;
+            }
+
+            .sub-header {
+                font-size: 12px;
+                margin-bottom: 15px;
+            }
+
+            .sub-header-icon .spinner,
+            .sub-header-icon .checkmark {
+                width: 16px;
+                height: 16px;
+                font-size: 16px;
+            }
+
+            .timer {
+                font-size: 12px;
+                margin-bottom: 15px;
+            }
+
+            .review-status {
+                font-size: 20px;
+            }
+
+            .spinner {
+                width: 18px;
+                height: 18px;
+            }
+
+            .footer-links a {
+                font-size: 11px;
+                margin: 0 5px;
+            }
+
+            .footer img {
+                height: 24px;
+            }
+
+            .footer p {
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .container-main {
+                padding: 8px;
+            }
+
+            .header {
+                font-size: 16px;
+                margin-bottom: 6px;
+            }
+
+            .sub-header {
+                font-size: 11px;
+                margin-bottom: 10px;
+            }
+
+            .sub-header-icon .spinner,
+            .sub-header-icon .checkmark {
+                width: 14px;
+                height: 14px;
+                font-size: 14px;
+            }
+
+            .timer {
+                font-size: 11px;
+                margin-bottom: 10px;
+            }
+
+            .review-status {
+                font-size: 18px;
+            }
+
+            .spinner {
+                width: 16px;
+                height: 16px;
+            }
+
+            .progress-steps {
+                margin: 8px 0;
+            }
+
+            .step {
+                padding: 6px;
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .container-main {
+                padding: 5px;
+            }
+
+            .header {
+                font-size: 14px;
+                margin-bottom: 5px;
+            }
+
+            .sub-header {
+                font-size: 10px;
+                margin-bottom: 8px;
+            }
+
+            .sub-header-icon .spinner,
+            .sub-header-icon .checkmark {
+                width: 12px;
+                height: 12px;
+                font-size: 12px;
+            }
+
+            .timer {
+                font-size: 10px;
+                margin-bottom: 8px;
+            }
+
+            .review-status {
+                font-size: 16px;
+            }
+
+            .spinner {
+                width: 14px;
+                height: 14px;
+            }
+
+            .navbar-nav .nav-link {
+                font-size: 0.75rem;
+                padding: 10px;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg">
-            <div class="container">
-                <a class="navbar-brand" href="#"><img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo"></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">GIỚI THIỆU</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/tham-chieu.html">LỢI ÍCH</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-vay.html">GIẤY TỜ CẦN THIẾT</a></li>
-                        <li class="nav-item"><a class="nav-link active" href="https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html">ĐĂNG KÝ TRỰC TUYẾN</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-tien-gui.html">XEM KẾT QUẢ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">ĐIỀU KHOẢN SỬ DỤNG</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">LIÊN HỆ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">MESSENGER</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+    <!-- Top Banner -->
+    <div class="top-banner">
+        <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo">
+        <button class="hamburger" aria-label="Toggle Menu" aria-expanded="false" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
 
-    <main class="container mt-4">
-        <div class="step-indicator">
-            <div class="step">1. Nhập thông tin</div>
-            <div class="step">2. Xác thực và xử lý</div>
-            <div class="step">3. Hoàn thành</div>
-            <div class="step active">4. Xét duyệt</div>
+    <!-- Navigation Bar -->
+    <nav class="navbar" role="navigation" aria-label="Main Navigation">
+        <div class="container">
+            <ul class="navbar-nav" id="nav-menu">
+                <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/trang-chu.html">TRANG CHỦ</a></li>
+                <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">GIỚI THIỆU</a></li>
+                <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/ca-nhan.html">LỢI ÍCH</a></li>
+                <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-tien-gui.html">GIẤY TỜ CẦN THIẾT</a></li>
+                <li class="nav-item"><a class="nav-link active" href="https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html">ĐĂNG KÝ GIẢI NGÂN</a></li>
+                <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/step5.html">XEM KẾT QUẢ</a></li>
+                <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">ĐIỀU KHOẢN SỬ DỤNG</a></li>
+                <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/support-center.html">LIÊN HỆ</a></li>
+            </ul>
         </div>
+    </nav>
 
-        <div class="status-section">
-            <h3>ĐANG XÉT DUYỆT HỒ SƠ</h3>
-            <div class="profile-details" id="profileDetails"></div>
-        </div>
-    </main>
-
-    <footer class="bg-light py-4 mt-5">
-        <div class="container text-center">
-            <div class="footer-links">
-                <a href="https://shinhan.com.vn/vi/page/chinh-sach-bao-mat.html">Chính sách bảo mật</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều khoản sử dụng</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Chính sách Cookies</a> |
-                <a href="https://shinhan.com.vn/vi/page/chinh-sach-lien-ket.html">Miễn khoản từ chối liên kết bên ngoài</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/financial-statement.html">Hướng dẫn truy cập web</a> |
-                <a href="https://shinhan.com.vn/vi/page/sitemap-2.html">Sitemap</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Trung tâm bảo mật</a> |
-                <a href="https://online.shinhan.com.vn/global.shinhan">Demo Ngân hàng trực tuyến</a> |
-                <a href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">Liên hệ</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/global-shinhan.html">Trang Global Portal</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới Thiệu</a>
+    <!-- Banner Carousel -->
+    <div class="banner-carousel" role="region" aria-label="Promotional Carousel">
+        <div class="banner-slide active">
+            <img data-src="https://shinhan.com.vn/public/uploads/personal/2024/RLD/2024---RLD---SOHO-operation-Loan---banner.jpg" alt="SOHO Operation Loan" class="lazy">
+            <div class="banner-text">
+                <h1>Giải Ngân Khoản Vay</h1>
+                <p>Tăng tốc tương lai, kết nối vạn niềm tin</p>
             </div>
-            <p class="mt-2">Copyright © 2017 by SHINHAN Bank (Vietnam) Ltd,. All rights reserved.</p>
         </div>
-    </footer>
-
-    <!-- Modal -->
-    <div class="modal fade" id="approvalModal" tabindex="-1" aria-labelledby="approvalModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="main-status" id="mainStatus"></div>
-                    <div class="sub-status" id="subStatus"></div>
-                    <div class="progress-container">
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar" id="progressBar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <div class="progress-milestone" style="left: 20%;">20%</div>
-                        <div class="progress-milestone" style="left: 40%;">40%</div>
-                        <div class="progress-milestone" style="left: 60%;">60%</div>
-                        <div class="progress-milestone" style="left: 80%;">80%</div>
-                    </div>
-                    <table class="status-table">
-                        <tbody id="statusTable"></tbody>
-                    </table>
-                    <div class="countdown" id="countdown">Còn 30s</div>
-                </div>
+        <div class="banner-slide">
+            <img data-src="https://shinhan.com.vn/public/uploads/personal/2025/RLD/2025.01_RLD_Unsecured--Loan_Baneer.jpg" alt="Unsecured Loan" class="lazy">
+            <div class="banner-text">
+                <h1>Giải Ngân Khoản Vay</h1>
+                <p>Ưu đãi hấp dẫn, vay dễ dàng</p>
             </div>
+        </div>
+        <div class="banner-slide">
+            <img data-src="https://shinhan.com.vn/public/uploads/personal/2022/DIGITAL%20%20PERSONAL%20LOAN/20220624_DIGITAL%20CONSUMER%20LOAN_%20BANNER.jpg" alt="Digital Consumer Loan" class="lazy">
+            <div class="banner-text">
+                <h1>Giải Ngân Khoản Vay</h1>
+                <p>Khám phá cơ hội tài chính</p>
+            </div>
+        </div>
+        <div class="banner-slide">
+            <img data-src="https://shinhan.com.vn/public/uploads/personal/2025/RLD/2025.01_RLD_Car-Loan_Baneer-1.jpg" alt="Car Loan" class="lazy">
+            <div class="banner-text">
+                <h1>Giải Ngân Khoản Vay</h1>
+                <p>Hỗ trợ mọi ước mơ</p>
+            </div>
+        </div>
+        <button class="prev" aria-label="Previous Slide" tabindex="0" onkeydown="if(event.key === 'Enter') changeSlide(-1)">❮</button>
+        <button class="next" aria-label="Next Slide" tabindex="0" onkeydown="if(event.key === 'Enter') changeSlide(1)">❯</button>
+        <div class="dots">
+            <span class="dot active" onclick="goToSlide(0)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(0)"></span>
+            <span class="dot" onclick="goToSlide(1)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(1)"></span>
+            <span class="dot" onclick="goToSlide(2)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(2)"></span>
+            <span class="dot" onclick="goToSlide(3)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(3)"></span>
         </div>
     </div>
 
+    <!-- Progress Steps -->
+    <div class="progress-steps" role="progressbar" aria-label="Review Progress">
+        <div class="step active">Đang Xem Xét Hồ Sơ</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container-main">
+        <div class="header">Trạng Thái Xét Duyệt</div>
+        <div class="sub-header">
+            <span id="sub-header-text">Đang xem xét thông tin cá nhân</span>
+            <span class="sub-header-icon" id="sub-header-icon"><span class="spinner"></span></span>
+        </div>
+        <div class="timer" id="timer">Còn 30s</div>
+        <div class="review-status">
+            vui Lòng Chờ Hệ Thống Đang Xem Xét Hồ Sơ Có Kết Quả Sau 1 phút
+            <span class="spinner"></span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+            <div class="progress-milestone" style="left: 20%;">20%</div>
+            <div class="progress-milestone" style="left: 40%;">40%</div>
+            <div class="progress-milestone" style="left: 60%;">60%</div>
+            <div class="progress-milestone" style="left: 80%;">80%</div>
+        </div>
+        <div class="progress-text" id="progress-text">20%</div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo" aria-label="Footer">
+        <div class="footer-links">
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/chinh-sach-bao-mat.html">Chính sách bảo mật</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều khoản sử dụng</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/chinh-sach-cookies.html">Chính sách Cookies</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/huong-dan-truy-cap.html">Hướng dẫn truy cập web</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/sitemap.html">Sitemap</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/trung-tam-bao-mat.html">Trung tâm bảo mật</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/support-center.html">Liên hệ</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới thiệu</a>
+        </div>
+        <img src="https://pg.megapay.vn/pg_was/images/pg/bankContents/PCIDSS.png?v2" alt="PCI DSS">
+        <img src="https://simg.zalopay.com.vn/zst/zlp-website/resources/images/footer/BCTLogo_1.png" alt="Bộ Công Thương">
+        <p>© Copyright Shinhan Bank 2016-2025</p>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function displayProfileDetails() {
-            const profileDetails = document.getElementById('profileDetails');
-            const savedData = JSON.parse(localStorage.getItem('userData')) || {};
+        // Core Functionality
+        const subHeaderText = document.getElementById('sub-header-text');
+        const subHeaderIcon = document.getElementById('sub-header-icon');
+        const timerElement = document.getElementById('timer');
+        const progressBar = document.getElementById('progress');
+        const progressText = document.getElementById('progress-text');
 
-            if (savedData) {
-                profileDetails.innerHTML = `
-                    <p><strong>Họ và Tên:</strong> ${savedData.fullName || 'N/A'}</p>
-                    <p><strong>Số CCCD:</strong> ${savedData.cccd || 'N/A'}</p>
-                    <p><strong>Số tiền vay:</strong> ${parseInt(savedData.loanAmount || 0).toLocaleString('vi-VN')} VND</p>
-                    <p><strong>Hình thức vay:</strong> ${savedData.loanType || 'N/A'}</p>
-                    <p><strong>Thời hạn vay:</strong> ${savedData.loanTerm || 'N/A'} tháng</p>
-                    <p><strong>Lãi suất:</strong> ${savedData.interestRate || 'N/A'}%/năm</p>
-                    <p><strong>Ngày giải ngân dự kiến:</strong> ${savedData.disbursementDate || 'N/A'}</p>
-                    <p><strong>Thu nhập hàng tháng:</strong> ${parseInt(savedData.monthlyIncome || 0).toLocaleString('vi-VN')} VND</p>
-                    <p><strong>Mục đích vay:</strong> ${savedData.loanPurpose || 'N/A'}</p>
-                    <p><strong>Mã hồ sơ:</strong> ${savedData.loanCode || 'N/A'}</p>
-                `;
-            } else {
-                profileDetails.innerHTML = `<p>Không tìm thấy thông tin hồ sơ. Vui lòng bắt đầu lại từ bước 1.</p>`;
-            }
-        }
-
-        const stages = [
-            {
-                main: 'Đang kiểm tra họ và tên, số CMND/CCCD',
-                sub: 'Kiểm tra họ và tên, số CMND/CCCD: Đối chiếu với cơ sở dữ liệu dân cư',
-                completed: 'Đã kiểm tra họ và tên, số CMND/CCCD hoàn tất',
-                start: 0,
-                checkmark: 5,
-                end: 6
-            },
-            {
-                main: 'Đang kiểm tra điểm tín dụng',
-                sub: 'Kiểm tra tín hiệu: Truy vấn báo cáo từ CIC',
-                completed: 'Đã kiểm tra điểm tín dụng hoàn tất',
-                start: 6,
-                checkmark: 11,
-                end: 12
-            },
-            {
-                main: 'Đang xác minh thu nhập',
-                sub: 'Xác minh thu nhập: Kiểm tra bảng lương và sao kê',
-                completed: 'Đã xác minh thu nhập hoàn tất',
-                start: 12,
-                checkmark: 17,
-                end: 18
-            },
-            {
-                main: 'Đang kiểm tra lịch sử giao dịch',
-                sub: 'Kiểm tra lịch sử giao dịch: Phân tích sao kê ngân hàng',
-                completed: 'Đã kiểm tra lịch sử giao dịch hoàn tất',
-                start: 18,
-                checkmark: 23,
-                end: 24
-            },
-            {
-                main: 'Đang xác nhận khoản vay',
-                sub: 'Xác nhận khoản vay: Đánh giá số tiền và khả năng thanh toán',
-                completed: 'Đã xác nhận khoản vay hoàn tất',
-                start: 24,
-                checkmark: 29,
-                end: 30
-            }
+        const messages = [
+            "Đang xem xét thông tin cá nhân",
+            "Đang kiểm tra căn cước công dân",
+            "Đang kiểm tra điểm tín dụng",
+            "Đang xem xét khả năng tài chính",
+            "Đang xem xét khoản vay",
+            "Đã có kết quả cuối cùng"
         ];
 
-        function updateStatus() {
-            const modal = new bootstrap.Modal(document.getElementById('approvalModal'), { backdrop: 'static', keyboard: false });
-            modal.show();
+        const progressSteps = [20, 40, 60, 80, 100];
+        let currentMessageIndex = 0;
+        let timeLeft = 30;
 
-            const mainStatus = document.getElementById('mainStatus');
-            const subStatus = document.getElementById('subStatus');
-            const progressBar = document.getElementById('progressBar');
-            const statusTable = document.getElementById('statusTable');
-            const countdown = document.getElementById('countdown');
+        function updateSubHeader() {
+            if (currentMessageIndex >= messages.length) {
+                subHeaderText.textContent = messages[messages.length - 1];
+                subHeaderIcon.innerHTML = '<span class="checkmark">✔</span>';
+                progressBar.style.width = '100%';
+                progressText.textContent = '100%';
+                setTimeout(() => {
+                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step5.html';
+                }, 2000);
+                return;
+            }
 
-            let currentTime = 0;
-            const totalTime = 30;
+            subHeaderText.textContent = messages[currentMessageIndex];
+            subHeaderIcon.innerHTML = '<span class="spinner"></span>';
+            progressBar.style.width = `${progressSteps[currentMessageIndex]}%`;
+            progressText.textContent = `${progressSteps[currentMessageIndex]}%`;
 
-            // Initialize table
-            statusTable.innerHTML = stages.map((stage, index) => `
-                <tr id="status-${index}">
-                    <td class="status-processing">${stage.main} <span class="spinner"></span></td>
-                </tr>
-            `).join('');
+            setTimeout(() => {
+                subHeaderIcon.innerHTML = '<span class="checkmark">✔</span>';
+            }, 4000);
 
-            const tickSound = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3'); // Simulated tick sound
-
-            const interval = setInterval(() => {
-                currentTime += 0.1;
-                const progress = (currentTime / totalTime) * 100;
-                progressBar.style.width = `${progress}%`;
-                progressBar.setAttribute('aria-valuenow', Math.round(progress));
-
-                countdown.textContent = `Còn ${Math.ceil(totalTime - currentTime)}s`;
-
-                const currentStage = stages.find(stage => currentTime >= stage.start && currentTime < stage.end);
-                const currentStageIndex = stages.findIndex(stage => currentTime >= stage.start && currentTime < stage.end);
-
-                if (currentStage) {
-                    mainStatus.innerHTML = `${currentStage.main} <span class="spinner"></span>`;
-                    subStatus.textContent = currentStage.sub;
-
-                    if (currentTime >= currentStage.checkmark && currentTime < currentStage.end) {
-                        mainStatus.innerHTML = `${currentStage.completed} <span class="checkmark">✔</span>`;
-                        document.getElementById(`status-${currentStageIndex}`).innerHTML = `
-                            <td class="status-completed">${currentStage.completed} <span class="checkmark" style="display: inline;">✔</span></td>
-                        `;
-                        tickSound.play();
-                    }
-                }
-
-                if (currentTime >= totalTime) {
-                    clearInterval(interval);
-                    mainStatus.innerHTML = 'Hồ sơ đã được xét duyệt thành công!';
-                    subStatus.textContent = 'Vui lòng chuyển sang bước tiếp theo.';
-                    countdown.textContent = '';
-                    progressBar.style.width = '100%';
-                    setTimeout(() => {
-                        modal.hide();
-                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step5.html';
-                    }, 2000);
-                }
-            }, 100);
+            currentMessageIndex++;
+            setTimeout(updateSubHeader, 5000);
         }
 
-        window.onload = () => {
-            displayProfileDetails();
-            setTimeout(updateStatus, 1000); // Start approval process after 1 second
-        };
+        updateSubHeader();
+
+        timerElement.textContent = `Còn ${timeLeft}s`;
+        const timerInterval = setInterval(() => {
+            timeLeft--;
+            timerElement.textContent = `Còn ${timeLeft}s`;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timerElement.textContent = `Còn 0s`;
+            }
+        }, 1000);
+
+        // Banner Carousel
+        let bannerIndex = 0;
+
+        function lazyLoadImages() {
+            const images = document.querySelectorAll('img.lazy');
+            images.forEach(img => {
+                if (img.getAttribute('data-src')) {
+                    img.src = img.getAttribute('data-src');
+                    img.removeAttribute('data-src');
+                    img.classList.remove('lazy');
+                }
+            });
+        }
+
+        function changeSlide(n) {
+            bannerIndex = (bannerIndex + n + 4) % 4;
+            updateBanner();
+        }
+
+        function goToSlide(n) {
+            bannerIndex = n;
+            updateBanner();
+        }
+
+        function updateBanner() {
+            const slides = document.querySelectorAll('.banner-slide');
+            const dots = document.querySelectorAll('.dot');
+            slides.forEach((slide, i) => slide.classList.toggle('active', i === bannerIndex));
+            dots.forEach((dot, i) => dot.classList.toggle('active', i === bannerIndex));
+            lazyLoadImages();
+        }
+
+        setInterval(() => {
+            bannerIndex = (bannerIndex + 1) % 4;
+            updateBanner();
+        }, 5000);
+
+        window.addEventListener('load', () => {
+            lazyLoadImages();
+            updateBanner();
+        });
+
+        // Hamburger Menu
+        function toggleMenu() {
+            const menu = document.getElementById('nav-menu');
+            const hamburger = document.querySelector('.hamburger');
+            menu.classList.toggle('show');
+            hamburger.setAttribute('aria-expanded', menu.classList.contains('show'));
+        }
     </script>
 </body>
 </html>

@@ -259,58 +259,171 @@
             gap: 8px;
             flex-wrap: wrap;
         }
+        .accordion-button {
+            position: relative;
+            padding-left: 40px;
+        }
+        .accordion-button::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 2px;
+            background-color: var(--primary-color);
+            box-shadow: 
+                0 -6px 0 0 var(--primary-color),
+                0 6px 0 0 var(--primary-color);
+        }
+        .accordion-button:not(.collapsed)::before {
+            background-color: var(--accent-color);
+            box-shadow: 
+                0 -6px 0 0 var(--accent-color),
+                0 6px 0 0 var(--accent-color);
+        }
         @media (max-width: 768px) {
             .navbar-brand img {
-                height: 40px;
+                height: 35px;
             }
             .navbar-nav {
                 flex-wrap: nowrap;
                 overflow-x: auto;
                 padding-bottom: 10px;
+                gap: 5px;
             }
             .navbar-nav .nav-link {
-                font-size: 0.8rem;
-                padding: 6px 8px;
-                margin: 0 3px;
+                font-size: 0.9rem;
+                padding: 8px 12px;
+                margin: 0 2px;
+                min-width: 80px;
+                text-align: center;
             }
             .step-indicator {
-                display: none;
+                display: flex;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding: 10px 0;
+                margin: 10px 0;
+                justify-content: flex-start;
+            }
+            .step {
+                font-size: 0.8rem;
+                padding: 8px 15px;
+                margin: 0 5px;
+                flex: 0 0 auto;
+            }
+            .step-indicator::before {
+                left: 5%;
+                right: 5%;
             }
             .progress-percentage {
-                font-size: 0.9rem;
+                font-size: 1rem;
+                margin-bottom: 15px;
             }
             .upload-section {
-                padding: 10px;
+                padding: 12px;
+                margin: 10px 0;
             }
             .upload-section h3 {
-                font-size: 1rem;
-            }
-            .btn-primary, .btn-secondary, .btn-outline-secondary {
-                width: 100%;
-                margin-bottom: 8px;
+                font-size: 1.1rem;
             }
             .webcam-container {
+                max-width: 260px;
+                margin: 10px auto;
+            }
+            .face-overlay {
+                top: 8%;
+                left: 8%;
+                width: 84%;
+                height: 84%;
+            }
+            #webcamStatus {
+                font-size: 0.95rem;
+                padding: 8px 12px;
+                margin-top: 10px;
+            }
+            .btn-primary, .btn-secondary, .btn-outline-secondary {
+                width: auto;
+                min-width: 100px;
+                padding: 8px 12px;
+                font-size: 0.9rem;
+                margin-bottom: 10px;
+                border-radius: 6px;
+            }
+            .btn-primary {
+                padding: 10px 16px;
+                font-size: 1rem;
+                font-weight: bold;
+            }
+            .btn-primary i {
+                font-size: 0.9rem;
+            }
+            .btn-primary.continue-btn {
+                width: 100%;
                 max-width: 280px;
+                padding: 10px 14px;
+                font-size: 1rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                border-radius: 10px;
+                background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+                border: none;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 8px;
+            }
+            .btn-primary.continue-btn:hover {
+                background: linear-gradient(45deg, var(--accent-color), var(--primary-color));
+                transform: translateY(-2px) scale(1.03);
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+            }
+            .btn-primary.continue-btn .spinner {
+                margin-left: 10px;
+                vertical-align: middle;
             }
             .instructions {
                 flex-direction: column;
-                gap: 8px;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+            .instruction-item {
+                font-size: 0.9rem;
+            }
+            .instruction-item i {
+                font-size: 1.1rem;
             }
             .upload-input {
-                font-size: 0.8rem;
+                font-size: 0.9rem;
+                margin-top: 20px;
             }
             .error, .success-message {
-                font-size: 0.9rem;
+                font-size: 0.95rem;
+                margin-top: 8px;
             }
-            #webcamStatus {
-                font-size: 0.9rem;
-                padding: 6px 12px;
+            .button-group {
+                gap: 10px;
+                flex-direction: column;
+                align-items: center;
             }
-            .nav-buttons .btn-outline-secondary {
-                align-self: start;
+            .nav-buttons {
+                gap: 10px;
+                flex-direction: column;
+                align-items: stretch;
             }
+            .nav-buttons .btn-outline-secondary,
             .nav-buttons .btn-primary {
-                align-self: end;
+                align-self: stretch;
+            }
+            .footer-links a {
+                font-size: 0.85rem;
+                margin: 5px;
+            }
+            .face-verification-text {
+                font-size: 0.9rem;
+                line-height: 1.4;
+                margin-bottom: 10px;
             }
         }
     </style>
@@ -348,23 +461,7 @@
         </div>
 
         <div id="faceVerificationContent">
-            <h2 class="text-center mb-3">XÁC NHẬN KHUÔN MẶT</h2>
-            <p class="text-center">Vui lòng chụp hoặc tải lên ảnh chân dung để xác minh. Ảnh của bạn không được lưu trữ hoặc gửi đi.</p>
-
-            <div class="instructions">
-                <div class="instruction-item">
-                    <i class="fas fa-camera"></i>
-                    <span>Đặt khuôn mặt vào giữa khung ảnh</span>
-                </div>
-                <div class="instruction-item">
-                    <i class="fas fa-lightbulb"></i>
-                    <span>Đảm bảo ánh sáng đầy đủ</span>
-                </div>
-                <div class="instruction-item">
-                    <i class="fas fa-glasses"></i>
-                    <span>Không đeo kính hoặc khẩu trang</span>
-                </div>
-            </div>
+            <p class="text-center face-verification-text">Chụp/tải ảnh chân dung với khuôn mặt giữa khung, ánh sáng đầy đủ, không đeo kính/khẩu trang. Ảnh không được lưu trữ/gửi đi.</p>
 
             <div class="accordion" id="faceAccordion">
                 <div class="accordion-item">
@@ -403,7 +500,7 @@
                 <div class="mb-2 mb-md-0 ms-0">
                     <a href="step2.html" class="btn btn-outline-secondary">QUAY LẠI</a>
                 </div>
-                <button class="btn btn-primary position-relative me-0" onclick="nextStep()">
+                <button class="btn btn-primary continue-btn position-relative me-0" onclick="nextStep()">
                     TIẾP TỤC
                     <span class="spinner-border spinner-border-sm spinner" role="status" aria-hidden="true"></span>
                 </button>

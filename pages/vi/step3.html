@@ -338,7 +338,7 @@
                 width: 84%;
                 height: 84%;
             }
-            #webcamStatus {
+            .webcamStatus {
                 font-size: 0.95rem;
                 padding: 8px 12px;
                 margin-top: 10px;
@@ -479,7 +479,7 @@
                             </div>
                             <p id="webcamStatus" class="text-center mt-2">Đang chờ khuôn mặt...</p>
                             <p id="webcamError" class="error text-center"></p>
-                            <p id="webcamSuccess" class="success-message text-center">Khuôn mặt đã được xác nhận!</p>
+                            <p id="webcamSuccess" class="success-message text-center">Ảnh chân dung đã được xác nhận!</p>
                             <div class="text-center mt-2 button-group">
                                 <button class="btn btn-primary" onclick="takeSnapshot()">Chụp</button>
                                 <button class="btn btn-primary" onclick="document.getElementById('faceImage').click()" title="Tải ảnh chân dung từ thiết bị">Tải</button>
@@ -489,7 +489,7 @@
                             <div class="upload-input text-center">
                                 <div id="faceImagePreview"></div>
                                 <p id="faceImageError" class="error"></p>
-                                <p id="faceImageSuccess" class="success-message">Khuôn mặt đã được xác nhận!</p>
+                                <p id="faceImageSuccess" class="success-message">Ảnh chân dung đã được xác nhận!</p>
                             </div>
                         </div>
                     </div>
@@ -662,7 +662,7 @@
                     const detections = await faceapi.detectAllFaces(videoElement, new faceapi.TinyFaceDetectorOptions());
                     if (detections.length > 0) {
                         faceOverlay.classList.add('face-detected');
-                        webcamStatus.textContent = 'Khuôn mặt đã được phát hiện. Nhấn "Chụp" hoặc "Tải" để tiếp tục.';
+                        webcamStatus.textContent = 'Khuôn mặt đã được phát hiện. Nhấn "Chụp" để tiếp tục.';
                     } else {
                         faceOverlay.classList.remove('face-detected');
                         webcamStatus.textContent = 'Không phát hiện khuôn mặt. Vui lòng đặt khuôn mặt vào giữa khung.';
@@ -716,7 +716,7 @@
                         webcamStatus.textContent = 'Đã chụp ảnh chân dung.';
                     }
                     if (successElement) {
-                        successElement.textContent = 'Khuôn mặt đã được xác nhận!';
+                        successElement.textContent = 'Ảnh chân dung đã được xác nhận!';
                         successElement.style.display = 'block';
                     }
                     if (retryButton) retryButton.style.display = 'inline-block';
@@ -741,7 +741,7 @@
                     webcamStatus.textContent = 'Đã chụp ảnh chân dung.';
                 }
                 if (successElement) {
-                    successElement.textContent = 'Khuôn mặt đã được xác nhận!';
+                    successElement.textContent = 'Ảnh chân dung đã được xác nhận!';
                     successElement.style.display = 'block';
                 }
                 if (retryButton) retryButton.style.display = 'inline-block';
@@ -843,7 +843,7 @@
                                 previewElement.innerHTML = `<img src="${dataUri}" alt="Ảnh chân dung" style="max-width: 300px;">`;
                             }
                             if (successElement) {
-                                successElement.textContent = 'Khuôn mặt đã được xác nhận!';
+                                successElement.textContent = 'Ảnh chân dung đã được xác nhận!';
                                 successElement.style.display = 'block';
                             }
                             if (retryButton) retryButton.style.display = 'inline-block';
@@ -858,7 +858,7 @@
                             previewElement.innerHTML = `<img src="${dataUri}" alt="Ảnh chân dung" style="max-width: 300px;">`;
                         }
                         if (successElement) {
-                            successElement.textContent = 'Khuôn mặt đã được xác nhận!';
+                            successElement.textContent = 'Ảnh chân dung đã được xác nhận!';
                             successElement.style.display = 'block';
                         }
                         if (retryButton) retryButton.style.display = 'inline-block';
@@ -878,7 +878,7 @@
             clearMessages();
 
             if (!tempFaceImage || (imageSource !== 'capture' && imageSource !== 'upload')) {
-                if (errorElement) errorElement.textContent = 'Vui lòng chụp hoặc tải lên ảnh chân dung.';
+                if (errorElement) error_Element.textContent = 'Vui lòng chụp hoặc tải lên một ảnh chân dung hợp lệ.';
                 return;
             }
 

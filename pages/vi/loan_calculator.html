@@ -11,65 +11,156 @@
     <meta property="og:description" content="Công cụ tính toán khoản vay trực tuyến - Ngân hàng Shinhan">
     <meta property="og:image" content="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg">
     <link rel="icon" href="https://shinhan.com.vn/public/themes/shinhan/img/favicon2023.ico">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            font-size: 16px;
-            background-color: #f5f8fa;
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
         }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .top-banner {
+            background-color: #003087;
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .top-banner img {
+            height: 35px;
+        }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            position: absolute;
+            top: 12px;
+            right: 10px;
+            z-index: 1000;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: #fff;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger[aria-expanded="true"] span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger[aria-expanded="true"] span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger[aria-expanded="true"] span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        nav {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 10px 0;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 10px 0;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #003087;
+            font-weight: bold;
+            padding: 10px;
+            display: block;
+            transition: background 0.3s;
+        }
+
+        nav ul li a:hover, nav ul li a:focus {
+            background: #e6f0ff;
+            border-radius: 5px;
+        }
+
         .container {
-            max-width: 90%;
-            width: 100%;
-            margin: 15px auto;
+            max-width: 600px;
+            margin: 20px auto;
             padding: 15px;
-            background: #ffffff;
+            background-color: #fff;
             border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 82, 204, 0.1);
-            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        @media (min-width: 768px) {
-            .container { max-width: 700px; }
-        }
+
         h1 {
-            color: #0033a0;
-            font-size: 18px;
-            font-weight: 700;
+            color: #003087;
+            text-align: center;
             margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: bold;
             text-transform: uppercase;
         }
+
         h3 {
-            color: #0033a0;
+            color: #003087;
+            text-align: center;
+            margin-bottom: 10px;
             font-size: 16px;
-            font-weight: 500;
-            margin: 10px 0;
-            text-align: left;
         }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
         .form-label {
-            font-weight: 400;
-            color: #1a3c87;
-            font-size: 14px;
-            margin-bottom: 3px;
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
             text-align: left;
-        }
-        .form-label span { color: #ff4d4f; }
-        .form-control, .form-select {
-            border-radius: 20px;
-            border: 1px solid #b3cde0;
-            padding: 8px 12px;
+            color: #003087;
             font-size: 14px;
-            height: 40px;
-            background-color: #f9fbfd;
+        }
+
+        .form-label span {
+            color: #ff4d4f;
+        }
+
+        .form-control, .form-select {
             width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #f9f9f9;
         }
+
         .form-control:focus, .form-select:focus {
-            border-color: #0033a0;
-            box-shadow: 0 0 5px rgba(0, 51, 160, 0.3);
+            border-color: #003087;
+            outline: none;
         }
+
         .form-select {
             appearance: none;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');
@@ -77,93 +168,105 @@
             background-position: right 10px center;
             background-size: 12px;
         }
-        .form-group {
-            margin-bottom: 10px;
-        }
-        .btn-primary {
-            background-color: #0033a0;
-            border: none;
-            border-radius: 20px;
-            padding: 8px 16px;
-            font-weight: 700;
-            font-size: 14px;
-            transition: background-color 0.3s ease;
-        }
-        .btn-primary:hover {
-            background-color: #0052cc;
-        }
-        .btn-secondary {
-            background-color: #d3d3d3;
-            color: #ffffff;
-            border: none;
-            border-radius: 20px;
-            padding: 8px 16px;
-            font-weight: 700;
-            font-size: 14px;
-        }
-        .btn-secondary:hover {
-            background-color: #b0b0b0;
-        }
+
         .error {
             color: #ff4d4f;
             font-size: 12px;
             text-align: left;
             margin-top: 3px;
         }
+
         .error-summary {
             color: #ff4d4f;
             font-size: 14px;
             text-align: center;
             margin-bottom: 10px;
         }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 12px 30px;
+            min-width: 120px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        button.primary {
+            background-color: #003087;
+            color: #fff;
+        }
+
+        button.primary:hover {
+            background-color: #002060;
+        }
+
+        button.secondary {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        button.secondary:hover {
+            background-color: #b3b3b3;
+        }
+
         #result {
             margin-top: 15px;
             padding: 15px;
-            background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 82, 204, 0.1);
+            background: #f9f9f9;
+            border-radius: 5px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
             font-size: 14px;
         }
+
         th, td {
-            border: 1px solid #b3cde0;
+            border: 1px solid #ccc;
             padding: 8px;
             text-align: right;
         }
+
         th {
-            background-color: #e6f0fa;
-            color: #0033a0;
-            font-weight: 700;
+            background-color: #e6f0ff;
+            color: #003087;
+            font-weight: bold;
         }
+
         .pagination {
             display: flex;
             justify-content: center;
             gap: 8px;
             margin-top: 10px;
         }
+
         .pagination button {
-            background-color: #0033a0;
-            color: #ffffff;
-            border-radius: 20px;
+            background-color: #003087;
+            color: #fff;
+            border-radius: 5px;
             padding: 6px 12px;
             font-size: 12px;
         }
+
         .pagination button:hover {
-            background-color: #0052cc;
+            background-color: #002060;
         }
+
         .chart-container {
             margin-top: 15px;
         }
-        .form-actions {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
-        }
+
         .loading-indicator {
             display: none;
             position: fixed;
@@ -171,123 +274,224 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(0, 0, 0, 0.7);
-            color: white;
+            color: #fff;
             padding: 12px;
             border-radius: 8px;
             z-index: 2000;
             font-size: 14px;
         }
-        .modal {
-            display: flex;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+
+        .support {
+            text-align: center;
+            margin: 20px 0;
         }
-        .modal-content {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 700px;
-            width: 90%;
-            box-shadow: 0 0 15px rgba(0, 82, 204, 0.1);
+
+        .support p {
+            margin: 5px 0;
+            font-size: 14px;
         }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+
+        footer {
+            background-color: #003087;
+            color: #fff;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 15px;
         }
-        .close-btn {
-            font-size: 20px;
-            cursor: pointer;
-            color: #0033a0;
+
+        footer a {
+            color: #fff;
+            margin: 0 8px;
+            font-size: 12px;
+            text-decoration: none;
         }
-        .close-btn:hover {
-            color: #ff4d4f;
+
+        footer a:hover {
+            text-decoration: underline;
         }
+
+        footer img {
+            height: 28px;
+            margin: 8px;
+        }
+
         @media (max-width: 768px) {
-            .container { padding: 10px; }
-            h1 { font-size: 16px; }
-            .form-control, .form-select { font-size: 12px; }
-            .btn-primary, .btn-secondary { font-size: 12px; }
-            table { font-size: 12px; }
+            .top-banner {
+                padding: 10px;
+            }
+
+            .top-banner img {
+                height: 28px;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            nav ul {
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                background: #fff;
+                position: absolute;
+                top: 50px;
+                left: 0;
+                width: 100%;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                z-index: 999;
+            }
+
+            nav ul.show {
+                display: flex;
+            }
+
+            nav ul li {
+                margin: 8px 0;
+                width: 100%;
+                text-align: center;
+            }
+
+            nav ul li a {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .container {
+                padding: 12px;
+            }
+
+            .form-control, .form-select {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            button {
+                padding: 10px 25px;
+                min-width: 100px;
+                font-size: 14px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            .support p {
+                font-size: 13px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="loading-indicator" id="loadingIndicator" role="alert" aria-live="assertive">Đang xử lý...</div>
-    <div class="modal" id="loanCalcModal" role="dialog" aria-labelledby="modalTitle">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a href="https://vaytieudung.github.io/shinhanbank/" class="btn btn-secondary">Quay về</a>
-                <span class="close-btn" onclick="closeLoanCalcModal()" role="button" aria-label="Đóng cửa sổ">×</span>
-            </div>
-            <div class="container">
-                <h1 id="modalTitle">TÍNH KHOẢN VAY</h1>
-                <form id="loanForm" aria-label="Biểu mẫu tính toán khoản vay">
-                    <div class="form-group">
-                        <label class="form-label" for="loanType">Loại khoản vay <span>*</span></label>
-                        <select class="form-select" id="loanType" onchange="updateInterestRate()" aria-required="true">
-                            <option value="" disabled selected>Chọn loại khoản vay</option>
-                            <option value="tinchap">Vay tín chấp</option>
-                            <option value="digital_tinchap">Vay tín chấp số</option>
-                            <option value="thechap_nha">Vay thế chấp mua nhà</option>
-                            <option value="thechap_xe">Vay thế chấp mua xe</option>
-                            <option value="thechap_xe_cu">Vay thế chấp mua xe đã qua sử dụng</option>
-                            <option value="tai_nha">Vay tái tài trợ nhà</option>
-                            <option value="dam_bao">Vay đảm bảo bán lẻ (SGI)</option>
-                        </select>
-                        <div class="error" id="loanTypeError" role="alert"></div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="amount">Số tiền vay (VND) <span>*</span></label>
-                        <input type="text" class="form-control" id="amount" oninput="formatNumber(this); validateAmount(this)" placeholder="Nhập số tiền vay" aria-required="true">
-                        <div class="error" id="amountError" role="alert"></div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="term">Thời hạn vay (tháng) <span>*</span></label>
-                        <select class="form-select" id="term" aria-required="true">
-                            <option value="" disabled selected>Chọn thời hạn</option>
-                            <option value="12">12 tháng</option>
-                            <option value="24">24 tháng</option>
-                            <option value="36">36 tháng</option>
-                            <option value="48">48 tháng</option>
-                            <option value="60">60 tháng</option>
-                            <option value="72">72 tháng</option>
-                            <option value="84">84 tháng</option>
-                            <option value="96">96 tháng</option>
-                        </select>
-                        <div class="error" id="termError" role="alert"></div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="interest">Lãi suất (%/năm) <span>*</span></label>
-                        <input type="number" class="form-control" id="interest" step="0.1" readonly aria-readonly="true">
-                        <div class="error" id="interestError" role="alert"></div>
-                    </div>
-                    <div class="error-summary" id="loanCalcErrorSummary" role="alert"></div>
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-primary" onclick="calculateLoan()" aria-label="Tính toán khoản vay">Tính toán</button>
-                        <button type="button" class="btn btn-secondary" onclick="resetForm()" aria-label="Xóa biểu mẫu">Xóa</button>
-                    </div>
-                </form>
-                <div id="result" role="region" aria-live="polite"></div>
-            </div>
-        </div>
+    <div class="top-banner">
+        <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo">
+        <button class="hamburger" aria-label="Toggle Menu" aria-expanded="false" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
+
+    <nav role="navigation" aria-label="Main Navigation">
+        <ul id="nav-menu">
+            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/trang-chu.html">Trang Chủ</a></li>
+            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới Thiệu</a></li>
+            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/ca-nhan.html">Lợi Ích</a></li>
+            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-tien-gui.html">Giấy Tờ Cần Thiết</a></li>
+            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html">Đăng Ký Giải Ngân</a></li>
+            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/step5.html">Xem Kết Quả</a></li>
+            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều Khoản Sử Dụng</a></li>
+            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/support-center.html">Liên Hệ</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>TÍNH KHOẢN VAY</h1>
+        <div class="buttons">
+            <a href="https://vaytieudung.github.io/shinhanbank/" class="secondary button">Quay về</a>
+        </div>
+        <form id="loanForm" aria-label="Biểu mẫu tính toán khoản vay">
+            <div class="form-group">
+                <label class="form-label" for="loanType">Loại khoản vay <span>*</span></label>
+                <select class="form-select" id="loanType" onchange="updateInterestRate()" aria-required="true">
+                    <option value="" disabled selected>Chọn loại khoản vay</option>
+                    <option value="tinchap">Vay tín chấp</option>
+                    <option value="digital_tinchap">Vay tín chấp số</option>
+                    <option value="thechap_nha">Vay thế chấp mua nhà</option>
+                    <option value="thechap_xe">Vay thế chấp mua xe</option>
+                    <option value="thechap_xe_cu">Vay thế chấp mua xe đã qua sử dụng</option>
+                    <option value="tai_nha">Vay tái tài trợ nhà</option>
+                    <option value="dam_bao">Vay đảm bảo bán lẻ (SGI)</option>
+                </select>
+                <div class="error" id="loanTypeError" role="alert"></div>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="amount">Số tiền vay (VND) <span>*</span></label>
+                <input type="text" class="form-control" id="amount" oninput="formatNumber(this); validateAmount(this)" placeholder="Nhập số tiền vay" aria-required="true">
+                <div class="error" id="amountError" role="alert"></div>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="term">Thời hạn vay (tháng) <span>*</span></label>
+                <select class="form-select" id="term" aria-required="true">
+                    <option value="" disabled selected>Chọn thời hạn</option>
+                    <option value="12">12 tháng</option>
+                    <option value="24">24 tháng</option>
+                    <option value="36">36 tháng</option>
+                    <option value="48">48 tháng</option>
+                    <option value="60">60 tháng</option>
+                    <option value="72">72 tháng</option>
+                    <option value="84">84 tháng</option>
+                    <option value="96">96 tháng</option>
+                </select>
+                <div class="error" id="termError" role="alert"></div>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="interest">Lãi suất (%/năm) <span>*</span></label>
+                <input type="number" class="form-control" id="interest" step="0.1" readonly aria-readonly="true">
+                <div class="error" id="interestError" role="alert"></div>
+            </div>
+            <div class="error-summary" id="loanCalcErrorSummary" role="alert"></div>
+            <div class="buttons">
+                <button type="button" class="primary" onclick="calculateLoan()" aria-label="Tính toán khoản vay">Tính toán</button>
+                <button type="button" class="secondary" onclick="resetForm()" aria-label="Xóa biểu mẫu">Xóa</button>
+            </div>
+        </form>
+        <div id="result" role="region" aria-live="polite"></div>
+    </div>
+
+    <div class="support">
+        <h3>HỖ TRỢ KHÁCH HÀNG</h3>
+        <p>Hotline: 1800-599-921</p>
+        <p>Email: <a href="mailto:hotro@shinhanfinance.com.vn">hotro@shinhanfinance.com.vn</a></p>
+    </div>
+
+    <footer role="contentinfo" aria-label="Footer">
+        <p>
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/chinh-sach-bao-mat.html">Chính sách bảo mật</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều khoản sử dụng</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/chinh-sach-cookies.html">Chính sách Cookies</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/huong-dan-truy-cap.html">Hướng dẫn truy cập web</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/sitemap.html">Sitemap</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/trung-tam-bao-mat.html">Trung tâm bảo mật</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/support-center.html">Liên hệ</a> |
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới thiệu</a>
+        </p>
+        <img src="https://pg.megapay.vn/pg_was/images/pg/bankContents/PCIDSS.png?v2" alt="PCI DSS">
+        <img src="https://simg.zalopay.com.vn/zst/zlp-website/resources/images/footer/BCTLogo_1.png" alt="Bộ Công Thương">
+        <p>© Copyright Shinhan Bank 2016-2025</p>
+    </footer>
+
+    <div class="loading-indicator" id="loadingIndicator" role="alert" aria-live="assertive">Đang xử lý...</div>
+
     <script>
         const { jsPDF } = window.jspdf;
         let loanData = {};
+
+        function toggleMenu() {
+            const menu = document.getElementById('nav-menu');
+            const hamburger = document.querySelector('.hamburger');
+            menu.classList.toggle('show');
+            hamburger.setAttribute('aria-expanded', menu.classList.contains('show'));
+        }
 
         function getCurrentDate() {
             const today = new Date();
@@ -493,9 +697,9 @@
                     <div class="chart-container">
                         <canvas id="loanChart" style="max-width: 100%; max-height: 250px;"></canvas>
                     </div>
-                    <div class="form-actions">
-                        <button class="btn btn-primary" onclick="exportToCSV()">Xuất CSV</button>
-                        <button class="btn btn-primary" onclick="exportToPDF()">Xuất PDF</button>
+                    <div class="buttons">
+                        <button class="primary" onclick="exportToCSV()">Xuất CSV</button>
+                        <button class="primary" onclick="exportToPDF()">Xuất PDF</button>
                     </div>
                     <p><strong>Số tiền vay:</strong> ${amount.toLocaleString('vi-VN')} VND</p>
                     <p><strong>Thanh toán hàng tháng:</strong> ${monthlyPayment.toLocaleString('vi-VN')} VND</p>
@@ -513,7 +717,7 @@
                             {
                                 label: 'Tiền gốc (VND)',
                                 data: rows.map(row => row.principal),
-                                borderColor: '#0033a0',
+                                borderColor: '#003087',
                                 fill: false
                             },
                             {
@@ -654,20 +858,10 @@
                 ]),
                 theme: 'grid',
                 styles: { fontSize: 10, cellPadding: 2 },
-                headStyles: { fillColor: [0, 51, 160], textColor: [255, 255, 255] },
+                headStyles: { fillColor: [0, 48, 135], textColor: [255, 255, 255] },
             });
 
             doc.save('loan_schedule.pdf');
-        }
-
-        function openLoanCalcModal() {
-            document.getElementById('loanCalcModal').style.display = 'flex';
-            loadLoanData();
-        }
-
-        function closeLoanCalcModal() {
-            document.getElementById('loanCalcModal').style.display = 'none';
-            resetForm();
         }
 
         function resetForm() {
@@ -689,6 +883,8 @@
         }
 
         window.onload = function() {
-            openLoanCalcModal();
+            loadLoanData();
         };
     </script>
+</body>
+</html>

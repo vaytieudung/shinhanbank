@@ -821,10 +821,10 @@
                 const totalAmount = monthlyPayment * loanTerm;
                 const totalInterest = totalAmount - loanAmount;
 
-                document.getElementById('calcLoanAmount').textContent = loanAmount.toLocaleString();
-                document.getElementById('calcMonthlyPayment').textContent = monthlyPayment.toFixed(2).toLocaleString();
-                document.getElementById('calcTotalInterest').textContent = totalInterest.toFixed(2).toLocaleString();
-                document.getElementById('calcTotalAmount').textContent = totalAmount.toFixed(2).toLocaleString();
+                document.getElementById('calcLoanAmount').textContent = loanAmount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+document.getElementById('calcMonthlyPayment').textContent = monthlyPayment.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+document.getElementById('calcTotalInterest').textContent = totalInterest.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+document.getElementById('calcTotalAmount').textContent = totalAmount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
                 let balance = loanAmount;
                 const tableBody = document.getElementById('calculationTable');
@@ -834,14 +834,14 @@
                     const principal = monthlyPayment - interest;
                     balance -= principal;
                     const row = `
-                        <tr>
-                            <td>${month}</td>
-                            <td>${principal.toFixed(2).toLocaleString()}</td>
-                            <td>${interest.toFixed(2).toLocaleString()}</td>
-                            <td>${monthlyPayment.toFixed(2).toLocaleString()}</td>
-                            <td>${balance.toFixed(2).toLocaleString()}</td>
-                        </tr>
-                    `;
+    <tr>
+        <td>${month}</td>
+        <td>${principal.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+        <td>${interest.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+        <td>${monthlyPayment.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+        <td>${balance.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+    </tr>
+`;
                     tableBody.innerHTML += row;
                 }
 

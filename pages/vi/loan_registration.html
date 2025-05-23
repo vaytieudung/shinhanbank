@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -270,7 +271,7 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="dob" class="form-label">Ngày sinh *</label>
-                                        <input type="date" class="form-control" id="dob" name="dob" autocomplete="bday" required>
+                                        <input type="text" class="form-control" id="dob" name="dob" autocomplete="bday" placeholder="dd/mm/yyyy" required>
                                         <p id="dobError" class="error"></p>
                                     </div>
                                 </div>
@@ -415,7 +416,7 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="monthlyIncome" class="form-label">Thu nhập hàng tháng (VND) *</label>
-                                        <input type="number" class="form-control" id="monthlyIncome" name="monthlyIncome" required>
+                                        <input type="text" class="form-control" id="monthlyIncome" name="monthlyIncome" required>
                                         <p id="monthlyIncomeError" class="error"></p>
                                     </div>
                                 </div>
@@ -626,17 +627,18 @@
         let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
 
         // Initialize tooltips, input masks, and default disbursement date
-        $(document).ready(function(){
-            $('[data-bs-toggle="tooltip"]').tooltip();
-            $('#phone').mask('0000 000 000');
-            $('#relativePhone').mask('0000 000 000');
-            $('#cccd').mask('000000000000');
-            $('#accountNumber').mask('0000000000000000');
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('disbursementDate').value = today;
-            // Set default interest rate on page load
-            updateInterestRate();
-        });
+$(document).ready(function(){
+    $('[data-bs-toggle="tooltip"]').tooltip();
+    $('#phone').mask('0000 000 000');
+    $('#relativePhone').mask('0000 000 000');
+    $('#cccd').mask('000000000000');
+    $('#accountNumber').mask('0000000000000000');
+    $('#dob').mask('00/00/0000');
+    $('#monthlyIncome').mask('000,000,000,000', {reverse: true}); // Thêm dòng này
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('disbursementDate').value = today;
+    updateInterestRate();
+});
 
         // Auto-select interest rate based on loan type
         const updateInterestRate = () => {
@@ -749,7 +751,15 @@
             let errorMessages = [];
             const fields = [
                 { id: 'fullName', errorId: 'fullNameError', validate: value => value.trim().length > 2, message: 'Họ và tên phải trên 2 ký tự.' },
-                { id: 'dob', errorId: 'dobError', validate: value => value && new Date(value) <= new Date() && new Date(value) >= new Date('1900-01-01'), message: 'Ngày sinh phải hợp lệ (1900 trở đi, không phải tương lai).' },
+                { id: 'dob', errorId: 'dobError', validate: value => {
+    const regex = /^\d{2}\/\d{2}\/\d{4}$/;
+    if (!regex.test(value)) return false;
+    const [day, month, year] = value.split('/').map(Number);
+    const date = new Date(year, month - 1, day);
+    const minDate = new Date('1900-01-01');
+    const today = new Date();
+    return date && !isNaN(date) && date <= today && date >= minDate && date.getDate() === day && date.getMonth() + 1 === month && date.getFullYear() === year;
+}, message: 'Ngày sinh phải hợp lệ (dd/mm/yyyy, từ 1900, không phải tương lai).' },
                 { id: 'gender', errorId: 'genderError', validate: value => value !== '', message: 'Vui lòng chọn giới tính.' },
                 { id: 'contactAddress', errorId: 'contactAddressError', validate: value => value.trim().length > 5, message: 'Địa chỉ thường trú phải chi tiết (trên 5 ký tự).' },
                 { id: 'hometown', errorId: 'hometownError', validate: value => value.trim().length > 5, message: 'Quê quán phải chi tiết (trên 5 ký tự).' },
@@ -764,7 +774,10 @@
                 { id: 'loanAmount', errorId: 'loanAmountError', validate: value => value !== '' && value !== 'other', message: 'Vui lòng chọn số tiền vay hợp lệ.' },
                 { id: 'disbursementDate', errorId: 'disbursementDateError', validate: value => value && new Date(value) >= new Date().setHours(0, 0, 0, 0), message: 'Ngày giải ngân phải từ hôm nay trở đi.' },
                 { id: 'interestRate', errorId: 'interestRateError', validate: value => value >= 5 && value <= 10, message: 'Lãi suất phải từ 5% đến 10%.' },
-                { id: 'monthlyIncome', errorId: 'monthlyIncomeError', validate: value => value >= 3000000, message: 'Thu nhập phải từ 3,000,000 VND.' },
+                { id: 'monthlyIncome', errorId: 'monthlyIncomeError', validate: value => {
+    const numericValue = parseFloat(value.replace(/,/g, ''));
+    return !isNaN(numericValue) && numericValue >= 3000000;
+}, message: 'Thu nhập phải từ 3,000,000 VND.' },
                 { id: 'occupation', errorId: 'occupationError', validate: value => value !== '', message: 'Vui lòng chọn nghề nghiệp.' },
                 { id: 'loanPurpose', errorId: 'loanPurposeError', validate: value => value !== '', message: 'Vui lòng chọn mục đích vay.' },
                 { id: 'relativePhone', errorId: 'relativePhoneError', validate: value => /^\d{10}$/.test(value.replace(/\s/g, '')), message: 'Số điện thoại người thân phải đúng 10 chữ số.' },
@@ -821,10 +834,10 @@
                 const totalAmount = monthlyPayment * loanTerm;
                 const totalInterest = totalAmount - loanAmount;
 
-                document.getElementById('calcLoanAmount').textContent = loanAmount.toLocaleString();
-                document.getElementById('calcMonthlyPayment').textContent = monthlyPayment.toFixed(2).toLocaleString();
-                document.getElementById('calcTotalInterest').textContent = totalInterest.toFixed(2).toLocaleString();
-                document.getElementById('calcTotalAmount').textContent = totalAmount.toFixed(2).toLocaleString();
+                document.getElementById('calcLoanAmount').textContent = loanAmount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+document.getElementById('calcMonthlyPayment').textContent = monthlyPayment.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+document.getElementById('calcTotalInterest').textContent = totalInterest.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+document.getElementById('calcTotalAmount').textContent = totalAmount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
                 let balance = loanAmount;
                 const tableBody = document.getElementById('calculationTable');
@@ -834,14 +847,14 @@
                     const principal = monthlyPayment - interest;
                     balance -= principal;
                     const row = `
-                        <tr>
-                            <td>${month}</td>
-                            <td>${principal.toFixed(2).toLocaleString()}</td>
-                            <td>${interest.toFixed(2).toLocaleString()}</td>
-                            <td>${monthlyPayment.toFixed(2).toLocaleString()}</td>
-                            <td>${balance.toFixed(2).toLocaleString()}</td>
-                        </tr>
-                    `;
+    <tr>
+        <td>${month}</td>
+        <td>${principal.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+        <td>${interest.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+        <td>${monthlyPayment.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+        <td>${balance.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+    </tr>
+`;
                     tableBody.innerHTML += row;
                 }
 

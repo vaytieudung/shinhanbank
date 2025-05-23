@@ -199,6 +199,9 @@
             padding: 20px;
             margin-top: 20px;
         }
+        .form-check.error-highlight .form-check-input {
+            border: 2px solid #dc3545;
+        }
         @media (max-width: 768px) {
             .navbar-brand img {
                 height: 40px;
@@ -441,8 +444,20 @@
         }
 
         function signContract() {
+            const consent = document.getElementById('contractConsent').checked;
             const errorElement = document.getElementById('contractConsentError');
             const spinner = document.querySelector('.spinner');
+            const formCheck = document.querySelector('.form-check');
+
+            if (!consent) {
+                errorElement.textContent = 'Vui lòng xác nhận đồng ý với các điều khoản.';
+                formCheck.classList.add('error-highlight');
+                formCheck.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(() => {
+                    formCheck.classList.remove('error-highlight');
+                }, 2000); // Remove highlight after 2 seconds
+                return;
+            }
 
             errorElement.textContent = '';
             spinner.style.display = 'inline-block';

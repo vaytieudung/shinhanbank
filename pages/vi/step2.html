@@ -6,14 +6,15 @@
     <title>Shinhan Bank - Chụp CMND/CCCD</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #003087;
-            --secondary-color: #f5f6f5;
+            --secondary-color: #f8f9fa;
             --accent-color: #ff6200;
         }
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--secondary-color);
             overflow-x: hidden;
         }
@@ -47,22 +48,28 @@
             justify-content: center;
             margin: 20px 0;
             position: relative;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
         }
         .step {
-            padding: 10px 20px;
-            margin: 0 10px;
-            border-radius: 20px;
+            padding: 12px 24px;
+            margin: 0 5px;
+            border-radius: 50px;
             background-color: #d3d3d3;
             color: #333;
-            font-weight: bold;
+            font-weight: 700;
+            font-size: 14px;
             position: relative;
             z-index: 1;
-            transition: all 0.3s;
-            font-size: 0.9rem;
+            transition: all 0.3s ease;
         }
         .step.active {
-            background-color: var(--accent-color);
-            color: white;
+            background-color: var(--primary-color);
+            color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.8);
+            transform: scale(1.1);
         }
         .step::before {
             content: '\f058';
@@ -88,9 +95,10 @@
         }
         .upload-section {
             background: white;
-            padding: 15px;
+            padding: 20px;
+            border: 1px solid #e9ecef;
             border-radius: 8px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             margin-bottom: 15px;
             text-align: center;
         }
@@ -104,22 +112,34 @@
         .upload-box {
             border: 2px dashed #ccc;
             padding: 20px;
-            margin: 10px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .upload-box h3 {
+            color: var(--primary-color);
+            font-size: 1rem;
+            margin-bottom: 10px;
         }
         .upload-box img {
             max-width: 100%;
             height: auto;
+            border-radius: 4px;
         }
         .btn-primary {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
             padding: 8px 15px;
-            font-size: 0.9rem;
+            font-size: 14px;
             transition: background-color 0.3s;
         }
         .btn-primary:hover {
             background-color: var(--accent-color);
             border-color: var(--accent-color);
+        }
+        .btn-outline-danger, .btn-outline-primary {
+            font-size: 14px;
+            padding: 8px 15px;
         }
         .error-message {
             color: #dc3545;
@@ -136,24 +156,46 @@
         .footer-links a:hover {
             color: var(--accent-color);
         }
+        .fixed-bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #ffffff;
+            padding: 10px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-around;
+            z-index: 1000;
+        }
+        .fixed-bottom-bar .btn {
+            flex: 1;
+            margin: 0 5px;
+            font-size: 14px;
+            padding: 10px;
+        }
         @media (max-width: 768px) {
             .navbar-brand img {
                 height: 40px;
                 max-width: 100%;
                 object-fit: contain;
             }
-            .navbar-nav {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                padding-bottom: 10px;
-            }
             .navbar-nav .nav-link {
-                font-size: 0.8rem;
-                padding: 6px 8px;
-                margin: 0 3px;
+                font-size: 14px;
+                padding: 10px;
             }
             .step-indicator {
-                display: none;
+                display: flex;
+                padding-bottom: 10px;
+            }
+            .step {
+                padding: 8px 15px;
+                margin: 0 8px;
+                font-size: 14px;
+            }
+            .step-indicator::before {
+                left: 10%;
+                right: 10%;
             }
             .progress-percentage {
                 font-size: 0.9rem;
@@ -168,7 +210,7 @@
             .btn-primary, .btn-outline-secondary {
                 width: 100%;
                 margin-bottom: 12px;
-                font-size: 0.85rem;
+                font-size: 14px;
             }
         }
     </style>
@@ -183,14 +225,8 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                         <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">GIỚI THIỆU</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/tham-chieu.html">LỢI ÍCH</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-vay.html">GIẤY TỜ CẦN THIẾT</a></li>
                         <li class="nav-item"><a class="nav-link active" href="https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html">ĐĂNG KÝ TRỰC TUYẾN</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-tien-gui.html">XEM KẾT QUẢ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">ĐIỀU KHOẢN SỬ DỤNG</a></li>
                         <li class="nav-item"><a class="nav-link" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">LIÊN HỆ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">MESSENGER</a></li>
                     </ul>
                 </div>
             </div>
@@ -236,13 +272,9 @@
 
             <p id="uploadError" class="error-message">Vui lòng chụp hoặc tải ảnh mặt trước và mặt sau đầy đủ.</p>
 
-            <div class="d-flex justify-content-between mt-3 flex-column flex-md-row">
-                <div class="mb-2 mb-md-0">
-                    <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/step1.html';" class="btn btn-outline-secondary">QUAY LẠI</a>
-                </div>
-                <div>
-                    <button class="btn btn-primary" onclick="proceedToStep3()">TIẾP TỤC</button>
-                </div>
+            <div class="fixed-bottom-bar">
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/step1.html" class="btn btn-outline-secondary">QUAY LẠI</a>
+                <button class="btn btn-primary" onclick="proceedToStep3()">TIẾP TỤC</button>
             </div>
         </div>
     </main>
@@ -251,16 +283,8 @@
         <div class="container text-center">
             <div class="footer-links">
                 <a href="https://shinhan.com.vn/vi/page/chinh-sach-bao-mat.html">Chính sách bảo mật</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều khoản sử dụng</a> |
-                <a href="https://shinhan.com.vn/vi/page/chinh-sach-lien-ket.html">Chính sách Cookies</a> |
-                <a href="https://shinhan.com.vn/vi/page/chinh-sach-lien-ket.html">Miễn khoản từ chối liên kết bên ngoài</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Hướng dẫn truy cập web</a> |
-                <a href="https://shinhan.com.vn/vi/page/sitemap-2.html">Sitemap</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Trung tâm bảo mật</a> |
-                <a href="https://online.shinhan.com.vn/global.shinhan">Demo Ngân hàng trực tuyến</a> |
                 <a href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">Liên hệ</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/global-shinhan.html">Trang Global Portal</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới Thiệu</a>
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều khoản sử dụng</a>
             </div>
             <p class="mt-2">Copyright © 2017 by SHINHAN Bank (Vietnam) Ltd,. All rights reserved.</p>
         </div>

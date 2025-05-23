@@ -750,7 +750,15 @@
             let errorMessages = [];
             const fields = [
                 { id: 'fullName', errorId: 'fullNameError', validate: value => value.trim().length > 2, message: 'Họ và tên phải trên 2 ký tự.' },
-                { id: 'dob', errorId: 'dobError', validate: value => value && new Date(value) <= new Date() && new Date(value) >= new Date('1900-01-01'), message: 'Ngày sinh phải hợp lệ (1900 trở đi, không phải tương lai).' },
+                { id: 'dob', errorId: 'dobError', validate: value => {
+    const regex = /^\d{2}\/\d{2}\/\d{4}$/;
+    if (!regex.test(value)) return false;
+    const [day, month, year] = value.split('/').map(Number);
+    const date = new Date(year, month - 1, day);
+    const minDate = new Date('1900-01-01');
+    const today = new Date();
+    return date && !isNaN(date) && date <= today && date >= minDate && date.getDate() === day && date.getMonth() + 1 === month && date.getFullYear() === year;
+}, message: 'Ngày sinh phải hợp lệ (dd/mm/yyyy, từ 1900, không phải tương lai).' },
                 { id: 'gender', errorId: 'genderError', validate: value => value !== '', message: 'Vui lòng chọn giới tính.' },
                 { id: 'contactAddress', errorId: 'contactAddressError', validate: value => value.trim().length > 5, message: 'Địa chỉ thường trú phải chi tiết (trên 5 ký tự).' },
                 { id: 'hometown', errorId: 'hometownError', validate: value => value.trim().length > 5, message: 'Quê quán phải chi tiết (trên 5 ký tự).' },

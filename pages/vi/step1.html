@@ -627,16 +627,17 @@
 
         // Initialize tooltips, input masks, and default disbursement date
         $(document).ready(function(){
-            $('[data-bs-toggle="tooltip"]').tooltip();
-            $('#phone').mask('0000 000 000');
-            $('#relativePhone').mask('0000 000 000');
-            $('#cccd').mask('000000000000');
-            $('#accountNumber').mask('0000000000000000');
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('disbursementDate').value = today;
-            // Set default interest rate on page load
-            updateInterestRate();
-        });
+    $('[data-bs-toggle="tooltip"]').tooltip();
+    $('#phone').mask('0000 000 000');
+    $('#relativePhone').mask('0000 000 000');
+    $('#cccd').mask('000000000000');
+    $('#accountNumber').mask('0000000000000000');
+    $('#dob').mask('00/00/0000'); // Thêm dòng này
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('disbursementDate').value = today;
+    // Set default interest rate on page load
+    updateInterestRate();
+});
 
         // Auto-select interest rate based on loan type
         const updateInterestRate = () => {

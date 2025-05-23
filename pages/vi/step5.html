@@ -424,35 +424,15 @@
         }
 
         function signContract() {
-            const consent = document.getElementById('contractConsent').checked;
             const errorElement = document.getElementById('contractConsentError');
             const spinner = document.querySelector('.spinner');
 
-            if (!consent) {
-                errorElement.textContent = 'Vui lòng xác nhận đồng ý với các điều khoản.';
-                return;
-            }
-
             errorElement.textContent = '';
             spinner.style.display = 'inline-block';
-
-            // Send confirmation email
-            const savedData = loadUserData();
-            const emailParams = {
-                to_email: savedData.email || 'user@example.com',
-                full_name: savedData.fullName || 'Khách hàng',
-                message: 'Vui lòng đọc và kiểm tra nội dung thông tin trên hồ sơ trước khi giải ngân.'
-            };
-
-            emailjs.send('service_60tgxof', 'template_uhyb8ve', emailParams)
-                .then(() => {
-                    console.log('Contract signing email sent');
-                    spinner.style.display = 'none';
-                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step6.html';
-                }, (error) => {
-                    console.error('Email sending failed:', error);
-                    spinner.style.display = 'none';
-                });
+            setTimeout(() => {
+                spinner.style.display = 'none';
+                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step6.html';
+            }, 1000); // Giả lập thời gian chờ 1 giây
         }
     </script>
 </body>

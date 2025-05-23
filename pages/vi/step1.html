@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -7,14 +6,15 @@
     <title>Shinhan Bank - Nhập Thông Tin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #003087;
-            --secondary-color: #f5f6f5;
+            --secondary-color: #f8f9fa;
             --accent-color: #ff6200;
         }
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--secondary-color);
             overflow-x: hidden;
         }
@@ -54,20 +54,22 @@
             -webkit-overflow-scrolling: touch;
         }
         .step {
-            padding: 10px 20px;
-            margin: 0 10px;
-            border-radius: 20px;
+            padding: 12px 24px;
+            margin: 0 5px;
+            border-radius: 50px;
             background-color: #d3d3d3;
             color: #333;
-            font-weight: bold;
+            font-weight: 700;
+            font-size: 14px;
             position: relative;
             z-index: 1;
-            transition: all 0.3s;
-            font-size: 0.9rem;
+            transition: all 0.3s ease;
         }
         .step.active {
-            background-color: var(--accent-color);
-            color: white;
+            background-color: var(--primary-color);
+            color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.8);
+            transform: scale(1.1);
         }
         .step::before {
             content: '\f058';
@@ -93,9 +95,10 @@
         }
         .form-section {
             background: white;
-            padding: 15px;
+            padding: 20px;
+            border: 1px solid #e9ecef;
             border-radius: 8px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             margin-bottom: 15px;
         }
         .form-section h3 {
@@ -105,10 +108,15 @@
             margin-bottom: 15px;
             font-size: 1.2rem;
         }
+        .form-label {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
         .form-control, .form-select {
-            font-size: 0.9rem;
+            font-size: 14px;
             padding: 8px;
-            margin-bottom: 5px;
+            margin-bottom: 15px;
         }
         .form-control:focus {
             border-color: var(--accent-color);
@@ -118,7 +126,7 @@
             background-color: var(--primary-color);
             border-color: var(--primary-color);
             padding: 8px 15px;
-            font-size: 0.9rem;
+            font-size: 14px;
             transition: background-color 0.3s;
         }
         .btn-primary:hover {
@@ -161,6 +169,24 @@
             margin-left: 5px;
             cursor: pointer;
         }
+        .fixed-bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #ffffff;
+            padding: 10px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-around;
+            z-index: 1000;
+        }
+        .fixed-bottom-bar .btn {
+            flex: 1;
+            margin: 0 5px;
+            font-size: 14px;
+            padding: 10px;
+        }
         @media (max-width: 768px) {
             .navbar-brand img {
                 height: 40px;
@@ -168,9 +194,8 @@
                 object-fit: contain;
             }
             .navbar-nav .nav-link {
-                font-size: 0.8rem;
-                padding: 6px 8px;
-                margin: 0 3px;
+                font-size: 14px;
+                padding: 10px;
             }
             .step-indicator {
                 flex-direction: row;
@@ -181,7 +206,7 @@
             .step {
                 padding: 8px 15px;
                 margin: 0 8px;
-                font-size: 0.85rem;
+                font-size: 14px;
             }
             .step-indicator::before {
                 left: 10%;
@@ -197,10 +222,34 @@
                 padding: 12px;
             }
             .calculation-table {
-                font-size: 0.75rem;
-                overflow-x: auto;
+                display: block;
+                font-size: 14px;
+            }
+            .calculation-table thead {
+                display: none;
+            }
+            .calculation-table tbody tr {
+                display: flex;
+                flex-wrap: wrap;
+                padding: 10px 0;
+                border-bottom: 1px solid #e9ecef;
+            }
+            .calculation-table tbody td {
+                flex: 1 1 50%;
+                padding: 5px;
+                text-align: left;
+            }
+            .calculation-table tbody td:before {
+                content: attr(data-label);
+                font-weight: 500;
+                color: var(--primary-color);
                 display: block;
             }
+            .calculation-table tbody td:nth-child(1):before { content: "Tháng: "; }
+            .calculation-table tbody td:nth-child(2):before { content: "Gốc: "; }
+            .calculation-table tbody td:nth-child(3):before { content: "Lãi: "; }
+            .calculation-table tbody td:nth-child(4):before { content: "Tổng: "; }
+            .calculation-table tbody td:nth-child(5):before { content: "Dư nợ: "; }
             .container {
                 padding-left: 12px;
                 padding-right: 12px;
@@ -208,10 +257,10 @@
             .btn-primary {
                 width: 100%;
                 margin-bottom: 12px;
-                font-size: 0.85rem;
+                font-size: 14px;
             }
             .form-control, .form-select {
-                font-size: 0.85rem;
+                font-size: 14px;
                 padding: 10px;
             }
         }
@@ -227,14 +276,8 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">GIỚI THIỆU</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/tham-chieu.html">LỢI ÍCH</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-vay.html">GIẤY TỜ CẦN THIẾT</a></li>
                         <li class="nav-item"><a class="nav-link active" href="https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html">ĐĂNG KÝ TRỰC TUYẾN</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-tien-gui.html">XEM KẾT QUẢ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">ĐIỀU KHOẢN SỬ DỤNG</a></li>
                         <li class="nav-item"><a class="nav-link" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">LIÊN HỆ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">MESSENGER</a></li>
                     </ul>
                 </div>
             </div>
@@ -348,7 +391,7 @@
                                         <label for="email" class="form-label">E-mail *</label>
                                         <input type="email" class="form-control" id="email" name="email" autocomplete="email" required>
                                         <p id="emailError" class="error"></p>
-                                        <small class="form-text text-muted">Bạn sẽ nhận thông tin hồ sơ đăng ký về email này .</small>
+                                        <small class="form-text text-muted">Bạn sẽ nhận thông tin hồ sơ đăng ký về email này.</small>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -548,11 +591,11 @@
                                 <table class="table table-bordered calculation-table">
                                     <thead>
                                         <tr>
-                                            <th>Tháng</th>
-                                            <th>Gốc (VND)</th>
-                                            <th>Lãi (VND)</th>
-                                            <th>Tổng (VND)</th>
-                                            <th>Dư nợ (VND)</th>
+                                            <th data-label="Tháng">Tháng</th>
+                                            <th data-label="Gốc">Gốc (VND)</th>
+                                            <th data-label="Lãi">Lãi (VND)</th>
+                                            <th data-label="Tổng">Tổng (VND)</th>
+                                            <th data-label="Dư nợ">Dư nợ (VND)</th>
                                         </tr>
                                     </thead>
                                     <tbody id="calculationTable"></tbody>
@@ -570,20 +613,15 @@
                     <p id="privacyConsentError" class="error"></p>
                 </div>
 
-                <div class="d-flex justify-content-between mt-3 flex-column flex-md-row">
-                    <div class="mb-2 mb-md-0">
-                        <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/trang-chu.html" class="btn btn-outline-secondary">TRANG CHỦ</a>
-                    </div>
-                    <div>
-                        <button type="button" class="btn btn-primary position-relative" onclick="calculateLoan()">
-                            TÍNH TOÁN
-                            <span class="spinner-border spinner-border-sm spinner" role="status" aria-hidden="true"></span>
-                        </button>
-                        <button type="submit" class="btn btn-primary ms-2 position-relative">
-                            ĐĂNG KÝ
-                            <span class="spinner-border spinner-border-sm spinner" role="status" aria-hidden="true"></span>
-                        </button>
-                    </div>
+                <div class="fixed-bottom-bar">
+                    <button type="button" class="btn btn-primary" onclick="calculateLoan()">
+                        TÍNH TOÁN
+                        <span class="spinner-border spinner-border-sm spinner" role="status" aria-hidden="true"></span>
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        ĐĂNG KÝ
+                        <span class="spinner-border spinner-border-sm spinner" role="status" aria-hidden="true"></span>
+                    </button>
                 </div>
             </form>
         </div>
@@ -593,16 +631,8 @@
         <div class="container text-center">
             <div class="footer-links">
                 <a href="https://shinhan.com.vn/vi/page/chinh-sach-bao-mat.html">Chính sách bảo mật</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều khoản sử dụng</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Chính sách Cookies</a> |
-                <a href="https://shinhan.com.vn/vi/page/chinh-sach-lien-ket.html">Miễn khoản từ chối liên kết bên ngoài</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/financial-statement.html">Hướng dẫn truy cập web</a> |
-                <a href="https://shinhan.com.vn/vi/page/sitemap-2.html">Sitemap</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Trung tâm bảo mật</a> |
-                <a href="https://online.shinhan.com.vn/global.shinhan">Demo Ngân hàng trực tuyến</a> |
                 <a href="https://m.me/shinhanfinancer?hash=AbbheNwiAth9Hcp7&source_id=8585216">Liên hệ</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/global-shinhan.html">Trang Global Portal</a> |
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới Thiệu</a>
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều khoản sử dụng</a>
             </div>
             <p class="mt-2">Copyright © 2017 by SHINHAN Bank (Vietnam) Ltd,. All rights reserved.</p>
         </div>
@@ -627,18 +657,18 @@
         let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
 
         // Initialize tooltips, input masks, and default disbursement date
-$(document).ready(function(){
-    $('[data-bs-toggle="tooltip"]').tooltip();
-    $('#phone').mask('0000 000 000');
-    $('#relativePhone').mask('0000 000 000');
-    $('#cccd').mask('000000000000');
-    $('#accountNumber').mask('0000000000000000');
-    $('#dob').mask('00/00/0000');
-    $('#monthlyIncome').mask('000,000,000,000', {reverse: true}); // Thêm dòng này
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('disbursementDate').value = today;
-    updateInterestRate();
-});
+        $(document).ready(function(){
+            $('[data-bs-toggle="tooltip"]').tooltip();
+            $('#phone').mask('0000 000 000');
+            $('#relativePhone').mask('0000 000 000');
+            $('#cccd').mask('000000000000');
+            $('#accountNumber').mask('0000000000000000');
+            $('#dob').mask('00/00/0000');
+            $('#monthlyIncome').mask('000,000,000,000', {reverse: true});
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('disbursementDate').value = today;
+            updateInterestRate();
+        });
 
         // Auto-select interest rate based on loan type
         const updateInterestRate = () => {
@@ -650,7 +680,7 @@ $(document).ready(function(){
                 'Vay thấu chi': 8.5,
                 'Vay trả góp': 7.2
             };
-            const rate = rates[loanType] || 7.0; // Default to 7.0 if no loanType selected
+            const rate = rates[loanType] || 7.0;
             interestRate.value = rate.toFixed(2);
             console.log(`Interest rate set to ${rate}% for ${loanType || 'default'}`);
             interestRate.dispatchEvent(new Event('change'));
@@ -665,7 +695,6 @@ $(document).ready(function(){
         // Load user data on page load
         window.onload = function() {
             loadUserData();
-            // Ensure interest rate is set after loading user data
             updateInterestRate();
         };
 
@@ -734,14 +763,12 @@ $(document).ready(function(){
                     document.getElementById('accountName').value = userData.accountName || '';
                     document.getElementById('accountNumber').value = userData.accountNumber || '';
                     document.getElementById('bankName').value = userData.bankName || '';
-                    updateInterestRate(); // Ensure interest rate is updated after loading
+                    updateInterestRate();
                 } else {
-                    // If no userData, set default interest rate
                     updateInterestRate();
                 }
             } catch (error) {
                 console.error('Error loading userData from localStorage:', error);
-                // Fallback to default interest rate on error
                 updateInterestRate();
             }
         }
@@ -752,14 +779,14 @@ $(document).ready(function(){
             const fields = [
                 { id: 'fullName', errorId: 'fullNameError', validate: value => value.trim().length > 2, message: 'Họ và tên phải trên 2 ký tự.' },
                 { id: 'dob', errorId: 'dobError', validate: value => {
-    const regex = /^\d{2}\/\d{2}\/\d{4}$/;
-    if (!regex.test(value)) return false;
-    const [day, month, year] = value.split('/').map(Number);
-    const date = new Date(year, month - 1, day);
-    const minDate = new Date('1900-01-01');
-    const today = new Date();
-    return date && !isNaN(date) && date <= today && date >= minDate && date.getDate() === day && date.getMonth() + 1 === month && date.getFullYear() === year;
-}, message: 'Ngày sinh phải hợp lệ (dd/mm/yyyy, từ 1900, không phải tương lai).' },
+                    const regex = /^\d{2}\/\d{2}\/\d{4}$/;
+                    if (!regex.test(value)) return false;
+                    const [day, month, year] = value.split('/').map(Number);
+                    const date = new Date(year, month - 1, day);
+                    const minDate = new Date('1900-01-01');
+                    const today = new Date();
+                    return date && !isNaN(date) && date <= today && date >= minDate && date.getDate() === day && date.getMonth() + 1 === month && date.getFullYear() === year;
+                }, message: 'Ngày sinh phải hợp lệ (dd/mm/yyyy, từ 1900, không phải tương lai).' },
                 { id: 'gender', errorId: 'genderError', validate: value => value !== '', message: 'Vui lòng chọn giới tính.' },
                 { id: 'contactAddress', errorId: 'contactAddressError', validate: value => value.trim().length > 5, message: 'Địa chỉ thường trú phải chi tiết (trên 5 ký tự).' },
                 { id: 'hometown', errorId: 'hometownError', validate: value => value.trim().length > 5, message: 'Quê quán phải chi tiết (trên 5 ký tự).' },
@@ -775,9 +802,9 @@ $(document).ready(function(){
                 { id: 'disbursementDate', errorId: 'disbursementDateError', validate: value => value && new Date(value) >= new Date().setHours(0, 0, 0, 0), message: 'Ngày giải ngân phải từ hôm nay trở đi.' },
                 { id: 'interestRate', errorId: 'interestRateError', validate: value => value >= 5 && value <= 10, message: 'Lãi suất phải từ 5% đến 10%.' },
                 { id: 'monthlyIncome', errorId: 'monthlyIncomeError', validate: value => {
-    const numericValue = parseFloat(value.replace(/,/g, ''));
-    return !isNaN(numericValue) && numericValue >= 3000000;
-}, message: 'Thu nhập phải từ 3,000,000 VND.' },
+                    const numericValue = parseFloat(value.replace(/,/g, ''));
+                    return !isNaN(numericValue) && numericValue >= 3000000;
+                }, message: 'Thu nhập phải từ 3,000,000 VND.' },
                 { id: 'occupation', errorId: 'occupationError', validate: value => value !== '', message: 'Vui lòng chọn nghề nghiệp.' },
                 { id: 'loanPurpose', errorId: 'loanPurposeError', validate: value => value !== '', message: 'Vui lòng chọn mục đích vay.' },
                 { id: 'relativePhone', errorId: 'relativePhoneError', validate: value => /^\d{10}$/.test(value.replace(/\s/g, '')), message: 'Số điện thoại người thân phải đúng 10 chữ số.' },
@@ -835,9 +862,9 @@ $(document).ready(function(){
                 const totalInterest = totalAmount - loanAmount;
 
                 document.getElementById('calcLoanAmount').textContent = loanAmount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-document.getElementById('calcMonthlyPayment').textContent = monthlyPayment.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-document.getElementById('calcTotalInterest').textContent = totalInterest.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-document.getElementById('calcTotalAmount').textContent = totalAmount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                document.getElementById('calcMonthlyPayment').textContent = monthlyPayment.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                document.getElementById('calcTotalInterest').textContent = totalInterest.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                document.getElementById('calcTotalAmount').textContent = totalAmount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
                 let balance = loanAmount;
                 const tableBody = document.getElementById('calculationTable');
@@ -847,14 +874,14 @@ document.getElementById('calcTotalAmount').textContent = totalAmount.toLocaleStr
                     const principal = monthlyPayment - interest;
                     balance -= principal;
                     const row = `
-    <tr>
-        <td>${month}</td>
-        <td>${principal.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
-        <td>${interest.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
-        <td>${monthlyPayment.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
-        <td>${balance.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
-    </tr>
-`;
+                        <tr>
+                            <td data-label="Tháng">${month}</td>
+                            <td data-label="Gốc">${principal.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+                            <td data-label="Lãi">${interest.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+                            <td data-label="Tổng">${monthlyPayment.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+                            <td data-label="Dư nợ">${balance.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+                        </tr>
+                    `;
                     tableBody.innerHTML += row;
                 }
 
@@ -1002,7 +1029,7 @@ document.getElementById('calcTotalAmount').textContent = totalAmount.toLocaleStr
                         } else {
                             console.error('Email failed after retries:', error);
                             spinner.style.display = 'none';
-                            alert('Đăng ký không thành công. Thông tin không trùng khớp tại hệ thống hoặc không đúng, vui lòng thử lại hoặc  liên hệ hỗ trợ . ');
+                            alert('Đăng ký không thành công. Thông tin không trùng khớp tại hệ thống hoặc không đúng, vui lòng thử lại hoặc liên hệ hỗ trợ.');
                             setTimeout(() => {
                                 window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html';
                             }, 500);
@@ -1012,7 +1039,7 @@ document.getElementById('calcTotalAmount').textContent = totalAmount.toLocaleStr
                 sendEmail();
             } else {
                 spinner.style.display = 'none';
-                alert('Lỗi vui lòng kiểm tra lại thông tin hoặc mục còn thiếu .');
+                alert('Lỗi vui lòng kiểm tra lại thông tin hoặc mục còn thiếu.');
                 console.error('LocalStorage save failed');
             }
         }

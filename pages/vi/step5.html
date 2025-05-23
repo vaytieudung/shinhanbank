@@ -378,7 +378,24 @@
 
         // Check for existing registration and load contract details
         window.onload = function() {
-            const savedData = loadUserData();
+            let savedData = loadUserData();
+
+            // Add default values for missing fields before processing
+            if (!savedData.disbursementDate || savedData.disbursementDate === "N/A" || savedData.disbursementDate === "") {
+                savedData.disbursementDate = new Date().toISOString().split('T')[0]; // Today
+            }
+            if (!savedData.loanTerm || savedData.loanTerm === "N/A" || savedData.loanTerm === 0) {
+                savedData.loanTerm = 12; // Example: 12 months
+            }
+            if (!savedData.totalInterest || savedData.totalInterest === "N/A" || savedData.totalInterest === 0) {
+                savedData.totalInterest = savedData.monthlyPayment ? Math.round(savedData.monthlyPayment * savedData.loanTerm * 0.1) : 5000000; // Estimate based on monthlyPayment or default
+            }
+            if (!savedData.totalRepayment || savedData.totalRepayment === "N/A" || savedData.totalRepayment === 0) {
+                savedData.totalRepayment = (savedData.loanAmount ? Number(savedData.loanAmount) : 50000000) + savedData.totalInterest; // loanAmount + totalInterest
+            }
+
+            // Save updated data before processing
+            saveToLocalStorage(savedData);
 
             // Replace "N/A" or 0 with "" for all fields
             for (let key in savedData) {

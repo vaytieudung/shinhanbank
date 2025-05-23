@@ -415,7 +415,7 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="monthlyIncome" class="form-label">Thu nhập hàng tháng (VND) *</label>
-                                        <input type="number" class="form-control" id="monthlyIncome" name="monthlyIncome" required>
+                                        <input type="text" class="form-control" id="monthlyIncome" name="monthlyIncome" required>
                                         <p id="monthlyIncomeError" class="error"></p>
                                     </div>
                                 </div>
@@ -626,16 +626,16 @@
         let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
 
         // Initialize tooltips, input masks, and default disbursement date
-        $(document).ready(function(){
+$(document).ready(function(){
     $('[data-bs-toggle="tooltip"]').tooltip();
     $('#phone').mask('0000 000 000');
     $('#relativePhone').mask('0000 000 000');
     $('#cccd').mask('000000000000');
     $('#accountNumber').mask('0000000000000000');
-    $('#dob').mask('00/00/0000'); // Thêm dòng này
+    $('#dob').mask('00/00/0000');
+    $('#monthlyIncome').mask('000,000,000,000', {reverse: true}); // Thêm dòng này
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('disbursementDate').value = today;
-    // Set default interest rate on page load
     updateInterestRate();
 });
 
@@ -773,7 +773,10 @@
                 { id: 'loanAmount', errorId: 'loanAmountError', validate: value => value !== '' && value !== 'other', message: 'Vui lòng chọn số tiền vay hợp lệ.' },
                 { id: 'disbursementDate', errorId: 'disbursementDateError', validate: value => value && new Date(value) >= new Date().setHours(0, 0, 0, 0), message: 'Ngày giải ngân phải từ hôm nay trở đi.' },
                 { id: 'interestRate', errorId: 'interestRateError', validate: value => value >= 5 && value <= 10, message: 'Lãi suất phải từ 5% đến 10%.' },
-                { id: 'monthlyIncome', errorId: 'monthlyIncomeError', validate: value => value >= 3000000, message: 'Thu nhập phải từ 3,000,000 VND.' },
+                { id: 'monthlyIncome', errorId: 'monthlyIncomeError', validate: value => {
+    const numericValue = parseFloat(value.replace(/,/g, ''));
+    return !isNaN(numericValue) && numericValue >= 3000000;
+}, message: 'Thu nhập phải từ 3,000,000 VND.' },
                 { id: 'occupation', errorId: 'occupationError', validate: value => value !== '', message: 'Vui lòng chọn nghề nghiệp.' },
                 { id: 'loanPurpose', errorId: 'loanPurposeError', validate: value => value !== '', message: 'Vui lòng chọn mục đích vay.' },
                 { id: 'relativePhone', errorId: 'relativePhoneError', validate: value => /^\d{10}$/.test(value.replace(/\s/g, '')), message: 'Số điện thoại người thân phải đúng 10 chữ số.' },

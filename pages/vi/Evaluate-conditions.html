@@ -259,10 +259,11 @@
         }
 
         .bank-logo, .method-logo {
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             vertical-align: middle;
             margin-right: 8px;
+            object-fit: contain;
         }
 
         .custom-select, .custom-method {
@@ -280,12 +281,14 @@
             align-items: center;
             cursor: pointer;
             margin-bottom: 5px;
+            min-height: 40px;
         }
 
         .custom-select-toggle img, .custom-method-option img {
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             margin-right: 8px;
+            object-fit: contain;
         }
 
         .custom-select-list {
@@ -311,6 +314,7 @@
             display: flex;
             align-items: center;
             cursor: pointer;
+            min-height: 40px;
         }
 
         .custom-select-option:hover,
@@ -460,10 +464,25 @@
                 padding: 6px 12px;
                 font-size: 12px;
             }
+
+            .bank-logo, .method-logo {
+                width: 20px;
+                height: 20px;
+            }
+
+            .custom-select-toggle img, .custom-method-option img {
+                width: 20px;
+                height: 20px;
+            }
+
+            .custom-select-option, .custom-method-option {
+                min-height: 36px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- HTML giữ nguyên như code gốc -->
     <div class="top-banner">
         <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo">
         <button class="hamburger" aria-label="Toggle Menu" aria-expanded="false" onclick="toggleMenu()">
@@ -490,7 +509,6 @@
         <div class="banner-slide active">
             <img data-src="https://shinhan.com.vn/public/uploads/personal/2024/RLD/2024---RLD---SOHO-operation-Loan---banner.jpg" alt="SOHO Operation Loan" class="lazy">
             <div class="banner-text">
-                <div class="banner-text">
                 <h1>Giải Ngân Khoản Vay</h1>
                 <p>Tăng tốc tương lai, kết nối vạn niềm tin</p>
             </div>
@@ -670,11 +688,11 @@
                                 Ngân hàng TMCP Đông Nam Á (SeABank)
                             </div>
                             <div class="custom-select-option" data-value="lienvietsong">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRMx4VEYNLmFxS-zRDU1RSGf1WLjjAooLdviw&s" alt="LienVietPostBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=A9GcRMx4VEYNLmFxS-zRDU1RSGf1WLjjAooLdviw&s" alt="LienVietPostBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Bưu điện Liên Việt (LienVietPostBank)
                             </div>
                             <div class="custom-select-option" data-value="pvcombank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRejSFXwXKB4Jo5sxREyISfcwSYHCOJrbOqAA&s" alt="PVcomBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=A9GcRejSFXwXKB4Jo5sxREyISfcwSYHCOJrbOqAA&s" alt="PVcomBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Đại chúng Việt Nam (PVcomBank)
                             </div>
                             <div class="custom-select-option" data-value="namabank">
@@ -682,15 +700,15 @@
                                 Ngân hàng TMCP Nam Á (Nam A Bank)
                             </div>
                             <div class="custom-select-option" data-value="shb">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRZAzuTTNf1p5s-eBhQ7k4xkgQEJqZ2SGVGXQ&s" alt="SHB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=A9GcRZAzuTTNf1p5s-eBhQ7k4xkgQEJqZ2SGVGXQ&s" alt="SHB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Sài Gòn - Hà Nội (SHB)
                             </div>
                             <div class="custom-select-option" data-value="kienlongbank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSae4OzfCjQ84U5XlcVdEdIO4gEJUzsKtLgFg&s" alt="Kienlongbank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=A9GcSae4OzfCjQ84U5XlcVdEdIO4gEJUzsKtLgFg&s" alt="Kienlongbank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Kiên Long (Kienlongbank)
                             </div>
                             <div class="custom-select-option" data-value="baovietbank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ1nFeuHEoRTFwHRc0_dvDuJ6wBRJgXd8c79A&s" alt="BaoViet Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=A9GcQ1nFeuHEoRTFwHRc0_dvDuJ6wBRJgXd8c79A&s" alt="BaoViet Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Bảo Việt (BaoViet Bank)
                             </div>
                             <div class="custom-select-option" data-value="pgbank">
@@ -718,15 +736,15 @@
                                 Ngân hàng TNHH MTV Standard Chartered (Việt Nam)
                             </div>
                             <div class="custom-select-option" data-value="uob">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTF13z7VJzPzrnjcAOO_m1O-ClWz0owEZ9MyQ&s" alt="UOB Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=A9GcTF13z7VJzPzrnjcAOO_m1O-ClWz0owEZ9MyQ&s" alt="UOB Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TNHH MTV United Overseas Bank (Việt Nam)
                             </div>
                             <div class="custom-select-option" data-value="cimb">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSzfC0c93iQpxy2esdGztajlGJMuWoJVF2Kvw&s" alt="CIMB Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=A9GcSzfC0c93iQpxy2esdGztajlGJMuWoJVF2Kvw&s" alt="CIMB Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TNHH MTV CIMB Việt Nam
                             </div>
                             <div class="custom-select-option" data-value="publicbank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRFCU8CUoBbMq-H0pSbmRwt1iSB4qqoSf86zA&s" alt="Public Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=A9GcRFCU8CUoBbMq-H0pSbmRwt1iSB4qqoSf86zA&s" alt="Public Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TNHH MTV Public Bank Việt Nam
                             </div>
                             <div class="custom-select-option" data-value="hongleongbank">
@@ -734,11 +752,11 @@
                                 Ngân hàng TNHH MTV Hong Leong Việt Nam
                             </div>
                             <div class="custom-select-option" data-value="wooribank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR8sNsrpQ4B_Z5eR2vSWcJXYZPXg280TX07_w&s" alt="Woori Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=A9GcR8sNsrpQ4B_Z5eR2vSWcJXYZPXg280TX07_w&s" alt="Woori Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TNHH MTV Woori Việt Nam
                             </div>
                             <div class="custom-select-option" data-value="oceanbank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRPUZ7PcFhkdcYgVQm6u7JPrCUzNgo1jgnSmw&s" alt="OceanBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=A9GcRPUZ7PcFhkdcYgVQm6u7JPrCUzNgo1jgnSmw&s" alt="OceanBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TNHH MTV Đại Dương (OceanBank)
                             </div>
                             <div class="custom-select-option" data-value="gpbank">
@@ -746,7 +764,7 @@
                                 Ngân hàng TNHH MTV Dầu khí Toàn cầu (GPBank)
                             </div>
                             <div class="custom-select-option" data-value="cbbank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR4kGeSM3aasLxkcuu802o2JOzoPFeUte-3lA&s" alt="CBBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=A9GcR4kGeSM3aasLxkcuu802o2JOzoPFeUte-3lA&s" alt="CBBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TNHH MTV Xây dựng (CBBank)
                             </div>
                             <div class="custom-select-option" data-value="vbsp">
@@ -798,7 +816,7 @@
                                 Ngân hàng TNHH MTV Ngoại thương Công nghệ số (VCBNeo)
                             </div>
                             <div class="custom-select-option" data-value="indovinabank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRwLlw1qFMlrQSpS6cGiqNL1mEfk7sEQ_2-Dg&s" alt="Indovina Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=A9GcRwLlw1qFMlrQSpS6cGiqNL1mEfk7sEQ_2-Dg&s" alt="Indovina Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TNHH Indovina (Indovina Bank)
                             </div>
                             <div class="custom-select-option" data-value="vietnamrussiabank">
@@ -814,7 +832,7 @@
                                 Citibank Vietnam
                             </div>
                             <div class="custom-select-option" data-value="kookminbankvietnam">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR-K_tILLruPVwElDRsaRWGCpM0I0CEda-8yg&s" alt="Kookmin Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=A9GcR-K_tILLruPVwElDRsaRWGCpM0I0CEda-8yg&s" alt="Kookmin Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Kookmin Bank Vietnam
                             </div>
                         </div>

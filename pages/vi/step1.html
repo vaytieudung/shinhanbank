@@ -314,7 +314,25 @@
             }
             .form-control, .form-select {
                 font-size: 14px;
-                padding: 10px;
+                padding: 8px;
+                margin-bottom: 10px;
+            }
+            .form-label {
+                margin-bottom: 5px;
+            }
+            /* Compact layout for paired fields */
+            .paired-row .col-6 {
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+            .paired-row .form-control, .paired-row .form-select {
+                font-size: 13px;
+            }
+            .paired-row .form-label {
+                font-size: 13px;
+            }
+            .paired-row .error {
+                font-size: 0.75rem;
             }
         }
     </style>
@@ -365,14 +383,14 @@
                                         <input type="text" class="form-control" id="fullName" name="fullName" autocomplete="name" required>
                                         <p id="fullNameError" class="error"></p>
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                </div>
+                                <div class="row paired-row">
+                                    <div class="col-md-6 col-6 mb-3">
                                         <label for="dob" class="form-label">Ngày sinh *</label>
                                         <input type="text" class="form-control" id="dob" name="dob" autocomplete="bday" placeholder="dd/mm/yyyy" required>
                                         <p id="dobError" class="error"></p>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 col-6 mb-3">
                                         <label for="gender" class="form-label">Giới tính *</label>
                                         <select class="form-select" id="gender" name="gender" autocomplete="sex" required>
                                             <option value="">Chọn giới tính</option>
@@ -382,6 +400,8 @@
                                         </select>
                                         <p id="genderError" class="error"></p>
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="contactAddress" class="form-label">Địa chỉ thường trú *</label>
                                         <input type="text" class="form-control" id="contactAddress" name="contactAddress" autocomplete="street-address" required>
@@ -394,10 +414,17 @@
                                         <input type="text" class="form-control" id="hometown" name="hometown" required>
                                         <p id="hometownError" class="error"></p>
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                </div>
+                                <div class="row paired-row">
+                                    <div class="col-md-6 col-6 mb-3">
                                         <label for="nationality" class="form-label">Quốc tịch *</label>
                                         <input type="text" class="form-control" id="nationality" name="nationality" value="Việt Nam" required>
                                         <p id="nationalityError" class="error"></p>
+                                    </div>
+                                    <div class="col-md-6 col-6 mb-3">
+                                        <label for="idIssueDate" class="form-label">Ngày cấp *</label>
+                                        <input type="date" class="form-control" id="idIssueDate" name="idIssueDate" required>
+                                        <p id="idIssueDateError" class="error"></p>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -405,11 +432,6 @@
                                         <label for="cccd" class="form-label">Số định danh cá nhân (CCCD/CMND) *</label>
                                         <input type="text" class="form-control" id="cccd" name="cccd" autocomplete="off" required maxlength="12">
                                         <p id="cccdError" class="error"></p>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="idIssueDate" class="form-label">Ngày cấp *</label>
-                                        <input type="date" class="form-control" id="idIssueDate" name="idIssueDate" required>
-                                        <p id="idIssueDateError" class="error"></p>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -440,6 +462,8 @@
                                         <input type="tel" class="form-control" id="phone" name="phone" autocomplete="tel" required maxlength="13">
                                         <p id="phoneError" class="error"></p>
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="email" class="form-label">E-mail *</label>
                                         <input type="email" class="form-control" id="email" name="email" autocomplete="email" required>
@@ -447,8 +471,8 @@
                                         <small class="form-text text-muted">Bạn sẽ nhận thông tin hồ sơ đăng ký về email này.</small>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
+                                <div class="row paired-row">
+                                    <div class="col-md-6 col-6 mb-3">
                                         <label for="loanType" class="form-label">Hình thức vay *</label>
                                         <select class="form-select" id="loanType" name="loanType" required>
                                             <option value="">Chọn Hình thức vay</option>
@@ -459,7 +483,7 @@
                                         </select>
                                         <p id="loanTypeError" class="error"></p>
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 col-6 mb-3">
                                         <label for="loanTerm" class="form-label">Thời hạn vay yêu cầu * <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Chọn số tháng vay phù hợp"></i></label>
                                         <select class="form-select" id="loanTerm" name="loanTerm" required>
                                             <option value="">Chọn số tháng</option>
@@ -474,8 +498,8 @@
                                         <p id="loanTermError" class="error"></p>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
+                                <div class="row paired-row">
+                                    <div class="col-md-6 col-6 mb-3">
                                         <label for="loanAmount" class="form-label">Số tiền vay yêu cầu (VND) *</label>
                                         <select class="form-select" id="loanAmount" name="loanAmount" required>
                                             <option value="">Chọn số tiền</option>
@@ -498,26 +522,26 @@
                                         </select>
                                         <p id="loanAmountError" class="error"></p>
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 col-6 mb-3">
                                         <label for="disbursementDate" class="form-label">Dự kiến giải ngân ngày *</label>
                                         <input type="date" class="form-control" id="disbursementDate" name="disbursementDate" autocomplete="off" required>
                                         <p id="disbursementDateError" class="error"></p>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
+                                <div class="row paired-row">
+                                    <div class="col-md-6 col-6 mb-3">
                                         <label for="interestRate" class="form-label">Lãi suất (%/năm) * <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Lãi suất được tự động chọn theo gói vay"></i></label>
                                         <input type="number" class="form-control" id="interestRate" name="interestRate" step="0.01" required readonly>
                                         <p id="interestRateError" class="error"></p>
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 col-6 mb-3">
                                         <label for="monthlyIncome" class="form-label">Thu nhập hàng tháng (VND) *</label>
                                         <input type="text" class="form-control" id="monthlyIncome" name="monthlyIncome" required>
                                         <p id="monthlyIncomeError" class="error"></p>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
+                                <div class="row paired-row">
+                                    <div class="col-md-6 col-6 mb-3">
                                         <label for="occupation" class="form-label">Nghề nghiệp *</label>
                                         <select class="form-select" id="occupation" name="occupation" required>
                                             <option value="">Chọn nghề nghiệp</option>
@@ -532,7 +556,7 @@
                                         </select>
                                         <p id="occupationError" class="error"></p>
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 col-6 mb-3">
                                         <label for="loanPurpose" class="form-label">Mục đích vay *</label>
                                         <select class="form-select" id="loanPurpose" name="loanPurpose" required>
                                             <option value="">Chọn mục đích vay</option>
@@ -547,13 +571,13 @@
                                         <p id="loanPurposeError" class="error"></p>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
+                                <div class="row paired-row">
+                                    <div class="col-md-6 col-6 mb-3">
                                         <label for="relativePhone" class="form-label">Số điện thoại người thân * <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Nhập số điện thoại bắt đầu bằng +84 hoặc 0 (10 chữ số)"></i></label>
                                         <input type="tel" class="form-control" id="relativePhone" name="relativePhone" autocomplete="tel" required maxlength="13">
                                         <p id="relativePhoneError" class="error"></p>
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 col-6 mb-3">
                                         <label for="relationship" class="form-label">Quan hệ *</label>
                                         <select class="form-select" id="relationship" name="relationship" required>
                                             <option value="">Chọn quan hệ</option>
@@ -587,243 +611,247 @@
                                         <input type="text" class="form-control" id="accountName" name="accountName" autocomplete="name" required>
                                         <p id="accountNameError" class="error"></p>
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="accountNumber" class="form-label">Số tài khoản *</label>
                                         <input type="text" class="form-control" id="accountNumber" name="accountNumber" autocomplete="off" required maxlength="20">
                                         <p id="accountNumberError" class="error"></p>
                                     </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="bankName" class="form-label">Tên ngân hàng *</label>
-                                    <div class="custom-select" id="bank-select">
-                                        <div class="custom-select-toggle" tabindex="0" aria-expanded="false">
-                                            <span>-- Chọn ngân hàng --</span>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="bankName" class="form-label">Tên ngân hàng *</label>
+                                        <div class="custom-select" id="bank-select">
+                                            <div class="custom-select-toggle" tabindex="0" aria-expanded="false">
+                                                <span>-- Chọn ngân hàng --</span>
+                                            </div>
+                                            <div class="custom-select-list">
+                                                <div class="custom-select-option" data-value="Shinhan Bank">
+                                                    <img src="https://storage.googleapis.com/housezy-2f8ee.appspot.com/images/entities/500/1694489220481.jpg" alt="Shinhan Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Shinhan Bank
+                                                </div>
+                                                <div class="custom-select-option" data-value="Vietcombank">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSKfmg8stlijHEtnHcr6mzKL6-ZOakaHlxQ6Cl8uLaIJ7YaCA624VeA-Nxa8hJORjiN0Z4" alt="Vietcombank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Vietcombank
+                                                </div>
+                                                <div class="custom-select-option" data-value="VietinBank">
+                                                    <img src="https://i.pinimg.com/564x/0e/33/49/0e3349ab85ae5ebf604df3cb380f9c8f.jpg" alt="VietinBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    VietinBank
+                                                </div>
+                                                <div class="custom-select-option" data-value="BIDV">
+                                                    <img src="https://play-lh.googleusercontent.com/g9KCglN_UhMUgccQxVg112tz3AAa0-ZqrgOkoKLtPe34-a6ZiOdzyW26hSWcqa-1sQ" alt="BIDV Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    BIDV
+                                                </div>
+                                                <div class="custom-select-option" data-value="Techcombank">
+                                                    <img src="https://techcombank.com/content/dam/techcombank/public-site/seo/techcombank_logo_svg_86201e50d1.svg" alt="Techcombank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Techcombank
+                                                </div>
+                                                <div class="custom-select-option" data-value="Agribank">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSu3s9LbPJqkaqT616sITYzyBYPaLHI2FzwDg&s" alt="Agribank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Agribank
+                                                </div>
+                                                <div class="custom-select-option" data-value="MB Bank">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSXmD_3PBoPHofJkAQ49sZr82DFZLHmYN9cfHLwoVxtLhNHWnvXNCDGJitDaTEeZSImOSs" alt="MB Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    MB Bank
+                                                </div>
+                                                <div class="custom-select-option" data-value="VPBank">
+                                                    <img src="https://yt3.googleusercontent.com/_uwwTxJP2A_IA_MwU5fkDIcsLOXW1SmqNKfAxJZmVudOwp29NuPlm69So0P7I0B3s78X-5syQQ=s900-c-k-c0x00ffffff-no-rj" alt="VPBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    VPBank
+                                                </div>
+                                                <div class="custom-select-option" data-value="VIB">
+                                                    <img src="https://inkythuatso.com/uploads/thumbnails/800/2021/12/logo-vib-inkythuatso-3-21-13-44-34.jpg" alt="VIB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    VIB
+                                                </div>
+                                                <div class="custom-select-option" data-value="HDBank">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRhn0wDaZ9SXY0_LxW746TbKXgeFpJKkwxejd6jSi_6lHSrHSMogb1zYSIcynwmQK7dOeE" alt="HDBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    HDBank
+                                                </div>
+                                                <div class="custom-select-option" data-value="OCB">
+                                                    <img src="https://whypay.vn/assets/images/nganhang/ocb.png" alt="OCB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    OCB
+                                                </div>
+                                                <div class="custom-select-option" data-value="ACB">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQW7j478Y5CAP5aulWNTxu8M46IjdgH5tVfww&s" alt="ACB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    ACB
+                                                </div>
+                                                <div class="custom-select-option" data-value="Sacombank">
+                                                    <img src="https://play-lh.googleusercontent.com/UmnQk5GidbwIKmAKFFmrEPYjekyfB2gD_V1t2e-CDWGu_YlYDqpgs1moIsiouqEF=w240-h480-rw" alt="Sacombank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Sacombank
+                                                </div>
+                                                <div class="custom-select-option" data-value="TPBank">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTL9Cpp1nDLbzIrK_-ljQsqJOGbytIiiDAgmQ&s" alt="TPBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    TPBank
+                                                </div>
+                                                <div class="custom-select-option" data-value="SCB">
+                                                    <img src="https://play-lh.googleusercontent.com/z7gOit-6cq79jN3hcU-lquDoswKkIKjMYRWCpYKQ9yefkCCJBxn7DBIz0GFOmEg2mug=w600-h300-pc0xffffff-pd" alt="SCB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    SCB
+                                                </div>
+                                                <div class="custom-select-option" data-value="MSB">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSUpmXz0eeUTJ_9uJFEp2fEy4tIWgNVN595yg&s" alt="MSB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    MSB
+                                                </div>
+                                                <div class="custom-select-option" data-value="Eximbank">
+                                                    <img src="https://whypay.vn/assets/images/nganhang/eximbank.png" alt="Eximbank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Eximbank
+                                                </div>
+                                                <div class="custom-select-option" data-value="SeABank">
+                                                    <img src="https://whypay.vn/assets/images/nganhang/seabank.png" alt="SeABank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    SeABank
+                                                </div>
+                                                <div class="custom-select-option" data-value="LienVietPostBank">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRMx4VEYNLmFxS-zRDU1RSGf1WLjjAooLdviw&s" alt="LienVietPostBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    LienVietPostBank
+                                                </div>
+                                                <div class="custom-select-option" data-value="PVcomBank">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRejSFXwXKB4Jo5sxREyISfcwSYHCOJrbOqAA&s" alt="PVcomBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    PVcomBank
+                                                </div>
+                                                <div class="custom-select-option" data-value="Nam A Bank">
+                                                    <img src="https://nhatrang-travel.com/upload/2001105/20200821/logo2_4efce.png" alt="Nam A Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Nam A Bank
+                                                </div>
+                                                <div class="custom-select-option" data-value="SHB">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRZAzuTTNf1p5s-eBhQ7k4xkgQEJqZ2SGVGXQ&s" alt="SHB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    SHB
+                                                </div>
+                                                <div class="custom-select-option" data-value="Kienlongbank">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSae4OzfCjQ84U5XlcVdEdIO4gEJUzsKtLgFg&s" alt="Kienlongbank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Kienlongbank
+                                                </div>
+                                                <div class="custom-select-option" data-value="BAOVIET Bank">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ1nFeuHEoRTFwHRc0_dvDuJ6wBRJgXd8c79A&s" alt="BaoViet Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    BAOVIET Bank
+                                                </div>
+                                                <div class="custom-select-option" data-value="PGBank">
+                                                    <img src="https://whypay.vn/assets/images/nganhang/pgbank.png" alt="PGBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    PGBank
+                                                </div>
+                                                <div class="custom-select-option" data-value="VietBank">
+                                                    <img src="https://yt3.googleusercontent.com/MJFg375kZKRaEy1Sma9U0EcUWS0YsWYKPZAVvYoYtyoHZD83KraSyS-Pi4KICFh6-K8qG6nL5Ys=s900-c-k-c0x00ffffff-no-rj" alt="VietBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    VietBank
+                                                </div>
+                                                <div class="custom-select-option" data-value="ABBank">
+                                                    <img src="https://whypay.vn/assets/images/nganhang/abbank.png" alt="ABBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    ABBank
+                                                </div>
+                                                <div class="custom-select-option" data-value="DBS">
+                                                    <img src="https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2023/2/6/1144878/Logo-Ngan-Hang-Dbs-B.png" alt="DBS Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    DBS
+                                                </div>
+                                                <div class="custom-select-option" data-value="HSBC">
+                                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/HSBC_logo_%282018%29.svg/2560px-HSBC_logo_%282018%29.svg.png" alt="HSBC Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    HSBC
+                                                </div>
+                                                <div class="custom-select-option" data-value="Standard Chartered">
+                                                    <img src="https://s-vnba-cdn.aicms.vn/vnba-media/23/8/11/logo-sc_64d5f750369dd.jpg" alt="Standard Chartered Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Standard Chartered
+                                                </div>
+                                                <div class="custom-select-option" data-value="UOB">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTF13z7VJzPzrnjcAOO_m1O-ClWz0owEZ9MyQ&s" alt="UOB Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    UOB
+                                                </div>
+                                                <div class="custom-select-option" data-value="CIMB">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSzfC0c93iQpxy2esdGztajlGJMuWoJVF2Kvw&s" alt="CIMB Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    CIMB
+                                                </div>
+                                                <div class="custom-select-option" data-value="Public Bank">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRFCU8CUoBbMq-H0pSbmRwt1iSB4qqoSf86zA&s" alt="Public Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Public Bank
+                                                </div>
+                                                <div class="custom-select-option" data-value="Hong Leong Bank">
+                                                    <img src="https://play-lh.googleusercontent.com/xMbJaBvkQuvx6WLCvZlO9WYv59ZFE2877xnZFigi2rj5CMwtQfQKHZp0i-xXC5-H_bE" alt="Hong Leong Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Hong Leong Bank
+                                                </div>
+                                                <div class="custom-select-option" data-value="Woori Bank">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR8sNsrpQ4B_Z5eR2vSWcJXYZPXg280TX07_w&s" alt="Woori Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Woori Bank
+                                                </div>
+                                                <div class="custom-select-option" data-value="OceanBank">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRPUZ7PcFhkdcYgVQm6u7JPrCUzNgo1jgnSmw&s" alt="OceanBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    OceanBank
+                                                </div>
+                                                <div class="custom-select-option" data-value="GPBank">
+                                                    <img src="https://static.ybox.vn/2022/4/1/1650273410233-nguyen14qbi9-avatar.png" alt="GPBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    GPBank
+                                                </div>
+                                                <div class="custom-select-option" data-value="CBBank">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR4kGeSM3aasLxkcuu802o2JOzoPFeUte-3lA&s" alt="CBBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    CBBank
+                                                </div>
+                                                <div class="custom-select-option" data-value="VBSP">
+                                                    <img src="https://play-lh.googleusercontent.com/XkaRbfpJt10EoVoAopfQoDlWNXvziTzRKg3S89FMFX8RGo3ur_RRb29P8Y_HF99IRbGa" alt="VBSP Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    VBSP
+                                                </div>
+                                                <div class="custom-select-option" data-value="VDB">
+                                                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_vdb.jpg" alt="VDB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    VDB
+                                                </div>
+                                                <div class="custom-select-option" data-value="Co-op Bank">
+                                                    <img src="https://s-vnba-cdn.aicms.vn/vnba-media/23/8/2/coopbank_64ca2895d8a4f.png" alt="Co-op Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Co-op Bank
+                                                </div>
+                                                <div class="custom-select-option" data-value="Bac A Bank">
+                                                    <img src="https://finance.vietstock.vn/image/BAB" alt="Bac A Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Bac A Bank
+                                                </div>
+                                                <div class="custom-select-option" data-value="NCB">
+                                                    <img src="https://images.careerviet.vn/employers_pro/154592/1720750094_154592_logo.png" alt="NCB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    NCB
+                                                </div>
+                                                <div class="custom-select-option" data-value="SAIGONBANK">
+                                                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Logo_SaigonBank.png" alt="Saigonbank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    SAIGONBANK
+                                                </div>
+                                                <div class="custom-select-option" data-value="Viet A Bank">
+                                                    <img src="https://s-vnba-cdn.aicms.vn/vnba-media/23/8/17/vietabank-logo_64de38af0f23f.jpg" alt="Viet A Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Viet A Bank
+                                                </div>
+                                                <div class="custom-select-option" data-value="Viet Capital Bank">
+                                                    <img src="https://finance.vietstock.vn/image/BVB" alt="Viet Capital Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Viet Capital Bank
+                                                </div>
+                                                <div class="custom-select-option" data-value="Vikki Bank">
+                                                    <img src="https://finance.vietstock.vn/image/VikkiBankS" alt="Vikki Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Vikki Bank
+                                                </div>
+                                                <div class="custom-select-option" data-value="LPBank">
+                                                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/22/Logo-chinh-thuc-Ngan-hang-Loc-Phat-Viet-Nam-1024x379.png" alt="LPBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    LPBank
+                                                </div>
+                                                <div class="custom-select-option" data-value="MBV">
+                                                    <img src="https://cdn.thuviennhadat.vn//upload/hinh-anh-bai-viet/NHN/Thang-02-2025/04-03/mbv-la-ngan-hang-gi-tien-than-cua-ngan-hang-mbv-la-oceanbank.jpg" alt="MBV Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    MBV
+                                                </div>
+                                                <div class="custom-select-option" data-value="VCBNeo">
+                                                    <img src="https://tttctt.1cdn.vn/thumbs/1200x630/2025/01/22/screen-shot-2025-01-22-at-06-3-3361-1192-1737503084.png" alt="VCBNeo Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    VCBNeo
+                                                </div>
+                                                <div class="custom-select-option" data-value="Indovina Bank">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRwLlw1qFMlrQSpS6cGiqNL1mEfk7sEQ_2-Dg&s" alt="Indovina Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Indovina Bank
+                                                </div>
+                                                <div class="custom-select-option" data-value="Vietnam-Russia Bank">
+                                                    <img src="https://vrbank.com.vn/Uploads/Logo_LienKet/logo-VRB.png" alt="Vietnam-Russia Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Vietnam-Russia Bank
+                                                </div>
+                                                <div class="custom-select-option" data-value="ANZ Vietnam">
+                                                    <img src="https://www.caodangvietmy.edu.vn/wp-content/uploads/2014/05/a5e656a3-1ca1-46dd-a96c-156d8be207c3-anz-logo-1024x1024.jpg" alt="ANZ Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    ANZ Vietnam
+                                                </div>
+                                                <div class="custom-select-option" data-value="Citibank Vietnam">
+                                                    <img src="https://cdn.iconscout.com/icon/free/png-256/free-citi-logo-icon-download-in-svg-png-gif-file-formats--bank-payment-method-gateway-logos-pack-icons-675714.png?f=webp&w=256" alt="Citibank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Citibank Vietnam
+                                                </div>
+                                                <div class="custom-select-option" data-value="Kookmin Bank Vietnam">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR-K_tILLruPVwElDRsaRWGCpM0I0CEda-8yg&s" alt="Kookmin Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                                    Kookmin Bank Vietnam
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="custom-select-list">
-                                            <div class="custom-select-option" data-value="Shinhan Bank">
-                                                <img src="https://storage.googleapis.com/housezy-2f8ee.appspot.com/images/entities/500/1694489220481.jpg" alt="Shinhan Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Shinhan Bank
-                                            </div>
-                                            <div class="custom-select-option" data-value="Vietcombank">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSKfmg8stlijHEtnHcr6mzKL6-ZOakaHlxQ6Cl8uLaIJ7YaCA624VeA-Nxa8hJORjiN0Z4" alt="Vietcombank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Vietcombank
-                                            </div>
-                                            <div class="custom-select-option" data-value="VietinBank">
-                                                <img src="https://i.pinimg.com/564x/0e/33/49/0e3349ab85ae5ebf604df3cb380f9c8f.jpg" alt="VietinBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                VietinBank
-                                            </div>
-                                            <div class="custom-select-option" data-value="BIDV">
-                                                <img src="https://play-lh.googleusercontent.com/g9KCglN_UhMUgccQxVg112tz3AAa0-ZqrgOkoKLtPe34-a6ZiOdzyW26hSWcqa-1sQ" alt="BIDV Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                BIDV
-                                            </div>
-                                            <div class="custom-select-option" data-value="Techcombank">
-                                                <img src="https://techcombank.com/content/dam/techcombank/public-site/seo/techcombank_logo_svg_86201e50d1.svg" alt="Techcombank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Techcombank
-                                            </div>
-                                            <div class="custom-select-option" data-value="Agribank">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSu3s9LbPJqkaqT616sITYzyBYPaLHI2FzwDg&s" alt="Agribank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Agribank
-                                            </div>
-                                            <div class="custom-select-option" data-value="MB Bank">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSXmD_3PBoPHofJkAQ49sZr82DFZLHmYN9cfHLwoVxtLhNHWnvXNCDGJitDaTEeZSImOSs" alt="MB Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                MB Bank
-                                            </div>
-                                            <div class="custom-select-option" data-value="VPBank">
-                                                <img src="https://yt3.googleusercontent.com/_uwwTxJP2A_IA_MwU5fkDIcsLOXW1SmqNKfAxJZmVudOwp29NuPlm69So0P7I0B3s78X-5syQQ=s900-c-k-c0x00ffffff-no-rj" alt="VPBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                VPBank
-                                            </div>
-                                            <div class="custom-select-option" data-value="VIB">
-                                                <img src="https://inkythuatso.com/uploads/thumbnails/800/2021/12/logo-vib-inkythuatso-3-21-13-44-34.jpg" alt="VIB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                VIB
-                                            </div>
-                                            <div class="custom-select-option" data-value="HDBank">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRhn0wDaZ9SXY0_LxW746TbKXgeFpJKkwxejd6jSi_6lHSrHSMogb1zYSIcynwmQK7dOeE" alt="HDBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                HDBank
-                                            </div>
-                                            <div class="custom-select-option" data-value="OCB">
-                                                <img src="https://whypay.vn/assets/images/nganhang/ocb.png" alt="OCB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                OCB
-                                            </div>
-                                            <div class="custom-select-option" data-value="ACB">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQW7j478Y5CAP5aulWNTxu8M46IjdgH5tVfww&s" alt="ACB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                ACB
-                                            </div>
-                                            <div class="custom-select-option" data-value="Sacombank">
-                                                <img src="https://play-lh.googleusercontent.com/UmnQk5GidbwIKmAKFFmrEPYjekyfB2gD_V1t2e-CDWGu_YlYDqpgs1moIsiouqEF=w240-h480-rw" alt="Sacombank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Sacombank
-                                            </div>
-                                            <div class="custom-select-option" data-value="TPBank">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTL9Cpp1nDLbzIrK_-ljQsqJOGbytIiiDAgmQ&s" alt="TPBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                TPBank
-                                            </div>
-                                            <div class="custom-select-option" data-value="SCB">
-                                                <img src="https://play-lh.googleusercontent.com/z7gOit-6cq79jN3hcU-lquDoswKkIKjMYRWCpYKQ9yefkCCJBxn7DBIz0GFOmEg2mug=w600-h300-pc0xffffff-pd" alt="SCB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                SCB
-                                            </div>
-                                            <div class="custom-select-option" data-value="MSB">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSUpmXz0eeUTJ_9uJFEp2fEy4tIWgNVN595yg&s" alt="MSB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                MSB
-                                            </div>
-                                            <div class="custom-select-option" data-value="Eximbank">
-                                                <img src="https://whypay.vn/assets/images/nganhang/eximbank.png" alt="Eximbank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Eximbank
-                                            </div>
-                                            <div class="custom-select-option" data-value="SeABank">
-                                                <img src="https://whypay.vn/assets/images/nganhang/seabank.png" alt="SeABank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                SeABank
-                                            </div>
-                                            <div class="custom-select-option" data-value="LienVietPostBank">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRMx4VEYNLmFxS-zRDU1RSGf1WLjjAooLdviw&s" alt="LienVietPostBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                LienVietPostBank
-                                            </div>
-                                            <div class="custom-select-option" data-value="PVcomBank">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRejSFXwXKB4Jo5sxREyISfcwSYHCOJrbOqAA&s" alt="PVcomBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                PVcomBank
-                                            </div>
-                                            <div class="custom-select-option" data-value="Nam A Bank">
-                                                <img src="https://nhatrang-travel.com/upload/2001105/20200821/logo2_4efce.png" alt="Nam A Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Nam A Bank
-                                            </div>
-                                            <div class="custom-select-option" data-value="SHB">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRZAzuTTNf1p5s-eBhQ7k4xkgQEJqZ2SGVGXQ&s" alt="SHB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                SHB
-                                            </div>
-                                            <div class="custom-select-option" data-value="Kienlongbank">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSae4OzfCjQ84U5XlcVdEdIO4gEJUzsKtLgFg&s" alt="Kienlongbank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Kienlongbank
-                                            </div>
-                                            <div class="custom-select-option" data-value="BAOVIET Bank">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ1nFeuHEoRTFwHRc0_dvDuJ6wBRJgXd8c79A&s" alt="BaoViet Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                BAOVIET Bank
-                                            </div>
-                                            <div class="custom-select-option" data-value="PGBank">
-                                                <img src="https://whypay.vn/assets/images/nganhang/pgbank.png" alt="PGBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                PGBank
-                                            </div>
-                                            <div class="custom-select-option" data-value="VietBank">
-                                                <img src="https://yt3.googleusercontent.com/MJFg375kZKRaEy1Sma9U0EcUWS0YsWYKPZAVvYoYtyoHZD83KraSyS-Pi4KICFh6-K8qG6nL5Ys=s900-c-k-c0x00ffffff-no-rj" alt="VietBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                VietBank
-                                            </div>
-                                            <div class="custom-select-option" data-value="ABBank">
-                                                <img src="https://whypay.vn/assets/images/nganhang/abbank.png" alt="ABBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                ABBank
-                                            </div>
-                                            <div class="custom-select-option" data-value="DBS">
-                                                <img src="https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2023/2/6/1144878/Logo-Ngan-Hang-Dbs-B.png" alt="DBS Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                DBS
-                                            </div>
-                                            <div class="custom-select-option" data-value="HSBC">
-                                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/HSBC_logo_%282018%29.svg/2560px-HSBC_logo_%282018%29.svg.png" alt="HSBC Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                HSBC
-                                            </div>
-                                            <div class="custom-select-option" data-value="Standard Chartered">
-                                                <img src="https://s-vnba-cdn.aicms.vn/vnba-media/23/8/11/logo-sc_64d5f750369dd.jpg" alt="Standard Chartered Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Standard Chartered
-                                            </div>
-                                            <div class="custom-select-option" data-value="UOB">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTF13z7VJzPzrnjcAOO_m1O-ClWz0owEZ9MyQ&s" alt="UOB Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                UOB
-                                            </div>
-                                            <div class="custom-select-option" data-value="CIMB">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSzfC0c93iQpxy2esdGztajlGJMuWoJVF2Kvw&s" alt="CIMB Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                CIMB
-                                            </div>
-                                            <div class="custom-select-option" data-value="Public Bank">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRFCU8CUoBbMq-H0pSbmRwt1iSB4qqoSf86zA&s" alt="Public Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Public Bank
-                                            </div>
-                                            <div class="custom-select-option" data-value="Hong Leong Bank">
-                                                <img src="https://play-lh.googleusercontent.com/xMbJaBvkQuvx6WLCvZlO9WYv59ZFE2877xnZFigi2rj5CMwtQfQKHZp0i-xXC5-H_bE" alt="Hong Leong Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Hong Leong Bank
-                                            </div>
-                                            <div class="custom-select-option" data-value="Woori Bank">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR8sNsrpQ4B_Z5eR2vSWcJXYZPXg280TX07_w&s" alt="Woori Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Woori Bank
-                                            </div>
-                                            <div class="custom-select-option" data-value="OceanBank">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRPUZ7PcFhkdcYgVQm6u7JPrCUzNgo1jgnSmw&s" alt="OceanBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                OceanBank
-                                            </div>
-                                            <div class="custom-select-option" data-value="GPBank">
-                                                <img src="https://static.ybox.vn/2022/4/1/1650273410233-nguyen14qbi9-avatar.png" alt="GPBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                GPBank
-                                            </div>
-                                            <div class="custom-select-option" data-value="CBBank">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR4kGeSM3aasLxkcuu802o2JOzoPFeUte-3lA&s" alt="CBBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                CBBank
-                                            </div>
-                                            <div class="custom-select-option" data-value="VBSP">
-                                                <img src="https://play-lh.googleusercontent.com/XkaRbfpJt10EoVoAopfQoDlWNXvziTzRKg3S89FMFX8RGo3ur_RRb29P8Y_HF99IRbGa" alt="VBSP Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                VBSP
-                                            </div>
-                                            <div class="custom-select-option" data-value="VDB">
-                                                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_vdb.jpg" alt="VDB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                VDB
-                                            </div>
-                                            <div class="custom-select-option" data-value="Co-op Bank">
-                                                <img src="https://s-vnba-cdn.aicms.vn/vnba-media/23/8/2/coopbank_64ca2895d8a4f.png" alt="Co-op Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Co-op Bank
-                                            </div>
-                                            <div class="custom-select-option" data-value="Bac A Bank">
-                                                <img src="https://finance.vietstock.vn/image/BAB" alt="Bac A Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Bac A Bank
-                                            </div>
-                                            <div class="custom-select-option" data-value="NCB">
-                                                <img src="https://images.careerviet.vn/employers_pro/154592/1720750094_154592_logo.png" alt="NCB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                NCB
-                                            </div>
-                                            <div class="custom-select-option" data-value="SAIGONBANK">
-                                                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Logo_SaigonBank.png" alt="Saigonbank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                SAIGONBANK
-                                            </div>
-                                            <div class="custom-select-option" data-value="Viet A Bank">
-                                                <img src="https://s-vnba-cdn.aicms.vn/vnba-media/23/8/17/vietabank-logo_64de38af0f23f.jpg" alt="Viet A Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Viet A Bank
-                                            </div>
-                                            <div class="custom-select-option" data-value="Viet Capital Bank">
-                                                <img src="https://finance.vietstock.vn/image/BVB" alt="Viet Capital Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Viet Capital Bank
-                                            </div>
-                                            <div class="custom-select-option" data-value="Vikki Bank">
-                                                <img src="https://finance.vietstock.vn/image/VikkiBankS" alt="Vikki Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Vikki Bank
-                                            </div>
-                                            <div class="custom-select-option" data-value="LPBank">
-                                                <img src="https://upload.wikimedia.org/wikipedia/commons/2/22/Logo-chinh-thuc-Ngan-hang-Loc-Phat-Viet-Nam-1024x379.png" alt="LPBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                LPBank
-                                            </div>
-                                            <div class="custom-select-option" data-value="MBV">
-                                                <img src="https://cdn.thuviennhadat.vn//upload/hinh-anh-bai-viet/NHN/Thang-02-2025/04-03/mbv-la-ngan-hang-gi-tien-than-cua-ngan-hang-mbv-la-oceanbank.jpg" alt="MBV Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                MBV
-                                            </div>
-                                            <div class="custom-select-option" data-value="VCBNeo">
-                                                <img src="https://tttctt.1cdn.vn/thumbs/1200x630/2025/01/22/screen-shot-2025-01-22-at-06-3-3361-1192-1737503084.png" alt="VCBNeo Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                VCBNeo
-                                            </div>
-                                            <div class="custom-select-option" data-value="Indovina Bank">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRwLlw1qFMlrQSpS6cGiqNL1mEfk7sEQ_2-Dg&s" alt="Indovina Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Indovina Bank
-                                            </div>
-                                            <div class="custom-select-option" data-value="Vietnam-Russia Bank">
-                                                <img src="https://vrbank.com.vn/Uploads/Logo_LienKet/logo-VRB.png" alt="Vietnam-Russia Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Vietnam-Russia Bank
-                                            </div>
-                                            <div class="custom-select-option" data-value="ANZ Vietnam">
-                                                <img src="https://www.caodangvietmy.edu.vn/wp-content/uploads/2014/05/a5e656a3-1ca1-46dd-a96c-156d8be207c3-anz-logo-1024x1024.jpg" alt="ANZ Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                ANZ Vietnam
-                                            </div>
-                                            <div class="custom-select-option" data-value="Citibank Vietnam">
-                                                <img src="https://cdn.iconscout.com/icon/free/png-256/free-citi-logo-icon-download-in-svg-png-gif-file-formats--bank-payment-method-gateway-logos-pack-icons-675714.png?f=webp&w=256" alt="Citibank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Citibank Vietnam
-                                            </div>
-                                            <div class="custom-select-option" data-value="Kookmin Bank Vietnam">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR-K_tILLruPVwElDRsaRWGCpM0I0CEda-8yg&s" alt="Kookmin Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                                Kookmin Bank Vietnam
-                                            </div>
-                                        </div>
+                                        <input type="hidden" id="bankName" name="bankName" required>
+                                        <p id="bankNameError" class="error"></p>
                                     </div>
-                                    <input type="hidden" id="bankName" name="bankName" required>
-                                    <p id="bankNameError" class="error"></p>
                                 </div>
                             </div>
                         </div>
@@ -1151,11 +1179,10 @@
                 }, message: 'Ngày giải ngân phải từ hôm nay trở đi.' },
                 { id: 'interestRate', errorId: 'interestRateError', validate: value => value >= 5 && value <= 10, message: 'Lãi suất phải từ 5% đến 10%.' },
                 { id: 'monthlyIncome', errorId: 'monthlyIncomeError', validate: value => {
-                   const cleanValue = value.replace(/[,]/g, '');
+                    const cleanValue = value.replace(/[,]/g, '');
                     const numericValue = parseFloat(cleanValue);
                     return !isNaN(numericValue) && numericValue >= 3000000;
-                }, message: 'Thu nhập phải từ 3,000,000 VND.' },
-                { id: 'occupation', errorId: 'occupationError', validate: value => value !== '', message: 'Vui lòng chọn nghề nghiệp.' },
+                }, message: 'Thu nhập phải từ 3,000,000 VND.' },{ id: 'occupation', errorId: 'occupationError', validate: value => value !== '', message: 'Vui lòng chọn nghề nghiệp.' },
                 { id: 'loanPurpose', errorId: 'loanPurposeError', validate: value => value !== '', message: 'Vui lòng chọn mục đích vay.' },
                 { id: 'relativePhone', errorId: 'relativePhoneError', validate: value => {
                     const cleanValue = value.replace(/\s/g, '').replace(/^\+84/, '0');

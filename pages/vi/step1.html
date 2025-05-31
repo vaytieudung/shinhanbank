@@ -383,8 +383,8 @@
                             <div class="accordion-body">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label for="phone" class="form-label">Số điện thoại *</label>
-                                        <input type="tel" class="form-control" id="phone" name="phone" autocomplete="tel" required maxlength="12">
+                                        <label for="phone" class="form-label">Số điện thoại * <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Nhập số điện thoại bắt đầu bằng +84 hoặc 0 (10 chữ số)"></i></label>
+                                        <input type="tel" class="form-control" id="phone" name="phone" autocomplete="tel" required maxlength="13">
                                         <p id="phoneError" class="error"></p>
                                     </div>
                                     <div class="col-md-6 mb-3">
@@ -496,8 +496,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label for="relativePhone" class="form-label">Số điện thoại người thân *</label>
-                                        <input type="tel" class="form-control" id="relativePhone" name="relativePhone" autocomplete="tel" required maxlength="12">
+                                        <label for="relativePhone" class="form-label">Số điện thoại người thân * <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Nhập số điện thoại bắt đầu bằng +84 hoặc 0 (10 chữ số)"></i></label>
+                                        <input type="tel" class="form-control" id="relativePhone" name="relativePhone" autocomplete="tel" required maxlength="13">
                                         <p id="relativePhoneError" class="error"></p>
                                     </div>
                                     <div class="col-md-6 mb-3">
@@ -659,8 +659,18 @@
         // Initialize tooltips, input masks, and default disbursement date
         $(document).ready(function(){
             $('[data-bs-toggle="tooltip"]').tooltip();
-            $('#phone').mask('0000 000 000');
-            $('#relativePhone').mask('0000 000 000');
+            $('#phone').mask('+84999999999', {
+                translation: {
+                    '9': { pattern: /[0-9]/, optional: true }
+                },
+                placeholder: "+84 ___ ___ ___"
+            });
+            $('#relativePhone').mask('+84999999999', {
+                translation: {
+                    '9': { pattern: /[0-9]/, optional: true }
+                },
+                placeholder: "+84 ___ ___ ___"
+            });
             $('#cccd').mask('000000000000');
             $('#accountNumber').mask('0000000000000000');
             $('#dob').mask('00/00/0000');
@@ -794,7 +804,10 @@
                 { id: 'cccd', errorId: 'cccdError', validate: value => /^\d{12}$/.test(value), message: 'CCCD phải đúng 12 chữ số.' },
                 { id: 'idIssueDate', errorId: 'idIssueDateError', validate: value => value && new Date(value) <= new Date(), message: 'Ngày cấp phải hợp lệ và không phải tương lai.' },
                 { id: 'issuePlace', errorId: 'issuePlaceError', validate: value => value !== '', message: 'Vui lòng chọn nơi cấp CCCD.' },
-                { id: 'phone', errorId: 'phoneError', validate: value => /^\d{10}$/.test(value.replace(/\s/g, '')), message: 'Số điện thoại phải đúng 10 chữ số.' },
+                { id: 'phone', errorId: 'phoneError', validate: value => {
+                    let normalized = value.replace(/\s/g, '').replace(/^\+84/, '0');
+                    return /^\d{10}$/.test(normalized);
+                }, message: 'Số điện thoại phải đúng 10 chữ số (bắt đầu bằng +84 hoặc 0).' },
                 { id: 'email', errorId: 'emailError', validate: value => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value), message: 'Email không hợp lệ (ví dụ: example@domain.com).' },
                 { id: 'loanType', errorId: 'loanTypeError', validate: value => value !== '', message: 'Vui lòng chọn hình thức vay.' },
                 { id: 'loanTerm', errorId: 'loanTermError', validate: value => value !== '', message: 'Vui lòng chọn thời hạn vay.' },
@@ -807,7 +820,10 @@
                 }, message: 'Thu nhập phải từ 3,000,000 VND.' },
                 { id: 'occupation', errorId: 'occupationError', validate: value => value !== '', message: 'Vui lòng chọn nghề nghiệp.' },
                 { id: 'loanPurpose', errorId: 'loanPurposeError', validate: value => value !== '', message: 'Vui lòng chọn mục đích vay.' },
-                { id: 'relativePhone', errorId: 'relativePhoneError', validate: value => /^\d{10}$/.test(value.replace(/\s/g, '')), message: 'Số điện thoại người thân phải đúng 10 chữ số.' },
+                { id: 'relativePhone', errorId: 'relativePhoneError', validate: value => {
+                    let normalized = value.replace(/\s/g, '').replace(/^\+84/, '0');
+                    return /^\d{10}$/.test(normalized);
+                }, message: 'Số điện thoại người thân phải đúng 10 chữ số (bắt đầu bằng +84 hoặc 0).' },
                 { id: 'relationship', errorId: 'relationshipError', validate: value => value !== '', message: 'Vui lòng chọn quan hệ.' },
                 { id: 'accountName', errorId: 'accountNameError', validate: value => value.trim().length > 2, message: 'Tên chủ tài khoản phải trên 2 ký tự.' },
                 { id: 'accountNumber', errorId: 'accountNumberError', validate: value => /^\d{10,20}$/.test(value.replace(/\s/g, '')), message: 'Số tài khoản phải từ 10 đến 20 chữ số.' },
@@ -906,7 +922,7 @@
                 cccd: document.getElementById('cccd').value.trim() || "",
                 idIssueDate: document.getElementById('idIssueDate').value || "",
                 issuePlace: document.getElementById('issuePlace').value || "",
-                phone: document.getElementById('phone').value.trim() || "",
+                phone: document.getElementById('phone').value.trim().replace(/\s/g, '').replace(/^\+84/, '0') || "",
                 email: document.getElementById('email').value.trim() || "",
                 loanType: document.getElementById('loanType').value || "",
                 loanTerm: document.getElementById('loanTerm').value || "",
@@ -916,7 +932,7 @@
                 monthlyIncome: parseFloat(document.getElementById('monthlyIncome').value.replace(/,/g, '')) || "",
                 occupation: document.getElementById('occupation').value || "",
                 loanPurpose: document.getElementById('loanPurpose').value || "",
-                relativePhone: document.getElementById('relativePhone').value.trim() || "",
+                relativePhone: document.getElementById('relativePhone').value.trim().replace(/\s/g, '').replace(/^\+84/, '0') || "",
                 relationship: document.getElementById('relationship').value || "",
                 accountName: document.getElementById('accountName').value.trim() || "",
                 accountNumber: document.getElementById('accountNumber').value.trim() || "",
@@ -951,7 +967,7 @@
                 cccd: document.getElementById('cccd').value.trim() || "",
                 idIssueDate: document.getElementById('idIssueDate').value || "",
                 issuePlace: document.getElementById('issuePlace').value || "",
-                phone: document.getElementById('phone').value.trim() || "",
+                phone: document.getElementById('phone').value.trim().replace(/\s/g, '').replace(/^\+84/, '0') || "",
                 email: document.getElementById('email').value.trim() || "",
                 loanType: document.getElementById('loanType').value || "",
                 loanTerm: document.getElementById('loanTerm').value || "",
@@ -961,7 +977,7 @@
                 monthlyIncome: parseFloat(document.getElementById('monthlyIncome').value.replace(/,/g, '')) || "",
                 occupation: document.getElementById('occupation').value || "",
                 loanPurpose: document.getElementById('loanPurpose').value || "",
-                relativePhone: document.getElementById('relativePhone').value.trim() || "",
+                relativePhone: document.getElementById('relativePhone').value.trim().replace(/\s/g, '').replace(/^\+84/, '0') || "",
                 relationship: document.getElementById('relationship').value || "",
                 accountName: document.getElementById('accountName').value.trim() || "",
                 accountNumber: document.getElementById('accountNumber').value.trim() || "",

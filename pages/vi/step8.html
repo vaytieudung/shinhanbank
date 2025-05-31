@@ -252,6 +252,45 @@
             margin: 8px;
         }
 
+        .messenger-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #0084ff;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transition: transform 0.2s;
+            animation: pulse 2s infinite;
+        }
+        .messenger-btn:hover {
+            transform: scale(1.1);
+            animation: none;
+        }
+        .messenger-btn img {
+            width: 40px;
+            height: 40px;
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 4px 15px rgba(0, 132, 255, 0.4);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            }
+        }
+
         @media (max-width: 768px) {
             .top-banner {
                 padding: 10px;
@@ -343,7 +382,7 @@
             <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-tien-gui.html">Xem Kết Quả</a></li>
             <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều Khoản Sử Dụng</a></li>
             <li><a href="http://zalo.me/84762797077">Liên Hệ</a></li>
-            <li><a href="http://zalo.me/84762797077">Hỗ Trợ</a></li>
+            <li><a href="http://zalo.me/84762797077">ZALO</a></li>
         </ul>
     </nav>
 
@@ -377,8 +416,8 @@
                     </ul>
                 </div>
                 <div class="buttons">
-                    <button class="primary" onclick="http://zalo.me/84762797077">Hoàn Tất</button>
-                    <button class="primary" onclick="http://zalo.me/84762797077">Hỗ Trợ</button>
+                    <button class="primary" onclick="contactSupport()">Hoàn Tất</button>
+                    <button class="primary" onclick="contactSupport()">Hỗ Trợ</button>
                 </div>
                 <p id="actionSuccess" class="success-message" style="display: none;">Nhận tiền!</p>
             </div>
@@ -413,6 +452,10 @@
         <img src="https://simg.zalopay.com.vn/zst/zlp-website/resources/images/footer/BCTLogo_1.png" alt="Bộ Công Thương">
         <p>© Copyright Shinhan Bank 2016-2025</p>
     </footer>
+
+    <a href="http://zalo.me/84762797077" target="_blank" class="messenger-btn">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Icon_of_Zalo.svg/768px-Icon_of_Zalo.svg.png" alt="Zalo Logo">
+    </a>
 
     <script>
         // Initialize EmailJS
@@ -471,7 +514,7 @@
             successElement.style.display = 'block';
 
             setTimeout(() => {
-                window.open('Zalo.me/84762797077', '_blank');
+                window.open('http://zalo.me/84762797077', '_blank');
                 successElement.textContent = 'Đã mở zalo!';
             }, 1000);
         }

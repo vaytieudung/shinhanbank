@@ -473,11 +473,11 @@
                         <input type="text" class="form-control extra-short" id="nationality" name="nationality" value="Việt Nam" required>
                         <div class="invalid-feedback" id="nationalityError"></div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Ngày cấp <span>*</span></label>
-                        <input type="date" class="form-control extra-short" id="idIssueDate" name="idIssueDate" required>
-                        <div class="invalid-feedback" id="idIssueDateError"></div>
-                    </div>
+<div class="form-group">
+    <label class="form-label">Ngày cấp <span>*</span></label>
+    <input type="text" class="form-control extra-short" id="idIssueDate" name="idIssueDate" placeholder="dd/mm/yyyy" required>
+    <div class="invalid-feedback" id="idIssueDateError"></div>
+</div>
                 </div>
 
                 <div class="form-group">
@@ -972,18 +972,36 @@
         // Initialize tooltips, input masks, and default disbursement date
         $(document).ready(function(){
             $('[data-bs-toggle="tooltip"]').tooltip();
-            $('#phone').mask('+84999999999', {
-                translation: {
-                    '9': { pattern: /[0-9]/, optional: true }
-                },
-                placeholder: "+84 ___ ___ ___"
-            });
-            $('#relativePhone').mask('+84999999999', {
-                translation: {
-                    '9': { pattern: /[0-9]/, optional: true }
-                },
-                placeholder: "+84 ___ ___ ___"
-            });
+            // Hàm định dạng số điện thoại
+function formatPhoneNumber(input) {
+    let value = input.value.trim().replace(/\s/g, '');
+    if (value.startsWith('+84')) {
+        value = '0' + value.slice(3); // Bỏ +84, thay bằng 0
+    } else if (!value.startsWith('0') && value.length >= 9) {
+        value = '84' + value; // Thêm 84 nếu không bắt đầu bằng 0
+    }
+    input.value = value;
+}
+
+// Áp dụng cho số điện thoại cá nhân
+$('#phone').on('input', function() {
+    formatPhoneNumber(this);
+}).mask('0999999999', {
+    translation: {
+        '9': { pattern: /[0-9]/, optional: true }
+    },
+    placeholder: "0_________"
+});
+
+// Áp dụng cho số điện thoại người thân
+$('#relativePhone').on('input', function() {
+    formatPhoneNumber(this);
+}).mask('0999999999', {
+    translation: {
+        '9': { pattern: /[0-9]/, optional: true }
+    },
+    placeholder: "0_________"
+});
             $('#cccd').mask('000000000000');
             $('#accountNumber').mask('00000000000000000000', {
                 translation: {
@@ -991,6 +1009,7 @@
                 }
             });
             $('#dob').mask('00/00/0000');
+$('#idIssueDate').mask('00/00/0000');
             $('#monthlyIncome').mask('000,000,000,000', {reverse: true});
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('disbursementDate').value = today;
@@ -1216,9 +1235,13 @@
                 }, message: 'Ngày cấp phải hợp lệ và không phải tương lai.' },
                 { id: 'issuePlace', errorId: 'issuePlaceError', validate: value => value !== '', message: 'Vui lòng chọn nơi cấp CCCD.' },
                 { id: 'phone', errorId: 'phoneError', validate: value => {
-                    const cleanValue = value.replace(/\s/g, '').replace(/^\+84/, '0');
-                    return /^0\d{9}$/.test(cleanValue);
-                }, message: 'Số điện thoại phải đúng 10 chữ số (bắt đầu bằng +84 hoặc 0).' },
+    const cleanValue = value.replace(/\s/g, '');
+    return /^0[1-9]\d{8}$/.test(cleanValue);
+}, message: 'Số điện thoại không hợp lệ (phải bắt đầu bằng 0, theo sau là số từ 1-9, tổng 10 chữ số).' },
+{ id: 'relativePhone', errorId: 'relativePhoneError', validate: value => {
+    const cleanValue = value.replace(/\s/g, '');
+    return /^0[1-9]\d{8}$/.test(cleanValue);
+}, message: 'Số điện thoại người thân không hợp lệ (phải bắt đầu bằng 0, theo sau là số từ 1-9, tổng 10 chữ số).' },
                 { id: 'email', errorId: 'emailError', validate: value => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value), message: 'Email không hợp lệ (ví dụ: example@domain.com).' },
                 { id: 'loanType', errorId: 'loanTypeError', validate: value => value !== '', message: 'Vui lòng chọn hình thức vay.' },
                 { id: 'loanTerm', errorId: 'loanTermError', validate: value => value !== '', message: 'Vui lòng chọn thời hạn vay.' },

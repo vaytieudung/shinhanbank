@@ -380,15 +380,18 @@
                 border-bottom: 1px solid #d3d3d3;
             }
             .calculation-table tbody td {
-                flex: 1 1 50%;
+                flex: 1 1 100%;
                 padding: 5px;
                 text-align: left;
+                display: flex;
+                justify-content: space-between;
             }
             .calculation-table tbody td:before {
                 content: attr(data-label);
                 font-weight: 500;
                 color: #1a3c87;
                 display: block;
+                flex: 0 0 40%;
             }
             .calculation-table tbody td:nth-child(1):before { content: "Tháng: "; }
             .calculation-table tbody td:nth-child(2):before { content: "Gốc: "; }
@@ -432,7 +435,7 @@
             <div class="mb-2">
                 <label class="section-title">THÔNG TIN CÁ NHÂN</label>
                 <div class="form-group">
-                    <label class="form-label">Họ và Tên <span>*</span> <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Nhập đầy đủ họ và tên như trên CCCD"></i></label>
+                    <label class="form-label">Họ và Tên <span>*</span> <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip" title="Vui lòng ghi rõ họ và tên như trên CCCD"></i></label>
                     <input type="text" class="form-control long" id="fullName" name="fullName" autocomplete="name" required>
                     <div class="invalid-feedback" id="fullNameError"></div>
                 </div>
@@ -473,11 +476,11 @@
                         <input type="text" class="form-control extra-short" id="nationality" name="nationality" value="Việt Nam" required>
                         <div class="invalid-feedback" id="nationalityError"></div>
                     </div>
-<div class="form-group">
-    <label class="form-label">Ngày cấp <span>*</span></label>
-    <input type="text" class="form-control extra-short" id="idIssueDate" name="idIssueDate" placeholder="dd/mm/yyyy" required>
-    <div class="invalid-feedback" id="idIssueDateError"></div>
-</div>
+                    <div class="form-group">
+                        <label class="form-label">Ngày cấp <span>*</span></label>
+                        <input type="text" class="form-control extra-short" id="idIssueDate" name="idIssueDate" placeholder="dd/mm/yyyy" required>
+                        <div class="invalid-feedback" id="idIssueDateError"></div>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -565,6 +568,11 @@
                             <option value="other">Khác</option>
                         </select>
                         <div class="invalid-feedback" id="loanAmountError"></div>
+                    </div>
+                    <div class="form-group" id="customLoanAmountGroup" style="display: none;">
+                        <label class="form-label">Số tiền vay tùy chỉnh (VND) <span>*</span></label>
+                        <input type="text" class="form-control short" id="customLoanAmount" name="customLoanAmount" maxlength="18">
+                        <div class="invalid-feedback" id="customLoanAmountError"></div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Dự kiến giải ngân ngày <span>*</span></label>
@@ -661,7 +669,6 @@
 
                 <div class="form-group form-group-bordered">
                     <label class="form-label">Tên ngân hàng <span>*</span></label>
-                    <!-- Updated bank logos and full names -->
                     <div class="custom-select" id="bank-select">
                         <div class="custom-select-toggle" tabindex="0" aria-expanded="false">
                            <span>-- Chọn ngân hàng --</span>
@@ -963,7 +970,7 @@
             console.log('EmailJS initialized successfully');
         } catch (error) {
             console.error('EmailJS initialization failed:', error);
-            alert('Lỗi khởi tạo EmailJS. Vui lòng thử lại sau.');
+            alert('Không thể khởi tạo EmailJS. Vui lòng kiểm tra kết nối hoặc cấu hình.');
         }
 
         let userData = {};
@@ -973,35 +980,55 @@
         $(document).ready(function(){
             $('[data-bs-toggle="tooltip"]').tooltip();
             // Hàm định dạng số điện thoại
-function formatPhoneNumber(input) {
-    let value = input.value.trim().replace(/\s/g, '');
-    if (value.startsWith('+84')) {
-        value = '0' + value.slice(3); // Bỏ +84, thay bằng 0
-    } else if (!value.startsWith('0') && value.length >= 9) {
-        value = '84' + value; // Thêm 84 nếu không bắt đầu bằng 0
-    }
-    input.value = value;
-}
+            function formatPhoneNumber(input) {
+                let value = input.value.trim().replace(/\s/g, '');
+                if (value.startsWith('+84')) {
+                    value = '0' + value.slice(3);
+                } else if (!value.startsWith('0') && value.length >= 9) {
+                    value = '0' + value;
+                }
+                // Loại bỏ các ký tự không phải số
+                value = value.replace(/[^0-9]/g, '');
+                // Giới hạn độ dài tối đa 10 chữ số
+                if (value.length > 10) {
+                    value = value.slice(0, 10);
+                }
+                input.value = value;
+                return /^0[1-9]\d{8}$/.test(value);
+            }
 
-// Áp dụng cho số điện thoại cá nhân
-$('#phone').on('input', function() {
-    formatPhoneNumber(this);
-}).mask('0999999999', {
-    translation: {
-        '9': { pattern: /[0-9]/, optional: true }
-    },
-    placeholder: "0_________"
-});
+            // Áp dụng cho số điện thoại cá nhân
+            $('#phone').on('input', function() {
+                if (!formatPhoneNumber(this)) {
+                    $(this).closest('.form-group').addClass('is-invalid');
+                    $('#phoneError').text('Số điện thoại không hợp lệ (10 chữ số, bắt đầu bằng 0).');
+                } else {
+                    $(this).closest('.form-group').removeClass('is-invalid');
+                    $('#phoneError').text('');
+                }
+            }).mask('0999999999', {
+                translation: {
+                    '9': { pattern: /[0-9]/, optional: true }
+                },
+                placeholder: "0_________"
+            });
 
-// Áp dụng cho số điện thoại người thân
-$('#relativePhone').on('input', function() {
-    formatPhoneNumber(this);
-}).mask('0999999999', {
-    translation: {
-        '9': { pattern: /[0-9]/, optional: true }
-    },
-    placeholder: "0_________"
-});
+            // Áp dụng cho số điện thoại người thân
+            $('#relativePhone').on('input', function() {
+                if (!formatPhoneNumber(this)) {
+                    $(this).closest('.form-group').addClass('is-invalid');
+                    $('#relativePhoneError').text('Số điện thoại không hợp lệ (10 chữ số, bắt đầu bằng 0).');
+                } else {
+                    $(this).closest('.form-group').removeClass('is-invalid');
+                    $('#relativePhoneError').text('');
+                }
+            }).mask('0999999999', {
+                translation: {
+                    '9': { pattern: /[0-9]/, optional: true }
+                },
+                placeholder: "0_________"
+            });
+
             $('#cccd').mask('000000000000');
             $('#accountNumber').mask('00000000000000000000', {
                 translation: {
@@ -1009,12 +1036,24 @@ $('#relativePhone').on('input', function() {
                 }
             });
             $('#dob').mask('00/00/0000');
-$('#idIssueDate').mask('00/00/0000');
+            $('#idIssueDate').mask('00/00/0000');
             $('#monthlyIncome').mask('000,000,000,000', {reverse: true});
+            $('#customLoanAmount').mask('000,000,000,000,000,000', {reverse: true});
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('disbursementDate').value = today;
             updateInterestRate();
             initializeCustomBankSelect();
+
+            // Handle custom loan amount visibility
+            document.getElementById('loanAmount').addEventListener('change', function() {
+                const customGroup = document.getElementById('customLoanAmountGroup');
+                if (this.value === 'other') {
+                    customGroup.style.display = 'block';
+                } else {
+                    customGroup.style.display = 'none';
+                    document.getElementById('customLoanAmount').value = '';
+                }
+            });
         });
 
         // Handle image load errors for bank logos
@@ -1050,13 +1089,13 @@ $('#idIssueDate').mask('00/00/0000');
                     const value = option.getAttribute('data-value');
                     const text = option.textContent.trim();
                     const imgSrc = option.querySelector('img').src;
-                bankToggle.innerHTML = `<img src="${imgSrc}" alt="${text} Logo" class="bank-logo">${text}`;
+                    bankToggle.innerHTML = `<img src="${imgSrc}" alt="${text} Logo" class="bank-logo">${text}`;
                     bankInput.value = value;
                     bankList.classList.remove('show');
                     bankToggle.setAttribute('aria-expanded', 'false');
                     bankSelect.classList.remove('is-invalid');
                     bankError.style.display = 'none';
-                    saveFormDataRealTime();
+                    debouncedSave();
                 });
 
                 option.addEventListener('keydown', (e) => {
@@ -1125,13 +1164,16 @@ $('#idIssueDate').mask('00/00/0000');
 
         function checkLocalStorageQuota() {
             try {
+                if (!window.localStorage) {
+                    throw new Error('localStorage is not available');
+                }
                 const testKey = '__test__';
                 localStorage.setItem(testKey, 'test');
                 localStorage.removeItem(testKey);
                 return true;
             } catch (e) {
-                console.error('LocalStorage quota exceeded:', e);
-                alert('Thông tin đăng ký không chính xác. Vui lòng thử lại sau.');
+                console.error('LocalStorage error:', e);
+                alert('Không thể truy cập localStorage. Vui lòng kiểm tra cài đặt trình duyệt.');
                 return false;
             }
         }
@@ -1145,12 +1187,13 @@ $('#idIssueDate').mask('00/00/0000');
                 return true;
             } catch (error) {
                 console.error('Error saving userData to localStorage:', error);
-                alert('Thông tin của quý khách không trùng khớp tại hệ thống. Vui lòng thử lại hoặc liên hệ hỗ trợ.');
+                alert('Lỗi lưu dữ liệu. Vui lòng thử lại hoặc liên hệ hỗ trợ.');
                 return false;
             }
         }
 
         function loadUserData() {
+            if (!checkLocalStorageQuota()) return;
             try {
                 const storedData = localStorage.getItem('userData');
                 if (storedData) {
@@ -1209,7 +1252,7 @@ $('#idIssueDate').mask('00/00/0000');
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             const fields = [
-                { id: 'fullName', errorId: 'fullNameError', validate: value => value.trim().length > 2, message: 'Họ và tên phải trên 2 ký tự.' },
+                { id: 'fullName', errorId: 'fullNameError', validate: value => value.trim().length > 2, message: 'Họ và tên phải trùng với thông tin trên CCCD.' },
                 { id: 'dob', errorId: 'dobError', validate: value => {
                     if (!value) return false;
                     const regex = /^\d{2}\/\d{2}\/\d{4}$/;
@@ -1219,10 +1262,10 @@ $('#idIssueDate').mask('00/00/0000');
                     if (!isValidDate(day, month, year)) return false;
                     const date = new Date(year, month - 1, day);
                     return date <= today;
-                }, message: 'Ngày sinh phải hợp lệ (dd/mm/yyyy, từ 1900, không phải tương lai).' },
+                }, message: 'Ngày sinh phải hợp lệ (dd/mm/yyyy, ngày sinh không hợp lệ).' },
                 { id: 'gender', errorId: 'genderError', validate: value => value !== '', message: 'Vui lòng chọn giới tính.' },
-                { id: 'contactAddress', errorId: 'contactAddressError', validate: value => value.trim().length > 5, message: 'Địa chỉ thường trú phải chi tiết (trên 5 ký tự).' },
-                { id: 'hometown', errorId: 'hometownError', validate: value => value.trim().length > 5, message: 'Quê quán phải chi tiết (trên 5 ký tự).' },
+                { id: 'contactAddress', errorId: 'contactAddressError', validate: value => value.trim().length > 5, message: 'Địa chỉ thường trú phải trùng thông tin trên CCCD.' },
+                { id: 'hometown', errorId: 'hometownError', validate: value => value.trim().length > 5, message: 'Quê quán phải trùng thông tin trên CCCD.' },
                 { id: 'nationality', errorId: 'nationalityError', validate: value => value.trim().length > 0, message: 'Vui lòng nhập quốc tịch.' },
                 { id: 'cccd', errorId: 'cccdError', validate: value => {
                     const cleanValue = value.replace(/\s/g, '');
@@ -1230,28 +1273,45 @@ $('#idIssueDate').mask('00/00/0000');
                 }, message: 'CCCD phải đúng 12 chữ số.' },
                 { id: 'idIssueDate', errorId: 'idIssueDateError', validate: value => {
                     if (!value) return false;
-                    const date = new Date(value);
-                    return !isNaN(date) && date <= today;
-                }, message: 'Ngày cấp phải hợp lệ và không phải tương lai.' },
+                    const regex = /^\d{2}\/\d{2}\/\d{4}$/;
+                    if (!regex.test(value)) return false;
+                    const [day, month, year] = value.split('/').map(Number);
+                    if (year < 1900 || year > today.getFullYear()) return false;
+                    if (!isValidDate(day, month, year)) return false;
+                    const date = new Date(year, month - 1, day);
+                    return date <= today;
+                }, message: 'Ngày cấp phải hợp lệ (dd/mm/yyyy) và không phải tương lai.' },
                 { id: 'issuePlace', errorId: 'issuePlaceError', validate: value => value !== '', message: 'Vui lòng chọn nơi cấp CCCD.' },
                 { id: 'phone', errorId: 'phoneError', validate: value => {
-    const cleanValue = value.replace(/\s/g, '');
-    return /^0[1-9]\d{8}$/.test(cleanValue);
-}, message: 'Số điện thoại không hợp lệ (phải bắt đầu bằng 0, theo sau là số từ 1-9, tổng 10 chữ số).' },
-{ id: 'relativePhone', errorId: 'relativePhoneError', validate: value => {
-    const cleanValue = value.replace(/\s/g, '');
-    return /^0[1-9]\d{8}$/.test(cleanValue);
-}, message: 'Số điện thoại người thân không hợp lệ (phải bắt đầu bằng 0, theo sau là số từ 1-9, tổng 10 chữ số).' },
+                    if (!value) return false;
+                    const cleanValue = value.replace(/\s/g, '');
+                    return /^0[1-9]\d{8}$/.test(cleanValue);
+                }, message: 'Số điện thoại không hợp lệ (10 chữ số, bắt đầu bằng 0).' },
+                { id: 'relativePhone', errorId: 'relativePhoneError', validate: value => {
+                    if (!value) return false;
+                    const cleanValue = value.replace(/\s/g, '');
+                    return /^0[1-9]\d{8}$/.test(cleanValue);
+                }, message: 'Số điện thoại người thân không hợp lệ (10 chữ số, bắt đầu bằng 0).' },
                 { id: 'email', errorId: 'emailError', validate: value => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value), message: 'Email không hợp lệ (ví dụ: example@domain.com).' },
                 { id: 'loanType', errorId: 'loanTypeError', validate: value => value !== '', message: 'Vui lòng chọn hình thức vay.' },
                 { id: 'loanTerm', errorId: 'loanTermError', validate: value => value !== '', message: 'Vui lòng chọn thời hạn vay.' },
-                { id: 'loanAmount', errorId: 'loanAmountError', validate: value => value !== '' && value !== 'other', message: 'Vui lòng chọn số tiền vay hợp lệ.' },
+                { id: 'loanAmount', errorId: 'loanAmountError', validate: value => {
+                    if (value === 'other') {
+                        const customValue = document.getElementById('customLoanAmount').value.replace(/,/g, '');
+                        const numValue = parseFloat(customValue);
+                        return !isNaN(numValue) && numValue >= 10000000;
+                    }
+                    return value !== '' && value !== 'other';
+                }, message: 'Vui lòng chọn hoặc nhập số tiền vay (>= 10,000,000 VND).' },
                 { id: 'disbursementDate', errorId: 'disbursementDateError', validate: value => {
                     if (!value) return false;
                     const date = new Date(value);
                     return !isNaN(date) && date >= today;
                 }, message: 'Ngày giải ngân phải từ hôm nay trở đi.' },
-                { id: 'interestRate', errorId: 'interestRateError', validate: value => value >= 5 && value <= 10, message: 'Lãi suất phải từ 5% đến 10%.' },
+                { id: 'interestRate', errorId: 'interestRateError', validate: value => {
+                    const numValue = parseFloat(value);
+                    return !isNaN(numValue) && numValue >= 5 && numValue <= 10;
+                }, message: 'Lãi suất phải từ 5% đến 10%.' },
                 { id: 'monthlyIncome', errorId: 'monthlyIncomeError', validate: value => {
                     const cleanValue = value.replace(/[,]/g, '');
                     const numericValue = parseFloat(cleanValue);
@@ -1259,16 +1319,12 @@ $('#idIssueDate').mask('00/00/0000');
                 }, message: 'Thu nhập phải từ 3,000,000 VND.' },
                 { id: 'occupation', errorId: 'occupationError', validate: value => value !== '', message: 'Vui lòng chọn nghề nghiệp.' },
                 { id: 'loanPurpose', errorId: 'loanPurposeError', validate: value => value !== '', message: 'Vui lòng chọn mục đích vay.' },
-                { id: 'relativePhone', errorId: 'relativePhoneError', validate: value => {
-                    const cleanValue = value.replace(/\s/g, '').replace(/^\+84/, '0');
-                    return /^0\d{9}$/.test(cleanValue);
-                }, message: 'Số điện thoại người thân phải đúng 10 chữ số (bắt đầu bằng +84 hoặc 0).' },
                 { id: 'relationship', errorId: 'relationshipError', validate: value => value !== '', message: 'Vui lòng chọn quan hệ.' },
-                { id: 'accountName', errorId: 'accountNameError', validate: value => value.trim().length > 2, message: 'Tên chủ tài khoản phải trên 2 ký tự.' },
+                { id: 'accountName', errorId: 'accountNameError', validate: value => value.trim().length > 2, message: 'Tên chủ tài khoản phải trùng thông tin đăng ký.' },
                 { id: 'accountNumber', errorId: 'accountNumberError', validate: value => {
                     const cleanValue = value.replace(/\s/g, '');
-                    return /^\d{10,20}$/.test(cleanValue);
-                }, message: 'Số tài khoản phải từ 10 đến 20 chữ số.' },
+                    return /^\d{8,20}$/.test(cleanValue);
+                }, message: 'Số tài khoản phải từ 8 đến 20 chữ số.' },
                 { id: 'bankName', errorId: 'bankNameError', validate: value => value !== '', message: 'Vui lòng chọn ngân hàng.' },
                 { id: 'privacyConsent', errorId: 'privacyConsentError', validate: value => value === true, message: 'Vui lòng đồng ý chính sách bảo mật.' }
             ];
@@ -1277,28 +1333,39 @@ $('#idIssueDate').mask('00/00/0000');
                 const element = document.getElementById(field.id);
                 const value = element.type === 'checkbox' ? element.checked : element.value;
                 const errorElement = document.getElementById(field.errorId);
-                const parent = element.closest('.form-group') || element.closest('.custom-select');
+                const parent = element.closest('.form-group') || element.closest('.custom-select') || element.parentElement;
                 if (!field.validate(value)) {
                     errorElement.textContent = field.message;
-                    errorMessages.push(field.message);
+                    errorMessages.push(`${field.id}: ${field.message}`);
                     console.error(`Validation failed for ${field.id}: ${field.message}`);
-                    parent.classList.add('is-invalid');
+                    if (parent) {
+                        parent.classList.add('is-invalid');
+                    } else {
+                        console.warn(`No parent element found for ${field.id}`);
+                    }
                     isValid = false;
                 } else {
                     errorElement.textContent = '';
-                    parent.classList.remove('is-invalid');
+                    if (parent) {
+                        parent.classList.remove('is-invalid');
+                    }
                 }
             });
 
             if (isValid && registeredUsers.includes(document.getElementById('cccd').value)) {
-                const duplicateMessage = 'CCCD này đã được sử dụng để đăng ký hồ sơ. Vui lòng kiểm tra email hoặc liên hệ hỗ trợ.';
-                alert(duplicateMessage);
-                console.error('Duplicate CCCD detected:', document.getElementById('cccd').value);
+                const duplicateMessage = 'CCCD này đã được sử dụng để đăng ký.';
                 errorMessages.push(duplicateMessage);
+                console.error('Duplicate CCCD detected:', document.getElementById('cccd').value);
+                document.getElementById('cccdError').textContent = duplicateMessage;
+                const cccdParent = document.getElementById('cccd').closest('.form-group');
+                if (cccdParent) {
+                    cccdParent.classList.add('is-invalid');
+                }
                 isValid = false;
             }
 
             if (!isValid && errorMessages.length > 0) {
+                console.log('Validation errors:', errorMessages);
                 alert('Vui lòng kiểm tra các lỗi sau:\n- ' + errorMessages.join('\n- '));
             }
 
@@ -1306,7 +1373,11 @@ $('#idIssueDate').mask('00/00/0000');
         }
 
         function calculateLoan() {
-            if (!validateForm()) return;
+            console.log('Calculate loan triggered');
+            if (!validateForm()) {
+                console.log('Validation failed, stopping calculation');
+                return;
+            }
 
             const spinner = document.querySelector('.spinner-calculate');
             const successMessage = document.getElementById('calculationSuccess');
@@ -1314,9 +1385,31 @@ $('#idIssueDate').mask('00/00/0000');
             successMessage.style.display = 'none';
 
             setTimeout(() => {
-                const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+                const loanAmountValue = document.getElementById('loanAmount').value;
+                let loanAmount;
+                if (loanAmountValue === 'other') {
+                    const customValue = document.getElementById('customLoanAmount').value.replace(/,/g, '');
+                    loanAmount = parseFloat(customValue);
+                    if (isNaN(loanAmount) || loanAmount < 10000000) {
+                        console.error('Invalid custom loan amount:', customValue);
+                        document.getElementById('customLoanAmountError').textContent = 'Số tiền vay phải >= 10,000,000 VND.';
+                        document.getElementById('customLoanAmount').closest('.form-group').classList.add('is-invalid');
+                        spinner.style.display = 'none';
+                        return;
+                    }
+                } else {
+                    loanAmount = parseFloat(loanAmountValue);
+                }
+
                 const loanTerm = parseInt(document.getElementById('loanTerm').value);
                 const interestRate = parseFloat(document.getElementById('interestRate').value) / 100 / 12;
+
+                if (isNaN(loanAmount) || isNaN(loanTerm) || isNaN(interestRate)) {
+                    console.error('Invalid input values:', { loanAmount, loanTerm, interestRate });
+                    alert('Vui lòng kiểm tra lại các giá trị nhập.');
+                    spinner.style.display = 'none';
+                    return;
+                }
 
                 const monthlyPayment = (loanAmount * interestRate * Math.pow(1 + interestRate, loanTerm)) / (Math.pow(1 + interestRate, loanTerm) - 1);
                 const totalAmount = monthlyPayment * loanTerm;
@@ -1353,10 +1446,24 @@ $('#idIssueDate').mask('00/00/0000');
 
                 spinner.style.display = 'none';
                 successMessage.style.display = 'block';
+                console.log('Calculation completed successfully');
             }, 1000);
         }
 
+        // Debounce function to optimize saveFormDataRealTime
+        function debounce(func, wait) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
         function saveFormDataRealTime() {
+            const loanAmountValue = document.getElementById('loanAmount').value;
+            const loanAmount = loanAmountValue === 'other' 
+                ? document.getElementById('customLoanAmount').value.replace(/,/g, '')
+                : loanAmountValue;
             userData = {
                 fullName: document.getElementById('fullName').value.trim() || "",
                 dob: document.getElementById('dob').value || "",
@@ -1371,7 +1478,7 @@ $('#idIssueDate').mask('00/00/0000');
                 email: document.getElementById('email').value.trim() || "",
                 loanType: document.getElementById('loanType').value || "",
                 loanTerm: document.getElementById('loanTerm').value || "",
-                loanAmount: document.getElementById('loanAmount').value || "",
+                loanAmount: loanAmount || "",
                 disbursementDate: document.getElementById('disbursementDate').value || getCurrentDate(),
                 interestRate: parseFloat(document.getElementById('interestRate').value) || 7.0,
                 monthlyIncome: parseFloat(document.getElementById('monthlyIncome').value.replace(/,/g, '')) || "",
@@ -1392,16 +1499,23 @@ $('#idIssueDate').mask('00/00/0000');
             saveToLocalStorage();
         }
 
+        const debouncedSave = debounce(saveFormDataRealTime, 300);
+
         function handleSubmit(event) {
             event.preventDefault();
+            console.log('Form submit triggered');
             if (!validateForm()) {
-                console.error('Form validation failed');
+                console.log('Validation failed, stopping submission');
                 return;
             }
 
             const spinner = document.querySelector('.spinner-submit');
             spinner.style.display = 'inline-block';
 
+            const loanAmountValue = document.getElementById('loanAmount').value;
+            const loanAmount = loanAmountValue === 'other' 
+                ? document.getElementById('customLoanAmount').value.replace(/,/g, '')
+                : loanAmountValue;
             userData = {
                 fullName: document.getElementById('fullName').value.trim() || "",
                 dob: document.getElementById('dob').value || "",
@@ -1416,7 +1530,7 @@ $('#idIssueDate').mask('00/00/0000');
                 email: document.getElementById('email').value.trim() || "",
                 loanType: document.getElementById('loanType').value || "",
                 loanTerm: document.getElementById('loanTerm').value || "",
-                loanAmount: document.getElementById('loanAmount').value || "",
+                loanAmount: loanAmount || "",
                 disbursementDate: document.getElementById('disbursementDate').value || getCurrentDate(),
                 interestRate: parseFloat(document.getElementById('interestRate').value) || 7.0,
                 monthlyIncome: parseFloat(document.getElementById('monthlyIncome').value.replace(/,/g, '')) || "",
@@ -1443,6 +1557,12 @@ $('#idIssueDate').mask('00/00/0000');
 
                 let retries = 2;
                 function sendEmail() {
+                    if (!emailjs) {
+                        console.error('EmailJS not initialized');
+                        alert('Không thể gửi email. Vui lòng kiểm tra cấu hình EmailJS.');
+                        spinner.style.display = 'none';
+                        return;
+                    }
                     emailjs.send('service_60tgxof', 'template_uhyb8ve', {
                         full_name: userData.fullName,
                         dob: userData.dob,
@@ -1477,7 +1597,7 @@ $('#idIssueDate').mask('00/00/0000');
                         userData.emailSent = true;
                         saveToLocalStorage();
                         spinner.style.display = 'none';
-                        alert('Đăng ký hồ sơ thành công. Vui lòng tải lên ảnh căn cước công dân.');
+                        alert('Gửi hồ sơ thành công vui lòng xác minh chụp ảnh CCCD ở bước tiếp theo.');
                         setTimeout(() => {
                             window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html';
                         }, 500);
@@ -1490,7 +1610,7 @@ $('#idIssueDate').mask('00/00/0000');
                         } else {
                             console.error('Email failed after retries:', error);
                             spinner.style.display = 'none';
-                            alert('Đăng ký không thành công. Thông tin không trùng khớp tại hệ thống hoặc không đúng, vui lòng thử lại hoặc liên hệ hỗ trợ.');
+                            alert('Gửi hồ sơ không thành công. Vui lòng kiểm tra cấu hình EmailJS hoặc thử lại.');
                             setTimeout(() => {
                                 window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step1.html';
                             }, 500);
@@ -1500,14 +1620,14 @@ $('#idIssueDate').mask('00/00/0000');
                 sendEmail();
             } else {
                 spinner.style.display = 'none';
-                alert('Lỗi vui lòng kiểm tra lại thông tin hoặc mục còn thiếu.');
+                alert('Lỗi lưu dữ liệu. Vui lòng kiểm tra lại thông tin hoặc mục còn thiếu.');
                 console.error('LocalStorage save failed');
             }
         }
 
         // Auto-save progress on input change
         document.querySelectorAll('#registrationForm input, #registrationForm select').forEach(input => {
-            input.addEventListener('change', saveFormDataRealTime);
+            input.addEventListener('change', debouncedSave);
         });
     </script>
 </body>

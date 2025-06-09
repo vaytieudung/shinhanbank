@@ -3,639 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shinhan Bank - Xem Kết Quả</title>
-    <script async src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
+    <title>Shinhan Bank - Xem Kết Quả Xét Duyệt</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://shinhan.com.vn/public/themes/shinhan/img/favicon2023.ico">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
+        :root {
+            --shinhan-blue: #003087;
         }
-
         body {
-            background-color: #f5f5f5;
-            color: #333;
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
         }
-
-        .top-banner {
-            background-color: #003087;
-            padding: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        .top-banner img {
-            height: 35px;
-        }
-
-        .hamburger {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 10px;
-            position: absolute;
-            top: 12px;
-            right: 10px;
-            z-index: 1000;
-        }
-
-        .hamburger span {
-            display: block;
-            width: 25px;
-            height: 3px;
-            background: #fff;
-            margin: 5px 0;
-            transition: all 0.3s ease;
-        }
-
-        .hamburger[aria-expanded="true"] span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-
-        .hamburger[aria-expanded="true"] span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger[aria-expanded="true"] span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -7px);
-        }
-
-        nav {
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin: 10px 0;
-        }
-
-        nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-            padding: 10px 0;
-        }
-
-        nav ul li {
-            margin: 0 15px;
-        }
-
-        nav ul li a {
-            text-decoration: none;
-            color: #003087;
-            font-weight: bold;
-            padding: 10px;
-            display: block;
-            transition: background 0.3s;
-        }
-
-        nav ul li a:hover, nav ul li a:focus {
-            background: #e6f0ff;
-            border-radius: 5px;
-        }
-
-        .banner-carousel {
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 10px;
-            min-height: 180px;
-        }
-
-        .banner-slide {
-            display: none;
-            width: 100%;
-            height: 100%;
-        }
-
-        .banner-slide.active {
-            display: block;
-        }
-
-        .banner-slide img {
-            width: 100%;
-            max-height: 280px;
-            object-fit: contain;
-            display: block;
-            margin: 0 auto;
-        }
-
-        .banner-text {
-            position: absolute;
-            top: 50%;
-            left: 5%;
-            transform: translateY(-50%);
-            color: #fff;
-            text-align: left;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 8px 12px;
-            border-radius: 5px;
-            max-width: 80%;
-        }
-
-        .prev, .next {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.7);
-            color: #fff;
-            border: none;
-            padding: 15px;
-            cursor: pointer;
-            font-size: 18px;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-
-        .prev:hover, .next:hover {
-            background: rgba(0, 0, 0, 0.9);
-        }
-
-        .prev:focus, .next:focus {
-            outline: 2px solid #fff;
-            outline-offset: 2px;
-        }
-
-        .prev { left: 15px; }
-        .next { right: 15px; }
-
-        .dots {
-            text-align: center;
-            position: absolute;
-            bottom: 10px;
-            width: 100%;
-        }
-
-        .dot {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            margin: 0 6px;
-            background: #ccc;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .dot:hover, .dot:focus {
-            background: #666;
-        }
-
-        .dot.active {
-            background: #003087;
-        }
-
-        .steps {
-            display: flex;
-            justify-content: center;
-            margin: 10px 0;
-            gap: 10px;
-        }
-
-        .step {
-            flex: 1;
-            text-align: center;
-            padding: 12px;
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .step.active {
-            background-color: #003087;
-            color: #fff;
-        }
-
-        .form-container {
-            background-color: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .form-group {
-            margin-bottom: 12px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .form-group .error {
-            color: red;
-            font-size: 12px;
-            display: none;
-        }
-
-        .form-group .error.show {
-            display: block;
-        }
-
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        button.primary {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            background-color: #003087;
-            color: #fff;
-        }
-
-        .result-container {
-            background-color: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: 20px auto;
-            text-align: center;
-        }
-
-        .result-container h2 {
-            color: #003087;
-            margin-bottom: 15px;
-        }
-
-        .result-container p {
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-
-        .result-section {
-            margin-top: 20px;
-            padding: 20px;
-            background: white;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            display: none;
-            text-align: left;
-        }
-
-        .result-section h4 {
-            color: #003087;
-            margin-bottom: 15px;
-            font-size: 16px;
-            font-weight: 700;
-        }
-
-        .result-section p {
-            margin: 5px 0;
-            font-size: 14px;
-        }
-
-        .image-section {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .image-section div {
-            display: inline-block;
-            vertical-align: top;
-            margin: 10px;
-        }
-
-        .image-section img {
-            max-width: 200px;
-            border: 1px solid #e9ecef;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-
-        .btn-download {
-            background-color: #17a2b8;
-            color: white;
-            font-size: 14px;
-            font-weight: 700;
-            padding: 8px 16px;
-            border-radius: 20px;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-download:hover {
-            background-color: #ff6200;
-        }
-
-        footer {
-            background-color: #003087;
-            color: #fff;
-            text-align: center;
-            padding: 15px 0;
-            margin-top: 15px;
-        }
-
-        footer img {
-            height: 28px;
-            margin: 8px;
-        }
-
-        footer a {
-            color: #fff;
-            margin: 0 8px;
-            font-size: 12px;
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 768px) {
-            .top-banner {
-                padding: 10px;
-            }
-
-            .top-banner img {
-                height: 28px;
-            }
-
-            .hamburger {
-                display: block;
-            }
-
-            nav ul {
-                display: none;
-                flex-direction: column;
-                align-items: center;
-                background: #fff;
-                position: absolute;
-                top: 50px;
-                left: 0;
-                width: 100%;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                z-index: 999;
-            }
-
-            nav ul.show {
-                display: flex;
-            }
-
-            nav ul li {
-                margin: 8px 0;
-                width: 100%;
-                text-align: center;
-            }
-
-            nav ul li a {
-                padding: 12px;
-                font-size: 14px;
-            }
-
-            .banner-carousel {
-                min-height: 160px;
-                margin-bottom: 5px;
-            }
-
-            .banner-text h1 {
-                font-size: 16px;
-            }
-
-            .banner-text p {
-                font-size: 10px;
-            }
-
-            .banner-slide img {
-                max-height: 180px;
-            }
-
-            .prev, .next {
-                padding: 8px;
-                font-size: 12px;
-            }
-
-            .dot {
-                width: 8px;
-                height: 8px;
-                margin: 0 4px;
-            }
-
-            .steps {
-                flex-direction: column;
-                gap: 6px;
-            }
-
-            .step {
-                padding: 8px;
-                font-size: 12px;
-            }
-
-            .form-container, .result-container {
-                padding: 12px;
-            }
-
-            .form-group {
-                margin-bottom: 10px;
-            }
-
-            .form-group input {
-                padding: 6px;
-                font-size: 12px;
-            }
-
-            button.primary, .btn-download {
-                padding: 6px 12px;
-                font-size: 12px;
-            }
-
-            .image-section div {
-                display: block;
-                margin: 20px auto;
-            }
-
-            .image-section img {
-                max-width: 150px;
-            }
-        }
+        .bg-shinhan-blue { background-color: var(--shinhan-blue); }
+        .text-shinhan-blue { color: var(--shinhan-blue); }
+        .border-shinhan-blue { border-color: var(--shinhan-blue); }
+        .hover\:bg-shinhan-blue-dark:hover { background-color: #002263; }
+        .details-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out; }
+        .details-content.show { max-height: 1000px; /* Adjust as needed */ }
+        .rotate-180 { transform: rotate(180deg); }
     </style>
 </head>
-<body>
-    <div class="top-banner">
-        <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo">
-        <button class="hamburger" aria-label="Toggle Menu" aria-expanded="false" onclick="toggleMenu()">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-    </div>
+<body class="bg-gray-100">
 
-    <nav role="navigation" aria-label="Main Navigation">
-        <ul id="nav-menu">
-            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/trang-chu.html">Trang Chủ</a></li>
-            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới Thiệu</a></li>
-            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/ca-nhan.html">Lợi Ích</a></li>
-            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-tien-gui.html">Giấy Tờ Cần Thiết</a></li>
-            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html">Đăng Ký Giải Ngân</a></li>
-            <li><a href="#" class="active">Xem Kết Quả</a></li>
-            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều Khoản Sử Dụng</a></li>
-            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/support-center.html">Liên Hệ</a></li>
-        </ul>
-    </nav>
-
-    <div class="banner-carousel" role="region" aria-label="Promotional Carousel">
-        <div class="banner-slide active">
-            <img data-src="https://shinhan.com.vn/public/uploads/personal/2024/RLD/2024---RLD---SOHO-operation-Loan---banner.jpg" alt="SOHO Operation Loan" class="lazy">
-            <div class="banner-text">
-                <h1>Giải Ngân Khoản Vay</h1>
-                <p>Tăng tốc tương lai, kết nối vạn niềm tin</p>
-            </div>
-        </div>
-        <div class="banner-slide">
-            <img data-src="https://shinhan.com.vn/public/uploads/personal/2025/RLD/2025.01_RLD_Unsecured--Loan_Baneer.jpg" alt="Unsecured Loan" class="lazy">
-            <div class="banner-text">
-                <h1>Tài chính linh hoạt</h1>
-                <p>Ước mơ trong tầm tay</p>
-            </div>
-        </div>
-        <div class="banner-slide">
-            <img data-src="https://shinhan.com.vn/public/uploads/personal/2022/DIGITAL%20%20PERSONAL%20LOAN/20220624_DIGITAL%20CONSUMER%20LOAN_%20BANNER.jpg" alt="Digital Consumer Loan" class="lazy">
-            <div class="banner-text">
-                <h1>Khoản vay nhanh</h1>
-                <p>Hiện thực hóa mọi khát vọng</p>
-            </div>
-        </div>
-        <div class="banner-slide">
-            <img data-src="https://shinhan.com.vn/public/uploads/personal/2025/RLD/2025.01_RLD_Car-Loan_Baneer-1.jpg" alt="Car Loan" class="lazy">
-            <div class="banner-text">
-                <h1>Hỗ trợ tài chính chính</h1>
-                <p>Cùng bạn vươn tới tương lai.</p>
-            </div>
-        </div>
-        <button class="prev" aria-label="Previous Slide" tabindex="0" onkeydown="if(event.key === 'Enter') changeSlide(-1)">❮</button>
-        <button class="next" aria-label="Next Slide" tabindex="0" onkeydown="if(event.key === 'Enter') changeSlide(1)">❯</button>
-        <div class="dots">
-            <span class="dot active" onclick="goToSlide(0)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(0)"></span>
-            <span class="dot" onclick="goToSlide(1)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(1)"></span>
-            <span class="dot" onclick="goToSlide(2)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(2)"></span>
-            <span class="dot" onclick="goToSlide(3)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(3)"></span>
-        </div>
-    </div>
-
-    <div class="steps" role="progressbar" aria-label="Result Progress">
-        <div class="step active" id="step1" aria-current="step">XEM KẾT QUẢ</div>
-    </div>
-
-    <div class="container">
-        <div class="form-container">
-            <h2>Xem Kết Quả Xét Duyệt</h2>
-            <form id="check-result-form">
-                <div class="form-group" aria-live="polite">
-                    <label for="cccd">Số căn cước công dân *</label>
-                    <input type="text" id="cccd" placeholder="VD: " maxlength="12" required aria-describedby="cccdError">
-                    <span class="error" id="cccdError">Số CCCD không đúng hoặc chưa đăng ký hồ sơ. Vui lòng kiểm tra lại</span>
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo" class="h-8">
                 </div>
-                <div class="buttons">
-                    <button type="button" class="primary" onclick="checkResult()">Kiểm tra</button>
+                <div class="hidden md:block">
+                    <nav class="flex items-center space-x-2">
+                        <a href="#" class="text-gray-600 hover:text-shinhan-blue px-3 py-2 rounded-md text-sm font-medium">Trang Chủ</a>
+                        <a href="#" class="text-gray-600 hover:text-shinhan-blue px-3 py-2 rounded-md text-sm font-medium">Sản Phẩm Vay</a>
+                        <a href="#" class="text-gray-600 hover:text-shinhan-blue px-3 py-2 rounded-md text-sm font-medium">Hỗ Trợ</a>
+                    </nav>
                 </div>
-            </form>
+                 <div class="md:hidden">
+                    <button id="hamburger-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none" aria-expanded="false">
+                        <span class="sr-only">Mở menu chính</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
-        <div id="result-container" class="result-container" style="display: none;">
-            <h2>Kết quả xét duyệt</h2>
-            <p id="no-result" style="display: none;">Quý khách chưa có hồ sơ đăng ký tại hệ thống Ngân hàng ShinhanBank.</p>
-            <div id="result-section" class="result-section"></div>
-        </div>
-    </div>
+        <nav id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                 <a href="#" class="text-gray-600 hover:bg-gray-50 hover:text-shinhan-blue block px-3 py-2 rounded-md text-base font-medium">Trang Chủ</a>
+                <a href="#" class="text-gray-600 hover:bg-gray-50 hover:text-shinhan-blue block px-3 py-2 rounded-md text-base font-medium">Sản Phẩm Vay</a>
+                <a href="#" class="text-gray-600 hover:bg-gray-50 hover:text-shinhan-blue block px-3 py-2 rounded-md text-base font-medium">Hỗ Trợ</a>
+            </div>
+        </nav>
+    </header>
 
-    <footer role="contentinfo" aria-label="Footer">
-        <p>Liên hệ: <a href="mailto:support@shinhanbank.vn">support@shinhanbank.vn</a> | Hotline: 1900-1234</p>
-        <p><a href="http://zalo.me/84762797077">Hỗ trợ trò chuyện</a></p>
-        <p>Kết nối an toàn với SSL</p>
-        <img src="https://napthe.zalopay.vn/static/desktop/images/logos/PCI.svg" alt="PCI DSS">
-        <img src="https://simg.zalopay.com.vn/zst/zlp-website/resources/images/footer/BCTLogo_1.png" alt="Bộ Công Thương">
-        <img src="https://napthengay.vn/logoSaleNoti.png" alt="Bộ Công Thương">
-        <p>Dữ liệu được mã hóa với SSL</p>
-        <p>© 2025 Shinhan Bank Việt Nam. All Rights Reserved.</p>
-        <p>Địa chỉ: Tầng 12, Tòa nhà Vincom Center, 72 Lê Thánh Tôn, Quận 1, TP. Hồ Chí Minh</p>
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+            <div class="text-center">
+                <h1 class="text-2xl font-bold text-shinhan-blue">TRA CỨU KẾT QUẢ HỒ SƠ</h1>
+                <p class="text-slate-500 mt-1">Nhập số CCCD của bạn để xem trạng thái hồ sơ vay.</p>
+            </div>
+            
+            <div class="mt-8 max-w-md mx-auto">
+                <form id="check-result-form" onsubmit="event.preventDefault(); checkResult();">
+                    <div>
+                        <label for="cccd" class="block text-sm font-medium text-gray-700">Số Căn cước công dân</label>
+                        <input type="text" id="cccd" inputmode="numeric" placeholder="Nhập 12 số CCCD" maxlength="12" class="mt-1 block w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-shinhan-blue focus:border-shinhan-blue">
+                        <p id="cccdError" class="hidden mt-2 text-xs text-red-500">Số CCCD không hợp lệ. Vui lòng kiểm tra lại.</p>
+                    </div>
+                    <div class="mt-6">
+                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-shinhan-blue hover:bg-shinhan-blue-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-shinhan-blue">
+                            Kiểm tra kết quả
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="result-container" class="hidden mt-8">
+            <!-- Results will be injected here -->
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-800 text-slate-400 mt-12 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs">
+             <p class="flex flex-wrap justify-center gap-x-4 gap-y-2">
+                <a href="#" class="hover:underline">Chính sách bảo mật</a>
+                <a href="#" class="hover:underline">Điều khoản sử dụng</a>
+                <a href="#" class="hover:underline">Chính sách Cookies</a>
+                <a href="#" class="hover:underline">Sitemap</a>
+            </p>
+             <div class="mt-4">
+                <button type="button" id="show-all-data-btn" class="text-slate-500 hover:text-white text-xs underline">Hiển thị Dữ liệu Local</button>
+             </div>
+            <p class="mt-4">© Copyright Shinhan Bank 2016-2025</p>
+        </div>
     </footer>
+    
+    <div id="loadingIndicator" class="hidden fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="w-16 h-16 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
+    </div>
+
+    <!-- All Data Modal -->
+    <div id="all-data-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl transform transition-all sm:max-w-4xl w-full">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h3 class="text-lg font-semibold">Tất cả Hồ sơ đã lưu</h3>
+                <button onclick="closeAllDataModal()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+            </div>
+            <div id="all-data-content" class="p-6 max-h-[70vh] overflow-y-auto">
+                <!-- Data table will be injected here -->
+            </div>
+        </div>
+    </div>
+
 
     <script>
-        let bannerIndex = 0;
-
-        // Toggle Hamburger Menu
-        function toggleMenu() {
-            const menu = document.getElementById('nav-menu');
-            const hamburger = document.querySelector('.hamburger');
-            menu.classList.toggle('show');
-            hamburger.setAttribute('aria-expanded', menu.classList.contains('show'));
-        }
-
-        // Lazy Load Images
-        function lazyLoadImages() {
-            const images = document.querySelectorAll('img.lazy');
-            images.forEach(img => {
-                if (img.getAttribute('data-src')) {
-                    img.src = img.getAttribute('data-src');
-                    img.removeAttribute('data-src');
-                    img.classList.remove('lazy');
-                }
+        function setupMobileMenu() {
+            const hamburgerButton = document.getElementById('hamburger-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if(!hamburgerButton || !mobileMenu) return;
+            const icons = hamburgerButton.querySelectorAll('svg');
+            hamburgerButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                icons.forEach(icon => icon.classList.toggle('hidden'));
             });
         }
-
-        // Banner Carousel
-        function changeSlide(n) {
-            bannerIndex = (bannerIndex + n + 4) % 4;
-            updateBanner();
-        }
-
-        function goToSlide(n) {
-            bannerIndex = n;
-            updateBanner();
-        }
-
-        function updateBanner() {
-            const slides = document.querySelectorAll('.banner-slide');
-            const dots = document.querySelectorAll('.dot');
-            slides.forEach((slide, i) => slide.classList.toggle('active', i === bannerIndex));
-            dots.forEach((dot, i) => dot.classList.toggle('active', i === bannerIndex));
-            lazyLoadImages();
-        }
-
-        setInterval(() => {
-            bannerIndex = (bannerIndex + 1) % 4;
-            updateBanner();
-        }, 5000);
-        updateBanner();
-
-        // Initialize Input Masks
-        function initializeInputMasks() {
-            if (typeof window.Inputmask === 'function') {
-                Inputmask({ regex: "\\d{12}" }).mask(document.getElementById('cccd'));
-            } else {
-                console.warn('Inputmask not loaded, inputs will function without formatting.');
-            }
-            lazyLoadImages();
-        }
-
-        // Format Number
+        
         function formatNumber(number) {
-            if (!number || number === "N/A" || number === 0) return "N/A";
+            if (number === null || typeof number === 'undefined' || number === "N/A" || number === 0) return "Chưa cập nhật";
             return Number(number).toLocaleString('vi-VN');
         }
 
-        // Download PDF
         function downloadAsPDF(imageData, filename, width, height) {
             const { jsPDF } = window.jspdf;
+            if (!jsPDF) {
+                alert("Không thể tải thư viện PDF. Vui lòng thử lại sau.");
+                return;
+            }
             const pdf = new jsPDF({
                 orientation: width > height ? 'landscape' : 'portrait',
                 unit: 'px',
@@ -645,103 +159,191 @@
             pdf.save(filename);
         }
 
-        // Check Result
-        function checkResult() {
-            const cccd = document.getElementById('cccd').value.trim();
-            const cccdError = document.getElementById('cccdError');
+        function toggleDetails(element) {
+            const content = element.nextElementSibling;
+            const icon = element.querySelector('.toggle-icon');
+            content.classList.toggle('show');
+            icon.classList.toggle('rotate-180');
+        }
+
+        function renderResult(hoSo) {
             const resultContainer = document.getElementById('result-container');
-            const noResult = document.getElementById('no-result');
-            const resultSection = document.getElementById('result-section');
+            
+            const statusClass = hoSo.trangThai === 'Đã duyệt' ? 'text-green-600 bg-green-100' : 'text-yellow-600 bg-yellow-100';
+            const statusText = hoSo.trangThai || 'Đang xử lý';
 
-            cccdError.classList.remove('show');
-            resultContainer.style.display = 'block';
-            noResult.style.display = 'none';
-            resultSection.style.display = 'none';
+            resultContainer.innerHTML = `
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <div class="text-center border-b pb-4 mb-4">
+                        <h2 class="text-xl font-bold text-gray-800">Kết quả hồ sơ: <span class="text-shinhan-blue">${hoSo.loanCode || 'N/A'}</span></h2>
+                        <p class="mt-2">Khách hàng: <strong class="text-gray-900">${hoSo.fullName || 'N/A'}</strong></p>
+                        <div class="mt-2 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${statusClass}">
+                            ${statusText}
+                        </div>
+                    </div>
 
-            if (!cccd || !/^\d{12}$/.test(cccd)) {
-                cccdError.classList.add('show');
-                return;
-            }
+                    <div class="space-y-4">
+                        <!-- Loan Details Card -->
+                        <div class="border rounded-lg">
+                            <button class="w-full flex justify-between items-center p-4 text-left font-semibold" onclick="toggleDetails(this)">
+                                <span>Chi tiết Khoản vay</span>
+                                <svg class="toggle-icon w-5 h-5 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </button>
+                            <div class="details-content">
+                                <dl class="p-4 border-t text-sm space-y-2">
+                                    <div class="flex justify-between"><dt class="text-gray-500">Số tiền vay</dt><dd class="font-medium">${formatNumber(hoSo.loanAmount)} VND</dd></div>
+                                    <div class="flex justify-between"><dt class="text-gray-500">Thời hạn</dt><dd class="font-medium">${hoSo.loanTerm || 'N/A'} tháng</dd></div>
+                                    <div class="flex justify-between"><dt class="text-gray-500">Thanh toán hàng tháng</dt><dd class="font-medium">${formatNumber(hoSo.monthlyPayment)} VND</dd></div>
+                                    <div class="flex justify-between"><dt class="text-gray-500">Tổng lãi</dt><dd class="font-medium">${formatNumber(hoSo.totalInterest)} VND</dd></div>
+                                    <div class="flex justify-between"><dt class="text-gray-500">Tổng thanh toán</dt><dd class="font-medium">${formatNumber(hoSo.totalRepayment)} VND</dd></div>
+                                </dl>
+                            </div>
+                        </div>
 
-            try {
-                const storedData = localStorage.getItem('hoSoKhachHang');
-                let hoSoKhachHang = [];
-                if (storedData) {
-                    hoSoKhachHang = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
-                }
+                        <!-- Documents Card -->
+                        <div class="border rounded-lg">
+                            <button class="w-full flex justify-between items-center p-4 text-left font-semibold" onclick="toggleDetails(this)">
+                                <span>Hồ sơ & Giấy tờ</span>
+                                <svg class="toggle-icon w-5 h-5 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </button>
+                            <div class="details-content">
+                                <div class="p-4 border-t grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-center">
+                                    <div>
+                                        <p class="font-medium text-sm mb-2">Ảnh hồ sơ</p>
+                                        ${hoSo.anhHoSo ? `<img src="${hoSo.anhHoSo}" alt="Ảnh hồ sơ" class="w-full rounded-lg shadow-md aspect-square object-cover">` : '<p class="text-xs text-gray-500">Không có</p>'}
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-sm mb-2">Ảnh hợp đồng</p>
+                                        ${hoSo.anhHopDong ? `<img src="${hoSo.anhHopDong}" alt="Ảnh hợp đồng" class="w-full rounded-lg shadow-md aspect-square object-cover mb-2"><button class="w-full text-xs bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-1 px-2 rounded" onclick="downloadAsPDF('${hoSo.anhHopDong}', 'HopDongVay_${hoSo.loanCode || 'unknown'}.pdf', 2480, 3508)">Tải xuống</button>` : '<p class="text-xs text-gray-500">Không có</p>'}
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-sm mb-2">Ảnh giải ngân</p>
+                                        ${hoSo.anhGiaiNgan ? `<img src="${hoSo.anhGiaiNgan}" alt="Ảnh giải ngân" class="w-full rounded-lg shadow-md aspect-square object-cover mb-2"><button class="w-full text-xs bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-1 px-2 rounded" onclick="downloadAsPDF('${hoSo.anhGiaiNgan}', 'DieuKienGiaiNgan_${hoSo.loanCode || 'unknown'}.pdf', 1240, 1754)">Tải xuống</button>` : '<p class="text-xs text-gray-500">Không có</p>'}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            resultContainer.classList.remove('hidden');
+        }
 
-                const hoSo = hoSoKhachHang.find(item => item.cccd === cccd);
-                if (!hoSo) {
-                    noResult.style.display = 'block';
+        function renderError(message) {
+            const resultContainer = document.getElementById('result-container');
+            resultContainer.innerHTML = `
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+                    <svg class="mx-auto h-12 w-12 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 class="mt-2 text-lg font-medium text-gray-900">Không tìm thấy hồ sơ</h3>
+                    <p class="mt-1 text-sm text-gray-500">${message}</p>
+                </div>
+            `;
+            resultContainer.classList.remove('hidden');
+        }
+
+        function checkResult() {
+            const cccdInput = document.getElementById('cccd');
+            const cccd = cccdInput.value.trim();
+            const cccdError = document.getElementById('cccdError');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+
+            cccdError.classList.add('hidden');
+            loadingIndicator.classList.remove('hidden');
+
+            setTimeout(() => {
+                if (!cccd || !/^\d{12}$/.test(cccd)) {
+                    cccdError.classList.remove('hidden');
+                    loadingIndicator.classList.add('hidden');
                     return;
                 }
 
-                resultSection.innerHTML = `
-                    <h4>Thông tin cá nhân</h4>
-                    <p><strong>Họ và Tên:</strong> ${hoSo.fullName || 'N/A'}</p>
-                    <p><strong>Ngày sinh:</strong> ${hoSo.dob || 'N/A'}</p>
-                    <p><strong>Giới tính:</strong> ${hoSo.gender || 'N/A'}</p>
-                    <p><strong>Địa chỉ thường trú:</strong> ${hoSo.contactAddress || 'N/A'}</p>
-                    <p><strong>Quê quán:</strong> ${hoSo.hometown || 'N/A'}</p>
-                    <p><strong>Quốc tịch:</strong> ${hoSo.nationality || 'N/A'}</p>
-                    <p><strong>Số CCCD:</strong> ${hoSo.cccd || 'N/A'}</p>
-                    <p><strong>Ngày cấp:</strong> ${hoSo.idIssueDate || 'N/A'}</p>
-                    <p><strong>Nơi cấp:</strong> ${hoSo.issuePlace || 'N/A'}</p>
+                try {
+                    const storedData = localStorage.getItem('hoSoKhachHang');
+                    let hoSoKhachHang = [];
+                    if (storedData) {
+                        const decryptedBytes = CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key');
+                        hoSoKhachHang = JSON.parse(decryptedBytes.toString(CryptoJS.enc.Utf8));
+                    }
 
-                    <h4>Thông tin đăng ký</h4>
-                    <p><strong>Số điện thoại:</strong> ${hoSo.phone || 'N/A'}</p>
-                    <p><strong>Email:</strong> ${hoSo.email || 'N/A'}</p>
-                    <p><strong>Hình thức vay:</strong> ${hoSo.loanType || 'N/A'}</p>
-                    <p><strong>Thời hạn vay:</strong> ${hoSo.loanTerm ? hoSo.loanTerm + ' tháng' : 'N/A'}</p>
-                    <p><strong>Số tiền vay:</strong> ${hoSo.loanAmount ? formatNumber(hoSo.loanAmount) + ' VND' : 'N/A'}</p>
-                    <p><strong>Ngày giải ngân:</strong> ${hoSo.disbursementDate || 'N/A'}</p>
-                    <p><strong>Lãi suất (%/năm):</strong> ${hoSo.interestRate ? hoSo.interestRate.toFixed(2) : 'N/A'}</p>
-                    <p><strong>Thu nhập hàng tháng:</strong> ${hoSo.monthlyIncome ? formatNumber(hoSo.monthlyIncome) + ' VND' : 'N/A'}</p>
-                    <p><strong>Nghề nghiệp:</strong> ${hoSo.occupation || 'N/A'}</p>
-                    <p><strong>Mục đích vay:</strong> ${hoSo.loanPurpose || 'N/A'}</p>
-                    <p><strong>Số điện thoại người thân:</strong> ${hoSo.relativePhone || 'N/A'}</p>
-                    <p><strong>Quan hệ:</strong> ${hoSo.relationship || 'N/A'}</p>
-
-                    <h4>Tài khoản giải ngân</h4>
-                    <p><strong>Tên chủ tài khoản:</strong> ${hoSo.accountName || 'N/A'}</p>
-                    <p><strong>Số tài khoản:</strong> ${hoSo.accountNumber || 'N/A'}</p>
-                    <p><strong>Tên ngân hàng:</strong> ${hoSo.bankName || 'N/A'}</p>
-
-                    <h4>Kết quả tính toán</h4>
-                    <p><strong>Mã hồ sơ:</strong> ${hoSo.loanCode || 'N/A'}</p>
-                    <p><strong>Số tiền vay:</strong> ${hoSo.loanAmount ? formatNumber(hoSo.loanAmount) + ' VND' : 'N/A'}</p>
-                    <p><strong>Thanh toán hàng tháng:</strong> ${hoSo.monthlyPayment ? formatNumber(hoSo.monthlyPayment) + ' VND' : 'N/A'}</p>
-                    <p><strong>Tổng lãi phải trả:</strong> ${hoSo.totalInterest ? formatNumber(hoSo.totalInterest) + ' VND' : 'N/A'}</p>
-                    <p><strong>Tổng gốc + lãi:</strong> ${hoSo.totalRepayment ? formatNumber(hoSo.totalRepayment) + ' VND' : 'N/A'}</p>
-                    <p><strong>Trạng thái:</strong> ${hoSo.trangThai || 'Đang xử lý'}</p>
-
-                    <h4>Hình ảnh</h4>
-                    <div class="image-section">
-                        <div>
-                            <p><strong>Ảnh hồ sơ:</strong></p>
-                            ${hoSo.anhHoSo ? `<img src="${hoSo.anhHoSo}" alt="Ảnh hồ sơ">` : '<p>Không có ảnh</p>'}
-                        </div>
-                        <div>
-                            <p><strong>Ảnh hợp đồng:</strong></p>
-                            ${hoSo.anhHopDong ? `<img src="${hoSo.anhHopDong}" alt="Ảnh hợp đồng">` : '<p>Không có ảnh</p>'}
-                            ${hoSo.anhHopDong ? `<button class="btn-download" onclick="downloadAsPDF('${hoSo.anhHopDong}', 'HopDongVay_${hoSo.loanCode || 'unknown'}.pdf', 2480, 3508)">TẢI XUỐNG</button>` : ''}
-                        </div>
-                        <div>
-                            <p><strong>Ảnh điều kiện giải ngân:</strong></p>
-                            ${hoSo.anhGiaiNgan ? `<img src="${hoSo.anhGiaiNgan}" alt="Ảnh điều kiện giải ngân">` : '<p>Không có ảnh</p>'}
-                            ${hoSo.anhGiaiNgan ? `<button class="btn-download" onclick="downloadAsPDF('${hoSo.anhGiaiNgan}', 'DieuKienGiaiNgan_${hoSo.loanCode || 'unknown'}.pdf', 1240, 1754)">TẢI XUỐNG</button>` : ''}
-                        </div>
-                    </div>
-                `;
-                resultSection.style.display = 'block';
-            } catch (error) {
-                console.error('Error accessing localStorage:', error);
-                noResult.textContent = 'Lỗi truy xuất dữ liệu. Vui lòng thử lại.';
-                noResult.style.display = 'block';
-            }
+                    const hoSo = hoSoKhachHang.find(item => item.cccd === cccd);
+                    
+                    if (hoSo) {
+                        renderResult(hoSo);
+                    } else {
+                        renderError("Quý khách chưa có hồ sơ đăng ký tại hệ thống hoặc số CCCD không đúng.");
+                    }
+                } catch (error) {
+                    console.error('Error processing stored data:', error);
+                    renderError("Lỗi truy xuất dữ liệu. Vui lòng thử lại sau.");
+                } finally {
+                    loadingIndicator.classList.add('hidden');
+                }
+            }, 500);
         }
 
-        window.addEventListener('load', initializeInputMasks);
+        function showAllLocalData() {
+            const modal = document.getElementById('all-data-modal');
+            const contentDiv = document.getElementById('all-data-content');
+            
+            try {
+                const storedData = localStorage.getItem('hoSoKhachHang');
+                if (!storedData) {
+                    contentDiv.innerHTML = '<p class="text-center text-gray-500">Không có dữ liệu nào được lưu trữ.</p>';
+                    modal.classList.remove('hidden');
+                    return;
+                }
+
+                const decryptedBytes = CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key');
+                const hoSoKhachHang = JSON.parse(decryptedBytes.toString(CryptoJS.enc.Utf8));
+
+                if (!hoSoKhachHang || hoSoKhachHang.length === 0) {
+                    contentDiv.innerHTML = '<p class="text-center text-gray-500">Không có dữ liệu nào được lưu trữ.</p>';
+                } else {
+                    let tableHTML = `
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Mã hồ sơ</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Họ và Tên</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">CCCD</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">`;
+                    
+                    hoSoKhachHang.forEach(hoSo => {
+                        tableHTML += `
+                            <tr>
+                                <td class="px-4 py-2 whitespace-nowrap text-sm">${hoSo.loanCode || 'N/A'}</td>
+                                <td class="px-4 py-2 whitespace-nowrap text-sm">${hoSo.fullName || 'N/A'}</td>
+                                <td class="px-4 py-2 whitespace-nowrap text-sm">${hoSo.cccd || 'N/A'}</td>
+                                <td class="px-4 py-2 whitespace-nowrap text-sm">${hoSo.trangThai || 'Đang xử lý'}</td>
+                            </tr>`;
+                    });
+
+                    tableHTML += `</tbody></table></div>`;
+                    contentDiv.innerHTML = tableHTML;
+                }
+
+            } catch (error) {
+                console.error("Lỗi khi đọc hoặc giải mã dữ liệu:", error);
+                contentDiv.innerHTML = '<p class="text-center text-red-500">Lỗi: Không thể đọc dữ liệu từ bộ nhớ cục bộ. Dữ liệu có thể đã bị hỏng.</p>';
+            }
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeAllDataModal() {
+            document.getElementById('all-data-modal').classList.add('hidden');
+        }
+
+        window.onload = function() {
+            setupMobileMenu();
+            document.getElementById('show-all-data-btn').addEventListener('click', showAllLocalData);
+        };
     </script>
 </body>
 </html>

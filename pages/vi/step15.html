@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Shinhan Bank - Xác thực eKYC</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -259,7 +259,7 @@
             margin: 15px auto;
             border-radius: var(--border-radius);
             overflow: hidden;
-            background: #000; /* Thay đổi thành màu đen để lớp phủ nổi bật */
+            background: #000;
         }
         
         .camera-frame::before {
@@ -276,27 +276,17 @@
             to { box-shadow: 0 0 15px rgba(255,255,255,0.8); }
         }
 
-        /* Thẻ video ẩn đi, chỉ dùng để lấy luồng dữ liệu */
         .camera-frame video {
             display: none; 
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* Vẫn giữ contain nếu bạn muốn kiểm tra */
-            position: absolute;
-            z-index: 0; 
         }
 
-        /* Canvas sẽ hiển thị luồng camera */
         .camera-frame canvas {
             width: 100%;
             height: 100%;
-            display: block; /* Mặc định là block để hiển thị */
-            background-color: #000; /* Đảm bảo nền đen */
-            /* object-fit không áp dụng trực tiếp cho canvas như video, 
-               việc căn chỉnh sẽ được thực hiện trong JS */
+            display: block;
+            background-color: #000;
         }
 
-        /* Thêm lớp phủ cho khung nhận diện */
         .camera-frame .overlay-focus {
             position: absolute;
             top: 0;
@@ -306,22 +296,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1; /* Nằm trên video/canvas */
+            z-index: 1;
         }
 
         .camera-frame .overlay-focus .id-card-outline {
-            width: 85%; /* Kích thước tương đối của khung thẻ */
-            aspect-ratio: 1.586 / 1; /* Giữ tỷ lệ thẻ CCCD */
-            border: 2px dashed rgba(255, 255, 255, 0.6); /* Viền nét đứt */
+            width: 85%;
+            aspect-ratio: 1.586 / 1;
+            border: 2px dashed rgba(255, 255, 255, 0.6);
             border-radius: 8px;
-            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6); /* Hiệu ứng làm mờ bên ngoài khung */
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6);
             transition: all 0.3s ease;
         }
         
-        /* Hiệu ứng khung sáng lên khi ảnh đủ điều kiện (mô phỏng) */
         .camera-frame.ready-to-capture .overlay-focus .id-card-outline {
-            border: 2px dashed var(--accent-color); /* Màu xanh lá khi sẵn sàng */
-            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.4); /* Giảm độ mờ bên ngoài một chút */
+            border: 2px dashed var(--accent-color);
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.4);
         }
         
         .camera-frame.blink-once {
@@ -344,7 +333,7 @@
         }
         
         .status-message {
-             height: 40px; /* Reserve space */
+             height: 40px;
              line-height: 20px;
              color: var(--primary-color);
         }
@@ -427,16 +416,15 @@
             border-color: #d8dde1;
         }
 
-        /* Spinner cho nút */
         .btn .spinner-border {
             width: 1rem;
             height: 1rem;
             vertical-align: middle;
             margin-right: 0.5rem;
-            display: none; /* Mặc định ẩn */
+            display: none;
         }
         .btn.is-loading {
-            pointer-events: none; /* Ngăn chặn nhấp lại */
+            pointer-events: none;
             opacity: 0.8;
         }
         .btn.is-loading .spinner-border {
@@ -446,7 +434,6 @@
         /* ==========================================================================
            6. State-driven UI Management
            ========================================================================== */
-        /* Ẩn tất cả các phần tử UI của phần chụp ảnh theo mặc định */
         #captureSection .cameraView,
         #captureSection .loader,
         #captureSection .manualCaptureBtn,
@@ -455,71 +442,33 @@
         #captureSection .error-message {
             display: none;
         }
-        /* Đảm bảo trạng thái lỗi sẽ hiển thị đúng message */
         #captureSection .error-message {
-            opacity: 0; /* Giữ nguyên trạng thái opacity */
+            opacity: 0;
         }
-
-        /* --------------------------------------------------- */
-        /* Trạng thái CAPTURING (đang chờ chụp tự động) */
-        /* --------------------------------------------------- */
-        #captureSection[data-state="capturing"] .cameraView {
+        #captureSection[data-state="capturing"] .cameraView,
+        #captureSection[data-state="capturing"] .manualCaptureBtn {
             display: block;
         }
-        #captureSection[data-state="capturing"] .manualCaptureBtn {
-            display: inline-flex;
-            align-items: center;
-        }
-
-        /* --------------------------------------------------- */
-        /* Trạng thái LOADING (sau khi chụp, đang xử lý) */
-        /* --------------------------------------------------- */
         #captureSection[data-state="loading"] .loader {
             display: block;
         }
-        /* Ẩn các phần tử khác khi đang loading */
-        #captureSection[data-state="loading"] .cameraView,
-        #captureSection[data-state="loading"] .manualCaptureBtn,
-        #captureSection[data-state="loading"] .recaptureBtn,
-        #captureSection[data-state="loading"] .nextStepBtn {
-            display: none;
-        }
-
-        /* --------------------------------------------------- */
-        /* Trạng thái SUCCESS (đã chụp thành công) */
-        /* --------------------------------------------------- */
-        #captureSection[data-state="success"] .recaptureBtn {
-            display: inline-flex;
-            align-items: center;
-        }
-        /* Nút "Tiếp tục" chỉ hiển thị khi chụp mặt trước thành công */
+        #captureSection[data-state="success"] .recaptureBtn,
         #captureSection.capture-type-front[data-state="success"] .nextStepBtn {
-            display: inline-flex;
-            align-items: center;
-        }
-        /* Ẩn camera view, loader và nút chụp thủ công khi thành công */
-        #captureSection[data-state="success"] .cameraView,
-        #captureSection[data-state="success"] .loader,
-        #captureSection[data-state="success"] .manualCaptureBtn {
-            display: none;
-        }
-
-        /* --------------------------------------------------- */
-        /* Trạng thái ERROR (có lỗi khi chụp) */
-        /* --------------------------------------------------- */
-        #captureSection[data-state="error"] .cameraView {
-            display: block;
-        }
-        #captureSection[data-state="error"] .manualCaptureBtn,
-        #captureSection[data-state="error"] .recaptureBtn { /* Cho phép chụp lại khi lỗi */
              display: inline-flex;
              align-items: center;
         }
+        #captureSection[data-state="error"] .cameraView,
+        #captureSection[data-state="error"] .manualCaptureBtn,
+        #captureSection[data-state="error"] .recaptureBtn {
+             display: block;
+        }
         #captureSection[data-state="error"] .error-message {
-             display: block; /* Vẫn điều khiển opacity bằng JS để auto-hide */
+             display: block;
         }
 
-        /* Styles for OCR display */
+        /* ==========================================================================
+           7. Semantic Info Display
+           ========================================================================== */
         .info-group {
             margin-top: 25px;
             text-align: left;
@@ -528,6 +477,7 @@
             padding: 15px;
             background-color: var(--secondary-color);
         }
+        /* [ĐÃ SỬA] Sử dụng DL, DT, DD cho ngữ nghĩa tốt hơn */
         .info-item {
             display: flex;
             align-items: center;
@@ -536,19 +486,20 @@
         .info-item:last-child {
             margin-bottom: 0;
         }
-        .info-label {
+        .info-label { /* dt */
             font-weight: 600;
             color: var(--text-light);
             flex: 0 0 100px; /* Fixed width for label */
+            margin-right: 10px;
         }
-        .info-value {
+        .info-value { /* dd */
             flex-grow: 1;
             padding: 8px 10px;
             border: 1px solid var(--border-color);
             border-radius: 6px;
             background-color: white;
             color: var(--text-color);
-            min-height: 40px; /* Match button height for alignment */
+            min-height: 40px;
             display: flex;
             align-items: center;
         }
@@ -561,6 +512,7 @@
         .info-value:empty:before {
             content: attr(data-placeholder);
             color: var(--text-light);
+            font-style: italic;
         }
     </style>
 </head>
@@ -652,28 +604,28 @@
                         <img id="backPreview" alt="Ảnh xem trước mặt sau">
                     </div>
 
-                    <div class="info-group">
+                    <dl class="info-group">
                         <div class="info-item">
-                            <span class="info-label">Số CCCD:</span>
-                            <div id="ocrCccdNumber" class="info-value" contenteditable="true" data-placeholder="Nhập số CCCD"></div>
+                            <dt class="info-label">Số CCCD:</dt>
+                            <dd id="ocrCccdNumber" class="info-value" contenteditable="true" data-placeholder="Nhập số CCCD" role="textbox" aria-label="Số Căn cước công dân"></dd>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">Họ và tên:</span>
-                            <div id="ocrFullName" class="info-value" contenteditable="true" data-placeholder="Nhập họ và tên"></div>
+                            <dt class="info-label">Họ và tên:</dt>
+                            <dd id="ocrFullName" class="info-value" contenteditable="true" data-placeholder="Nhập họ và tên" role="textbox" aria-label="Họ và tên"></dd>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">Ngày sinh:</span>
-                            <div id="ocrDateOfBirth" class="info-value" contenteditable="true" data-placeholder="Nhập ngày sinh"></div>
+                            <dt class="info-label">Ngày sinh:</dt>
+                            <dd id="ocrDateOfBirth" class="info-value" contenteditable="true" data-placeholder="Nhập ngày sinh" role="textbox" aria-label="Ngày sinh"></dd>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">Giới tính:</span>
-                            <div id="ocrGender" class="info-value" contenteditable="true" data-placeholder="Nhập giới tính"></div>
+                            <dt class="info-label">Giới tính:</dt>
+                            <dd id="ocrGender" class="info-value" contenteditable="true" data-placeholder="Nhập giới tính" role="textbox" aria-label="Giới tính"></dd>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">Địa chỉ:</span>
-                            <div id="ocrAddress" class="info-value" contenteditable="true" data-placeholder="Nhập địa chỉ"></div>
+                            <dt class="info-label">Địa chỉ:</dt>
+                            <dd id="ocrAddress" class="info-value" contenteditable="true" data-placeholder="Nhập địa chỉ" role="textbox" aria-label="Địa chỉ thường trú"></dd>
                         </div>
-                    </div>
+                    </dl>
 
                     <div class="button-group">
                         <button id="redoFrontBtn" class="btn btn-secondary">Chụp lại mặt trước</button>
@@ -707,16 +659,13 @@ const IDCaptureApp = {
         isAutoCapturing: false,
         autoCaptureTimeoutId: null,
         simulationAttempts: 0,
-        isCardDetected: false, 
+        currentFacingMode: 'environment',
+        videoOrientation: 0,
         
-        // Canvas-related properties
         cameraCanvasPreview: null,
         cameraCanvasContext: null,
-        animationFrameId: null, // To manage the canvas drawing loop
-        videoOrientation: 0, // 0: landscape, 90: portrait, 180: landscape upside down, 270: portrait upside down
-        currentFacingMode: 'environment', // Mặc định là camera sau (environment)
-
-        // New state for OCR data
+        animationFrameId: null,
+        
         extractedInfo: {
             cccdNumber: '',
             fullName: '',
@@ -728,15 +677,16 @@ const IDCaptureApp = {
 
     elements: {},
 
+    // [ĐÃ SỬA] Thêm tùy chọn để kiểm soát hiệu ứng gương
     config: {
         AUTO_CAPTURE_INTERVAL: 2500,
         ERROR_MESSAGE_TIMEOUT: 4000,
-        NEXT_STEP_URL: 'https://vaytieudung.github.io/shinhanbank/pages/vi/step3.html'
+        NEXT_STEP_URL: 'https://vaytieudung.github.io/shinhanbank/pages/vi/step3.html',
+        mirrorFrontCamera: false // Đặt là `false` để tắt hiệu ứng gương cho camera trước
     },
 
     init() {
         this.cacheDOMElements();
-        // Feature detection for camera
         if (!('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices)) {
              this.showPermanentError("Trình duyệt không hỗ trợ camera. Vui lòng sử dụng một trình duyệt khác.");
              return;
@@ -753,16 +703,14 @@ const IDCaptureApp = {
             'step1', 'step2', 'progressBarFill', 'backButton', 'confirmSection',
             'frontPreview', 'backPreview', 'redoFrontBtn', 'redoBackBtn', 'confirmBtn',
             'cameraCanvasPreview',
-            // New OCR fields
             'ocrCccdNumber', 'ocrFullName', 'ocrDateOfBirth', 'ocrGender', 'ocrAddress'
         ];
         ids.forEach(id => this.elements[id] = document.getElementById(id));
-
-        // Get canvas context
         this.state.cameraCanvasPreview = this.elements.cameraCanvasPreview;
         this.state.cameraCanvasContext = this.state.cameraCanvasPreview.getContext('2d');
     },
 
+    // [ĐÃ SỬA] Thêm listener cho sự kiện xoay màn hình
     addEventListeners() {
         this.elements.startCaptureBtn.addEventListener('click', () => this.startCaptureProcess('front'));
         this.elements.manualCaptureBtn.addEventListener('click', () => this.triggerCapture(false));
@@ -774,23 +722,39 @@ const IDCaptureApp = {
         });
         this.elements.backButton.addEventListener('click', () => this.cancelCapture(true)); 
         this.elements.finalContinueBtn.addEventListener('click', () => this.showConfirmationScreen());
-
-        // Confirmation screen buttons
         this.elements.redoFrontBtn.addEventListener('click', () => this.retakePhoto('front'));
         this.elements.redoBackBtn.addEventListener('click', () => this.retakePhoto('back'));
         this.elements.confirmBtn.addEventListener('click', () => this.submitFinalData());
+
+        // Lắng nghe sự kiện xoay màn hình để điều chỉnh camera
+        if ('orientation' in screen) {
+            screen.orientation.addEventListener('change', this.handleOrientationChange.bind(this));
+        }
+    },
+    
+    // [MỚI] Hàm xử lý khi người dùng xoay màn hình
+    handleOrientationChange() {
+        console.log(`Màn hình đã xoay. Hướng hiện tại: ${screen.orientation.type}`);
+        // Chỉ thực hiện khi đang ở màn hình chụp ảnh
+        if (!this.elements.captureSection.classList.contains('hidden')) {
+            console.log("Đang trong màn hình chụp, khởi động lại camera để điều chỉnh hướng.");
+            this.stopCamera(); // Dừng stream hiện tại
+            // Chờ một chút để thiết bị ổn định rồi khởi động lại
+            setTimeout(() => {
+                this.startCaptureProcess(this.state.currentCaptureType);
+            }, 200);
+        }
     },
     
     async startCaptureProcess(type) {
         this.state.currentCaptureType = type;
         this.state.simulationAttempts = 0;
-        this.state.isCardDetected = false; 
         this.resetUIForCapture(type);
         
         try {
             const constraints = {
                 video: { 
-                    facingMode: 'environment', // Mặc định dùng camera sau (environment)
+                    facingMode: 'environment',
                     width: { ideal: 1920 }, 
                     height: { ideal: 1080 },
                 }
@@ -799,324 +763,184 @@ const IDCaptureApp = {
             this.state.currentStream = stream;
             this.elements.cameraVideo.srcObject = stream;
             
-            // Lấy facingMode thực tế của camera đang dùng
             const videoTrack = stream.getVideoTracks()[0];
             const trackSettings = videoTrack.getSettings();
-            this.state.currentFacingMode = trackSettings.facingMode || 'environment'; // Fallback to environment
-
-            // Debug: Kiểm tra stream có hoạt động không
-            console.log("Stream obtained successfully. Stream active:", stream.active);
-            console.log("Current camera facing mode:", this.state.currentFacingMode);
+            this.state.currentFacingMode = trackSettings.facingMode || 'environment';
 
             if (!stream.active) {
-                console.error("Stream is not active, likely a permissions or device issue.");
-                this.showPermanentError("Không thể kích hoạt luồng camera. Vui lòng kiểm tra quyền hoặc khởi động lại thiết bị.");
+                this.showPermanentError("Không thể kích hoạt luồng camera.");
                 return;
             }
 
             this.elements.cameraVideo.onloadedmetadata = () => {
                 const video = this.elements.cameraVideo;
-                let videoWidth = video.videoWidth;
-                let videoHeight = video.videoHeight;
-                
-                // Debug: Log video's actual dimensions
-                console.log('Video loaded - Actual dimensions (width x height):', videoWidth, 'x', videoHeight);
-                console.log('Camera frame dimensions (width x height):', this.elements.cameraFrame.offsetWidth, 'x', this.elements.cameraFrame.offsetHeight);
-                
-                // --- Cải thiện logic xác định định hướng video ---
-                // Thử đọc orientation từ track settings (một số trình duyệt cung cấp)
-                const trackSettings = videoTrack.getSettings();
-                if (trackSettings.orientation !== undefined) {
-                    this.state.videoOrientation = trackSettings.orientation;
-                    console.log('Detected video orientation from track settings:', trackSettings.orientation);
+                if (video.videoHeight > video.videoWidth) {
+                     this.state.videoOrientation = 90;
                 } else {
-                    // Nếu không có orientation từ track settings, phỏng đoán từ kích thước
-                    // Logic này cần được tinh chỉnh để phù hợp với hầu hết các thiết bị di động
-                    // khi giữ điện thoại dọc (portrait) nhưng muốn quay ngang (landscape)
-                    // Hầu hết các camera điện thoại khi gọi getUserMedia sẽ trả về luồng:
-                    // 1. Nếu quay ngang: videoWidth > videoHeight
-                    // 2. Nếu quay dọc: videoHeight > videoWidth
-                    // Tuy nhiên, đối với `facingMode: 'environment'`, ta thường muốn luồng ngang.
-                    // Nếu `videoHeight > videoWidth`, có thể luồng đang ở chiều dọc.
-                    // Chúng ta sẽ đặt orientation = 90 để xoay nó về ngang trong drawVideoToCanvas.
-                    if (videoHeight > videoWidth) {
-                         this.state.videoOrientation = 90; // Luồng dọc, cần xoay 90 độ để thành ngang
-                         console.log('Detected video orientation (guessed from dimensions): Portrait (requires 90 degree rotation)');
-                    } else {
-                         this.state.videoOrientation = 0; // Luồng ngang, không cần xoay thêm
-                         console.log('Detected video orientation (guessed from dimensions): Landscape (no rotation needed)');
-                    }
+                     this.state.videoOrientation = 0;
                 }
                 
-                // Đặt kích thước canvas để phù hợp với kích thước của khung hình hiển thị (camera-frame)
                 this.state.cameraCanvasPreview.width = this.elements.cameraFrame.offsetWidth;
                 this.state.cameraCanvasPreview.height = this.elements.cameraFrame.offsetHeight;
-                console.log('Canvas preview dimensions set to:', this.state.cameraCanvasPreview.width, 'x', this.state.cameraCanvasPreview.height);
-
-                this.drawVideoToCanvas(); // Bắt đầu vòng lặp vẽ video lên canvas
-                this.autoCaptureLoop();   // Bắt đầu vòng lặp tự động chụp
+                
+                this.drawVideoToCanvas();
+                this.autoCaptureLoop();
             };
 
-            // Vẫn gọi play() sau onloadedmetadata để đảm bảo video thực sự phát
-            await this.elements.cameraVideo.play().catch(err => {
-                console.error("Error playing video:", err);
-                this.showPermanentError("Không thể phát luồng video từ camera. Vui lòng thử lại hoặc kiểm tra quyền phát phương tiện.");
-            });
-
+            await this.elements.cameraVideo.play();
         } catch (err) {
             console.error("Camera Error:", err);
-            let message = "Không thể truy cập camera. Vui lòng kiểm tra lại thiết bị.";
+            let message = "Không thể truy cập camera.";
             if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
-                message = "Bạn đã từ chối quyền truy cập camera. Vui lòng cấp quyền trong cài đặt trình duyệt để tiếp tục.";
-            } else if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError") {
-                message = "Không tìm thấy camera trên thiết bị của bạn.";
-            } else if (err.name === "NotReadableError") {
-                message = "Camera đang được sử dụng bởi ứng dụng khác. Vui lòng đóng các ứng dụng khác và thử lại.";
-            } else if (err.name === "AbortError" || err.name === "OverconstrainedError") {
-                message = "Lỗi khởi tạo camera. Có thể do ràng buộc không phù hợp hoặc sự cố thiết bị.";
+                message = "Bạn đã từ chối quyền truy cập camera. Vui lòng cấp quyền trong cài đặt trình duyệt.";
             }
             this.showPermanentError(message);
         }
     },
 
-    // Hàm để liên tục vẽ các frame video lên canvas với phép biến đổi đúng
+    // [ĐÃ SỬA] Logic vẽ tự nhiên hơn, tôn trọng cấu hình mirror
     drawVideoToCanvas() {
-        if (!this.elements.cameraVideo.paused && !this.elements.cameraVideo.ended && this.state.currentStream && this.state.currentStream.active) {
-            const video = this.elements.cameraVideo;
-            const canvas = this.state.cameraCanvasPreview;
-            const context = this.state.cameraCanvasContext;
-
-            // Kích thước thực tế của luồng video từ camera
-            let videoWidth = video.videoWidth;
-            let videoHeight = video.videoHeight;
-
-            // Kích thước của canvas hiển thị (khung CCCD)
-            const canvasWidth = canvas.width;
-            const canvasHeight = canvas.height;
-
-            // Xóa canvas
-            context.clearRect(0, 0, canvasWidth, canvasHeight);
-            context.save(); // Lưu trạng thái hiện tại của context
-
-            // Reset tất cả các biến đổi trước đó
-            context.setTransform(1, 0, 0, 1, 0, 0); 
-
-            let rotateAngle = 0; // Góc xoay tính bằng radian
-            let scaleX = 1;      // Hệ số lật ngang
-            let scaleY = 1;      // Hệ số lật dọc (thường là 1)
-
-            // Bước 1: Điều chỉnh xoay dựa trên videoOrientation
-            // Sau khi xoay, kích thước "logic" của video sẽ thay đổi
-            let drawSourceWidth = videoWidth;
-            let drawSourceHeight = videoHeight;
-
-            switch (this.state.videoOrientation) {
-                case 90: // Video gốc là dọc (portrait), cần xoay 90 độ để hiển thị ngang
-                    rotateAngle = Math.PI / 2;
-                    // Khi xoay 90 độ, kích thước nguồn để tính toán tỷ lệ sẽ là chiều cao x chiều rộng
-                    [drawSourceWidth, drawSourceHeight] = [videoHeight, videoWidth]; 
-                    break;
-                case 180: // Video gốc bị lộn ngược
-                    rotateAngle = Math.PI;
-                    break;
-                case 270: // Video gốc là dọc ngược
-                    rotateAngle = -Math.PI / 2;
-                    [drawSourceWidth, drawSourceHeight] = [videoHeight, videoWidth];
-                    break;
-                case 0: // Video gốc đã ngang, không cần xoay thêm
-                default:
-                    rotateAngle = 0;
-                    break;
-            }
-
-            // Bước 2: Xử lý hiệu ứng lật (Mirror Effect)
-            // Camera trước (facingMode: 'user') thường được lật theo chiều ngang để tạo hiệu ứng gương.
-            // Camera sau (facingMode: 'environment') thường KHÔNG NÊN bị lật.
-            // Mã này đảm bảo rằng chúng ta CHỈ lật nếu là camera trước.
-            if (this.state.currentFacingMode === 'user') {
-                scaleX = -1; // Lật ngang cho camera trước
-            }
-
-            // Bước 3: Tính toán tỷ lệ phóng để lấp đầy canvas (object-fit: cover)
-            // Tỷ lệ scale dựa trên kích thước LOGIC của video sau khi đã tính đến xoay và lật.
-            let scale = Math.max(canvasWidth / drawSourceWidth, canvasHeight / drawSourceHeight);
-
-            let scaledWidth = drawSourceWidth * scale;
-            let scaledHeight = drawSourceHeight * scale;
-
-            // Áp dụng các biến đổi theo thứ tự:
-            // 1. Di chuyển gốc tọa độ về giữa canvas
-            context.translate(canvasWidth / 2, canvasHeight / 2); 
-            // 2. Áp dụng xoay
-            context.rotate(rotateAngle);
-            // 3. Áp dụng lật (chỉ khi cần)
-            context.scale(scaleX, scaleY);
-
-            // Vẽ video frame lên canvas, căn giữa sau khi đã xoay và dịch chuyển
-            context.drawImage(video, 
-                              -scaledWidth / 2, // Vị trí X để căn giữa
-                              -scaledHeight / 2, // Vị trí Y để căn giữa
-                              scaledWidth, scaledHeight);
-            
-            context.restore(); // Khôi phục trạng thái canvas đã lưu
-        } else {
-            if (this.state.currentStream && !this.state.currentStream.active) {
-                console.warn("drawVideoToCanvas: Stream is not active. Stopping draw loop.");
-            } else if (!this.elements.cameraVideo.paused && !this.elements.cameraVideo.ended) {
-                 console.warn("drawVideoToCanvas: Video not playing or no stream. Stopping draw loop.");
-            }
-        }
-        this.state.animationFrameId = requestAnimationFrame(() => this.drawVideoToCanvas());
-    },
-    
-    autoCaptureLoop() {
-        if (!this.state.currentStream || !this.state.currentStream.active || this.state.isAutoCapturing) {
-            console.log("autoCaptureLoop: No active stream or already capturing. Stopping loop.");
+        if (!this.state.currentStream || !this.state.currentStream.active) {
+            if (this.state.animationFrameId) cancelAnimationFrame(this.state.animationFrameId);
             return;
         }
 
-        const { isValid, message, isCardDetected, isCardTypeCorrect } = this.simulateValidation();
-        this.state.isCardDetected = isCardDetected; 
+        const video = this.elements.cameraVideo;
+        const canvas = this.state.cameraCanvasPreview;
+        const context = this.state.cameraCanvasContext;
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
         
-        // Cập nhật trạng thái khung hình và thông báo dựa trên cả nhận diện thẻ VÀ loại thẻ
-        this.setCameraFrameReady(isCardDetected && isValid && isCardTypeCorrect);
-        this.elements.statusMessage.textContent = message; 
-        console.log('AutoCapture Status:', message, 'Card Detected:', isCardDetected, 'Card Type Correct:', isCardTypeCorrect, 'Is Valid:', isValid);
+        let videoWidth = video.videoWidth;
+        let videoHeight = video.videoHeight;
 
-        // Chỉ tự động chụp nếu thẻ được nhận diện, loại thẻ đúng VÀ chất lượng ảnh tốt
-        if (isCardDetected && isValid && isCardTypeCorrect) {
-            console.log('Conditions met for auto capture. Setting timeout...');
-            this.state.autoCaptureTimeoutId = setTimeout(() => {
-                this.triggerCapture(true); 
-            }, this.config.AUTO_CAPTURE_INTERVAL);
+        context.save();
+        context.clearRect(0, 0, canvasWidth, canvasHeight);
+
+        let rotateAngle = 0;
+        let drawSourceWidth = videoWidth;
+        let drawSourceHeight = videoHeight;
+
+        if (this.state.videoOrientation === 90) {
+            rotateAngle = Math.PI / 2;
+            [drawSourceWidth, drawSourceHeight] = [videoHeight, videoWidth];
+        }
+
+        let scaleX = 1;
+        let scaleY = 1;
+
+        // Chỉ lật ảnh nếu là camera trước VÀ tùy chọn mirrorFrontCamera được bật
+        if (this.state.currentFacingMode === 'user' && this.config.mirrorFrontCamera) {
+            scaleX = -1;
+        }
+        
+        let scale = Math.max(canvasWidth / drawSourceWidth, canvasHeight / drawSourceHeight);
+        let scaledWidth = drawSourceWidth * scale;
+        let scaledHeight = drawSourceHeight * scale;
+
+        context.translate(canvasWidth / 2, canvasHeight / 2);
+        context.rotate(rotateAngle);
+        context.scale(scaleX, scaleY);
+        context.drawImage(video, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight);
+        context.restore();
+
+        this.state.animationFrameId = requestAnimationFrame(() => this.drawVideoToCanvas());
+    },
+    
+    // [ĐÃ SỬA] Vòng lặp tự động chụp thông minh hơn
+    autoCaptureLoop() {
+        if (!this.state.currentStream || !this.state.currentStream.active || this.state.isAutoCapturing) {
+            return;
+        }
+
+        const validation = this.simulateValidation();
+        this.elements.statusMessage.textContent = validation.message;
+
+        if (validation.code === 'READY') {
+            this.setCameraFrameReady(true);
+            if (!this.state.autoCaptureTimeoutId) {
+                 this.state.autoCaptureTimeoutId = setTimeout(() => {
+                    this.triggerCapture(true);
+                }, this.config.AUTO_CAPTURE_INTERVAL);
+            }
         } else {
-            // Tiếp tục kiểm tra các khung hình nếu chưa sẵn sàng
-            console.log('Conditions not met for auto capture. Retrying in 500ms.');
-            this.state.autoCaptureTimeoutId = setTimeout(() => {
-                this.autoCaptureLoop();
-            }, 500); 
+            this.setCameraFrameReady(false);
+            if (this.state.autoCaptureTimeoutId) {
+                clearTimeout(this.state.autoCaptureTimeoutId);
+                this.state.autoCaptureTimeoutId = null;
+            }
+            setTimeout(() => this.autoCaptureLoop(), 700);
         }
     },
 
     triggerCapture(isAuto = false) {
-        if (isAuto && this.state.isAutoCapturing) {
-            console.warn("triggerCapture: Already auto capturing, skipping.");
-            return;
-        }
+        if (this.state.isAutoCapturing) return;
 
         this.stopAutoCapture();
-        if (this.state.animationFrameId) {
-            cancelAnimationFrame(this.state.animationFrameId);
-            this.state.animationFrameId = null;
-            console.log("Canvas draw loop stopped for capture.");
-        }
+        this.state.isAutoCapturing = true;
 
-        if (isAuto) {
-            this.state.isAutoCapturing = true;
-            this.toggleUIState('loading'); 
-            console.log('Auto capturing triggered. State: loading');
-        } else {
-            this.toggleUIState('loading');
-            console.log('Manual capture triggered. State: loading');
-        }
-
+        this.toggleUIState('loading');
         this.elements.cameraFrame.classList.add('blink-once');
         setTimeout(() => this.elements.cameraFrame.classList.remove('blink-once'), 500);
 
-        this.handleImageVerification(isAuto);
+        this.handleImageVerification();
     },
 
-    async handleImageVerification(isAuto) {
-        if (!this.state.currentStream || !this.state.currentStream.active) {
-            console.error("handleImageVerification: No active stream available.");
+    async handleImageVerification() {
+        if (!this.state.currentStream) {
             this.showError("Lỗi: Luồng camera không hoạt động.");
             this.toggleUIState('error');
             return;
         }
-        
-        if (this.state.cameraCanvasPreview.width === 0 || this.state.cameraCanvasPreview.height === 0) {
-            console.error("Canvas has zero dimensions, cannot take snapshot!");
-            this.showError("Lỗi: Không thể chụp ảnh. Canvas có kích thước không hợp lệ.");
-            this.toggleUIState('error');
-            return;
-        }
-        const imageDataUrl = this.state.cameraCanvasPreview.toDataURL('image/jpeg', 0.9);
-        console.log("Image snapshot taken from canvas. Data URL length:", imageDataUrl.length);
-        
-        const { isValid, message, isCardDetected, isCardTypeCorrect } = this.simulateValidationAfterCapture(); 
-        this.state.simulationAttempts++; // Tăng số lần thử sau khi chụp để mô phỏng lỗi
-        console.log('Verification Result (after capture):', 'Valid:', isValid, 'Card Detected:', isCardDetected, 'Card Type Correct:', isCardTypeCorrect, 'Message:', message);
-        
-        await new Promise(resolve => setTimeout(resolve, isAuto ? 1500 : 1000));
 
-        if (isValid && isCardDetected && isCardTypeCorrect) { 
-            console.log('Verification SUCCESS (after capture).');
+        const imageDataUrl = this.state.cameraCanvasPreview.toDataURL('image/jpeg', 0.9);
+        const { isValid, message } = this.simulateValidationAfterCapture(); 
+        
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        if (isValid) {
             this.handleVerificationSuccess(imageDataUrl);
         } else {
-            console.log('Verification FAILED (after capture).');
-            this.handleVerificationFailure(message, isAuto);
+            this.handleVerificationFailure(message);
         }
         
         this.state.isAutoCapturing = false;
-        if (this.state.currentStream && this.state.currentStream.active && !this.state.animationFrameId && (!isValid || !isCardDetected || !isCardTypeCorrect)) {
-             console.log('Re-starting canvas draw loop and auto capture loop after failure.');
-             this.drawVideoToCanvas();
-             this.autoCaptureLoop(); 
+        if (!isValid) {
+            this.autoCaptureLoop();
         }
     },
-
+    
+    // [ĐÃ SỬA] Hàm mô phỏng thông minh hơn, trả về object
     simulateValidation() {
-        // Hàm này mô phỏng quá trình phân tích Computer Vision theo thời gian thực (từng frame)
-        // để nhận diện CCCD và kiểm tra chất lượng trước khi chụp tự động.
+        const randomFactor = Math.random();
 
-        this.state.simulationAttempts++; // Tăng số lần thử để mô phỏng điều kiện thay đổi
-
-        // Giai đoạn 1: Chưa tìm thấy bất kỳ thẻ nào
-        if (this.state.simulationAttempts < 3) {
-            return { isValid: false, message: "Đang tìm kiếm giấy tờ trong khung hình...", isCardDetected: false, isCardTypeCorrect: false };
-        } 
-        // Giai đoạn 2: Đã tìm thấy một vật thể hình thẻ, nhưng chưa xác định đúng là CCCD
-        else if (this.state.simulationAttempts < 6) {
-            return { isValid: false, message: "Đã tìm thấy giấy tờ. Vui lòng đảm bảo đó là CCCD/CMND.", isCardDetected: true, isCardTypeCorrect: false };
+        if (this.elements.cameraFrame.classList.contains('ready-to-capture') === false && randomFactor > 0.5) {
+            return { code: 'NO_CARD', message: "Hãy đưa giấy tờ vào trong khung hình..." };
         }
-        // Giai đoạn 3: Đã xác định là CCCD, nhưng chất lượng ảnh chưa tốt (mờ, lóa)
-        else if (this.state.simulationAttempts < 9) {
-            return { isValid: false, message: "Đã nhận diện CCCD. Vui lòng giữ cố định, tránh mờ.", isCardDetected: true, isCardTypeCorrect: true };
-        } 
-        else if (this.state.simulationAttempts < 12) {
-            return { isValid: false, message: "Đã nhận diện CCCD. Tránh lóa sáng và bóng đổ.", isCardDetected: true, isCardTypeCorrect: true };
+        if (randomFactor < 0.2) {
+             return { code: 'BLURRY', message: "Ảnh bị mờ, vui lòng giữ máy ổn định." };
         }
-        // Giai đoạn 4: Đã nhận diện đúng CCCD và chất lượng ảnh tốt, sẵn sàng chụp
-        else {
-            return { isValid: true, message: "Đã nhận diện CCCD. Sẵn sàng chụp!", isCardDetected: true, isCardTypeCorrect: true };
+        if (randomFactor > 0.8) {
+             return { code: 'GLARE', message: "Ảnh bị lóa sáng, vui lòng tránh ánh đèn." };
         }
+        return { code: 'READY', message: "Rất tốt! Giữ yên máy để chụp tự động." };
     },
 
     simulateValidationAfterCapture() {
-        // Hàm này mô phỏng quá trình xác thực cuối cùng của ảnh đã chụp.
-        // Trong một ứng dụng thực tế, ảnh sẽ được gửi đến backend để xử lý OCR và xác thực sâu hơn.
-        // Chúng ta mô phỏng các trường hợp lỗi khác nhau.
-
-        // Mỗi 4 lần chụp, sẽ có 1 lần mô phỏng không phải CCCD
-        const testCase = (this.state.simulationAttempts - 1) % 4; // Bắt đầu từ 0
+        this.state.simulationAttempts++;
+        const testCase = this.state.simulationAttempts % 4;
         
         switch (testCase) {
-            case 0: // Trường hợp thành công sau khi đã nhận diện
-                return { isValid: true, message: "Tải ảnh mặt trước thành công!", isCardDetected: true, isCardTypeCorrect: true }; 
-            case 1: // Trường hợp lỗi: Không đúng loại CCCD
-                return { isValid: false, message: "Ảnh không phải là CCCD/CMND. Vui lòng chụp lại.", isCardDetected: false, isCardTypeCorrect: false };
-            case 2: // Trường hợp lỗi: Ảnh mờ
-                return { isValid: false, message: "Ảnh CCCD bị mờ. Vui lòng chụp lại rõ nét hơn.", isCardDetected: true, isCardTypeCorrect: true };
-            case 3: // Trường hợp lỗi: Ảnh lóa sáng
-                return { isValid: false, message: "Ảnh CCCD bị lóa sáng. Vui lòng chụp lại ở nơi có đủ ánh sáng.", isCardDetected: true, isCardTypeCorrect: true };
-            default: // Fallback
-                return { isValid: true, message: "Tải ảnh mặt trước thành công!", isCardDetected: true, isCardTypeCorrect: true };
+            case 0: return { isValid: true, message: "Tải ảnh thành công!" }; 
+            case 1: return { isValid: false, message: "Ảnh không phải là CCCD/CMND. Vui lòng chụp lại." };
+            case 2: return { isValid: false, message: "Ảnh CCCD bị mờ. Vui lòng chụp lại rõ nét hơn." };
+            case 3: return { isValid: false, message: "Ảnh CCCD bị lóa sáng. Vui lòng chụp lại." };
+            default: return { isValid: true, message: "Tải ảnh thành công!" };
         }
     },
 
     handleVerificationSuccess(imageDataUrl) {
-        this.stopCamera(); // Stops both stream and canvas drawing
-        
+        this.stopCamera();
         const type = this.state.currentCaptureType;
         if (type === 'front') {
             this.state.frontImageDataUrl = imageDataUrl;
@@ -1128,48 +952,35 @@ const IDCaptureApp = {
             this.updateProgress(2, true);
         }
         
-        // Khi cả hai mặt đã chụp thành công, gọi hàm mô phỏng OCR
         if (this.state.frontImageVerified && this.state.backImageVerified) {
             this.state.extractedInfo = this.simulateOCR();
-            console.log("OCR data extracted:", this.state.extractedInfo);
         }
 
         this.triggerHapticFeedback(); 
         this.setCameraFrameReady(false); 
         this.toggleUIState('success');
         this.updateFinalButtonState();
-        console.log('Handle verification success. Image captured and stored.');
     },
 
-    // New function to simulate OCR extraction
     simulateOCR() {
-        // In a real application, this would send image data to an OCR API/model
-        // For simulation, generate some dummy data
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const randomId = Math.floor(100000000000 + Math.random() * 900000000000); // 12-digit random number
-
+        const randomId = Math.floor(100000000000 + Math.random() * 900000000000);
         return {
-            cccdNumber: `0${randomId}`, // Example VN CCCD starts with 0
+            cccdNumber: `0${String(randomId).slice(1)}`,
             fullName: "NGUYEN VAN A",
             dateOfBirth: "01/01/1990",
             gender: "Nam",
-            address: `TP. HCM, Việt Nam. ${year}`
+            address: "TP. Hồ Chí Minh, Việt Nam"
         };
     },
 
-    handleVerificationFailure(message, isAuto) {
+    handleVerificationFailure(message) {
         this.elements.statusMessage.textContent = message; 
         this.showError(message, true); 
-
         this.toggleUIState('error'); 
-        console.warn('Handle verification failure:', message);
     },
     
     updateProgress(step, isComplete = false) {
-        if (step === 0) { 
+        if (step === 0) {
             this.elements.step1.classList.remove('active', 'completed');
             this.elements.step2.classList.remove('active', 'completed');
             this.elements.progressBarFill.style.width = '0%';
@@ -1196,21 +1007,16 @@ const IDCaptureApp = {
 
     stopCamera() {
         if (this.state.currentStream) {
-            console.log("Stopping camera stream.");
             this.state.currentStream.getTracks().forEach(track => track.stop());
             this.state.currentStream = null;
         }
         this.stopAutoCapture();
-        // Stop the canvas drawing loop
         if (this.state.animationFrameId) {
             cancelAnimationFrame(this.state.animationFrameId);
             this.state.animationFrameId = null;
-            console.log("Canvas draw loop explicitly stopped.");
         }
-        // Clear the canvas to show black background
-        if (this.state.cameraCanvasContext && this.state.cameraCanvasPreview) {
+        if (this.state.cameraCanvasContext) {
             this.state.cameraCanvasContext.clearRect(0, 0, this.state.cameraCanvasPreview.width, this.state.cameraCanvasPreview.height);
-            console.log("Canvas cleared.");
         }
     },
 
@@ -1218,42 +1024,27 @@ const IDCaptureApp = {
         if (this.state.autoCaptureTimeoutId) {
             clearTimeout(this.state.autoCaptureTimeoutId);
             this.state.autoCaptureTimeoutId = null;
-            console.log("Auto capture loop stopped.");
         }
     },
 
     showError(message, autoHide = false) {
         this.elements.errorMessage.textContent = message || '';
         this.elements.errorMessage.classList.add('visible');
-        console.error("Displaying error:", message);
         if (autoHide) {
-            setTimeout(() => {
-                this.elements.errorMessage.classList.remove('visible');
-                console.log("Error message hidden.");
-            }, this.config.ERROR_MESSAGE_TIMEOUT);
+            setTimeout(() => this.elements.errorMessage.classList.remove('visible'), this.config.ERROR_MESSAGE_TIMEOUT);
         }
     },
     
     showPermanentError(message) {
         this.elements.guideSection.innerHTML = `
             <div class="error-message visible" style="margin-bottom: 20px;">${message}</div>
-            <div class="button-group">
-                <button id="retryCameraBtn" class="btn btn-primary">Tải lại trang</button>
-            </div>
-        `;
-        document.getElementById('retryCameraBtn').addEventListener('click', () => window.location.reload());
-        console.error("Displaying permanent error:", message);
+            <div class="button-group"><button onclick="window.location.reload()" class="btn btn-primary">Tải lại trang</button></div>`;
     },
 
     updateFinalButtonState() {
         const enabled = this.state.frontImageVerified && this.state.backImageVerified;
         this.elements.finalContinueBtn.disabled = !enabled;
-        if(enabled) {
-            this.elements.bottomBar.classList.remove('hidden');
-        } else {
-            this.elements.bottomBar.classList.add('hidden');
-        }
-        console.log('Final continue button state updated. Enabled:', enabled);
+        this.elements.bottomBar.classList.toggle('hidden', !enabled);
     },
     
     showConfirmationScreen() {
@@ -1265,22 +1056,16 @@ const IDCaptureApp = {
         this.elements.frontPreview.src = this.state.frontImageDataUrl;
         this.elements.backPreview.src = this.state.backImageDataUrl;
 
-        // Populate OCR data
         this.elements.ocrCccdNumber.textContent = this.state.extractedInfo.cccdNumber;
         this.elements.ocrFullName.textContent = this.state.extractedInfo.fullName;
         this.elements.ocrDateOfBirth.textContent = this.state.extractedInfo.dateOfBirth;
         this.elements.ocrGender.textContent = this.state.extractedInfo.gender;
         this.elements.ocrAddress.textContent = this.state.extractedInfo.address;
-
-        console.log('Confirmation screen displayed with OCR data.');
     },
 
     async submitFinalData() {
         this.elements.confirmBtn.classList.add('is-loading'); 
-        this.elements.confirmBtn.textContent = 'Đang xử lý...'; 
-        console.log('Submitting final data...');
-
-        // In a real app, gather data from contenteditable fields here
+        
         const finalData = {
             frontImage: this.state.frontImageDataUrl,
             backImage: this.state.backImageDataUrl,
@@ -1295,23 +1080,12 @@ const IDCaptureApp = {
         console.log("Data to be submitted:", finalData);
         
         try {
-            // In a real app, you would send data to a server here.
-            
-            await new Promise(resolve => setTimeout(resolve, 1500)); 
-            
-            this.state.frontImageDataUrl = null;
-            this.state.backImageDataUrl = null;
-            this.state.extractedInfo = {}; // Clear extracted info
-            
+            await new Promise(resolve => setTimeout(resolve, 1500));
             console.log('Data submitted successfully (simulated). Redirecting...');
             window.location.href = this.config.NEXT_STEP_URL;
-            
         } catch (err) {
-            console.error("Submission Error:", err);
             this.showError("Lỗi khi gửi dữ liệu. Vui lòng thử lại.");
-        } finally {
             this.elements.confirmBtn.classList.remove('is-loading'); 
-            this.elements.confirmBtn.textContent = 'Xác nhận và Hoàn tất';
         }
     },
     
@@ -1326,7 +1100,6 @@ const IDCaptureApp = {
         }
         this.updateFinalButtonState();
         this.startCaptureProcess(type);
-        console.log('Retaking photo for:', type);
     },
 
     cancelCapture(isFullReset = false) {
@@ -1340,17 +1113,14 @@ const IDCaptureApp = {
         
         this.state.frontImageVerified = false;
         this.state.backImageVerified = false;
-        this.state.isCardDetected = false; 
-        this.state.extractedInfo = {}; // Clear extracted info on full reset
+        this.state.extractedInfo = {};
 
         if (isFullReset) { 
             this.state.frontImageDataUrl = null;
             this.state.backImageDataUrl = null;
         }
-
         this.elements.finalContinueBtn.disabled = true;
-        this.setCameraFrameReady(false); 
-        console.log('Capture cancelled. Full reset:', isFullReset);
+        this.setCameraFrameReady(false);
     },
 
     resetUIForCapture(type) {
@@ -1360,24 +1130,18 @@ const IDCaptureApp = {
         this.elements.captureSection.classList.remove('hidden');
         this.elements.backButton.classList.remove('hidden');
         
-        this.elements.captureSection.classList.remove('capture-type-front', 'capture-type-back');
-        this.elements.captureSection.classList.add(isFront ? 'capture-type-front' : 'capture-type-back');
+        this.elements.captureSection.className = 'capture-type-' + type;
 
         this.elements.captureTitle.textContent = isFront ? "Chụp mặt trước CCCD/CMND" : "Chụp mặt sau CCCD/CMND";
-        this.elements.captureInstruction.textContent = "Vui lòng đặt CCCD/CMND vào khung hình. Hệ thống sẽ tự động tìm kiếm.";
+        this.elements.captureInstruction.textContent = "Vui lòng đặt CCCD/CMND vào khung hình.";
         
         this.updateProgress(isFront ? 1 : 2);
         this.toggleUIState('capturing'); 
         this.setCameraFrameReady(false); 
-        console.log('UI reset for capture. Type:', type);
     },
 
     setCameraFrameReady(isReady) {
-        if (isReady) {
-            this.elements.cameraFrame.classList.add('ready-to-capture');
-        } else {
-            this.elements.cameraFrame.classList.remove('ready-to-capture');
-        }
+        this.elements.cameraFrame.classList.toggle('ready-to-capture', isReady);
     },
 
     triggerHapticFeedback() {
@@ -1388,19 +1152,15 @@ const IDCaptureApp = {
     
     toggleUIState(state) {
         this.elements.captureSection.dataset.state = state;
-        console.log('UI State changed to:', state);
+        this.elements.errorMessage.classList.remove('visible'); 
+
         if (state === 'capturing') {
             this.elements.statusMessage.textContent = "Hệ thống đang tìm kiếm CCCD/CMND...";
-            this.elements.errorMessage.classList.remove('visible'); 
         } else if (state === 'loading') {
             this.elements.statusMessage.textContent = "Đang phân tích hình ảnh...";
-            this.elements.errorMessage.classList.remove('visible');
         } else if (state === 'success') {
             const type = this.state.currentCaptureType;
             this.elements.statusMessage.textContent = type === 'front' ? "Đã lưu mặt trước." : "Đã lưu mặt sau.";
-            this.elements.errorMessage.classList.remove('visible');
-        } else if (state === 'error') {
-            // Status message vẫn sẽ hiển thị lỗi
         }
     }
 };

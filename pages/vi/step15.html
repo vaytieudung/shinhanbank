@@ -711,15 +711,10 @@ const IDCaptureApp = {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: { 
                     facingMode: 'environment',
-                    // Đặt độ phân giải lý tưởng, nhưng không bắt buộc chính xác
-                    // Trình duyệt sẽ chọn độ phân giải tốt nhất có thể.
-                    // Xoay sẽ được xử lý bằng canvas
-                    width: { ideal: 1920 }, // Giữ độ phân giải cao để chất lượng ảnh tốt
+                    // Đặt độ phân giải lý tưởng để đảm bảo chất lượng cao
+                    width: { ideal: 1920 }, 
                     height: { ideal: 1080 },
-                    // aspect ratio không cần thiết ở đây nếu bạn muốn xoay tự do
-                    // hoặc nếu bạn muốn video lấp đầy khung hình canvas sau khi xoay.
-                    // Nếu giữ, nó sẽ ưu tiên luồng có tỷ lệ này.
-                    // aspectRatio: 1.586 / 1 
+                    // aspect ratio không cần thiết ở đây vì chúng ta sẽ xoay và căn chỉnh trên canvas
                 }
             });
             this.state.currentStream = stream;
@@ -727,27 +722,33 @@ const IDCaptureApp = {
             await this.elements.cameraVideo.play();
 
             this.elements.cameraVideo.onloadedmetadata = () => {
-                // Xác định định hướng của luồng video thực tế
-                const videoWidth = this.elements.cameraVideo.videoWidth;
-                const videoHeight = this.elements.cameraVideo.videoHeight;
+                const video = this.elements.cameraVideo;
+                const videoWidth = video.videoWidth;
+                const videoHeight = video.videoHeight;
+
+                // Debug: Log video's actual dimensions
+                console.log('Video loaded - Actual dimensions (width x height):', videoWidth, 'x', videoHeight);
+                console.log('Camera frame dimensions (width x height):', this.elements.cameraFrame.offsetWidth, 'x', this.elements.cameraFrame.offsetHeight);
                 
-                // Giả định định hướng 90 độ nếu chiều cao lớn hơn chiều rộng (phổ biến với luồng dọc)
-                // Hoặc có thể dùng window.screen.orientation.angle nếu muốn khớp với hướng màn hình
-                // Nhưng tốt nhất là kiểm tra thực tế tỷ lệ videoWidth/videoHeight
+                // Xác định định hướng của luồng video thực tế
+                // Nếu videoHeight > videoWidth, đây thường là luồng video dọc từ camera điện thoại.
+                // Chúng ta sẽ xoay nó để hiển thị ngang.
                 if (videoHeight > videoWidth) {
-                    this.state.videoOrientation = 90; // Video là dọc
+                    this.state.videoOrientation = 90; // Ví dụ: luồng 1080x1920 (chiều cao > chiều rộng), cần xoay 90 độ để thành ngang
+                    console.log('Detected video orientation: Portrait (requires 90 degree rotation)');
                 } else {
-                    this.state.videoOrientation = 0; // Video là ngang
+                    this.state.videoOrientation = 0; // Ví dụ: luồng 1920x1080 (chiều rộng > chiều cao), là ngang
+                    console.log('Detected video orientation: Landscape (no rotation needed)');
                 }
                 
-                // Đặt kích thước canvas để phù hợp với khung hình hiển thị (tỷ lệ CCCD)
-                // Không đặt kích thước canvas bằng videoWidth/videoHeight trực tiếp, 
-                // mà sẽ điều chỉnh drawing context.
+                // Đặt kích thước canvas để phù hợp với kích thước của khung hình hiển thị (camera-frame)
+                // CSS sẽ quản lý tỷ lệ khung hình của camera-frame, chúng ta chỉ cần khớp kích thước.
                 this.state.cameraCanvasPreview.width = this.elements.cameraFrame.offsetWidth;
                 this.state.cameraCanvasPreview.height = this.elements.cameraFrame.offsetHeight;
+                console.log('Canvas preview dimensions set to:', this.state.cameraCanvasPreview.width, 'x', this.state.cameraCanvasPreview.height);
 
-                this.drawVideoToCanvas(); // Start drawing loop
-                this.autoCaptureLoop();   // Start auto capture loop
+                this.drawVideoToCanvas(); // Bắt đầu vòng lặp vẽ video lên canvas
+                this.autoCaptureLoop();   // Bắt đầu vòng lặp tự động chụp
             };
 
         } catch (err) {
@@ -762,58 +763,68 @@ const IDCaptureApp = {
         }
     },
 
-    // New function to continuously draw video frames to canvas
+    // Hàm mới để liên tục vẽ các frame video lên canvas
     drawVideoToCanvas() {
         if (!this.elements.cameraVideo.paused && !this.elements.cameraVideo.ended && this.state.currentStream) {
             const video = this.elements.cameraVideo;
             const canvas = this.state.cameraCanvasPreview;
             const context = this.state.cameraCanvasContext;
-            const videoWidth = video.videoWidth;
-            const videoHeight = video.videoHeight;
 
-            // Clear the canvas
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            context.save(); // Save the current canvas state
+            // Kích thước thực tế của luồng video
+            let videoWidth = video.videoWidth;
+            let videoHeight = video.videoHeight;
 
-            // Calculate scale to fit video into canvas while preserving aspect ratio
-            let scaleX = canvas.width / videoWidth;
-            let scaleY = canvas.height / videoHeight;
-            let scale = Math.max(scaleX, scaleY); // Use Math.max to ensure 'cover' like behavior
+            // Kích thước của canvas hiển thị
+            const canvasWidth = canvas.width;
+            const canvasHeight = canvas.height;
 
-            // Calculate x and y to center the video
+            // Xóa canvas
+            context.clearRect(0, 0, canvasWidth, canvasHeight);
+            context.save(); // Lưu trạng thái hiện tại của canvas
+
+            // Tính toán tỷ lệ phóng để video lấp đầy canvas (cover-like behavior)
+            let scale = Math.max(canvasWidth / videoWidth, canvasHeight / videoHeight);
+
+            // Nếu video là dọc, thì chiều rộng và chiều cao đã bị đổi chỗ ảo
+            if (this.state.videoOrientation === 90 || this.state.videoOrientation === 270) {
+                 // Khi video được xoay 90 độ, chiều rộng thực tế của video trở thành chiều cao ảo và ngược lại.
+                 // Cần đổi chỗ videoWidth và videoHeight để tính toán scale và drawImage đúng.
+                 scale = Math.max(canvasWidth / videoHeight, canvasHeight / videoWidth); // Swap for scale calculation
+            }
+            
             let scaledWidth = videoWidth * scale;
             let scaledHeight = videoHeight * scale;
-            let x = (canvas.width / 2);
-            let y = (canvas.height / 2);
 
-            // Apply transformations for orientation and centering
-            context.translate(x, y); // Move origin to center of canvas
-            
-            // Apply rotation based on video orientation
-            if (this.state.videoOrientation === 90) { // Portrait video, need to rotate 90 degrees clockwise
-                context.rotate(Math.PI / 2); // Rotate 90 degrees
-                [scaledWidth, scaledHeight] = [scaledHeight, scaledWidth]; // Swap dimensions for scaling
-                [videoWidth, videoHeight] = [videoHeight, videoWidth]; // Swap source dimensions for drawing
-            } else if (this.state.videoOrientation === 270) { // Portrait upside down
-                 context.rotate(-Math.PI / 2); // Rotate -90 degrees
-                 [scaledWidth, scaledHeight] = [scaledHeight, scaledWidth];
-                 [videoWidth, videoHeight] = [videoHeight, videoWidth];
-            } else if (this.state.videoOrientation === 180) { // Upside down
-                 context.rotate(Math.PI);
+            // Di chuyển gốc tọa độ về giữa canvas
+            context.translate(canvasWidth / 2, canvasHeight / 2); 
+
+            // Áp dụng xoay dựa trên định hướng đã phát hiện
+            if (this.state.videoOrientation === 90) { // Video dọc (thường là 90 độ từ ngang)
+                context.rotate(Math.PI / 2); // Xoay 90 độ (clockwise)
+                // Sau khi xoay, kích thước logic của video đã bị đổi chỗ
+                [scaledWidth, scaledHeight] = [scaledHeight, scaledWidth];
+            } else if (this.state.videoOrientation === 270) { // Video dọc (thường là 270 độ từ ngang, ngược chiều kim đồng hồ)
+                context.rotate(-Math.PI / 2); // Xoay -90 độ (counter-clockwise)
+                [scaledWidth, scaledHeight] = [scaledHeight, scaledWidth];
+            } else if (this.state.videoOrientation === 180) { // Video ngang nhưng lộn ngược
+                context.rotate(Math.PI); // Xoay 180 độ
             }
 
-            // Apply mirror effect for front camera or sometimes needed for back camera
-            // Kiểm tra cụ thể facingMode hoặc deviceId nếu cần lật cho camera trước
-            // Mặc định lật để giống gương nếu là selfie, hoặc khắc phục lỗi một số thiết bị
-            // Bạn có thể bỏ qua nếu không muốn lật
-            context.scale(-1, 1); // Lật ngang (mirror effect)
+            // Áp dụng lật ngang (mirror effect) - thường cần cho camera trước hoặc một số camera sau
+            // Bạn có thể tùy chỉnh hoặc xóa dòng này nếu không cần lật hoặc gây ra lỗi.
+            // Để CCCD/CMND không bị lật ngược, chúng ta cần lật lại nếu camera tự lật
+            // hoặc nếu đó là camera trước và bạn muốn nó như gương.
+            // Đối với CCCD, thường không nên lật để dữ liệu dễ đọc hơn. 
+            // Nếu bạn thấy hình ảnh bị lật ngược (ví dụ: chữ ngược), hãy xóa dòng này.
+            // context.scale(-1, 1); 
 
-            // Draw video frame to canvas
+            // Vẽ video frame lên canvas, căn giữa sau khi đã xoay và dịch chuyển
             context.drawImage(video, 
-                              -scaledWidth / 2, -scaledHeight / 2, // Start drawing from translated origin
+                              -scaledWidth / 2, // Vị trí X để căn giữa
+                              -scaledHeight / 2, // Vị trí Y để căn giữa
                               scaledWidth, scaledHeight);
             
-            context.restore(); // Restore the canvas state to prevent accumulated transformations
+            context.restore(); // Khôi phục trạng thái canvas đã lưu
         }
         this.state.animationFrameId = requestAnimationFrame(() => this.drawVideoToCanvas());
     },
@@ -822,11 +833,6 @@ const IDCaptureApp = {
         if (!this.state.currentStream || this.state.isAutoCapturing) {
             return;
         }
-
-        // --- Simulate Computer Vision processing here ---
-        // In a real app, you would pass the current canvas frame to your CV library (e.g., OpenCV.js)
-        // const currentFrameData = this.state.cameraCanvasContext.getImageData(0, 0, this.state.cameraCanvasPreview.width, this.state.cameraCanvasPreview.height);
-        // const analysisResult = yourCVLibrary.processFrame(currentFrameData);
 
         const { isValid, message, isCardDetected } = this.simulateValidation();
         this.state.isCardDetected = isCardDetected; 

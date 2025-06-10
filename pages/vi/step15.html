@@ -536,7 +536,6 @@
                 <div class="step-label">Mặt trước</div>
             </div>
             <div id="step2" class="progress-step">
-                <div class
                 <div class="step-circle">2</div>
                 <div class="step-label">Mặt sau</div>
             </div>
@@ -647,6 +646,8 @@ const IDCaptureApp = {
         cameraCanvasContext: null,
         animationFrameId: null, // To manage the canvas drawing loop
         videoOrientation: 0, // 0: landscape, 90: portrait, 180: landscape upside down, 270: portrait upside down
+        // Thêm biến để lưu facingMode của camera hiện tại
+        currentFacingMode: 'environment', 
     },
 
     elements: {},
@@ -711,11 +712,9 @@ const IDCaptureApp = {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: { 
-                    facingMode: 'environment',
-                    // Đặt độ phân giải lý tưởng để đảm bảo chất lượng cao
+                    facingMode: 'environment', // Mặc định dùng camera sau (environment)
                     width: { ideal: 1920 }, 
                     height: { ideal: 1080 },
-                    // aspect ratio không cần thiết ở đây vì chúng ta sẽ xoay và căn chỉnh trên canvas
                 }
             });
             this.state.currentStream = stream;
@@ -808,9 +807,7 @@ const IDCaptureApp = {
 
             if (this.state.videoOrientation === 90) { 
                 rotateAngle = Math.PI / 2; // Xoay 90 độ (clockwise)
-                // Đổi chỗ kích thước nguồn cho mục đích tính toán tỷ lệ.
-                // Video gốc là HxW, sau xoay 90 độ, nó hiển thị như WxH.
-                // Chúng ta cần lấy luồng HxW và vẽ nó xoay.
+                // Khi xoay 90 độ, kích thước nguồn để tính toán tỷ lệ sẽ là chiều cao x chiều rộng
                 [drawSourceWidth, drawSourceHeight] = [videoHeight, videoWidth]; 
             } else if (this.state.videoOrientation === 270) { 
                 rotateAngle = -Math.PI / 2; // Xoay -90 độ (counter-clockwise)
@@ -833,10 +830,17 @@ const IDCaptureApp = {
             context.rotate(rotateAngle);
 
             // ***************************************************************
-            // Đã sửa: Thêm phép lật ngang (mirror effect) để khắc phục camera bị ngược.
-            // QUAN TRỌNG: Nếu ảnh hiển thị bị lật ngược (chữ bị ngược), hãy BỎ COMMENT DÒNG NÀY.
-            // Dòng này thường chỉ cần cho camera trước hoặc một số thiết bị đặc biệt.
-            // context.scale(-1, 1); 
+            // SỬA LỖI: Lật camera ngược (Mirror Effect)
+            // Chúng ta chỉ muốn lật hình ảnh nếu đó là camera TRƯỚC (selfie cam)
+            // Camera sau (facingMode: 'environment') thường KHÔNG NÊN bị lật.
+            // Nếu bạn đang dùng camera sau và ảnh bị lật (chữ bị ngược), hãy BỎ COMMENT DÒNG NÀY.
+            // Nếu bạn muốn camera trước cũng như gương, hãy BỎ COMMENT DÒNG NÀY.
+            // Để xác định loại camera, cần lấy thông tin từ stream.getSettings() hoặc constraints ban đầu.
+            // Ví dụ đơn giản: Nếu camera sau thì không lật (dòng này sẽ không chạy).
+            // Nếu bạn muốn lật chỉ cho camera trước:
+            // if (this.state.currentFacingMode === 'user') {
+            //     context.scale(-1, 1); // Lật ngang cho camera trước
+            // }
             // ***************************************************************
 
             // Vẽ video frame lên canvas, căn giữa sau khi đã xoay và dịch chuyển

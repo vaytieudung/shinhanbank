@@ -276,15 +276,23 @@
             to { box-shadow: 0 0 15px rgba(255,255,255,0.8); }
         }
 
+        /* Thẻ video ẩn đi, chỉ dùng để lấy luồng dữ liệu */
         .camera-frame video {
+            display: none; 
             width: 100%;
             height: 100%;
-            /* Đã sửa: Sử dụng contain để đảm bảo toàn bộ video hiển thị */
-            object-fit: contain; 
-            /* Để video nằm dưới lớp phủ */
-            z-index: 0; 
+            object-fit: contain; /* Vẫn giữ contain nếu bạn muốn kiểm tra */
             position: absolute;
-            /* Đã xóa: Loại bỏ transform: scaleX(-1) vì có thể gây lỗi hoặc lật hình */
+            z-index: 0; 
+        }
+
+        /* Canvas sẽ hiển thị luồng camera */
+        .camera-frame canvas {
+            width: 100%;
+            height: 100%;
+            display: block; /* Mặc định là block để hiển thị */
+            background-color: #000; /* Đảm bảo nền đen */
+            object-fit: contain; /* Giúp canvas hiển thị toàn bộ nội dung */
         }
 
         /* Thêm lớp phủ cho khung nhận diện */
@@ -297,7 +305,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1; /* Nằm trên video */
+            z-index: 1; /* Nằm trên video/canvas */
         }
 
         .camera-frame .overlay-focus .id-card-outline {
@@ -566,7 +574,8 @@
                     
                     <div id="cameraView" class="cameraView">
                         <div class="camera-frame" id="cameraFrame">
-                            <video id="cameraVideo" autoplay playsinline></video>
+                            <video id="cameraVideo" autoplay playsinline class="hidden"></video>
+                            <canvas id="cameraCanvasPreview"></canvas>
                             <div class="overlay-focus">
                                 <div class="id-card-outline"></div>
                             </div>
@@ -629,8 +638,12 @@ const IDCaptureApp = {
         isAutoCapturing: false,
         autoCaptureTimeoutId: null,
         simulationAttempts: 0,
-        // Thêm trạng thái mới để mô phỏng nhận diện CCCD
         isCardDetected: false, 
+        
+        // Canvas-related properties
+        cameraCanvasPreview: null,
+        cameraCanvasContext: null,
+        animationFrameId: null, // To manage the canvas drawing loop
     },
 
     elements: {},
@@ -658,9 +671,14 @@ const IDCaptureApp = {
             'statusMessage', 'loader', 'errorMessage', 'manualCaptureBtn', 'recaptureBtn', 'nextStepBtn', 
             'captureTitle', 'captureInstruction', 'bottomBar', 'finalContinueBtn',
             'step1', 'step2', 'progressBarFill', 'backButton', 'confirmSection',
-            'frontPreview', 'backPreview', 'redoFrontBtn', 'redoBackBtn', 'confirmBtn'
+            'frontPreview', 'backPreview', 'redoFrontBtn', 'redoBackBtn', 'confirmBtn',
+            'cameraCanvasPreview' // Cache the new canvas element
         ];
         ids.forEach(id => this.elements[id] = document.getElementById(id));
+
+        // Get canvas context
+        this.state.cameraCanvasPreview = this.elements.cameraCanvasPreview;
+        this.state.cameraCanvasContext = this.state.cameraCanvasPreview.getContext('2d');
     },
 
     addEventListeners() {
@@ -684,25 +702,30 @@ const IDCaptureApp = {
     async startCaptureProcess(type) {
         this.state.currentCaptureType = type;
         this.state.simulationAttempts = 0;
-        this.state.isCardDetected = false; // Reset trạng thái nhận diện thẻ
+        this.state.isCardDetected = false; 
         this.resetUIForCapture(type);
         
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: { 
                     facingMode: 'environment',
-                    // Đã sửa: Giảm độ phân giải yêu cầu để tải nhanh hơn
                     width: { ideal: 1280 }, 
                     height: { ideal: 720 },
-                    // Đã sửa: Sử dụng aspectRatio thay vì resizeMode: "exact" để linh hoạt hơn
                     aspectRatio: 1.586 / 1 
                 }
             });
             this.state.currentStream = stream;
             this.elements.cameraVideo.srcObject = stream;
             await this.elements.cameraVideo.play();
-            
-            this.autoCaptureLoop();
+
+            // Setup canvas to draw video frames
+            this.elements.cameraVideo.onloadedmetadata = () => {
+                // Set canvas dimensions to match video stream
+                this.state.cameraCanvasPreview.width = this.elements.cameraVideo.videoWidth;
+                this.state.cameraCanvasPreview.height = this.elements.cameraVideo.videoHeight;
+                this.drawVideoToCanvas(); // Start drawing loop
+                this.autoCaptureLoop();   // Start auto capture loop
+            };
 
         } catch (err) {
             console.error("Camera Error:", err);
@@ -715,49 +738,69 @@ const IDCaptureApp = {
             this.showPermanentError(message);
         }
     },
+
+    // New function to continuously draw video frames to canvas
+    drawVideoToCanvas() {
+        if (!this.elements.cameraVideo.paused && !this.elements.cameraVideo.ended && this.state.currentStream) {
+            const video = this.elements.cameraVideo;
+            const canvas = this.state.cameraCanvasPreview;
+            const context = this.state.cameraCanvasContext;
+
+            // Clear the canvas
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw video frame to canvas
+            // This is where you could add transformations (rotation, mirroring) if needed
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        }
+        this.state.animationFrameId = requestAnimationFrame(() => this.drawVideoToCanvas());
+    },
     
     autoCaptureLoop() {
         if (!this.state.currentStream || this.state.isAutoCapturing) {
-            // Nếu không có stream hoặc đang chụp tự động, thoát
             return;
         }
 
-        // Trong một ứng dụng thực tế, bạn sẽ xử lý từng frame video ở đây
-        // để nhận diện CCCD và đánh giá chất lượng ảnh.
-        // Ví dụ:
-        // const currentFrame = this.captureFrameToCanvas();
-        // const analysisResult = this.runComputerVision(currentFrame); // <-- Tích hợp CV ở đây
+        // --- Simulate Computer Vision processing here ---
+        // In a real app, you would pass the current canvas frame to your CV library (e.g., OpenCV.js)
+        // const currentFrameData = this.state.cameraCanvasContext.getImageData(0, 0, this.state.cameraCanvasPreview.width, this.state.cameraCanvasPreview.height);
+        // const analysisResult = yourCVLibrary.processFrame(currentFrameData);
 
-        // Mô phỏng quá trình phân tích và nhận diện
         const { isValid, message, isCardDetected } = this.simulateValidation();
-        this.state.isCardDetected = isCardDetected; // Cập nhật trạng thái nhận diện thẻ
+        this.state.isCardDetected = isCardDetected; 
 
-        // Cập nhật trạng thái hiển thị của khung camera dựa trên isCardDetected
+        // Update camera frame border and status message
         this.setCameraFrameReady(isCardDetected && isValid);
-        this.elements.statusMessage.textContent = isCardDetected ? message : "Đang tìm kiếm CCCD/CMND...";
+        this.elements.statusMessage.textContent = message; // statusMessage now directly reflects simulateValidation message
 
-        // Chỉ tự động chụp nếu CCCD đã được nhận diện và ảnh đủ điều kiện
+        // Only trigger auto capture if card is detected AND image quality is good
         if (isCardDetected && isValid) {
             this.state.autoCaptureTimeoutId = setTimeout(() => {
-                this.triggerCapture(true); // Kích hoạt chụp tự động
-                this.autoCaptureLoop(); // Tiếp tục vòng lặp (hoặc dừng nếu đã chụp thành công)
+                this.triggerCapture(true); 
             }, this.config.AUTO_CAPTURE_INTERVAL);
         } else {
-            // Nếu chưa nhận diện được hoặc ảnh chưa đủ điều kiện, tiếp tục vòng lặp tìm kiếm
+            // Continue checking frames if not ready
             this.state.autoCaptureTimeoutId = setTimeout(() => {
                 this.autoCaptureLoop();
-            }, 500); // Kiểm tra lại sau mỗi 500ms
+            }, 500); 
         }
     },
 
     triggerCapture(isAuto = false) {
         if (isAuto && this.state.isAutoCapturing) return;
 
+        // Stop the auto-capture loop before manual or immediate auto capture
+        this.stopAutoCapture();
+        // Stop the canvas drawing loop temporarily during processing
+        if (this.state.animationFrameId) {
+            cancelAnimationFrame(this.state.animationFrameId);
+            this.state.animationFrameId = null;
+        }
+
         if (isAuto) {
             this.state.isAutoCapturing = true;
             this.toggleUIState('loading'); 
         } else {
-            this.stopAutoCapture();
             this.toggleUIState('loading');
         }
 
@@ -770,64 +813,70 @@ const IDCaptureApp = {
     async handleImageVerification(isAuto) {
         if (!this.state.currentStream) return;
         
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.width = this.elements.cameraVideo.videoWidth;
-        canvas.height = this.elements.cameraVideo.videoHeight;
-        context.drawImage(this.elements.cameraVideo, 0, 0, canvas.width, canvas.height);
+        // Take snapshot from the canvas that's displaying the preview
+        const imageDataUrl = this.state.cameraCanvasPreview.toDataURL('image/jpeg', 0.9);
         
-        const imageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
-        
-        // Mô phỏng lại việc xác thực ảnh, có tính đến trạng thái isCardDetected
-        const { isValid, message, isCardDetected } = this.simulateValidationAfterCapture(); // Hàm mới cho trạng thái sau chụp
+        // Simulate validation after capture
+        const { isValid, message, isCardDetected } = this.simulateValidationAfterCapture(); 
         this.state.simulationAttempts++;
         
         await new Promise(resolve => setTimeout(resolve, isAuto ? 1500 : 1000));
 
-        if (isValid && isCardDetected) { // Chỉ thành công nếu cả ảnh tốt và thẻ được nhận diện
+        if (isValid && isCardDetected) { 
             this.handleVerificationSuccess(imageDataUrl);
         } else {
             this.handleVerificationFailure(message, isAuto);
         }
         
         this.state.isAutoCapturing = false;
+        // Re-start canvas drawing loop after verification if not successful,
+        // or if camera is still needed
+        if (this.state.currentStream && !this.state.animationFrameId && (!isValid || !isCardDetected)) {
+             this.drawVideoToCanvas();
+             this.autoCaptureLoop(); // Re-start auto capture loop if failed
+        }
     },
 
     simulateValidation() {
-        // Hàm này mô phỏng việc kiểm tra TỪNG FRAME video để nhận diện CCCD và chất lượng.
-        // Trong thực tế, bạn sẽ có một thư viện Computer Vision ở đây.
-        this.state.simulationAttempts++; // Tăng số lần thử để mô phỏng tìm kiếm
+        // This function simulates real-time Computer Vision analysis per frame.
+        // It should check if a card is present and if its quality is good enough to capture.
 
-        // Mô phỏng rằng sau một vài giây (tức là vài lần gọi hàm này),
-        // hệ thống "nhận diện" được thẻ và chất lượng tốt dần lên.
+        // Increment attempt to simulate changing conditions
+        this.state.simulationAttempts++; 
+
+        // Phase 1: Card Not Detected (Initial few seconds/frames)
         if (this.state.simulationAttempts < 3) {
             return { isValid: false, message: "Đang tìm kiếm CCCD/CMND trong khung hình...", isCardDetected: false };
-        } else if (this.state.simulationAttempts < 6) {
-            // Giả định thẻ đã được phát hiện, nhưng ảnh chưa tốt
+        } 
+        // Phase 2: Card Detected, but quality issues
+        else if (this.state.simulationAttempts < 6) {
             return { isValid: false, message: "Đã tìm thấy giấy tờ. Vui lòng căn chỉnh rõ nét, không mờ.", isCardDetected: true };
-        } else if (this.state.simulationAttempts < 9) {
-            // Giả định thẻ đã được phát hiện, ảnh vẫn chưa tốt
-            return { isValid: false, message: "Đã tìm thấy giấy tờ. Vui lòng tránh lóa sáng.", isCardDetected: true };
-        } else {
-            // Giả định thẻ đã được phát hiện và ảnh đủ điều kiện để chụp
+        } 
+        else if (this.state.simulationAttempts < 9) {
+            return { isValid: false, message: "Đã tìm thấy giấy tờ. Tránh lóa sáng và bóng đổ.", isCardDetected: true };
+        } 
+        // Phase 3: Card Detected and ready for capture
+        else {
             return { isValid: true, message: "Sẵn sàng chụp! Giữ máy ổn định...", isCardDetected: true };
         }
     },
 
-    // Hàm này mô phỏng kết quả xác thực SAU KHI một bức ảnh đã được chụp
     simulateValidationAfterCapture() {
-        // Trong thực tế, bạn sẽ gửi ảnh này đến backend hoặc thư viện CV để phân tích kỹ lưỡng
-        // Vẫn sử dụng logic mô phỏng lỗi 2 lần rồi thành công để dễ thử nghiệm
-        switch (this.state.simulationAttempts % 3) { // Để luân phiên lỗi và thành công
-            case 0: return { isValid: true, message: "Đã chụp thành công!", isCardDetected: true }; // Thành công sau 3 lần lặp (0,1,2 -> 0)
+        // This function simulates the final validation of the captured image.
+        // In a real app, this would be a more robust check (e.g., sending to backend).
+        // We still simulate a few failures for testing purposes.
+
+        // Use modulo to cycle through success/failure messages for testing
+        switch (this.state.simulationAttempts % 3) { 
+            case 0: return { isValid: true, message: "Đã chụp thành công!", isCardDetected: true }; 
             case 1: return { isValid: false, message: "Ảnh bị mờ. Vui lòng giữ điện thoại thật ổn định.", isCardDetected: true };
             case 2: return { isValid: false, message: "Có hiện tượng lóa sáng. Vui lòng di chuyển ra khỏi nguồn sáng trực tiếp.", isCardDetected: true };
-            default: return { isValid: true, message: "Đã chụp thành công!", isCardDetected: true }; // Fallback
+            default: return { isValid: true, message: "Đã chụp thành công!", isCardDetected: true }; 
         }
     },
 
     handleVerificationSuccess(imageDataUrl) {
-        this.stopCamera();
+        this.stopCamera(); // Stops both stream and canvas drawing
         
         const type = this.state.currentCaptureType;
         if (type === 'front') {
@@ -850,7 +899,7 @@ const IDCaptureApp = {
         this.elements.statusMessage.textContent = message; 
         this.showError(message, true); 
 
-        this.toggleUIState('error'); // Vẫn chuyển về trạng thái 'error' để hiển thị lại camera và các nút
+        this.toggleUIState('error'); 
     },
     
     updateProgress(step, isComplete = false) {
@@ -885,6 +934,15 @@ const IDCaptureApp = {
             this.state.currentStream = null;
         }
         this.stopAutoCapture();
+        // Stop the canvas drawing loop
+        if (this.state.animationFrameId) {
+            cancelAnimationFrame(this.state.animationFrameId);
+            this.state.animationFrameId = null;
+        }
+        // Clear the canvas to show black background
+        if (this.state.cameraCanvasContext && this.state.cameraCanvasPreview) {
+            this.state.cameraCanvasContext.clearRect(0, 0, this.state.cameraCanvasPreview.width, this.state.cameraCanvasPreview.height);
+        }
     },
 
     stopAutoCapture() {
@@ -939,7 +997,7 @@ const IDCaptureApp = {
         this.elements.confirmBtn.textContent = 'Đang xử lý...'; 
         
         try {
-            // Trong một ứng dụng thực tế, bạn sẽ gửi dữ liệu đến máy chủ ở đây.
+            // In a real app, you would send data to a server here.
             console.log("Submitting data to server...");
             // await fetch('/api/ekyc-submit', { 
             //    method: 'POST', 
@@ -947,9 +1005,8 @@ const IDCaptureApp = {
             //    headers: { 'Content-Type': 'application/json' } 
             // });
 
-            await new Promise(resolve => setTimeout(resolve, 1500)); // Mô phỏng độ trễ mạng
+            await new Promise(resolve => setTimeout(resolve, 1500)); 
             
-            // Xóa dữ liệu nhạy cảm khỏi state sau khi "gửi"
             this.state.frontImageDataUrl = null;
             this.state.backImageDataUrl = null;
             
@@ -988,7 +1045,7 @@ const IDCaptureApp = {
         
         this.state.frontImageVerified = false;
         this.state.backImageVerified = false;
-        this.state.isCardDetected = false; // Reset trạng thái nhận diện thẻ khi hủy
+        this.state.isCardDetected = false; 
 
         if (isFullReset) { 
             this.state.frontImageDataUrl = null;
@@ -1010,7 +1067,6 @@ const IDCaptureApp = {
         this.elements.captureSection.classList.add(isFront ? 'capture-type-front' : 'capture-type-back');
 
         this.elements.captureTitle.textContent = isFront ? "Chụp mặt trước CCCD/CMND" : "Chụp mặt sau CCCD/CMND";
-        // Cập nhật instruction để phản ánh việc đang tìm kiếm
         this.elements.captureInstruction.textContent = "Vui lòng đặt CCCD/CMND vào khung hình. Hệ thống sẽ tự động tìm kiếm.";
         
         this.updateProgress(isFront ? 1 : 2);
@@ -1018,7 +1074,6 @@ const IDCaptureApp = {
         this.setCameraFrameReady(false); 
     },
 
-    // Hàm mới để kiểm soát class 'ready-to-capture' của khung camera
     setCameraFrameReady(isReady) {
         if (isReady) {
             this.elements.cameraFrame.classList.add('ready-to-capture');
@@ -1027,10 +1082,9 @@ const IDCaptureApp = {
         }
     },
 
-    // Hàm mới để kích hoạt rung
     triggerHapticFeedback() {
         if ("vibrate" in navigator) {
-            navigator.vibrate(50); // Rung 50ms
+            navigator.vibrate(50); 
         }
     },
     

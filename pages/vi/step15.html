@@ -719,8 +719,7 @@ const IDCaptureApp = {
             });
             this.state.currentStream = stream;
             this.elements.cameraVideo.srcObject = stream;
-            await this.elements.cameraVideo.play();
-
+            
             this.elements.cameraVideo.onloadedmetadata = () => {
                 const video = this.elements.cameraVideo;
                 const videoWidth = video.videoWidth;
@@ -751,6 +750,12 @@ const IDCaptureApp = {
                 this.autoCaptureLoop();   // Bắt đầu vòng lặp tự động chụp
             };
 
+            // Vẫn gọi play() sau onloadedmetadata để đảm bảo video thực sự phát
+            await this.elements.cameraVideo.play().catch(err => {
+                console.error("Error playing video:", err);
+                this.showPermanentError("Không thể phát luồng video từ camera. Vui lòng thử lại hoặc kiểm tra quyền phát phương tiện.");
+            });
+
         } catch (err) {
             console.error("Camera Error:", err);
             let message = "Không thể truy cập camera. Vui lòng kiểm tra lại thiết bị.";
@@ -758,6 +763,8 @@ const IDCaptureApp = {
                 message = "Bạn đã từ chối quyền truy cập camera. Vui lòng cấp quyền trong cài đặt trình duyệt để tiếp tục.";
             } else if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError") {
                 message = "Không tìm thấy camera trên thiết bị của bạn.";
+            } else if (err.name === "NotReadableError") {
+                message = "Camera đang được sử dụng bởi ứng dụng khác. Vui lòng đóng các ứng dụng khác và thử lại.";
             }
             this.showPermanentError(message);
         }
@@ -783,54 +790,55 @@ const IDCaptureApp = {
             context.save(); // Lưu trạng thái hiện tại của canvas
 
             // Tính toán tỷ lệ phóng để video lấp đầy canvas (cover-like behavior)
-            let scale = Math.max(canvasWidth / videoWidth, canvasHeight / videoHeight);
-
             // Nếu video là dọc, thì chiều rộng và chiều cao đã bị đổi chỗ ảo
-            if (this.state.videoOrientation === 90 || this.state.videoOrientation === 270) {
-                 // Khi video được xoay 90 độ, chiều rộng thực tế của video trở thành chiều cao ảo và ngược lại.
-                 // Cần đổi chỗ videoWidth và videoHeight để tính toán scale và drawImage đúng.
-                 scale = Math.max(canvasWidth / videoHeight, canvasHeight / videoWidth); // Swap for scale calculation
+            let drawSourceWidth = videoWidth;
+            let drawSourceHeight = videoHeight;
+            let rotateAngle = 0;
+
+            if (this.state.videoOrientation === 90) { 
+                rotateAngle = Math.PI / 2; // Xoay 90 độ (clockwise)
+                // Đổi chỗ kích thước nguồn cho mục đích tính toán tỷ lệ.
+                // Video gốc là HxW, sau xoay 90 độ, nó hiển thị như WxH.
+                // Chúng ta cần lấy luồng HxW và vẽ nó xoay.
+                [drawSourceWidth, drawSourceHeight] = [videoHeight, videoWidth]; 
+            } else if (this.state.videoOrientation === 270) { 
+                rotateAngle = -Math.PI / 2; // Xoay -90 độ (counter-clockwise)
+                [drawSourceWidth, drawSourceHeight] = [videoHeight, videoWidth]; 
+            } else if (this.state.videoOrientation === 180) { 
+                rotateAngle = Math.PI; // Xoay 180 độ
             }
+
+            // Tính toán tỷ lệ scale để lấp đầy canvas (cover-like)
+            // Dựa trên kích thước nguồn sau khi tính đến xoay.
+            let scale = Math.max(canvasWidth / drawSourceWidth, canvasHeight / drawSourceHeight);
             
-            let scaledWidth = videoWidth * scale;
-            let scaledHeight = videoHeight * scale;
+            let scaledWidth = drawSourceWidth * scale;
+            let scaledHeight = drawSourceHeight * scale;
 
             // Di chuyển gốc tọa độ về giữa canvas
             context.translate(canvasWidth / 2, canvasHeight / 2); 
 
-            // Áp dụng xoay dựa trên định hướng đã phát hiện
-            if (this.state.videoOrientation === 90) { // Video dọc (thường là 90 độ từ ngang)
-                context.rotate(Math.PI / 2); // Xoay 90 độ (clockwise)
-                // Sau khi xoay, kích thước logic của video đã bị đổi chỗ
-                [scaledWidth, scaledHeight] = [scaledHeight, scaledWidth];
-            } else if (this.state.videoOrientation === 270) { // Video dọc (thường là 270 độ từ ngang, ngược chiều kim đồng hồ)
-                context.rotate(-Math.PI / 2); // Xoay -90 độ (counter-clockwise)
-                [scaledWidth, scaledHeight] = [scaledHeight, scaledWidth];
-            } else if (this.state.videoOrientation === 180) { // Video ngang nhưng lộn ngược
-                context.rotate(Math.PI); // Xoay 180 độ
-            }
-
-            // Áp dụng lật ngang (mirror effect) - thường cần cho camera trước hoặc một số camera sau
-            // Bạn có thể tùy chỉnh hoặc xóa dòng này nếu không cần lật hoặc gây ra lỗi.
-            // Để CCCD/CMND không bị lật ngược, chúng ta cần lật lại nếu camera tự lật
-            // hoặc nếu đó là camera trước và bạn muốn nó như gương.
-            // Đối với CCCD, thường không nên lật để dữ liệu dễ đọc hơn. 
-            // Nếu bạn thấy hình ảnh bị lật ngược (ví dụ: chữ ngược), hãy xóa dòng này.
-            // context.scale(-1, 1); 
+            // Áp dụng xoay
+            context.rotate(rotateAngle);
 
             // Vẽ video frame lên canvas, căn giữa sau khi đã xoay và dịch chuyển
+            // Lưu ý: Đối với drawImage, chúng ta vẫn truyền video nguyên bản,
+            // việc xoay và dịch chuyển được thực hiện trên context.
             context.drawImage(video, 
                               -scaledWidth / 2, // Vị trí X để căn giữa
                               -scaledHeight / 2, // Vị trí Y để căn giữa
                               scaledWidth, scaledHeight);
             
             context.restore(); // Khôi phục trạng thái canvas đã lưu
+        } else {
+            console.warn("drawVideoToCanvas: Video is paused, ended, or no stream. Stopping draw loop.");
         }
         this.state.animationFrameId = requestAnimationFrame(() => this.drawVideoToCanvas());
     },
     
     autoCaptureLoop() {
         if (!this.state.currentStream || this.state.isAutoCapturing) {
+            console.log("autoCaptureLoop: No stream or already capturing. Stopping loop.");
             return;
         }
 
@@ -840,14 +848,17 @@ const IDCaptureApp = {
         // Update camera frame border and status message
         this.setCameraFrameReady(isCardDetected && isValid);
         this.elements.statusMessage.textContent = message; 
+        console.log('AutoCapture Status:', message, 'Card Detected:', isCardDetected, 'Is Valid:', isValid);
 
         // Only trigger auto capture if card is detected AND image quality is good
         if (isCardDetected && isValid) {
+            console.log('Conditions met for auto capture. Setting timeout...');
             this.state.autoCaptureTimeoutId = setTimeout(() => {
                 this.triggerCapture(true); 
             }, this.config.AUTO_CAPTURE_INTERVAL);
         } else {
             // Continue checking frames if not ready
+            console.log('Conditions not met for auto capture. Retrying in 500ms.');
             this.state.autoCaptureTimeoutId = setTimeout(() => {
                 this.autoCaptureLoop();
             }, 500); 
@@ -855,7 +866,10 @@ const IDCaptureApp = {
     },
 
     triggerCapture(isAuto = false) {
-        if (isAuto && this.state.isAutoCapturing) return;
+        if (isAuto && this.state.isAutoCapturing) {
+            console.warn("triggerCapture: Already auto capturing, skipping.");
+            return;
+        }
 
         // Stop the auto-capture loop before manual or immediate auto capture
         this.stopAutoCapture();
@@ -863,13 +877,16 @@ const IDCaptureApp = {
         if (this.state.animationFrameId) {
             cancelAnimationFrame(this.state.animationFrameId);
             this.state.animationFrameId = null;
+            console.log("Canvas draw loop stopped for capture.");
         }
 
         if (isAuto) {
             this.state.isAutoCapturing = true;
             this.toggleUIState('loading'); 
+            console.log('Auto capturing triggered. State: loading');
         } else {
             this.toggleUIState('loading');
+            console.log('Manual capture triggered. State: loading');
         }
 
         this.elements.cameraFrame.classList.add('blink-once');
@@ -879,20 +896,34 @@ const IDCaptureApp = {
     },
 
     async handleImageVerification(isAuto) {
-        if (!this.state.currentStream) return;
+        if (!this.state.currentStream) {
+            console.error("handleImageVerification: No current stream available.");
+            return;
+        }
         
         // Take snapshot from the canvas that's displaying the preview
+        // Ensure canvas has valid dimensions before toDataURL
+        if (this.state.cameraCanvasPreview.width === 0 || this.state.cameraCanvasPreview.height === 0) {
+            console.error("Canvas has zero dimensions, cannot take snapshot!");
+            this.showError("Lỗi: Không thể chụp ảnh. Canvas có kích thước không hợp lệ.");
+            this.toggleUIState('error');
+            return;
+        }
         const imageDataUrl = this.state.cameraCanvasPreview.toDataURL('image/jpeg', 0.9);
+        console.log("Image snapshot taken from canvas. Data URL length:", imageDataUrl.length);
         
         // Simulate validation after capture
         const { isValid, message, isCardDetected } = this.simulateValidationAfterCapture(); 
         this.state.simulationAttempts++;
+        console.log('Verification Result:', 'Valid:', isValid, 'Message:', message);
         
         await new Promise(resolve => setTimeout(resolve, isAuto ? 1500 : 1000));
 
         if (isValid && isCardDetected) { 
+            console.log('Verification SUCCESS.');
             this.handleVerificationSuccess(imageDataUrl);
         } else {
+            console.log('Verification FAILED.');
             this.handleVerificationFailure(message, isAuto);
         }
         
@@ -900,8 +931,9 @@ const IDCaptureApp = {
         // Re-start canvas drawing loop after verification if not successful,
         // or if camera is still needed
         if (this.state.currentStream && !this.state.animationFrameId && (!isValid || !isCardDetected)) {
+             console.log('Re-starting canvas draw loop and auto capture loop after failure.');
              this.drawVideoToCanvas();
-             this.autoCaptureLoop(); // Re-start auto capture loop if failed
+             this.autoCaptureLoop(); 
         }
     },
 
@@ -961,6 +993,7 @@ const IDCaptureApp = {
         this.setCameraFrameReady(false); 
         this.toggleUIState('success');
         this.updateFinalButtonState();
+        console.log('Handle verification success. Image captured and stored.');
     },
 
     handleVerificationFailure(message, isAuto) {
@@ -968,6 +1001,7 @@ const IDCaptureApp = {
         this.showError(message, true); 
 
         this.toggleUIState('error'); 
+        console.warn('Handle verification failure:', message);
     },
     
     updateProgress(step, isComplete = false) {
@@ -998,6 +1032,7 @@ const IDCaptureApp = {
 
     stopCamera() {
         if (this.state.currentStream) {
+            console.log("Stopping camera stream.");
             this.state.currentStream.getTracks().forEach(track => track.stop());
             this.state.currentStream = null;
         }
@@ -1006,10 +1041,12 @@ const IDCaptureApp = {
         if (this.state.animationFrameId) {
             cancelAnimationFrame(this.state.animationFrameId);
             this.state.animationFrameId = null;
+            console.log("Canvas draw loop explicitly stopped.");
         }
         // Clear the canvas to show black background
         if (this.state.cameraCanvasContext && this.state.cameraCanvasPreview) {
             this.state.cameraCanvasContext.clearRect(0, 0, this.state.cameraCanvasPreview.width, this.state.cameraCanvasPreview.height);
+            console.log("Canvas cleared.");
         }
     },
 
@@ -1017,15 +1054,18 @@ const IDCaptureApp = {
         if (this.state.autoCaptureTimeoutId) {
             clearTimeout(this.state.autoCaptureTimeoutId);
             this.state.autoCaptureTimeoutId = null;
+            console.log("Auto capture loop stopped.");
         }
     },
 
     showError(message, autoHide = false) {
         this.elements.errorMessage.textContent = message || '';
         this.elements.errorMessage.classList.add('visible');
+        console.error("Displaying error:", message);
         if (autoHide) {
             setTimeout(() => {
                 this.elements.errorMessage.classList.remove('visible');
+                console.log("Error message hidden.");
             }, this.config.ERROR_MESSAGE_TIMEOUT);
         }
     },
@@ -1038,6 +1078,7 @@ const IDCaptureApp = {
             </div>
         `;
         document.getElementById('retryCameraBtn').addEventListener('click', () => window.location.reload());
+        console.error("Displaying permanent error:", message);
     },
 
     updateFinalButtonState() {
@@ -1048,6 +1089,7 @@ const IDCaptureApp = {
         } else {
             this.elements.bottomBar.classList.add('hidden');
         }
+        console.log('Final continue button state updated. Enabled:', enabled);
     },
     
     showConfirmationScreen() {
@@ -1058,26 +1100,23 @@ const IDCaptureApp = {
         this.elements.confirmSection.classList.remove('hidden');
         this.elements.frontPreview.src = this.state.frontImageDataUrl;
         this.elements.backPreview.src = this.state.backImageDataUrl;
+        console.log('Confirmation screen displayed.');
     },
 
     async submitFinalData() {
         this.elements.confirmBtn.classList.add('is-loading'); 
         this.elements.confirmBtn.textContent = 'Đang xử lý...'; 
+        console.log('Submitting final data...');
         
         try {
             // In a real app, you would send data to a server here.
-            console.log("Submitting data to server...");
-            // await fetch('/api/ekyc-submit', { 
-            //    method: 'POST', 
-            //    body: JSON.stringify({ front: this.state.frontImageDataUrl, back: this.state.backImageDataUrl }),
-            //    headers: { 'Content-Type': 'application/json' } 
-            // });
-
+            
             await new Promise(resolve => setTimeout(resolve, 1500)); 
             
             this.state.frontImageDataUrl = null;
             this.state.backImageDataUrl = null;
             
+            console.log('Data submitted successfully (simulated). Redirecting...');
             window.location.href = this.config.NEXT_STEP_URL;
             
         } catch (err) {
@@ -1100,6 +1139,7 @@ const IDCaptureApp = {
         }
         this.updateFinalButtonState();
         this.startCaptureProcess(type);
+        console.log('Retaking photo for:', type);
     },
 
     cancelCapture(isFullReset = false) {
@@ -1122,6 +1162,7 @@ const IDCaptureApp = {
 
         this.elements.finalContinueBtn.disabled = true;
         this.setCameraFrameReady(false); 
+        console.log('Capture cancelled. Full reset:', isFullReset);
     },
 
     resetUIForCapture(type) {
@@ -1140,6 +1181,7 @@ const IDCaptureApp = {
         this.updateProgress(isFront ? 1 : 2);
         this.toggleUIState('capturing'); 
         this.setCameraFrameReady(false); 
+        console.log('UI reset for capture. Type:', type);
     },
 
     setCameraFrameReady(isReady) {
@@ -1158,7 +1200,7 @@ const IDCaptureApp = {
     
     toggleUIState(state) {
         this.elements.captureSection.dataset.state = state;
-        
+        console.log('UI State changed to:', state);
         if (state === 'capturing') {
             this.elements.statusMessage.textContent = "Hệ thống đang tìm kiếm CCCD/CMND...";
             this.elements.errorMessage.classList.remove('visible'); 

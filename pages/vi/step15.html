@@ -720,6 +720,14 @@ const IDCaptureApp = {
             this.state.currentStream = stream;
             this.elements.cameraVideo.srcObject = stream;
             
+            // Debug: Kiểm tra stream có hoạt động không
+            console.log("Stream obtained successfully. Stream active:", stream.active);
+            if (!stream.active) {
+                console.error("Stream is not active, likely a permissions or device issue.");
+                this.showPermanentError("Không thể kích hoạt luồng camera. Vui lòng kiểm tra quyền hoặc khởi động lại thiết bị.");
+                return;
+            }
+
             this.elements.cameraVideo.onloadedmetadata = () => {
                 const video = this.elements.cameraVideo;
                 const videoWidth = video.videoWidth;
@@ -765,6 +773,8 @@ const IDCaptureApp = {
                 message = "Không tìm thấy camera trên thiết bị của bạn.";
             } else if (err.name === "NotReadableError") {
                 message = "Camera đang được sử dụng bởi ứng dụng khác. Vui lòng đóng các ứng dụng khác và thử lại.";
+            } else if (err.name === "AbortError" || err.name === "OverconstrainedError") {
+                message = "Lỗi khởi tạo camera. Có thể do ràng buộc không phù hợp hoặc sự cố thiết bị.";
             }
             this.showPermanentError(message);
         }
@@ -772,7 +782,7 @@ const IDCaptureApp = {
 
     // Hàm mới để liên tục vẽ các frame video lên canvas
     drawVideoToCanvas() {
-        if (!this.elements.cameraVideo.paused && !this.elements.cameraVideo.ended && this.state.currentStream) {
+        if (!this.elements.cameraVideo.paused && !this.elements.cameraVideo.ended && this.state.currentStream && this.state.currentStream.active) {
             const video = this.elements.cameraVideo;
             const canvas = this.state.cameraCanvasPreview;
             const context = this.state.cameraCanvasContext;
@@ -831,14 +841,19 @@ const IDCaptureApp = {
             
             context.restore(); // Khôi phục trạng thái canvas đã lưu
         } else {
-            console.warn("drawVideoToCanvas: Video is paused, ended, or no stream. Stopping draw loop.");
+            // Chỉ log cảnh báo nếu vòng lặp vẫn cố gắng chạy nhưng không có stream hoạt động
+            if (this.state.currentStream && !this.state.currentStream.active) {
+                console.warn("drawVideoToCanvas: Stream is not active. Stopping draw loop.");
+            } else if (!this.elements.cameraVideo.paused && !this.elements.cameraVideo.ended) {
+                 console.warn("drawVideoToCanvas: Video not playing or no stream. Stopping draw loop.");
+            }
         }
         this.state.animationFrameId = requestAnimationFrame(() => this.drawVideoToCanvas());
     },
     
     autoCaptureLoop() {
-        if (!this.state.currentStream || this.state.isAutoCapturing) {
-            console.log("autoCaptureLoop: No stream or already capturing. Stopping loop.");
+        if (!this.state.currentStream || !this.state.currentStream.active || this.state.isAutoCapturing) {
+            console.log("autoCaptureLoop: No active stream or already capturing. Stopping loop.");
             return;
         }
 
@@ -896,8 +911,10 @@ const IDCaptureApp = {
     },
 
     async handleImageVerification(isAuto) {
-        if (!this.state.currentStream) {
-            console.error("handleImageVerification: No current stream available.");
+        if (!this.state.currentStream || !this.state.currentStream.active) {
+            console.error("handleImageVerification: No active stream available.");
+            this.showError("Lỗi: Luồng camera không hoạt động.");
+            this.toggleUIState('error');
             return;
         }
         
@@ -930,7 +947,7 @@ const IDCaptureApp = {
         this.state.isAutoCapturing = false;
         // Re-start canvas drawing loop after verification if not successful,
         // or if camera is still needed
-        if (this.state.currentStream && !this.state.animationFrameId && (!isValid || !isCardDetected)) {
+        if (this.state.currentStream && this.state.currentStream.active && !this.state.animationFrameId && (!isValid || !isCardDetected)) {
              console.log('Re-starting canvas draw loop and auto capture loop after failure.');
              this.drawVideoToCanvas();
              this.autoCaptureLoop(); 

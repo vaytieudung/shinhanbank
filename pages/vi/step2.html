@@ -259,7 +259,7 @@
             margin: 15px auto;
             border-radius: var(--border-radius);
             overflow: hidden;
-            background: #000;
+            background: #000; /* Thay đổi thành màu đen để lớp phủ nổi bật */
         }
         
         .camera-frame::before {
@@ -280,6 +280,37 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            /* Để video nằm dưới lớp phủ */
+            z-index: 0; 
+            position: absolute;
+        }
+
+        /* Thêm lớp phủ cho khung nhận diện */
+        .camera-frame .overlay-focus {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1; /* Nằm trên video */
+        }
+
+        .camera-frame .overlay-focus .id-card-outline {
+            width: 85%; /* Kích thước tương đối của khung thẻ */
+            aspect-ratio: 1.586 / 1; /* Giữ tỷ lệ thẻ CCCD */
+            border: 2px dashed rgba(255, 255, 255, 0.6); /* Viền nét đứt */
+            border-radius: 8px;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6); /* Hiệu ứng làm mờ bên ngoài khung */
+            transition: all 0.3s ease;
+        }
+        
+        /* Hiệu ứng khung sáng lên khi ảnh đủ điều kiện (mô phỏng) */
+        .camera-frame.ready-to-capture .overlay-focus .id-card-outline {
+            border: 2px dashed var(--accent-color); /* Màu xanh lá khi sẵn sàng */
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.4); /* Giảm độ mờ bên ngoài một chút */
         }
         
         .camera-frame.blink-once {
@@ -534,6 +565,9 @@
                     <div id="cameraView" class="cameraView">
                         <div class="camera-frame" id="cameraFrame">
                             <video id="cameraVideo" autoplay playsinline></video>
+                            <div class="overlay-focus">
+                                <div class="id-card-outline"></div>
+                            </div>
                         </div>
                     </div>
                     
@@ -727,13 +761,18 @@ const IDCaptureApp = {
     },
 
     simulateValidation() {
-        // Here, you would integrate a real Computer Vision check (e.g., using OpenCV.js)
-        // to detect blur, glare, and if the card is within the frame.
-        // For now, we simulate a few failures before success.
+        // Trong một ứng dụng thực tế, đây sẽ là nơi bạn tích hợp AI/CV
+        // để phân tích hình ảnh và trả về lỗi cụ thể.
+        // Hiện tại, chúng ta mô phỏng các lỗi phổ biến.
+
+        // Giả lập trạng thái "sẵn sàng"
+        const isReady = this.state.simulationAttempts >= 2; 
+        this.setCameraFrameReady(isReady); // Cập nhật trạng thái khung camera
+
         switch (this.state.simulationAttempts) {
-            case 0: return { isValid: false, message: "Mẹo: Đảm bảo giấy tờ nằm trọn trong khung." };
-            case 1: return { isValid: false, message: "Mẹo: Vui lòng giữ máy ổn định hơn." };
-            default: return { isValid: true, message: "Đã chụp thành công!" };
+            case 0: return { isValid: false, message: "Giấy tờ chưa nằm trọn trong khung. Vui lòng căn chỉnh lại." };
+            case 1: return { isValid: false, message: "Ảnh bị mờ. Vui lòng giữ điện thoại thật ổn định." };
+            default: return { isValid: true, message: "Đã chụp thành công! Vui lòng chờ xử lý." };
         }
     },
 
@@ -744,13 +783,19 @@ const IDCaptureApp = {
         if (type === 'front') {
             this.state.frontImageDataUrl = imageDataUrl;
             this.state.frontImageVerified = true;
-            this.updateProgress(1, true); // Mark step 1 as complete
+            this.updateProgress(1, true);
         } else {
             this.state.backImageDataUrl = imageDataUrl;
             this.state.backImageVerified = true;
-            this.updateProgress(2, true); // Mark step 2 as complete
+            this.updateProgress(2, true);
         }
         
+        // Phản hồi khi chụp thành công
+        this.triggerHapticFeedback(); // Kích hoạt rung (nếu hỗ trợ)
+        // Nếu có âm thanh chụp ảnh, bạn có thể gọi:
+        // document.getElementById('shutterSound').play();
+
+        this.setCameraFrameReady(false); // Đặt lại trạng thái khung sau khi chụp thành công
         this.toggleUIState('success');
         this.updateFinalButtonState();
     },
@@ -906,6 +951,7 @@ const IDCaptureApp = {
         }
 
         this.elements.finalContinueBtn.disabled = true;
+        this.setCameraFrameReady(false); // Đảm bảo tắt trạng thái sẵn sàng khi quay lại
     },
 
     resetUIForCapture(type) {
@@ -923,6 +969,23 @@ const IDCaptureApp = {
         
         this.updateProgress(isFront ? 1 : 2);
         this.toggleUIState('capturing'); // Bắt đầu ở trạng thái capturing
+        this.setCameraFrameReady(false); // Đảm bảo khung về trạng thái ban đầu
+    },
+
+    // Hàm mới để kiểm soát class 'ready-to-capture' của khung camera
+    setCameraFrameReady(isReady) {
+        if (isReady) {
+            this.elements.cameraFrame.classList.add('ready-to-capture');
+        } else {
+            this.elements.cameraFrame.classList.remove('ready-to-capture');
+        }
+    },
+
+    // Hàm mới để kích hoạt rung
+    triggerHapticFeedback() {
+        if ("vibrate" in navigator) {
+            navigator.vibrate(50); // Rung 50ms
+        }
     },
     
     toggleUIState(state) {

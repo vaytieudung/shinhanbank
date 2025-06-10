@@ -2,316 +2,1022 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shinhan Bank - Kết Quả Xét Duyệt Hồ Sơ</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" href="https://shinhan.com.vn/public/themes/shinhan/img/favicon2023.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Shinhan Bank - Xác thực eKYC</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://shinhan.com.vn/favicon.ico">
     <style>
-        /* ==================== CẤU HÌNH BIẾN MÀU SẮC VÀ FONT ==================== */
+        /* ==========================================================================
+           1. Global Variables & Base Styles
+           ========================================================================== */
         :root {
-            --shinhan-blue: #003087;
-            --shinhan-blue-dark: #002263;
-            --shinhan-green-text: #00803a; /* Màu xanh đậm hơn để đủ tương phản WCAG */
-            --shinhan-gray: #f3f4f6;
+            --primary-color: #0072CE; /* Shinhan Official Blue */
+            --secondary-color: #F5F7FA;
+            --accent-color: #00A859; /* Green for success */
+            --error-color: #E63946;
+            --text-color: #333;
+            --text-light: #6c757d;
+            --border-color: #DEE2E6;
+            --border-radius: 8px;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
+
         body {
-            font-family: 'Lexend', sans-serif;
-            background-color: var(--shinhan-gray);
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* ==================== CÁC LỚP TIỆN ÍCH VÀ HIỆU ỨNG ==================== */
-        .details-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out; }
-        .details-content.show { max-height: 2000px; }
-        .rotate-180 { transform: rotate(180deg); }
-        .fade-in { animation: fadeIn 0.5s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .interactive-btn { transition: all 0.2s ease-in-out; }
-        .interactive-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .amortization-table tbody tr:hover { background-color: #f9fafb; }
-
-        .skeleton-loader { background-color: #e5e7eb; border-radius: 0.25rem; animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
-        
-        /* ==================== THÔNG BÁO TOAST ==================== */
-        #toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; }
-        .toast-notification {
-            background-color: #2d3748; color: white; padding: 0.75rem 1.25rem; border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-            transform: translateY(100px); opacity: 0;
-            transition: all 0.4s cubic-bezier(0.21, 1.02, 0.73, 1);
+        .hidden {
+            display: none !important;
         }
-        .toast-notification.show { transform: translateY(0); opacity: 1; }
+        
+        /* ==========================================================================
+           2. Header & Progress Bar
+           ========================================================================== */
+        .app-header {
+            background: #fff;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            text-align: center;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1010;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-        /* ==================== CẤU HÌNH CHO VIỆC IN ẤN ==================== */
-        @media print {
-            body { background-color: #fff; }
-            body * { visibility: hidden; }
-            #result-container, #result-container * { visibility: visible; }
-            #result-container { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 1rem; }
-            .no-print { display: none !important; }
-            .printable-card { box-shadow: none !important; border: 1px solid #ddd; }
-            .details-content.show { max-height: none !important; overflow: visible !important; }
+        .app-header img {
+            height: 30px;
+            max-width: 150px;
+        }
+        
+        .back-button {
+            position: absolute;
+            left: 20px;
+            font-size: 1.5rem;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+        
+        .progress-bar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 400px;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        .progress-bar-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--border-color);
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+        
+        .progress-bar-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%; /* JS will update this */
+            background-color: var(--primary-color);
+            transition: width 0.4s ease-in-out;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+            position: relative;
+        }
+
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .step-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 8px;
+            transition: var(--transition);
+        }
+
+        /* Step States */
+        .progress-step.active .step-circle {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        .progress-step.active .step-label {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .progress-step.completed .step-circle {
+            border-color: var(--accent-color);
+            background-color: var(--accent-color);
+            color: #fff;
+        }
+        .progress-step.completed .step-label {
+            color: var(--text-color);
+        }
+
+        /* ==========================================================================
+           3. Main Content & Sections
+           ========================================================================== */
+        .content-card {
+            background: white;
+            padding: clamp(20px, 5vw, 40px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin: 20px auto 120px;
+            max-width: 600px;
+        }
+
+        .guide-box {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .guide-box h3 {
+            color: var(--text-color);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .guide-examples {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .guide-example {
+            width: 120px;
+        }
+        .guide-example img {
+            width: 100%;
+            height: 75px;
+            border-radius: 8px;
+            border: 2px solid;
+            object-fit: cover;
+        }
+        .guide-example p {
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        .guide-example.correct img { border-color: var(--accent-color); }
+        .guide-example.correct p { color: var(--accent-color); }
+        .guide-example.incorrect img { border-color: var(--error-color); }
+        .guide-example.incorrect p { color: var(--error-color); }
+        
+        .guide-box ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            max-width: 450px;
+            margin: 0 auto 30px auto;
+        }
+
+        .guide-box li {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+        }
+
+        .guide-box li i {
+            color: var(--primary-color);
+            margin-right: 15px;
+            width: 24px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        /* ==========================================================================
+           4. Capture UI
+           ========================================================================== */
+        .capture-box, .confirm-box {
+            text-align: center;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .capture-box .instruction-text, .confirm-box .instruction-text {
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+        
+        .confirm-previews {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .confirm-previews img {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 8px;
+            margin: 0 auto;
+            box-shadow: var(--shadow);
+        }
+
+        .camera-frame {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            aspect-ratio: 1.586 / 1; /* Tỷ lệ thẻ CCCD */
+            margin: 15px auto;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            background: #000; /* Thay đổi thành màu đen để lớp phủ nổi bật */
+        }
+        
+        .camera-frame::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border: 2px solid rgba(255,255,255,0.7);
+            border-radius: var(--border-radius);
+            animation: scan-glow 2s infinite alternate;
+        }
+        
+        @keyframes scan-glow {
+            from { box-shadow: 0 0 5px rgba(255,255,255,0.4); }
+            to { box-shadow: 0 0 15px rgba(255,255,255,0.8); }
+        }
+
+        .camera-frame video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Để video nằm dưới lớp phủ */
+            z-index: 0; 
+            position: absolute;
+            /* Thêm dòng này để cố gắng khắc phục lỗi hiển thị một nửa */
+            /* Có thể cần xóa nếu không cần thiết hoặc gây ra vấn đề lật hình */
+            transform: scaleX(-1); 
+        }
+
+        /* Thêm lớp phủ cho khung nhận diện */
+        .camera-frame .overlay-focus {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1; /* Nằm trên video */
+        }
+
+        .camera-frame .overlay-focus .id-card-outline {
+            width: 85%; /* Kích thước tương đối của khung thẻ */
+            aspect-ratio: 1.586 / 1; /* Giữ tỷ lệ thẻ CCCD */
+            border: 2px dashed rgba(255, 255, 255, 0.6); /* Viền nét đứt */
+            border-radius: 8px;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6); /* Hiệu ứng làm mờ bên ngoài khung */
+            transition: all 0.3s ease;
+        }
+        
+        /* Hiệu ứng khung sáng lên khi ảnh đủ điều kiện (mô phỏng) */
+        .camera-frame.ready-to-capture .overlay-focus .id-card-outline {
+            border: 2px dashed var(--accent-color); /* Màu xanh lá khi sẵn sàng */
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.4); /* Giảm độ mờ bên ngoài một chút */
+        }
+        
+        .camera-frame.blink-once {
+            animation: blink 0.5s 1;
+        }
+        @keyframes blink {
+            50% { box-shadow: 0 0 20px var(--primary-color); }
+        }
+
+        /* ==========================================================================
+           5. UI Elements
+           ========================================================================== */
+        .status-message, .error-message {
+            font-size: 0.9rem;
+            margin: 15px auto 5px auto;
+            max-width: 480px;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+        }
+        
+        .status-message {
+             height: 40px; /* Reserve space */
+             line-height: 20px;
+             color: var(--primary-color);
+        }
+
+        .error-message {
+            background-color: #FFF2F2;
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .error-message.visible {
+            opacity: 1;
+        }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px solid var(--secondary-color);
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 50px auto;
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        .fixed-bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.07);
+            z-index: 1000;
+            padding-bottom: calc(15px + env(safe-area-inset-bottom));
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            border-radius: var(--border-radius);
+            padding: 12px 28px;
+            font-weight: 600;
+            transition: var(--transition);
+            border: 1px solid transparent;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #005a9e;
+            transform: translateY(-2px);
+            color: white;
+        }
+        .btn-primary:disabled {
+            background-color: #a0c2e0;
+            border-color: #a0c2e0;
+        }
+        
+        .btn-secondary {
+            background-color: #E9ECEF;
+            color: var(--text-color);
+            border-color: #E9ECEF;
+        }
+        .btn-secondary:hover {
+            background-color: #d8dde1;
+            border-color: #d8dde1;
+        }
+
+        /* Spinner cho nút */
+        .btn .spinner-border {
+            width: 1rem;
+            height: 1rem;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+            display: none; /* Mặc định ẩn */
+        }
+        .btn.is-loading {
+            pointer-events: none; /* Ngăn chặn nhấp lại */
+            opacity: 0.8;
+        }
+        .btn.is-loading .spinner-border {
+            display: inline-block;
+        }
+
+        /* ==========================================================================
+           6. State-driven UI Management
+           ========================================================================== */
+        /* Ẩn tất cả các phần tử UI của phần chụp ảnh theo mặc định */
+        #captureSection .cameraView,
+        #captureSection .loader,
+        #captureSection .manualCaptureBtn,
+        #captureSection .recaptureBtn,
+        #captureSection .nextStepBtn,
+        #captureSection .error-message {
+            display: none;
+        }
+        /* Đảm bảo trạng thái lỗi sẽ hiển thị đúng message */
+        #captureSection .error-message {
+            opacity: 0; /* Giữ nguyên trạng thái opacity */
+        }
+
+        /* --------------------------------------------------- */
+        /* Trạng thái CAPTURING (đang chờ chụp tự động) */
+        /* --------------------------------------------------- */
+        #captureSection[data-state="capturing"] .cameraView {
+            display: block;
+        }
+        #captureSection[data-state="capturing"] .manualCaptureBtn {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        /* --------------------------------------------------- */
+        /* Trạng thái LOADING (sau khi chụp, đang xử lý) */
+        /* --------------------------------------------------- */
+        #captureSection[data-state="loading"] .loader {
+            display: block;
+        }
+        /* Ẩn các phần tử khác khi đang loading */
+        #captureSection[data-state="loading"] .cameraView,
+        #captureSection[data-state="loading"] .manualCaptureBtn,
+        #captureSection[data-state="loading"] .recaptureBtn,
+        #captureSection[data-state="loading"] .nextStepBtn {
+            display: none;
+        }
+
+        /* --------------------------------------------------- */
+        /* Trạng thái SUCCESS (đã chụp thành công) */
+        /* --------------------------------------------------- */
+        #captureSection[data-state="success"] .recaptureBtn {
+            display: inline-flex;
+            align-items: center;
+        }
+        /* Nút "Tiếp tục" chỉ hiển thị khi chụp mặt trước thành công */
+        #captureSection.capture-type-front[data-state="success"] .nextStepBtn {
+            display: inline-flex;
+            align-items: center;
+        }
+        /* Ẩn camera view, loader và nút chụp thủ công khi thành công */
+        #captureSection[data-state="success"] .cameraView,
+        #captureSection[data-state="success"] .loader,
+        #captureSection[data-state="success"] .manualCaptureBtn {
+            display: none;
+        }
+
+        /* --------------------------------------------------- */
+        /* Trạng thái ERROR (có lỗi khi chụp) */
+        /* --------------------------------------------------- */
+        #captureSection[data-state="error"] .cameraView {
+            display: block;
+        }
+        #captureSection[data-state="error"] .manualCaptureBtn,
+        #captureSection[data-state="error"] .recaptureBtn { /* Cho phép chụp lại khi lỗi */
+             display: inline-flex;
+             align-items: center;
+        }
+        #captureSection[data-state="error"] .error-message {
+             display: block; /* Vẫn điều khiển opacity bằng JS để auto-hide */
         }
     </style>
 </head>
-<body class="bg-gray-100">
-
-    <div id="toast-container"></div>
-
-    <header class="bg-white shadow-sm sticky top-0 z-40 no-print">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex-shrink-0">
-                    <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo" class="h-8">
-                </div>
-                <div id="header-user-info" class="hidden items-center space-x-3">
-                    <span class="text-sm font-medium text-gray-600"></span>
-                    <div class="w-8 h-8 rounded-full bg-blue-100 text-[--shinhan-blue] flex items-center justify-center font-bold text-sm"></div>
-                </div>
-            </div>
-        </div>
+<body>
+    <header class="app-header">
+        <i id="backButton" class="fas fa-arrow-left back-button hidden"></i>
+        <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo.png" alt="Shinhan Bank Logo">
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-        
-        <div id="check-form-container" class="max-w-xl mx-auto bg-white p-6 sm:p-8 rounded-xl shadow-lg fade-in">
-            <div class="text-center">
-                <h1 class="text-2xl font-bold text-[--shinhan-blue]">TRA CỨU KẾT QUẢ HỒ SƠ</h1>
-                <p class="text-slate-500 mt-1">Nhập số CCCD của bạn để xem trạng thái hồ sơ vay.</p>
+    <main class="container">
+        <div class="progress-bar-container">
+            <div class="progress-bar-line">
+                <div id="progressBarFill" class="progress-bar-fill"></div>
             </div>
-            <div class="mt-8 max-w-md mx-auto">
-                <form id="check-result-form" onsubmit="event.preventDefault(); checkResult();">
-                    <label for="cccd" class="block text-sm font-medium text-gray-700">Số Căn cước công dân</label>
-                    <input type="text" id="cccd" inputmode="numeric" placeholder="Nhập 12 chữ số" maxlength="12" class="mt-1 block w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-[--shinhan-blue] focus:border-[--shinhan-blue]">
-                    <p id="cccdError" class="hidden mt-2 text-xs text-red-500">Số CCCD không hợp lệ. Vui lòng kiểm tra lại.</p>
-                    <button type="submit" class="mt-6 w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[--shinhan-blue] hover:bg-[--shinhan-blue-dark] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[--shinhan-blue] interactive-btn">
-                        Kiểm tra kết quả
-                    </button>
-                </form>
+            <div id="step1" class="progress-step">
+                <div class="step-circle">1</div>
+                <div class="step-label">Mặt trước</div>
             </div>
-        </div>
-        
-        <div id="skeleton-container" class="hidden">
-            <div class="bg-white rounded-xl shadow-lg p-8">
-                <div class="h-8 w-1/2 mx-auto skeleton-loader"></div>
-                <div class="h-4 w-1/3 mx-auto skeleton-loader mt-4"></div>
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
-                    <div class="lg:col-span-8 space-y-6">
-                        <div class="h-20 w-full skeleton-loader"></div>
-                        <div class="h-48 w-full skeleton-loader"></div>
-                        <div class="h-64 w-full skeleton-loader"></div>
-                    </div>
-                    <div class="lg:col-span-4 space-y-6">
-                        <div class="h-32 w-full skeleton-loader"></div>
-                        <div class="h-40 w-full skeleton-loader"></div>
-                    </div>
-                </div>
+            <div id="step2" class="progress-step">
+                <div class="step-circle">2</div>
+                <div class="step-label">Mặt sau</div>
             </div>
         </div>
 
-        <div id="result-container" class="hidden"></div>
-    </main>
-
-    <script>
-        // ==================== KHAI BÁO BIẾN VÀ HÀM TIỆN ÍCH ====================
-
-        // Khóa bí mật để giải mã dữ liệu (trong thực tế phải được bảo vệ ở server)
-        const SECRET_KEY = 'Sh1nh@nB@nk-Pr0j3ct-K3y-2o25!#';
-
-        // Hàm định dạng số
-        function formatNumber(n) { return n != null && !isNaN(n) ? Number(n).toLocaleString('vi-VN') : "N/A"; }
-
-        // Hàm đóng/mở các mục chi tiết
-        function toggleDetails(el) { el.nextElementSibling.classList.toggle('show'); el.querySelector('.toggle-icon').classList.toggle('rotate-180'); }
-
-        // Hàm sao chép vào clipboard và hiển thị thông báo
-        function copyToClipboard(text, type) { 
-            if (!text) return; 
-            navigator.clipboard.writeText(text).then(() => showToast(`Đã sao chép ${type}`)); 
-        }
-        
-        // Hàm lấy lời chào theo thời gian
-        function getGreeting() { 
-            const h = new Date().getHours(); 
-            return h < 12 ? "Chào buổi sáng" : h < 18 ? "Chào buổi chiều" : "Chào buổi tối"; 
-        }
-
-        // Hàm tạo hiệu ứng số chạy
-        function animateValue(element, start, end, duration) {
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                const currentValue = Math.floor(progress * (end - start) + start);
-                element.innerHTML = `${formatNumber(currentValue)} <span class="text-2xl font-medium">VNĐ</span>`;
-                if (progress < 1) window.requestAnimationFrame(step);
-            };
-            window.requestAnimationFrame(step);
-        }
-        
-        // Hàm tải lịch trả nợ dạng CSV
-        function downloadAmortizationCSV(hoSo) {
-            if (!hoSo || !hoSo.loanAmount) { alert("Không có dữ liệu lịch trả nợ để tải."); return; }
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += ["Ky", "Du No Dau Ky", "Tien Lai", "Tien Goc", "Tong Tra", "Du No Cuoi Ky"].join(",") + "\r\n";
-            const p = parseFloat(hoSo.loanAmount), t = parseInt(hoSo.loanTerm), r = parseFloat(hoSo.interestRate)/100/12, m = parseFloat(hoSo.monthlyPayment);
-            let balance = p;
-            for (let i = 1; i <= t; i++) {
-                const int = balance*r, princ = m-int, start = balance; balance -= princ;
-                csvContent += [i, Math.round(start), Math.round(int), Math.round(princ), Math.round(m), Math.round(balance<0?0:balance)].join(",") + "\r\n";
-            }
-            const link = document.createElement("a");
-            link.setAttribute("href", encodeURI(csvContent));
-            link.setAttribute("download", `lich_tra_no_${hoSo.loanCode}.csv`);
-            document.body.appendChild(link); link.click(); document.body.removeChild(link);
-        }
-
-        // Hàm hiển thị thông báo toast
-        function showToast(message) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'toast-notification';
-            toast.textContent = message;
-            container.appendChild(toast);
-            setTimeout(() => toast.classList.add('show'), 10);
-            setTimeout(() => {
-                toast.classList.remove('show');
-                toast.addEventListener('transitionend', () => toast.remove());
-            }, 3000);
-        }
-
-        // Hàm hiển thị giao diện skeleton
-        function showSkeleton() {
-            document.getElementById('check-form-container').classList.add('hidden');
-            document.getElementById('skeleton-container').classList.remove('hidden');
-        }
-
-        // Hàm cập nhật header với tên người dùng
-        function updateHeader(hoSo) {
-            const userInfoDiv = document.getElementById('header-user-info');
-            const nameParts = hoSo.fullName.split(' ');
-            const name = nameParts.length > 1 ? nameParts.slice(1).join(' ') : nameParts[0]; // Lấy Tên + Tên đệm
-            const initial = hoSo.fullName.charAt(0).toUpperCase();
-            userInfoDiv.querySelector('span').textContent = `Xin chào, ${name}`;
-            userInfoDiv.querySelector('div').textContent = initial;
-            userInfoDiv.classList.remove('hidden');
-            userInfoDiv.classList.add('flex');
-        }
-        
-        // Hàm reset giao diện về trạng thái ban đầu
-        function resetUI() {
-            document.getElementById('result-container').innerHTML = '';
-            document.getElementById('result-container').classList.add('hidden');
-            document.getElementById('header-user-info').classList.add('hidden');
-            document.getElementById('check-form-container').classList.remove('hidden');
-            document.getElementById('cccd').value = '';
-        }
-
-        // ==================== HÀM RENDER GIAO DIỆN KẾT QUẢ ====================
-        function renderResult(hoSo) {
-            const resultContainer = document.getElementById('result-container');
-            const principal = parseFloat(hoSo.loanAmount) || 0;
-            const totalInterest = parseFloat(hoSo.totalInterest) || 0;
-            const totalRepay = principal + totalInterest;
-            const interestPercentage = totalRepay > 0 ? (totalInterest / totalRepay) * 100 : 0;
-            const principalPercentage = 100 - interestPercentage;
-
-            let amortizationHTML = '<p class="text-center text-gray-500 text-sm">Không thể tạo lịch trả nợ.</p>';
-            if (principal > 0 && hoSo.loanTerm && hoSo.interestRate && hoSo.monthlyPayment) {
-                const term=parseInt(hoSo.loanTerm), monthlyRate=parseFloat(hoSo.interestRate)/100/12, monthlyPayment=parseFloat(hoSo.monthlyPayment);
-                let balance=principal, rowsHTML='';
-                for (let i=1; i<=term; i++) {
-                    const interestPaid=balance*monthlyRate, principalPaid=monthlyPayment-interestPaid, startingBalance=balance; balance -= principalPaid;
-                    rowsHTML += `<tr class="amortization-table text-xs sm:text-sm"><td class="p-2 border text-center">${i}</td><td class="p-2 border text-right">${formatNumber(Math.round(startingBalance))}</td><td class="p-2 border text-right text-red-600">${formatNumber(Math.round(interestPaid))}</td><td class="p-2 border text-right text-[--shinhan-green-text]">${formatNumber(Math.round(principalPaid))}</td><td class="p-2 border text-right font-semibold">${formatNumber(Math.round(monthlyPayment))}</td><td class="p-2 border text-right font-bold text-blue-600">${formatNumber(Math.round(balance<0?0:balance))}</td></tr>`;
-                }
-                amortizationHTML = `<div class="overflow-x-auto"><table class="w-full border-collapse border"><thead class="bg-gray-100 text-xs sm:text-sm"><tr class="text-left"><th class="p-2 border">Kỳ</th><th class="p-2 border">Dư nợ đầu kỳ</th><th class="p-2 border">Tiền lãi</th><th class="p-2 border">Tiền gốc</th><th class="p-2 border">Tổng trả</th><th class="p-2 border">Dư nợ cuối kỳ</th></tr></thead><tbody>${rowsHTML}</tbody></table></div>`;
-            }
-
-            resultContainer.innerHTML = `
-            <div class="printable-card bg-white rounded-xl shadow-lg fade-in">
-                <div class="p-6 sm:p-8 border-b">
-                    <div class="text-gray-700">${getGreeting()}, <strong class="text-xl">${hoSo.fullName || 'N/A'}</strong></div>
-                    <p class="text-sm text-gray-500">Dưới đây là thông tin chi tiết về hồ sơ vay của Quý khách.</p>
-                </div>
-                <div class="p-6 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    <div class="lg:col-span-8 space-y-6">
-                        <div class="bg-blue-50 border-l-4 border-[--shinhan-blue] rounded-r-lg p-4">
-                            <p class="text-sm font-medium text-[--shinhan-blue]">SỐ TIỀN ĐƯỢC DUYỆT</p>
-                            <p id="animated-amount" class="text-4xl font-bold text-[--shinhan-blue] mt-1"></p>
+        <div class="content-card">
+            <div id="guideSection">
+                <div class="guide-box">
+                    <h3>Xác thực Giấy tờ tùy thân</h3>
+                    <div class="guide-examples">
+                        <div class="guide-example correct">
+                            <img src="https://i.imgur.com/q7PIttQ.jpeg" alt="Mẫu mặt trước">
+                            <p>Mặt trước</p>
                         </div>
-                        <div class="border rounded-lg p-4">
-                            <h3 class="font-semibold text-gray-800 mb-4">Cơ cấu khoản vay</h3>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                                <div class="relative w-48 h-48 mx-auto">
-                                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36"><circle class="text-red-100" stroke="currentColor" stroke-width="3" fill="none" cx="18" cy="18" r="15.9155"></circle><circle class="text-[--shinhan-green-text]" stroke="currentColor" stroke-width="3" stroke-dasharray="${principalPercentage}, 100" fill="none" cx="18" cy="18" r="15.9155"></circle></svg>
-                                    <div class="absolute inset-0 flex flex-col items-center justify-center text-center"><span class="text-xs text-gray-500">Tổng trả</span><span class="font-bold text-lg text-gray-800">${formatNumber(totalRepay)}</span></div>
-                                </div>
-                                <div class="text-sm space-y-3"><div class="flex items-center"><span class="w-3 h-3 rounded-full bg-[--shinhan-green-text] mr-2"></span> Tiền gốc: <strong class="ml-auto text-lg">${formatNumber(principal)}</strong></div><div class="flex items-center"><span class="w-3 h-3 rounded-full bg-red-400 mr-2"></span> Tổng lãi: <strong class="ml-auto text-lg">${formatNumber(totalInterest)}</strong></div><hr class="my-2"><div class="flex items-center">Trả hàng tháng: <strong class="ml-auto font-bold text-base text-[--shinhan-blue]">${formatNumber(hoSo.monthlyPayment)}</strong></div></div>
+                        <div class="guide-example correct">
+                             <img src="https://i.imgur.com/mzBQ9t4.jpeg" alt="Mẫu mặt sau">
+                            <p>Mặt sau</p>
+                        </div>
+                    </div>
+                    <ul>
+                        <li><i class="fas fa-image"></i> Đặt CCCD trên một mặt phẳng, màu tối.</li>
+                        <li><i class="fas fa-lightbulb"></i> Đảm bảo môi trường đủ sáng, không bị lóa.</li>
+                        <li><i class="fas fa-crop-alt"></i> Canh chỉnh toàn bộ giấy tờ nằm gọn trong khung hình.</li>
+                        <li><i class="fas fa-mobile-alt"></i> Giữ điện thoại ổn định để ảnh không bị mờ.</li>
+                    </ul>
+                    <div class="button-group">
+                        <button id="startCaptureBtn" class="btn btn-primary">Bắt đầu chụp</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="captureSection" class="hidden" data-state="capturing">
+                <div class="capture-box">
+                    <div> <h3 id="captureTitle"></h3>
+                        <p id="captureInstruction" class="instruction-text"></p>
+                    </div>
+                    
+                    <div id="cameraView" class="cameraView">
+                        <div class="camera-frame" id="cameraFrame">
+                            <video id="cameraVideo" autoplay playsinline></video>
+                            <div class="overlay-focus">
+                                <div class="id-card-outline"></div>
                             </div>
                         </div>
-                        <div class="border rounded-lg">
-                            <button class="w-full flex justify-between items-center p-4 text-left font-semibold text-gray-700" onclick="toggleDetails(this)"><span class="pr-2">Lịch trả nợ Chi tiết (Dự kiến)</span><span class="toggle-icon text-gray-400 transition-transform rotate-180">▼</span></button>
-                            <div class="details-content show"><div class="p-2 sm:p-4 border-t">${amortizationHTML}</div></div>
+                    </div>
+                    
+                    <div id="loader" class="loader" role="status" aria-label="Đang xử lý"></div>
+                    
+                    <div> <p id="statusMessage" class="status-message" aria-live="polite"></p>
+                        <p id="errorMessage" class="error-message" aria-live="assertive"></p>
+
+                        <div class="button-group">
+                            <button id="manualCaptureBtn" class="btn btn-secondary"><i class="fas fa-camera"></i> Chụp ảnh</button>
+                            <button id="recaptureBtn" class="btn btn-secondary"><i class="fas fa-redo"></i> Chụp lại</button>
+                            <button id="nextStepBtn" class="btn btn-primary">Tiếp tục: Chụp mặt sau</button>
                         </div>
                     </div>
-                    <div class="lg:col-span-4 space-y-6">
-                        <div class="bg-gray-50 rounded-lg p-4 border"><h3 class="font-semibold text-gray-800 mb-3 text-center">Chuyên viên hỗ trợ</h3><div class="flex items-center space-x-4"><img loading="lazy" src="https://i.pravatar.cc/100?u=${hoSo.cccd}" class="w-16 h-16 rounded-full ring-2 ring-blue-100"><div><h4 class="font-semibold text-gray-900">Lê Minh Anh</h4><p class="text-xs text-gray-500">Mã số: SHB0458</p></div></div><a href="tel:19001577" class="no-print block mt-4 w-full text-center py-2 px-3 border rounded-md text-sm font-medium text-white bg-[--shinhan-blue] hover:bg-[--shinhan-blue-dark] interactive-btn">Gọi hỗ trợ</a></div>
-                        <div class="bg-gray-50 rounded-lg p-4 border"><h3 class="font-semibold text-gray-800 mb-2">Bước tiếp theo</h3><ol class="list-decimal list-inside text-sm text-gray-700 space-y-2"><li><strong>Xác nhận:</strong> Chuyên viên sẽ sớm liên hệ Quý khách qua SĐT <strong class="text-[--shinhan-blue]">${hoSo.phone}</strong>.</li><li><strong>Ký hợp đồng:</strong> Chuẩn bị CCCD gốc để đối chiếu.</li><li><strong>Giải ngân:</strong> Tiền sẽ được chuyển vào TK <strong class="break-all">${hoSo.accountNumber}</strong>. <button onclick="copyToClipboard('${hoSo.accountNumber}', 'Số tài khoản')" aria-label="Sao chép số tài khoản giải ngân" class="no-print ml-1 text-gray-400 hover:text-blue-600 interactive-btn">❐</button></li></ol></div>
-                        <div class="bg-red-50 text-red-800 rounded-lg p-3 text-xs border border-red-200"><p class="font-bold">CẢNH BÁO BẢO MẬT!</p><p>Shinhan Bank **không bao giờ** yêu cầu Quý khách chuyển khoản bất kỳ loại phí nào để được giải ngân.</p></div>
+                </div>
+            </div>
+
+            <div id="confirmSection" class="hidden">
+                <div class="confirm-box">
+                     <div>
+                        <h3>Xác nhận thông tin</h3>
+                        <p class="instruction-text">Vui lòng kiểm tra lại hình ảnh đã chụp.</p>
+                     </div>
+                    <div class="confirm-previews">
+                        <img id="frontPreview" alt="Ảnh xem trước mặt trước">
+                        <img id="backPreview" alt="Ảnh xem trước mặt sau">
+                    </div>
+                    <div class="button-group">
+                        <button id="redoFrontBtn" class="btn btn-secondary">Chụp lại mặt trước</button>
+                        <button id="redoBackBtn" class="btn btn-secondary">Chụp lại mặt sau</button>
+                    </div>
+                     <div class="button-group">
+                        <button id="confirmBtn" class="btn btn-primary w-100"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Xác nhận và Hoàn tất</button>
                     </div>
                 </div>
-                <div class="p-6 border-t mt-4 flex flex-col sm:flex-row gap-3 justify-between items-center no-print">
-                    <button onclick="resetUI()" aria-label="Quay lại trang tra cứu hồ sơ" class="w-full sm:w-auto flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 interactive-btn"><svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>Tra cứu hồ sơ khác</button>
-                    <div class="flex gap-3"><button onclick="downloadAmortizationCSV(window.currentHoSo)" aria-label="Tải lịch trả nợ dạng CSV" class="interactive-btn flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">Tải lịch trả nợ</button><button onclick="window.print()" aria-label="In thông báo xét duyệt" class="interactive-btn flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">In thông báo</button></div>
-                </div>
-            </div>`;
-            
-            updateHeader(hoSo);
-            document.getElementById('skeleton-container').classList.add('hidden');
-            resultContainer.classList.remove('hidden');
-            const amountEl = document.getElementById('animated-amount');
-            if(amountEl) animateValue(amountEl, 0, principal, 1000);
-        }
+            </div>
 
-        // ==================== LOGIC CHÍNH VÀ SỰ KIỆN ====================
-        
-        function checkResult() {
-            const cccdInput = document.getElementById('cccd');
-            let cccd = cccdInput.value.replace(/\D/g, '');
-            if (!cccd || cccd.length !== 12) {
-                document.getElementById('cccdError').classList.remove('hidden'); return;
+        </div>
+    </main>
+    
+    <div id="bottomBar" class="fixed-bottom-bar hidden">
+        <button id="finalContinueBtn" class="btn btn-primary w-100" disabled>Xem lại và Hoàn tất</button>
+    </div>
+
+<script>
+"use strict";
+
+const IDCaptureApp = {
+    // Application State
+    state: {
+        frontImageVerified: false,
+        backImageVerified: false,
+        frontImageDataUrl: null,
+        backImageDataUrl: null,
+        currentStream: null,
+        currentCaptureType: 'front',
+        isAutoCapturing: false,
+        autoCaptureTimeoutId: null,
+        simulationAttempts: 0,
+    },
+
+    elements: {},
+
+    config: {
+        AUTO_CAPTURE_INTERVAL: 2500,
+        ERROR_MESSAGE_TIMEOUT: 4000,
+        NEXT_STEP_URL: 'https://vaytieudung.github.io/shinhanbank/pages/vi/step3.html'
+    },
+
+    init() {
+        this.cacheDOMElements();
+        // Feature detection for camera
+        if (!('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices)) {
+             this.showPermanentError("Trình duyệt không hỗ trợ camera. Vui lòng sử dụng một trình duyệt khác.");
+             return;
+        }
+        this.addEventListeners();
+        console.log("Professional eKYC App initialized.");
+    },
+
+    cacheDOMElements() {
+        const ids = [
+            'guideSection', 'captureSection', 'startCaptureBtn', 'cameraView', 'cameraFrame', 'cameraVideo', 
+            'statusMessage', 'loader', 'errorMessage', 'manualCaptureBtn', 'recaptureBtn', 'nextStepBtn', 
+            'captureTitle', 'captureInstruction', 'bottomBar', 'finalContinueBtn',
+            'step1', 'step2', 'progressBarFill', 'backButton', 'confirmSection',
+            'frontPreview', 'backPreview', 'redoFrontBtn', 'redoBackBtn', 'confirmBtn'
+        ];
+        ids.forEach(id => this.elements[id] = document.getElementById(id));
+    },
+
+    addEventListeners() {
+        this.elements.startCaptureBtn.addEventListener('click', () => this.startCaptureProcess('front'));
+        this.elements.manualCaptureBtn.addEventListener('click', () => this.triggerCapture(false));
+        this.elements.recaptureBtn.addEventListener('click', () => this.startCaptureProcess(this.state.currentCaptureType));
+        this.elements.nextStepBtn.addEventListener('click', () => {
+            if (this.state.currentCaptureType === 'front') {
+                this.startCaptureProcess('back');
             }
-            document.getElementById('cccdError').classList.add('hidden');
-            showSkeleton();
-            
-            setTimeout(() => {
-                try {
-                    const storedData = localStorage.getItem('userData');
-                    if (!storedData) throw new Error("Không tìm thấy hồ sơ nào trên trình duyệt này. Vui lòng đăng ký trước.");
-                    const decryptedBytes = CryptoJS.AES.decrypt(storedData, SECRET_KEY);
-                    const hoSo = JSON.parse(decryptedBytes.toString(CryptoJS.enc.Utf8));
-                    if (hoSo && hoSo.cccd === cccd) {
-                        window.currentHoSo = hoSo; // Lưu vào biến toàn cục để hàm download có thể truy cập
-                        renderResult(hoSo);
-                    } else {
-                        throw new Error("Số CCCD không khớp với hồ sơ đã lưu. Vui lòng kiểm tra lại.");
-                    }
-                } catch (error) {
-                    document.getElementById('skeleton-container').classList.add('hidden');
-                    resetUI();
-                    alert(error.message || "Lỗi truy xuất dữ liệu. Dữ liệu có thể bị hỏng.");
+        });
+        this.elements.backButton.addEventListener('click', () => this.cancelCapture(true)); // Đã sửa: Truyền true để reset hoàn toàn
+        this.elements.finalContinueBtn.addEventListener('click', () => this.showConfirmationScreen());
+
+        // Confirmation screen buttons
+        this.elements.redoFrontBtn.addEventListener('click', () => this.retakePhoto('front'));
+        this.elements.redoBackBtn.addEventListener('click', () => this.retakePhoto('back'));
+        this.elements.confirmBtn.addEventListener('click', () => this.submitFinalData());
+    },
+    
+    async startCaptureProcess(type) {
+        this.state.currentCaptureType = type;
+        this.state.simulationAttempts = 0;
+        this.resetUIForCapture(type);
+        
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { 
+                    facingMode: 'environment',
+                    // Đã sửa: Giảm độ phân giải yêu cầu để tải nhanh hơn
+                    width: { ideal: 1280 }, 
+                    height: { ideal: 720 },
+                    // Đã sửa: Sử dụng aspectRatio thay vì resizeMode: "exact" để linh hoạt hơn
+                    aspectRatio: 1.586 / 1 
                 }
-            }, 1000);
+            });
+            this.state.currentStream = stream;
+            this.elements.cameraVideo.srcObject = stream;
+            await this.elements.cameraVideo.play();
+            
+            this.autoCaptureLoop();
+
+        } catch (err) {
+            console.error("Camera Error:", err);
+            let message = "Không thể truy cập camera. Vui lòng kiểm tra lại thiết bị.";
+            if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
+                message = "Bạn đã từ chối quyền truy cập camera. Vui lòng cấp quyền trong cài đặt trình duyệt để tiếp tục.";
+            } else if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError") {
+                message = "Không tìm thấy camera trên thiết bị của bạn.";
+            }
+            this.showPermanentError(message);
+        }
+    },
+    
+    autoCaptureLoop() {
+        if (!this.state.currentStream || this.state.isAutoCapturing) return;
+        
+        this.state.autoCaptureTimeoutId = setTimeout(() => {
+             this.triggerCapture(true);
+             this.autoCaptureLoop();
+        }, this.config.AUTO_CAPTURE_INTERVAL);
+    },
+
+    triggerCapture(isAuto = false) {
+        if (isAuto && this.state.isAutoCapturing) return;
+
+        if (isAuto) {
+            this.state.isAutoCapturing = true;
+            this.toggleUIState('loading'); // Đã sửa: Chuyển sang trạng thái loading
+        } else {
+            this.stopAutoCapture();
+            this.toggleUIState('loading');
         }
 
-        document.getElementById('cccd').addEventListener('input', (e) => {
-            e.target.value = e.target.value.replace(/\D/g, '');
-        });
+        this.elements.cameraFrame.classList.add('blink-once');
+        setTimeout(() => this.elements.cameraFrame.classList.remove('blink-once'), 500);
 
-    </script>
+        this.handleImageVerification(isAuto);
+    },
+
+    async handleImageVerification(isAuto) {
+        if (!this.state.currentStream) return;
+        
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = this.elements.cameraVideo.videoWidth;
+        canvas.height = this.elements.cameraVideo.videoHeight;
+        context.drawImage(this.elements.cameraVideo, 0, 0, canvas.width, canvas.height);
+        
+        const imageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+        
+        const { isValid, message } = this.simulateValidation();
+        this.state.simulationAttempts++;
+        
+        await new Promise(resolve => setTimeout(resolve, isAuto ? 1500 : 1000));
+
+        if (isValid) {
+            this.handleVerificationSuccess(imageDataUrl);
+        } else {
+            this.handleVerificationFailure(message, isAuto);
+        }
+        
+        this.state.isAutoCapturing = false;
+    },
+
+    simulateValidation() {
+        // Trong một ứng dụng thực tế, đây sẽ là nơi bạn tích hợp AI/CV
+        // để phân tích hình ảnh và trả về lỗi cụ thể.
+        // Hiện tại, chúng ta mô phỏng các lỗi phổ biến.
+
+        // Giả lập trạng thái "sẵn sàng"
+        const isReady = this.state.simulationAttempts >= 2; 
+        this.setCameraFrameReady(isReady); // Cập nhật trạng thái khung camera
+
+        switch (this.state.simulationAttempts) {
+            case 0: return { isValid: false, message: "Giấy tờ chưa nằm trọn trong khung. Vui lòng căn chỉnh lại." };
+            case 1: return { isValid: false, message: "Ảnh bị mờ. Vui lòng giữ điện thoại thật ổn định." };
+            default: return { isValid: true, message: "Đã chụp thành công! Vui lòng chờ xử lý." };
+        }
+    },
+
+    handleVerificationSuccess(imageDataUrl) {
+        this.stopCamera();
+        
+        const type = this.state.currentCaptureType;
+        if (type === 'front') {
+            this.state.frontImageDataUrl = imageDataUrl;
+            this.state.frontImageVerified = true;
+            this.updateProgress(1, true);
+        } else {
+            this.state.backImageDataUrl = imageDataUrl;
+            this.state.backImageVerified = true;
+            this.updateProgress(2, true);
+        }
+        
+        // Phản hồi khi chụp thành công
+        this.triggerHapticFeedback(); // Kích hoạt rung (nếu hỗ trợ)
+        // Nếu có âm thanh chụp ảnh, bạn có thể gọi:
+        // document.getElementById('shutterSound').play();
+
+        this.setCameraFrameReady(false); // Đặt lại trạng thái khung sau khi chụp thành công
+        this.toggleUIState('success');
+        this.updateFinalButtonState();
+    },
+
+    handleVerificationFailure(message, isAuto) {
+        this.elements.statusMessage.textContent = message; // Vẫn hiển thị message thông thường
+        this.showError(message, true); // Hàm này hiển thị lỗi đỏ và tự động ẩn
+
+        this.toggleUIState('error'); // Đã sửa: Chuyển về trạng thái 'error'
+    },
+    
+    updateProgress(step, isComplete = false) {
+        if (step === 0) { // Reset state
+            this.elements.step1.classList.remove('active', 'completed');
+            this.elements.step2.classList.remove('active', 'completed');
+            this.elements.progressBarFill.style.width = '0%';
+            return;
+        }
+        if (step === 1) {
+            this.elements.step1.classList.add('active');
+            this.elements.step2.classList.remove('active', 'completed');
+            this.elements.progressBarFill.style.width = '0%';
+            if (isComplete) {
+                this.elements.step1.classList.add('completed');
+                this.elements.progressBarFill.style.width = '50%';
+            }
+        } else if (step === 2) {
+            this.elements.step1.classList.add('active', 'completed');
+            this.elements.step2.classList.add('active');
+            this.elements.progressBarFill.style.width = '50%';
+            if (isComplete) {
+                this.elements.step2.classList.add('completed');
+                this.elements.progressBarFill.style.width = '100%';
+            }
+        }
+    },
+
+    stopCamera() {
+        if (this.state.currentStream) {
+            this.state.currentStream.getTracks().forEach(track => track.stop());
+            this.state.currentStream = null;
+        }
+        this.stopAutoCapture();
+    },
+
+    stopAutoCapture() {
+        if (this.state.autoCaptureTimeoutId) {
+            clearTimeout(this.state.autoCaptureTimeoutId);
+            this.state.autoCaptureTimeoutId = null;
+        }
+    },
+
+    showError(message, autoHide = false) {
+        this.elements.errorMessage.textContent = message || '';
+        this.elements.errorMessage.classList.add('visible');
+        if (autoHide) {
+            setTimeout(() => {
+                this.elements.errorMessage.classList.remove('visible');
+            }, this.config.ERROR_MESSAGE_TIMEOUT);
+        }
+    },
+    
+    showPermanentError(message) {
+        this.elements.guideSection.innerHTML = `
+            <div class="error-message visible" style="margin-bottom: 20px;">${message}</div>
+            <div class="button-group">
+                <button id="retryCameraBtn" class="btn btn-primary">Tải lại trang</button>
+            </div>
+        `;
+        document.getElementById('retryCameraBtn').addEventListener('click', () => window.location.reload());
+    },
+
+    updateFinalButtonState() {
+        const enabled = this.state.frontImageVerified && this.state.backImageVerified;
+        this.elements.finalContinueBtn.disabled = !enabled;
+        if(enabled) {
+            this.elements.bottomBar.classList.remove('hidden');
+        } else {
+            this.elements.bottomBar.classList.add('hidden');
+        }
+    },
+    
+    showConfirmationScreen() {
+        this.stopCamera();
+        this.elements.captureSection.classList.add('hidden');
+        this.elements.bottomBar.classList.add('hidden');
+        this.elements.backButton.classList.add('hidden');
+        this.elements.confirmSection.classList.remove('hidden');
+        this.elements.frontPreview.src = this.state.frontImageDataUrl;
+        this.elements.backPreview.src = this.state.backImageDataUrl;
+    },
+
+    async submitFinalData() {
+        this.elements.confirmBtn.classList.add('is-loading'); // Thêm class loading
+        this.elements.confirmBtn.textContent = 'Đang xử lý...'; // Giữ lại text hoặc hiển thị riêng spinner
+        
+        try {
+            // In a real app, you would send data to a server here.
+            console.log("Submitting data to server...");
+            // await fetch('/api/ekyc-submit', { 
+            //    method: 'POST', 
+            //    body: JSON.stringify({ front: this.state.frontImageDataUrl, back: this.state.backImageDataUrl }),
+            //    headers: { 'Content-Type': 'application/json' } 
+            // });
+
+            await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network delay
+            
+            // Clear sensitive data from state after "submission"
+            this.state.frontImageDataUrl = null;
+            this.state.backImageDataUrl = null;
+            
+            // alert("Xác thực thành công! Chuẩn bị chuyển đến bước tiếp theo...");
+            window.location.href = this.config.NEXT_STEP_URL;
+            
+        } catch (err) {
+            console.error("Submission Error:", err);
+            this.showError("Lỗi khi gửi dữ liệu. Vui lòng thử lại.");
+        } finally {
+            this.elements.confirmBtn.classList.remove('is-loading'); // Xóa class loading
+            this.elements.confirmBtn.textContent = 'Xác nhận và Hoàn tất';
+        }
+    },
+    
+    retakePhoto(type) {
+        this.elements.confirmSection.classList.add('hidden');
+        if (type === 'front') {
+            this.state.frontImageVerified = false;
+            this.state.frontImageDataUrl = null;
+        } else {
+            this.state.backImageVerified = false;
+            this.state.backImageDataUrl = null;
+        }
+        this.updateFinalButtonState();
+        this.startCaptureProcess(type);
+    },
+
+    cancelCapture(isFullReset = false) {
+        this.stopCamera();
+        this.elements.captureSection.classList.add('hidden');
+        this.elements.confirmSection.classList.add('hidden');
+        this.elements.guideSection.classList.remove('hidden');
+        this.elements.bottomBar.classList.add('hidden');
+        this.elements.backButton.classList.add('hidden');
+        this.updateProgress(0); // Reset progress
+        
+        // BUG FIX: Reset verification state
+        this.state.frontImageVerified = false;
+        this.state.backImageVerified = false;
+
+        if (isFullReset) { 
+            this.state.frontImageDataUrl = null;
+            this.state.backImageDataUrl = null;
+        }
+
+        this.elements.finalContinueBtn.disabled = true;
+        this.setCameraFrameReady(false); // Đảm bảo tắt trạng thái sẵn sàng khi quay lại
+    },
+
+    resetUIForCapture(type) {
+        const isFront = type === 'front';
+        this.elements.guideSection.classList.add('hidden');
+        this.elements.confirmSection.classList.add('hidden');
+        this.elements.captureSection.classList.remove('hidden');
+        this.elements.backButton.classList.remove('hidden');
+        
+        this.elements.captureSection.classList.remove('capture-type-front', 'capture-type-back');
+        this.elements.captureSection.classList.add(isFront ? 'capture-type-front' : 'capture-type-back');
+
+        this.elements.captureTitle.textContent = isFront ? "Chụp mặt trước CCCD/CMND" : "Chụp mặt sau CCCD/CMND";
+        this.elements.captureInstruction.textContent = "Vui lòng canh chỉnh giấy tờ vào giữa khung hình.";
+        
+        this.updateProgress(isFront ? 1 : 2);
+        this.toggleUIState('capturing'); // Bắt đầu ở trạng thái capturing
+        this.setCameraFrameReady(false); // Đảm bảo khung về trạng thái ban đầu
+    },
+
+    // Hàm mới để kiểm soát class 'ready-to-capture' của khung camera
+    setCameraFrameReady(isReady) {
+        if (isReady) {
+            this.elements.cameraFrame.classList.add('ready-to-capture');
+        } else {
+            this.elements.cameraFrame.classList.remove('ready-to-capture');
+        }
+    },
+
+    // Hàm mới để kích hoạt rung
+    triggerHapticFeedback() {
+        if ("vibrate" in navigator) {
+            navigator.vibrate(50); // Rung 50ms
+        }
+    },
+    
+    toggleUIState(state) {
+        this.elements.captureSection.dataset.state = state;
+        
+        if (state === 'capturing') {
+            this.elements.statusMessage.textContent = "Hệ thống sẽ tự động chụp khi ảnh rõ nét.";
+            this.elements.errorMessage.classList.remove('visible'); // Đảm bảo ẩn lỗi cũ
+        } else if (state === 'loading') {
+            this.elements.statusMessage.textContent = "Đang phân tích hình ảnh...";
+            this.elements.errorMessage.classList.remove('visible');
+        } else if (state === 'success') {
+            const type = this.state.currentCaptureType;
+            this.elements.statusMessage.textContent = type === 'front' ? "Đã lưu mặt trước." : "Đã lưu mặt sau.";
+            this.elements.errorMessage.classList.remove('visible');
+            // CSS sẽ xử lý việc hiển thị/ẩn các nút dựa trên data-state và capture-type
+        } else if (state === 'error') {
+            // Thông báo lỗi sẽ được cập nhật trong handleVerificationFailure
+            // Các nút và camera view sẽ hiển thị lại theo CSS
+        }
+    }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    IDCaptureApp.init();
+});
+</script>
+
 </body>
 </html>

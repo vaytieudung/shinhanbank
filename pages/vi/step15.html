@@ -270,7 +270,7 @@
             display: none;
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             position: absolute;
             top: 0;
             left: 0;
@@ -282,9 +282,7 @@
             height: 100%;
             display: block;
             background-color: #000;
-            position: absolute;
-            top: 0;
-            left: 0;
+            position: relative;
             z-index: 1;
         }
 
@@ -353,13 +351,14 @@
         .loader {
             width: 48px;
             height: 48px;
-            border: 5px solid var(--secondary-color);
-            border-top: 5px solid var(--primary-color);
+            border: 4px solid var(--secondary-color);
+            border-top: 4px solid var(--primary-color);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 50px auto;
+            margin: 20px auto;
         }
         @keyframes spin {
+            0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
 
@@ -386,7 +385,7 @@
 
         .btn {
             border-radius: var(--border-radius);
-            padding: 12px 28px;
+            padding: 12px 20px;
             font-weight: 600;
             transition: var(--transition);
             border: 1px solid transparent;
@@ -611,7 +610,7 @@
                 cameraCanvasPreview: null,
                 cameraCanvasContext: null,
                 animationFrameId: null,
-                videoOrientation: 0,
+                deviceOrientation: 0,
             },
 
             elements: {},
@@ -625,7 +624,7 @@
             init() {
                 this.cacheDOMElements();
                 if (!('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices)) {
-                    this.showPermanentError("Trình duyệt không hỗ trợ truy cập camera. Vui lòng sử dụng một trình duyệt khác.");
+                    this.showPermanentError("Trình duyệt không hỗ trợ truy cập camera. Vui lòng sử dụng trình duyệt hiện đại như Chrome hoặc Safari.");
                     return;
                 }
                 this.addEventListeners();
@@ -643,7 +642,7 @@
                 ];
                 ids.forEach(id => this.elements[id] = document.getElementById(id));
                 this.state.cameraCanvasPreview = this.elements.cameraCanvasPreview;
-                this.state.cameraCanvasContext = this.state.cameraCanvasPreview.getContext('2d');
+                this.state.cameraCanvasContext = this.state.cameraCanvasPreview ? this.state.cameraCanvasPreview.getContext('2d') : null;
             },
 
             addEventListeners() {
@@ -660,14 +659,27 @@
                 this.elements.redoFrontBtn.addEventListener('click', () => this.retakePhoto('front'));
                 this.elements.redoBackBtn.addEventListener('click', () => this.retakePhoto('back'));
                 this.elements.confirmBtn.addEventListener('click', () => this.submitFinalData());
+                window.addEventListener('orientationchange', () => this.handleOrientationChange());
+            },
+
+            handleOrientationChange() {
+                this.state.deviceOrientation = window.orientation || 0;
+                console.log('Device orientation changed to:', this.state.deviceOrientation);
+                if (this.state.currentStream) {
+                    this.drawVideoToCanvas();
+                }
             },
 
             async startCaptureProcess(type) {
                 this.state.currentCaptureType = type;
                 this.state.simulationAttempts = 0;
                 this.state.isCardDetected = false;
+                this.state.deviceOrientation = window.orientation || 0;
                 this.resetUIForCapture(type);
-                
+
+                // Cleanup any existing stream before starting a new one
+                this.stopCamera();
+
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({
                         video: {
@@ -681,9 +693,7 @@
                     
                     console.log("Stream obtained successfully. Stream active:", stream.active);
                     if (!stream.active) {
-                        console.error("Stream is not active, likely a permissions or device issue.");
-                        this.showPermanentError("Không thể kích hoạt luồng camera. Vui lòng kiểm tra quyền hoặc khởi động lại thiết bị.");
-                        return;
+                        throw new Error("Stream is not active.");
                     }
 
                     this.elements.cameraVideo.onloadedmetadata = () => {
@@ -692,14 +702,6 @@
                         const videoHeight = video.videoHeight;
                         console.log('Video loaded - Actual dimensions (width x height):', videoWidth, 'x', videoHeight);
                         console.log('Camera frame dimensions (width x height):', this.elements.cameraFrame.offsetWidth, 'x', this.elements.cameraFrame.offsetHeight);
-                        
-                        if (videoHeight > videoWidth) {
-                            this.state.videoOrientation = 90;
-                            console.log('Detected video orientation: Portrait (requires 90 degree rotation)');
-                        } else {
-                            this.state.videoOrientation = 0;
-                            console.log('Detected video orientation: Landscape (no rotation needed)');
-                        }
                         
                         const frameWidth = this.elements.cameraFrame.offsetWidth || 480;
                         const frameHeight = this.elements.cameraFrame.offsetHeight || (frameWidth / 1.586);
@@ -723,20 +725,20 @@
 
                     await this.elements.cameraVideo.play().catch(err => {
                         console.error("Error playing video:", err);
-                        this.showPermanentError("Không thể phát luồng video từ camera. Vui lòng thử lại hoặc kiểm tra quyền phát phương tiện.");
+                        this.showPermanentError("Không thể phát luồng video từ camera. Vui lòng kiểm tra quyền truy cập camera hoặc thử lại.");
                     });
 
                 } catch (err) {
                     console.error("Camera Error:", err);
-                    let message = "Không thể truy cập camera. Vui lòng kiểm tra lại thiết bị.";
+                    let message = "Không thể truy cập camera. Vui lòng kiểm tra thiết bị và kết nối.";
                     if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
-                        message = "Bạn đã từ chối quyền truy cập camera. Vui lòng cấp quyền trong cài đặt trình duyệt để tiếp tục.";
+                        message = "Bạn đã từ chối quyền truy cập camera. Vui lòng cấp quyền trong cài đặt trình duyệt.";
                     } else if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError") {
-                        message = "Không tìm thấy camera trên thiết bị của bạn.";
+                        message = "Không tìm thấy camera trên thiết bị. Vui lòng kiểm tra phần cứng.";
                     } else if (err.name === "NotReadableError") {
-                        message = "Camera đang được sử dụng bởi ứng dụng khác. Vui lòng đóng các ứng dụng khác và thử lại.";
+                        message = "Camera đang được sử dụng bởi ứng dụng khác. Vui lòng đóng ứng dụng khác và thử lại.";
                     } else if (err.name === "AbortError" || err.name === "OverconstrainedError") {
-                        message = "Lỗi khởi tạo camera. Có thể do ràng buộc không phù hợp hoặc sự cố thiết bị.";
+                        message = "Lỗi khởi tạo camera do cấu hình không phù hợp. Vui lòng thử lại.";
                     }
                     this.showPermanentError(message);
                 }
@@ -764,23 +766,40 @@
 
                     context.clearRect(0, 0, canvasWidth, canvasHeight);
                     context.save();
+
                     let drawSourceWidth = videoWidth;
                     let drawSourceHeight = videoHeight;
                     let rotateAngle = 0;
 
-                    if (this.state.videoOrientation === 90) {
-                        rotateAngle = Math.PI / 2;
+                    const isPortrait = videoHeight > videoWidth;
+                    const deviceOrientation = this.state.deviceOrientation;
+                    if (isPortrait) {
+                        if (deviceOrientation === 90 || deviceOrientation === -90) {
+                            rotateAngle = deviceOrientation * (Math.PI / 180);
+                        } else {
+                            rotateAngle = 90 * (Math.PI / 180);
+                        }
                         [drawSourceWidth, drawSourceHeight] = [videoHeight, videoWidth];
-                    } else if (this.state.videoOrientation === 270) {
-                        rotateAngle = -Math.PI / 2;
-                        [drawSourceWidth, drawSourceHeight] = [videoHeight, videoWidth];
-                    } else if (this.state.videoOrientation === 180) {
-                        rotateAngle = Math.PI;
+                    } else {
+                        if (deviceOrientation === 90 || deviceOrientation === -90) {
+                            rotateAngle = deviceOrientation * (Math.PI / 180);
+                        }
                     }
 
-                    let scale = Math.max(canvasWidth / drawSourceWidth, canvasHeight / drawSourceHeight);
-                    let scaledWidth = drawSourceWidth * scale;
-                    let scaledHeight = drawSourceHeight * scale;
+                    console.log('Video orientation:', isPortrait ? 'Portrait' : 'Landscape', 'Rotation angle:', rotateAngle * (180 / Math.PI), 'degrees');
+
+                    const videoAspectRatio = drawSourceWidth / drawSourceHeight;
+                    const canvasAspectRatio = canvasWidth / canvasHeight;
+                    let scale;
+                    if (videoAspectRatio > canvasAspectRatio) {
+                        scale = canvasHeight / drawSourceHeight;
+                    } else {
+                        scale = canvasWidth / drawSourceWidth;
+                    }
+
+                    const scaledWidth = drawSourceWidth * scale;
+                    const scaledHeight = drawSourceHeight * scale;
+
                     context.translate(canvasWidth / 2, canvasHeight / 2);
                     context.rotate(rotateAngle);
                     context.drawImage(video,
@@ -857,7 +876,7 @@
 
                 if (this.state.cameraCanvasPreview.width === 0 || this.state.cameraCanvasPreview.height === 0) {
                     console.error("Canvas has zero dimensions, cannot take snapshot!");
-                    this.showError("Lỗi: Không thể chụp ảnh. Canvas có kích thước không hợp lệ.");
+                    this.showError("Lỗi: Không thể chụp ảnh do kích thước canvas không hợp lệ.");
                     this.toggleUIState('error');
                     return;
                 }
@@ -964,20 +983,25 @@
             stopCamera() {
                 if (this.state.currentStream) {
                     console.log("Stopping camera stream.");
-                    this.state.currentStream.getTracks().forEach(track => track.stop());
+                    this.state.currentStream.getTracks().forEach(track => {
+                        track.stop();
+                        console.log("Track stopped:", track.label);
+                    });
                     this.state.currentStream = null;
                 }
                 this.stopAutoCapture();
                 if (this.state.animationFrameId) {
                     cancelAnimationFrame(this.state.animationFrameId);
                     this.state.animationFrameId = null;
-                    console.log("Canvas draw loop explicitly stopped.");
+                    console.log("Canvas draw loop stopped.");
                 }
                 if (this.state.cameraCanvasContext && this.state.cameraCanvasPreview) {
                     this.state.cameraCanvasContext.clearRect(0, 0, this.state.cameraCanvasPreview.width, this.state.cameraCanvasPreview.height);
                     console.log("Canvas cleared.");
                 }
-                this.elements.cameraFrame.style.display = 'none';
+                if (this.elements.cameraFrame) {
+                    this.elements.cameraFrame.style.display = 'none';
+                }
             },
 
             stopAutoCapture() {
@@ -989,60 +1013,81 @@
             },
 
             showError(message, autoHide = false) {
-                this.elements.errorMessage.textContent = message || '';
-                this.elements.errorMessage.classList.add('visible');
-                console.error("Displaying error:", message);
-                if (autoHide) {
-                    setTimeout(() => {
-                        this.elements.errorMessage.classList.remove('visible');
-                        console.log("Error message hidden.");
-                    }, this.config.ERROR_MESSAGE_TIMEOUT);
+                if (this.elements.errorMessage) {
+                    this.elements.errorMessage.textContent = message || '';
+                    this.elements.errorMessage.classList.add('visible');
+                    console.error("Displaying error:", message);
+                    if (autoHide) {
+                        setTimeout(() => {
+                            this.elements.errorMessage.classList.remove('visible');
+                            console.log("Error message hidden.");
+                        }, this.config.ERROR_MESSAGE_TIMEOUT);
+                    }
                 }
             },
 
             showPermanentError(message) {
+                // Ensure all resources are cleaned up before showing error
                 this.stopCamera();
-                this.elements.captureSection.classList.add('hidden');
-                this.elements.confirmSection.classList.add('hidden');
-                this.elements.bottomBar.classList.add('hidden');
-                this.elements.backButton.classList.add('hidden');
-                this.elements.guideSection.classList.remove('hidden');
-                this.elements.guideSection.innerHTML = `
-                    <div class="error-message visible" style="margin-bottom: 20px;">${message}</div>
-                    <div class="button-group">
-                        <button id="retryCameraBtn" class="btn btn-primary">Tải lại trang</button>
-                    </div>
-                `;
-                document.getElementById('retryCameraBtn').addEventListener('click', () => window.location.reload());
+                this.state.isAutoCapturing = false;
+
+                // Reset UI to initial state
+                if (this.elements.captureSection) this.elements.captureSection.classList.add('hidden');
+                if (this.elements.confirmSection) this.elements.confirmSection.classList.add('hidden');
+                if (this.elements.bottomBar) this.elements.bottomBar.classList.add('hidden');
+                if (this.elements.backButton) this.elements.backButton.classList.add('hidden');
+                if (this.elements.guideSection) this.elements.guideSection.classList.remove('hidden');
+
+                // Update guideSection with error message
+                if (this.elements.guideSection) {
+                    this.elements.guideSection.innerHTML = `
+                        <div class="guide-box">
+                            <div class="error-message visible" style="margin-bottom: 20px;">${message}</div>
+                            <div class="button-group">
+                                <button id="retryCameraBtn" class="btn btn-primary">Thử lại</button>
+                            </div>
+                        </div>
+                    `;
+                    const retryBtn = document.getElementById('retryCameraBtn');
+                    if (retryBtn) {
+                        retryBtn.addEventListener('click', () => window.location.reload());
+                    }
+                }
                 console.error("Displaying permanent error:", message);
             },
 
             updateFinalButtonState() {
                 const enabled = this.state.frontImageVerified && this.state.backImageVerified &&
                                 this.state.frontImageDataUrl && this.state.backImageDataUrl;
-                this.elements.finalContinueBtn.disabled = !enabled;
-                if (enabled) {
-                    this.elements.bottomBar.classList.remove('hidden');
-                } else {
-                    this.elements.bottomBar.classList.add('hidden');
+                if (this.elements.finalContinueBtn) {
+                    this.elements.finalContinueBtn.disabled = !enabled;
+                }
+                if (this.elements.bottomBar) {
+                    if (enabled) {
+                        this.elements.bottomBar.classList.remove('hidden');
+                    } else {
+                        this.elements.bottomBar.classList.add('hidden');
+                    }
                 }
                 console.log('Final continue button state updated. Enabled:', enabled);
             },
 
             showConfirmationScreen() {
                 this.stopCamera();
-                this.elements.captureSection.classList.add('hidden');
-                this.elements.bottomBar.classList.add('hidden');
-                this.elements.backButton.classList.add('hidden');
-                this.elements.confirmSection.classList.remove('hidden');
-                this.elements.frontPreview.src = this.state.frontImageDataUrl;
-                this.elements.backPreview.src = this.state.backImageDataUrl;
+                if (this.elements.captureSection) this.elements.captureSection.classList.add('hidden');
+                if (this.elements.bottomBar) this.elements.bottomBar.classList.add('hidden');
+                if (this.elements.backButton) this.elements.backButton.classList.add('hidden');
+                if (this.elements.confirmSection) this.elements.confirmSection.classList.remove('hidden');
+                if (this.elements.frontPreview) this.elements.frontPreview.src = this.state.frontImageDataUrl;
+                if (this.elements.backPreview) this.elements.backPreview.src = this.state.backImageDataUrl;
                 console.log('Confirmation screen displayed.');
             },
 
             async submitFinalData() {
-                this.elements.confirmBtn.classList.add('is-loading');
-                this.elements.confirmBtn.textContent = 'Đang xử lý...';
+                if (this.elements.confirmBtn) {
+                    this.elements.confirmBtn.classList.add('is-loading');
+                    this.elements.confirmBtn.textContent = 'Đang xử lý...';
+                }
                 console.log('Submitting final data...');
 
                 try {
@@ -1055,13 +1100,15 @@
                     console.error("Submission Error:", err);
                     this.showError("Lỗi khi gửi dữ liệu. Vui lòng thử lại.");
                 } finally {
-                    this.elements.confirmBtn.classList.remove('is-loading');
-                    this.elements.confirmBtn.textContent = 'Xác nhận và Hoàn tất';
+                    if (this.elements.confirmBtn) {
+                        this.elements.confirmBtn.classList.remove('is-loading');
+                        this.elements.confirmBtn.textContent = 'Xác nhận và Hoàn tất';
+                    }
                 }
             },
 
             retakePhoto(type) {
-                this.elements.confirmSection.classList.add('hidden');
+                if (this.elements.confirmSection) this.elements.confirmSection.classList.add('hidden');
                 if (type === 'front') {
                     this.state.frontImageVerified = false;
                     this.state.frontImageDataUrl = null;
@@ -1076,11 +1123,11 @@
 
             cancelCapture(isFullReset = false) {
                 this.stopCamera();
-                this.elements.captureSection.classList.add('hidden');
-                this.elements.confirmSection.classList.add('hidden');
-                this.elements.guideSection.classList.remove('hidden');
-                this.elements.bottomBar.classList.add('hidden');
-                this.elements.backButton.classList.add('hidden');
+                if (this.elements.captureSection) this.elements.captureSection.classList.add('hidden');
+                if (this.elements.confirmSection) this.elements.confirmSection.classList.add('hidden');
+                if (this.elements.guideSection) this.elements.guideSection.classList.remove('hidden');
+                if (this.elements.bottomBar) this.elements.bottomBar.classList.add('hidden');
+                if (this.elements.backButton) this.elements.backButton.classList.add('hidden');
                 this.updateProgress(0);
                 this.state.frontImageVerified = false;
                 this.state.backImageVerified = false;
@@ -1091,23 +1138,29 @@
                     this.state.backImageDataUrl = null;
                 }
 
-                this.elements.finalContinueBtn.disabled = true;
+                if (this.elements.finalContinueBtn) this.elements.finalContinueBtn.disabled = true;
                 this.setCameraFrameReady(false);
                 console.log('Capture cancelled. Full reset:', isFullReset);
             },
 
             resetUIForCapture(type) {
                 const isFront = type === 'front';
-                this.elements.guideSection.classList.add('hidden');
-                this.elements.confirmSection.classList.add('hidden');
-                this.elements.captureSection.classList.remove('hidden');
-                this.elements.backButton.classList.remove('hidden');
+                if (this.elements.guideSection) this.elements.guideSection.classList.add('hidden');
+                if (this.elements.confirmSection) this.elements.confirmSection.classList.add('hidden');
+                if (this.elements.captureSection) this.elements.captureSection.classList.remove('hidden');
+                if (this.elements.backButton) this.elements.backButton.classList.remove('hidden');
 
-                this.elements.captureSection.classList.remove('capture-type-front', 'capture-type-back');
-                this.elements.captureSection.classList.add(isFront ? 'capture-type-front' : 'capture-type-back');
+                if (this.elements.captureSection) {
+                    this.elements.captureSection.classList.remove('capture-type-front', 'capture-type-back');
+                    this.elements.captureSection.classList.add(isFront ? 'capture-type-front' : 'capture-type-back');
+                }
 
-                this.elements.captureTitle.textContent = isFront ? "Chụp mặt trước CCCD/CMND" : "Chụp mặt sau CCCD/CMND";
-                this.elements.captureInstruction.textContent = "Vui lòng đặt CCCD/CMND vào khung hình. Hệ thống sẽ tự động tìm kiếm.";
+                if (this.elements.captureTitle) {
+                    this.elements.captureTitle.textContent = isFront ? "Chụp mặt trước CCCD/CMND" : "Chụp mặt sau CCCD/CMND";
+                }
+                if (this.elements.captureInstruction) {
+                    this.elements.captureInstruction.textContent = "Vui lòng đặt CCCD/CMND vào khung hình. Hệ thống sẽ tự động tìm kiếm.";
+                }
 
                 this.updateProgress(isFront ? 1 : 2);
                 this.toggleUIState('capturing');
@@ -1116,10 +1169,12 @@
             },
 
             setCameraFrameReady(isReady) {
-                if (isReady) {
-                    this.elements.cameraFrame.classList.add('ready-to-capture');
-                } else {
-                    this.elements.cameraFrame.classList.remove('ready-to-capture');
+                if (this.elements.cameraFrame) {
+                    if (isReady) {
+                        this.elements.cameraFrame.classList.add('ready-to-capture');
+                    } else {
+                        this.elements.cameraFrame.classList.remove('ready-to-capture');
+                    }
                 }
             },
 
@@ -1130,20 +1185,22 @@
             },
 
             toggleUIState(state) {
-                this.elements.captureSection.dataset.state = state;
+                if (this.elements.captureSection) {
+                    this.elements.captureSection.dataset.state = state;
+                }
                 console.log('UI state changed to:', state);
-                if (state === 'capturing') {
-                    this.elements.statusMessage.textContent = "Hệ thống đang tìm kiếm CCCD/CMND...";
-                    this.elements.errorMessage.classList.remove('visible');
-                } else if (state === 'loading') {
-                    this.elements.statusMessage.textContent = "Đang phân tích hình ảnh...";
-                    this.elements.errorMessage.classList.remove('visible');
-                } else if (state === 'success') {
-                    const type = this.state.currentCaptureType;
-                    this.elements.statusMessage.textContent = type === 'front' ? "Đã lưu mặt trước." : "Đã lưu mặt sau.";
-                    this.elements.errorMessage.classList.remove('visible');
-                } else if (state === 'error') {
-                    // Status message vẫn hiển thị lỗi
+                if (this.elements.statusMessage && this.elements.errorMessage) {
+                    if (state === 'capturing') {
+                        this.elements.statusMessage.textContent = "Hệ thống đang tìm kiếm CCCD/CMND...";
+                        this.elements.errorMessage.classList.remove('visible');
+                    } else if (state === 'loading') {
+                        this.elements.statusMessage.textContent = "Đang phân tích hình ảnh...";
+                        this.elements.errorMessage.classList.remove('visible');
+                    } else if (state === 'success') {
+                        const type = this.state.currentCaptureType;
+                        this.elements.statusMessage.textContent = type === 'front' ? "Đã lưu mặt trước." : "Đã lưu mặt sau.";
+                        this.elements.errorMessage.classList.remove('visible');
+                    }
                 }
             }
         };

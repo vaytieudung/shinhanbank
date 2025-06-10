@@ -536,6 +536,7 @@
                 <div class="step-label">Mặt trước</div>
             </div>
             <div id="step2" class="progress-step">
+                <div class
                 <div class="step-circle">2</div>
                 <div class="step-label">Mặt sau</div>
             </div>
@@ -831,6 +832,13 @@ const IDCaptureApp = {
             // Áp dụng xoay
             context.rotate(rotateAngle);
 
+            // ***************************************************************
+            // Đã sửa: Thêm phép lật ngang (mirror effect) để khắc phục camera bị ngược.
+            // QUAN TRỌNG: Nếu ảnh hiển thị bị lật ngược (chữ bị ngược), hãy BỎ COMMENT DÒNG NÀY.
+            // Dòng này thường chỉ cần cho camera trước hoặc một số thiết bị đặc biệt.
+            // context.scale(-1, 1); 
+            // ***************************************************************
+
             // Vẽ video frame lên canvas, căn giữa sau khi đã xoay và dịch chuyển
             // Lưu ý: Đối với drawImage, chúng ta vẫn truyền video nguyên bản,
             // việc xoay và dịch chuyển được thực hiện trên context.
@@ -857,22 +865,22 @@ const IDCaptureApp = {
             return;
         }
 
-        const { isValid, message, isCardDetected } = this.simulateValidation();
+        const { isValid, message, isCardDetected, isCardTypeCorrect } = this.simulateValidation();
         this.state.isCardDetected = isCardDetected; 
-
-        // Update camera frame border and status message
-        this.setCameraFrameReady(isCardDetected && isValid);
+        
+        // Cập nhật trạng thái khung hình và thông báo dựa trên cả nhận diện thẻ VÀ loại thẻ
+        this.setCameraFrameReady(isCardDetected && isValid && isCardTypeCorrect);
         this.elements.statusMessage.textContent = message; 
-        console.log('AutoCapture Status:', message, 'Card Detected:', isCardDetected, 'Is Valid:', isValid);
+        console.log('AutoCapture Status:', message, 'Card Detected:', isCardDetected, 'Card Type Correct:', isCardTypeCorrect, 'Is Valid:', isValid);
 
-        // Only trigger auto capture if card is detected AND image quality is good
-        if (isCardDetected && isValid) {
+        // Chỉ tự động chụp nếu thẻ được nhận diện, loại thẻ đúng VÀ chất lượng ảnh tốt
+        if (isCardDetected && isValid && isCardTypeCorrect) {
             console.log('Conditions met for auto capture. Setting timeout...');
             this.state.autoCaptureTimeoutId = setTimeout(() => {
                 this.triggerCapture(true); 
             }, this.config.AUTO_CAPTURE_INTERVAL);
         } else {
-            // Continue checking frames if not ready
+            // Tiếp tục kiểm tra các khung hình nếu chưa sẵn sàng
             console.log('Conditions not met for auto capture. Retrying in 500ms.');
             this.state.autoCaptureTimeoutId = setTimeout(() => {
                 this.autoCaptureLoop();
@@ -886,9 +894,7 @@ const IDCaptureApp = {
             return;
         }
 
-        // Stop the auto-capture loop before manual or immediate auto capture
         this.stopAutoCapture();
-        // Stop the canvas drawing loop temporarily during processing
         if (this.state.animationFrameId) {
             cancelAnimationFrame(this.state.animationFrameId);
             this.state.animationFrameId = null;
@@ -918,8 +924,6 @@ const IDCaptureApp = {
             return;
         }
         
-        // Take snapshot from the canvas that's displaying the preview
-        // Ensure canvas has valid dimensions before toDataURL
         if (this.state.cameraCanvasPreview.width === 0 || this.state.cameraCanvasPreview.height === 0) {
             console.error("Canvas has zero dimensions, cannot take snapshot!");
             this.showError("Lỗi: Không thể chụp ảnh. Canvas có kích thước không hợp lệ.");
@@ -929,25 +933,22 @@ const IDCaptureApp = {
         const imageDataUrl = this.state.cameraCanvasPreview.toDataURL('image/jpeg', 0.9);
         console.log("Image snapshot taken from canvas. Data URL length:", imageDataUrl.length);
         
-        // Simulate validation after capture
-        const { isValid, message, isCardDetected } = this.simulateValidationAfterCapture(); 
-        this.state.simulationAttempts++;
-        console.log('Verification Result:', 'Valid:', isValid, 'Message:', message);
+        const { isValid, message, isCardDetected, isCardTypeCorrect } = this.simulateValidationAfterCapture(); 
+        this.state.simulationAttempts++; // Tăng số lần thử sau khi chụp để mô phỏng lỗi
+        console.log('Verification Result (after capture):', 'Valid:', isValid, 'Card Detected:', isCardDetected, 'Card Type Correct:', isCardTypeCorrect, 'Message:', message);
         
         await new Promise(resolve => setTimeout(resolve, isAuto ? 1500 : 1000));
 
-        if (isValid && isCardDetected) { 
-            console.log('Verification SUCCESS.');
+        if (isValid && isCardDetected && isCardTypeCorrect) { 
+            console.log('Verification SUCCESS (after capture).');
             this.handleVerificationSuccess(imageDataUrl);
         } else {
-            console.log('Verification FAILED.');
+            console.log('Verification FAILED (after capture).');
             this.handleVerificationFailure(message, isAuto);
         }
         
         this.state.isAutoCapturing = false;
-        // Re-start canvas drawing loop after verification if not successful,
-        // or if camera is still needed
-        if (this.state.currentStream && this.state.currentStream.active && !this.state.animationFrameId && (!isValid || !isCardDetected)) {
+        if (this.state.currentStream && this.state.currentStream.active && !this.state.animationFrameId && (!isValid || !isCardDetected || !isCardTypeCorrect)) {
              console.log('Re-starting canvas draw loop and auto capture loop after failure.');
              this.drawVideoToCanvas();
              this.autoCaptureLoop(); 
@@ -955,40 +956,51 @@ const IDCaptureApp = {
     },
 
     simulateValidation() {
-        // This function simulates real-time Computer Vision analysis per frame.
-        // It should check if a card is present and if its quality is good enough to capture.
+        // Hàm này mô phỏng quá trình phân tích Computer Vision theo thời gian thực (từng frame)
+        // để nhận diện CCCD và kiểm tra chất lượng trước khi chụp tự động.
 
-        // Increment attempt to simulate changing conditions
-        this.state.simulationAttempts++; 
+        this.state.simulationAttempts++; // Tăng số lần thử để mô phỏng điều kiện thay đổi
 
-        // Phase 1: Card Not Detected (Initial few seconds/frames)
+        // Giai đoạn 1: Chưa tìm thấy bất kỳ thẻ nào
         if (this.state.simulationAttempts < 3) {
-            return { isValid: false, message: "Đang tìm kiếm CCCD/CMND trong khung hình...", isCardDetected: false };
+            return { isValid: false, message: "Đang tìm kiếm giấy tờ trong khung hình...", isCardDetected: false, isCardTypeCorrect: false };
         } 
-        // Phase 2: Card Detected, but quality issues
+        // Giai đoạn 2: Đã tìm thấy một vật thể hình thẻ, nhưng chưa xác định đúng là CCCD
         else if (this.state.simulationAttempts < 6) {
-            return { isValid: false, message: "Đã tìm thấy giấy tờ. Vui lòng căn chỉnh rõ nét, không mờ.", isCardDetected: true };
-        } 
+            return { isValid: false, message: "Đã tìm thấy giấy tờ. Vui lòng đảm bảo đó là CCCD/CMND.", isCardDetected: true, isCardTypeCorrect: false };
+        }
+        // Giai đoạn 3: Đã xác định là CCCD, nhưng chất lượng ảnh chưa tốt (mờ, lóa)
         else if (this.state.simulationAttempts < 9) {
-            return { isValid: false, message: "Đã tìm thấy giấy tờ. Tránh lóa sáng và bóng đổ.", isCardDetected: true };
+            return { isValid: false, message: "Đã nhận diện CCCD. Vui lòng giữ cố định, tránh mờ.", isCardDetected: true, isCardTypeCorrect: true };
         } 
-        // Phase 3: Card Detected and ready for capture
+        else if (this.state.simulationAttempts < 12) {
+            return { isValid: false, message: "Đã nhận diện CCCD. Tránh lóa sáng và bóng đổ.", isCardDetected: true, isCardTypeCorrect: true };
+        }
+        // Giai đoạn 4: Đã nhận diện đúng CCCD và chất lượng ảnh tốt, sẵn sàng chụp
         else {
-            return { isValid: true, message: "Sẵn sàng chụp! Giữ máy ổn định...", isCardDetected: true };
+            return { isValid: true, message: "Đã nhận diện CCCD. Sẵn sàng chụp!", isCardDetected: true, isCardTypeCorrect: true };
         }
     },
 
     simulateValidationAfterCapture() {
-        // This function simulates the final validation of the captured image.
-        // In a real app, this would be a more robust check (e.g., sending to backend).
-        // We still simulate a few failures for testing purposes.
+        // Hàm này mô phỏng quá trình xác thực cuối cùng của ảnh đã chụp.
+        // Trong một ứng dụng thực tế, ảnh sẽ được gửi đến backend để xử lý OCR và xác thực sâu hơn.
+        // Chúng ta mô phỏng các trường hợp lỗi khác nhau.
 
-        // Use modulo to cycle through success/failure messages for testing
-        switch (this.state.simulationAttempts % 3) { 
-            case 0: return { isValid: true, message: "Đã chụp thành công!", isCardDetected: true }; 
-            case 1: return { isValid: false, message: "Ảnh bị mờ. Vui lòng giữ điện thoại thật ổn định.", isCardDetected: true };
-            case 2: return { isValid: false, message: "Có hiện tượng lóa sáng. Vui lòng di chuyển ra khỏi nguồn sáng trực tiếp.", isCardDetected: true };
-            default: return { isValid: true, message: "Đã chụp thành công!", isCardDetected: true }; 
+        // Mỗi 4 lần chụp, sẽ có 1 lần mô phỏng không phải CCCD
+        const testCase = (this.state.simulationAttempts - 1) % 4; // Bắt đầu từ 0
+        
+        switch (testCase) {
+            case 0: // Trường hợp thành công sau khi đã nhận diện
+                return { isValid: true, message: "Tải ảnh mặt trước thành công!", isCardDetected: true, isCardTypeCorrect: true }; 
+            case 1: // Trường hợp lỗi: Không đúng loại CCCD
+                return { isValid: false, message: "Ảnh không phải là CCCD/CMND. Vui lòng chụp lại.", isCardDetected: false, isCardTypeCorrect: false };
+            case 2: // Trường hợp lỗi: Ảnh mờ
+                return { isValid: false, message: "Ảnh CCCD bị mờ. Vui lòng chụp lại rõ nét hơn.", isCardDetected: true, isCardTypeCorrect: true };
+            case 3: // Trường hợp lỗi: Ảnh lóa sáng
+                return { isValid: false, message: "Ảnh CCCD bị lóa sáng. Vui lòng chụp lại ở nơi có đủ ánh sáng.", isCardDetected: true, isCardTypeCorrect: true };
+            default: // Fallback
+                return { isValid: true, message: "Tải ảnh mặt trước thành công!", isCardDetected: true, isCardTypeCorrect: true };
         }
     },
 

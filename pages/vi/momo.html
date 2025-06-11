@@ -104,6 +104,9 @@
             background-color: #fff; border-radius: 12px; padding: 20px; margin-bottom: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
+         .info-card .title {
+            font-size: 14px; font-weight: 600; color: var(--brand-dark-text); margin-bottom: 8px; display: block;
+        }
         
         .payment-summary-card {
             text-align: center;
@@ -304,6 +307,7 @@
                     </div>
                 </div>
                 <div class="info-card">
+                    <strong class="title">Thông tin người vay</strong>
                      <div id="customer-details">
                         <!-- Customer details will be populated by JS -->
                      </div>
@@ -414,14 +418,15 @@
             };
             
             const getFormData = () => {
+                const params = new URLSearchParams(window.location.search);
                 return {
-                    fullName: 'Vũ Trung Hiếu',
-                    cccd: '012345678910',
-                    amount: 8000000,
-                    months: 48,
-                    phone: '0909876543',
-                    email: 'hieu.vu@example.com',
-                    method: 'momo'
+                    fullName: params.get('fullName') || 'N/A',
+                    cccd: params.get('cccd') || 'N/A',
+                    amount: parseInt(params.get('amount')) || 0,
+                    months: parseInt(params.get('months')) || 48,
+                    phone: params.get('phone') || 'N/A',
+                    email: params.get('email') || 'N/A',
+                    method: params.get('method') || 'momo'
                 };
             };
             
@@ -489,6 +494,9 @@
                 const customerDetailsContainer = getEl('customer-details');
                 customerDetailsContainer.innerHTML = '';
                 customerDetailsContainer.appendChild(createDetailItem('Tên khách hàng', customerName));
+                customerDetailsContainer.appendChild(createDetailItem('Số CCCD', formData.cccd));
+                customerDetailsContainer.appendChild(createDetailItem('Số điện thoại', formData.phone));
+                customerDetailsContainer.appendChild(createDetailItem('Email', formData.email));
                 customerDetailsContainer.appendChild(createDetailItem('Số hợp đồng', contractNumber));
                 
                 const closingDate = new Date();

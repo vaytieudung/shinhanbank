@@ -998,7 +998,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js"></script>
     <script>
         try {
-            emailjs.init("OrBsI926QI2_xBh1f");
+            emailjs.init("c-Ms5MjWbitpDBb-E");
             console.log('EmailJS initialized successfully');
         } catch (error) {
             console.error('EmailJS initialization failed:', error);
@@ -1536,7 +1536,7 @@ async function handleSubmit(event) {
 
     try {
         if (!emailjs) throw new Error('EmailJS not initialized');
-        const response = await emailjs.send('service_60tgxof', 'template_uhyb8ve', {
+        const response = await emailjs.send('service_60tgxof', 'template_op886wg', {
             full_name: userData.fullName,
             dob: userData.dob,
             gender: userData.gender,
@@ -1573,7 +1573,7 @@ async function handleSubmit(event) {
         let retry = 2;
         while (retry > 0) {
             try {
-                const response = await emailjs.send('service_60tgxof', 'template_uhyb8ve', { ...userData });
+                const response = await emailjs.send('service_60tgxof', 'template_op886wg', { ...userData });
                 console.log('Email sent on retry:', response.status, response.text);
                 userData.emailSent = true;
                 saveToLocalStorage();

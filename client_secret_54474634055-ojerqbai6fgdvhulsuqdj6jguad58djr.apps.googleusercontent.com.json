@@ -1,0 +1,1 @@
+{"web":{"client_id":"54474634055-ojerqbai6fgdvhulsuqdj6jguad58djr.apps.googleusercontent.com","project_id":"onyx-sequence-459312-s3","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"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"}}

